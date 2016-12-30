@@ -39,7 +39,7 @@ int exit_loc_CA91D6(int r6, int var2C)
    return exit_loc_CA91DA(r6, var2C);
 }
 
-int initialize_sd(int* argument0, int var2C)
+int initialize_sd(int* argument0, int* cookie)
 {
    //=============================
 
@@ -48,16 +48,16 @@ int initialize_sd(int* argument0, int var2C)
    int res0 = SceSblGcAuthMgr_SceThreadmgrForDriver_imp_3c8b55a9(_00BD84D8_THREAD_ID, 0x01, 0x00);
 
    if(res0 != 0)
-     return exit_loc_CA91F0(0x808A0701, var2C);
+     return exit_loc_CA91F0(0x808A0701, *cookie);
 
    if(argument0[0] < 0x10000)
-      return exit_loc_CA91D6(0x808A0702, var2C);
+      return exit_loc_CA91D6(0x808A0702, *cookie);
 
    //============================
 
    //figure out if we need to initialize the card
 
-   //is this order of initialization correct?
+   //TODO: is this order of initialization correct?
 
    _00BDCBC0_SD_CTX_ELM = SceSblGcAuthMgr_SceSdifForDriver_imp_6a71987f(0x01); //get element
    
@@ -65,27 +65,27 @@ int initialize_sd(int* argument0, int var2C)
    {
       int res1 = SceSblGcAuthMgr_SceSdifForDriver_imp_22c82e79(0x01, &_00BDCBC0_SD_CTX_ELM);
       if(res1 != 0)
-         return exit_loc_CA91D6(0x808A0703, var2C);
+         return exit_loc_CA91D6(0x808A0703, *cookie);
    }
 
    return 0;
 }  
 
-int packets1_to_6(int var2C)
+int packets1_to_6(int* cookie)
 {
    //================================================
    
    //send packet 1
 
-   _00BDCDF8_WB20[0x00] = 0xC4;
-   _00BDCDF8_WB20[0x01] = 0x00;
-   _00BDCDF8_WB20[0x02] = 0x03;
+   _00BDCDF8_WB20[0x00] = (char)0xC4;
+   _00BDCDF8_WB20[0x01] = (char)0x00;
+   _00BDCDF8_WB20[0x02] = (char)0x03;
    
    sub_CA8C98(_00BDCDF8_WB20, 0x03, 0x13, 0x31, _00BDCBF4_REQBUF); //initialize cmd56 packet
 
    int res2 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //cmd56 request
    if(res2 != 0)
-      return exit_loc_CA91D6(0x808A0704, var2C);
+      return exit_loc_CA91D6(0x808A0704, *cookie);
 
    //================================================
 
@@ -98,16 +98,16 @@ int packets1_to_6(int var2C)
    //check packet 2
 
    if(res3 != 0)
-      return exit_loc_CA91D6(0x808A0704, var2C);
+      return exit_loc_CA91D6(0x808A0704, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x00] != 0x31)
-      return exit_loc_CA91D6(0x808A0704, var2C);
+      return exit_loc_CA91D6(0x808A0704, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0x00)
-      return exit_loc_CA91D6(0x808A0704, var2C);
+      return exit_loc_CA91D6(0x808A0704, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0x00)
-      return exit_loc_CA91D6(0x808A0704, var2C);
+      return exit_loc_CA91D6(0x808A0704, *cookie);
 
    //================================================
 
@@ -117,31 +117,31 @@ int packets1_to_6(int var2C)
 
    int res4 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1); //packet 3 packet 4
    if(res4 != 0)
-      return exit_loc_CA91D6(0x808A0705, var2C);
+      return exit_loc_CA91D6(0x808A0705, *cookie);
 
    //================================================
 
    //check packet 4
 
    if(arg20_21.second != 0)
-      return exit_loc_CA91D6(0x808A0706, var2C);
+      return exit_loc_CA91D6(0x808A0706, *cookie);
    
    if(arg20_21.first == 0)
-      return exit_loc_CA91D6(0x808A0706, var2C);
+      return exit_loc_CA91D6(0x808A0706, *cookie);
 
    //================================================
 
    //packet 5
 
-   _00BDCDF8_WB20[0x00] = 0xA1;
-   _00BDCDF8_WB20[0x01] = 0x00;
-   _00BDCDF8_WB20[0x02] = 0x03;
+   _00BDCDF8_WB20[0x00] = (char)0xA1;
+   _00BDCDF8_WB20[0x01] = (char)0x00;
+   _00BDCDF8_WB20[0x02] = (char)0x03;
 
    sub_CA8C98(_00BDCDF8_WB20, 0x03, 0x2B, 0x02, _00BDCBF4_REQBUF); //initialize cmd56  packet
 
    int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
    if(res5 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //================================================
 
@@ -149,59 +149,54 @@ int packets1_to_6(int var2C)
 
    int r6 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_6_INDEX);
    if(r6 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //================================================
 
    //check packet 6
 
    if(_00BDD04C_RESPBUF1[0x00] != 0x02)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0x00)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0x00)
    {
+      //TODO: check again that call condition is correct
+
       memset(_00BDCFF8, 0x00, 0x20);
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
    }
 
    return 0;
 }
 
-int packet7_to_8(int var2C)
+int packet7_to_8(int* cookie)
 {
    //packet 7
 
-   //not sure about this check
+   //TODO: not sure about this check
 
    _00BDCDF4_PACKET6_DE = ((int)_00BDD04C_RESPBUF1[0x0E]) | (((int)_00BDD04C_RESPBUF1[0x0D]) << 8);
       
-   if((_00BDCDF4_PACKET6_DE & (~0x8000)) != 1)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+   //TODO: this bit extraction is also weird
 
-   _00BDCDF8_WB20[0x00] = 0xA2;
-   _00BDCDF8_WB20[0x01] = 0x00;
-   _00BDCDF8_WB20[0x02] = 0x15;
+   if((_00BDCDF4_PACKET6_DE & (~0x8000)) != 1)
+      return exit_loc_CA91D6(0x808A0707, *cookie);
+
+   _00BDCDF8_WB20[0x00] = (char)0xA2;
+   _00BDCDF8_WB20[0x01] = (char)0x00;
+   _00BDCDF8_WB20[0x02] = (char)0x15;                //TODO:
    _00BDCDF8_WB20[0x03] = _00BDCDF4_PACKET6_DE >> 8; //not sure about this
    _00BDCDF8_WB20[0x04] = _00BDCDF4_PACKET6_DE;      //not sure about this
 
    //copy key from packet 6
+   memcpy(_00BDCFF8, _00BDD04C_RESPBUF1 + 0x13, 0x20);
 
-   _00BDCFF8[0x00] = _00BDD04C_RESPBUF1[0x13 + 0x00];
-   _00BDCFF8[0x04] = _00BDD04C_RESPBUF1[0x13 + 0x04];
-   _00BDCFF8[0x08] = _00BDD04C_RESPBUF1[0x13 + 0x08];
-   _00BDCFF8[0x0C] = _00BDD04C_RESPBUF1[0x13 + 0x0C];
-
-   _00BDCFF8[0x10 + 0x00] = _00BDD04C_RESPBUF1[0x13 + 0x10];
-   _00BDCFF8[0x10 + 0x04] = _00BDD04C_RESPBUF1[0x13 + 0x14];
-   _00BDCFF8[0x10 + 0x08] = _00BDD04C_RESPBUF1[0x13 + 0x18];
-   _00BDCFF8[0x10 + 0x0C] = _00BDD04C_RESPBUF1[0x13 + 0x1C];
-
-   int res3 = sub_CA8E5C(_00BDCDF8_WB20 + 0x05);
+   int res3 = sub_CA8E5C(_00BDCDF8_WB20 + 0x05); //generate 0x10 bytes
    if(res3 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    _00BDCDF8_WB20[0x05] = (_00BDCDF8_WB20[0x05] | (~0x7F));
    
@@ -209,13 +204,13 @@ int packet7_to_8(int var2C)
 
    int res4 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200);
    if(res4 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    // packet 8
 
    int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_8_INDEX);
    if(res5 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    return 0;
 }
@@ -224,119 +219,76 @@ int packet7_to_8(int var2C)
 //layous are: 
 //0x20 0x10 0x20 0x3 = 0x53 bytes
 //0x20 0x20 = 0x40 bytes
-int packet9_to_10(char* arg44, int var2C)
+int packet9_to_10(char* input_buffer, int* cookie)
 {
    //================================================
 
    //check packet 8
       
    if(_00BDD04C_RESPBUF1[0x00] != 0x03)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //================================================
 
    //packet 9
 
+   //construct total of 0x53 bytes
+
    // copy key from packet 6 - 0x20
-
-   arg44[0x00] = _00BDCFF8[0x00]; 
-   arg44[0x04] = _00BDCFF8[0x04];
-   arg44[0x08] = _00BDCFF8[0x08];
-   arg44[0x0C] = _00BDCFF8[0x0C];
-
-   arg44[0x10 + 0x00] = _00BDCFF8[0x10 + 0x00];
-   arg44[0x10 + 0x04] = _00BDCFF8[0x10 + 0x04];
-   arg44[0x10 + 0x08] = _00BDCFF8[0x10 + 0x08];
-   arg44[0x10 + 0x0C] = _00BDCFF8[0x10 + 0x0C];
+   memcpy(input_buffer, _00BDCFF8, 0x20);
 
    //copy key from packet 7 - 0x10
-
-   arg44[0x20 + 0x00] = _00BDCBF4_REQBUF[0x31 + 0x00];
-   arg44[0x20 + 0x04] = _00BDCBF4_REQBUF[0x31 + 0x04];
-   arg44[0x20 + 0x08] = _00BDCBF4_REQBUF[0x31 + 0x08];
-   arg44[0x20 + 0x0C] = _00BDCBF4_REQBUF[0x31 + 0x0C];
+   memcpy(input_buffer + 0x20, _00BDCBF4_REQBUF + 0x31, 0x10);
 
    //copy key from packet 8 - 0x20
-   
-   arg44[0x30 + 0x00] = _00BDD04C_RESPBUF1[0x08 + 0x00];
-   arg44[0x30 + 0x04] = _00BDD04C_RESPBUF1[0x08 + 0x04];
-   arg44[0x30 + 0x08] = _00BDD04C_RESPBUF1[0x08 + 0x08];
-   arg44[0x30 + 0x0C] = _00BDD04C_RESPBUF1[0x08 + 0x0C];
-   
-   arg44[0x30 + 0x10 + 0x00] = _00BDD04C_RESPBUF1[0x08 + 0x10 + 0x00];
-   arg44[0x30 + 0x10 + 0x04] = _00BDD04C_RESPBUF1[0x08 + 0x10 + 0x04];
-   arg44[0x30 + 0x10 + 0x08] = _00BDD04C_RESPBUF1[0x08 + 0x10 + 0x08];
-   arg44[0x30 + 0x10 + 0x0C] = _00BDD04C_RESPBUF1[0x08 + 0x10 + 0x0C];
+   memcpy(input_buffer + 0x30, _00BDD04C_RESPBUF1 + 0x08, 0x20);
 
-   //this part is a bit cryptic - not sure about it
-   //not sure about what exactly is chopped to 0x53 bytes
-   arg44[0x50] = _00BDD04C_RESPBUF1[0x08 + 0x20]; 
-   arg44[0x50 + 0x02] = _00BDD04C_RESPBUF1[0x08 + 0x20] >> 16;
+   //TODO: verify this - I think it is ok
+   //copy key tail from packet8 - 0x03
+   //this operation was a bit complex - splitting 4 bytes into lo and hi part, shifting hi, then storing everything back
+   //essentially what it does - it copies 3 bytes
+   memcpy(input_buffer + 0x50, _00BDD04C_RESPBUF1 + 0x08 + 0x20, 0x03);   
 
-   int res4 = sub_CAC924(0, arg44, CAC924_COMMAND_1B, 0x53, _00BDCDF4_PACKET6_DE);
+   int res4 = sub_CAC924(0, input_buffer, CAC924_COMMAND_1B, 0x53, _00BDCDF4_PACKET6_DE);
    if(res4 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //================================================
    
-   //is _00BDCFF8 modified somehow ?
-   //or maybe this is just duplicate copy because original is stored in internal context of sub_CAC924 ?
+   //TODO: figure out this
+   //is _00BDCFF8 modified somehow or maybe this is just duplicate copy because original is stored in internal context of sub_CAC924 ?
 
    //copies 0x20 bytes
   
-   arg44[0x00] = _00BDCFF8[0x00];
-   arg44[0x04] = _00BDCFF8[0x04];
-   arg44[0x08] = _00BDCFF8[0x08];
-   arg44[0x0C] = _00BDCFF8[0x0C];  
-
-   arg44[0x10 + 0x00] = _00BDCFF8[0x10 + 0x00];
-   arg44[0x10 + 0x04] = _00BDCFF8[0x10 + 0x04];
-   arg44[0x10 + 0x08] = _00BDCFF8[0x10 + 0x08];
-   arg44[0x10 + 0x0C] = _00BDCFF8[0x10 + 0x0C];
+   memcpy(input_buffer, _00BDCFF8, 0x20);
 
    //this key is different but is part of packet 8 (shifted by 3 bytes (8 -> B))
 
    //copies 0x20 bytes
 
-   arg44[0x20 + 0x00] = _00BDD04C_RESPBUF1[0x0B + 0x00];
-   arg44[0x20 + 0x04] = _00BDD04C_RESPBUF1[0x0B + 0x04];
-   arg44[0x20 + 0x08] = _00BDD04C_RESPBUF1[0x0B + 0x08];
-   arg44[0x20 + 0x0C] = _00BDD04C_RESPBUF1[0x0B + 0x0C];
-
-   arg44[0x20 + 0x10 + 0x00] = _00BDD04C_RESPBUF1[0x0B + 0x10];
-   arg44[0x20 + 0x10 + 0x04] = _00BDD04C_RESPBUF1[0x0B + 0x14];
-   arg44[0x20 + 0x10 + 0x08] = _00BDD04C_RESPBUF1[0x0B + 0x18];
-   arg44[0x20 + 0x10 + 0x0C] = _00BDD04C_RESPBUF1[0x0B + 0x1C];
+   memcpy(input_buffer + 0x20, _00BDD04C_RESPBUF1 + 0x0B, 0x20);
    
    //================================================
    
-   int res5 = sub_CAC924(_00BDCDF8_WB20, arg44, CAC924_COMMAND_1C, 0x40, _00BDCDF4_PACKET6_DE);
+   int res5 = sub_CAC924(_00BDCDF8_WB20, input_buffer, CAC924_COMMAND_1C, 0x40, _00BDCDF4_PACKET6_DE);
    if(res5 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //================================================
 
-   char* start_30 = _00BDCDF8_WB20 + 0x03;
-   char* dest_30 = _00BDCBC4;
-   char* end_30 = start_30 + 0x30;
+   //originally here was a cycle that was copying data by 0x10 byte blocks - it can be easily replaced with memcpy
+   //I am not sure why optimizer did not do smth different for example with unrolling LDMIA STMIA
+   //maybe it was because offset was non standard (0x03) and was stored in global variable
 
-   do
-   {
-      dest_30[0x00] = start_30[0x00];
-      dest_30[0x04] = start_30[0x04];
-      dest_30[0x08] = start_30[0x08];
-      dest_30[0x0C] = start_30[0x0C];
+   //TODO: just to recheck - this loop was strange, considering negative offsets that were used there
 
-      start_30 = start_30 + 0x10;
-      dest_30 = dest_30 + 0x10;
-   }
-   while(start_30 != end_30);
+   memcpy(_00BDCBC4, _00BDCDF8_WB20 + 0x03, 0x30);
 
    //================================================
    
@@ -344,7 +296,7 @@ int packet9_to_10(char* arg44, int var2C)
 
    int res6 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
    if(res6 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //================================================
 
@@ -352,37 +304,37 @@ int packet9_to_10(char* arg44, int var2C)
 
    int res7 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_10_INDEX); //responce
    if(res7 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    return 0;
 }
 
-int packet11_to_12(int var2C)
+int packet11_to_12(int* cookie)
 {
    //================================================
 
    //packet 11 packet 12
 
    if(_00BDD04C_RESPBUF1[0x00] != 0x05)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    std::pair<char, char> arg20_21;
 
    int r0 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1); //packet 11 packet 12
    if(r0 != 0)
-      return exit_loc_CA91D6(0x808A0705, var2C);
+      return exit_loc_CA91D6(0x808A0705, *cookie);
 
    if(arg20_21.second != 0)
-      return exit_loc_CA91D6(0x808A0706, var2C);
+      return exit_loc_CA91D6(0x808A0706, *cookie);
    
    if(arg20_21.first != 0)
-      return exit_loc_CA91D6(0x808A0706, var2C);
+      return exit_loc_CA91D6(0x808A0706, *cookie);
 
    return 0;
 }
@@ -397,13 +349,13 @@ enum cycle_state
 //copies data to arg24 buffer
 //layous are: 
 //0x10 = 0x10 bytes
-std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& varC, int var2C)
+std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& varC, int* cookie)
 {
    //packet 13
 
-   _00BDCDF8_WB20[0x00] = 0xA4;
-   _00BDCDF8_WB20[0x01] = 0x00;
-   _00BDCDF8_WB20[0x02] = 0x13;
+   _00BDCDF8_WB20[0x00] = (char)0xA4;
+   _00BDCDF8_WB20[0x01] = (char)0x00;
+   _00BDCDF8_WB20[0x02] = (char)0x13;
 
    int res6 = sub_CA8E5C(_00BDCDF8_WB20 + 0x03); //10 byte keygen
    if(res6 != 0) //loc_CA966A
@@ -411,7 +363,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, var2C);
+         int error = exit_loc_CA91D6(0x808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -434,7 +386,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, var2C);
+         int error = exit_loc_CA91D6(0x808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -450,7 +402,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, var2C);
+         int error = exit_loc_CA91D6(0x808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -464,8 +416,6 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
 //0x20 0x30 0x10 0x43 = 0xA3 bytes
 int packet15_preinit(char* arg44, const char* arg24)
 {
-   int A0_intermediate;
-
    if(_00BDD04C_RESPBUF1[0x00] != 0x07)
    {
       return -1;
@@ -547,7 +497,7 @@ int packet15_preinit(char* arg44, const char* arg24)
 //copies data to arg44 buffer
 //layouts are:
 //0x20 0x30 0x10 0x43 = 0xA3 bytes
-std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, char* arg24, int& varC, int var2C)
+std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, char* arg24, int& varC, int* cookie)
 {
    //================================================
       
@@ -570,7 +520,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
          varC = varC - 1; //dec counter
          if(varC == 0)
          {
-            int error = exit_loc_CA91D6(0x808A0707, var2C);
+            int error = exit_loc_CA91D6(0x808A0707, *cookie);
             return std::make_pair(c_error, error);
          }
          return std::make_pair(c_continue, 0); // continue cycle
@@ -586,7 +536,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
          varC = varC - 1; //dec counter
          if(varC == 0)
          {
-            int error = exit_loc_CA91D6(0x808A0707, var2C);
+            int error = exit_loc_CA91D6(0x808A0707, *cookie);
             return std::make_pair(c_error, error);
          }
          return std::make_pair(c_continue, 0); // continue cycle
@@ -600,7 +550,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, var2C);
+         int error = exit_loc_CA91D6(0x808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -610,7 +560,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
    if(res7 != 0)
    {
       //no continuation here
-      int error = exit_loc_CA91D6(0x808A0707, var2C);
+      int error = exit_loc_CA91D6(0x808A0707, *cookie);
       return std::make_pair(c_error, error);
    }
 
@@ -628,7 +578,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
    if(res8 != 0)
    {
       //no continuation here
-      int error = exit_loc_CA91D6(0x808A0707, var2C);
+      int error = exit_loc_CA91D6(0x808A0707, *cookie);
       return std::make_pair(c_error, error);
    }
 
@@ -640,7 +590,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
    if(res9 != 0)
    {
       //no continuation here
-      int error = exit_loc_CA91D6(0x808A0707, var2C);
+      int error = exit_loc_CA91D6(0x808A0707, *cookie);
       return std::make_pair(c_error, error);
    }
 
@@ -652,16 +602,16 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
 //copies data to arg44 buffer
 //layouts are:
 //0x20 0x30 0x20 0x43 = 0xB3
-int packet17_to_20(char* arg44, const char* arg24, int var2C)
+int packet17_to_20(char* arg44, const char* arg24, int* cookie)
 {
    if(_00BDD04C_RESPBUF1[0x00] != 0x11)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //copy 0x20 bytes
 
@@ -712,16 +662,16 @@ int packet17_to_20(char* arg44, const char* arg24, int var2C)
 
    int res8 = sub_CAC924(_00BDD44C, arg44, CAC924_COMMAND_1F, 0xB3, _00BDCDF4_PACKET6_DE);
    if(res8 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //what is the point of checking resp buffer - it was already checked - is it modified?
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    //packet 17 packet 18 packet 19 packet 20
    int res9 = sub_CA8EA0(_00BDCBC0_SD_CTX_ELM, _00BDCDF4_PACKET6_DE, _00BDCFF8, _00BDCBC4, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1, _00BDD24C_RESPBUF2, _00BDD018);
    if(res9 != 0)
-      return exit_loc_CA91D6(0x808A0707, var2C);
+      return exit_loc_CA91D6(0x808A0707, *cookie);
 
    return 0;
 }
@@ -732,17 +682,17 @@ int sub_CA919C(int* argument0)
 {
    //=============================
 
-   int var2C = var_009EA004; //stack cookie
+   int cookie = var_009EA004; //stack cookie
 
-   int res1 = initialize_sd(argument0, var2C);
+   int res1 = initialize_sd(argument0, &cookie);
    if(res1 != 0)
       return res1;
 
-   int res2 = packets1_to_6(var2C);
+   int res2 = packets1_to_6(&cookie);
    if(res2 != 0)
       return res2;
    
-   int res3 = packet7_to_8(var2C);
+   int res3 = packet7_to_8(&cookie);
    if(res3 != 0)
       return res3;
 
@@ -762,11 +712,11 @@ int sub_CA919C(int* argument0)
    //layous are: 
    //0x20 0x10 0x20 0x3 = 0x53 bytes
    //0x20 0x20 = 0x40 bytes
-   int res4 = packet9_to_10(generic_buffer, var2C);
+   int res4 = packet9_to_10(generic_buffer, &cookie);
    if(res4 != 0)
       return res4;
 
-   int res5 = packet11_to_12(var2C);
+   int res5 = packet11_to_12(&cookie);
    if(res5 != 0)
       return res5;
 
@@ -783,7 +733,7 @@ int sub_CA919C(int* argument0)
       //copies data to arg24 buffer
       //layous are: 
       //0x10 = 0x10 bytes
-      std::pair<cycle_state, int> res6 = packet13_to_14(arg24, time_0, varC, var2C); 
+      std::pair<cycle_state, int> res6 = packet13_to_14(arg24, time_0, varC, &cookie); 
       if(res6.first == c_continue)
          continue;
       else if(res6.first == c_error)
@@ -798,7 +748,7 @@ int sub_CA919C(int* argument0)
       //copies data to arg44 buffer
       //layouts are:
       //0x20 0x30 0x10 0x43 = 0xA3 bytes
-      std::pair<cycle_state, int> res7 = packet15_to_16(time_0, generic_buffer, arg24, varC, var2C);
+      std::pair<cycle_state, int> res7 = packet15_to_16(time_0, generic_buffer, arg24, varC, &cookie);
       if(res7.first == c_continue)
          continue;
       else if(res7.first == c_error)
@@ -816,9 +766,9 @@ int sub_CA919C(int* argument0)
    //copies data to arg44 buffer
    //layouts are:
    //0x20 0x30 0x20 0x43 = 0xB3
-   int res8 = packet17_to_20(generic_buffer, arg24, var2C);
+   int res8 = packet17_to_20(generic_buffer, arg24, &cookie);
    if(res8 != 0)
       return res8;
 
-   return exit_loc_CA91DA(res8, var2C);
+   return exit_loc_CA91DA(res8, cookie);
 }

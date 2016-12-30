@@ -1,10 +1,14 @@
 #include <stdint.h>
 #include <exception>
 #include <string>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 #include "Imports.h"
 #include "Constants.h"
 #include "ResponsePackets.h"
+#include "GlobalVariables.h"
 
 // OTHER IMPORTS
 
@@ -37,6 +41,22 @@ int SceSblGcAuthMgr_SceSdifForDriver_imp_22c82e79(int index, sd_context** elemen
 //CMD56_REQUEST
 int SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(sd_context* ctx, char* buffer, int size)
 {
+   //TODO:
+   //here will just print to console - this would be useful for observation
+
+   int32_t maxSize = 0x50; //only print part of the packet, ommit zeroes
+
+   std::cout << "packet:";
+
+   for(int32_t i = 0; i < maxSize; i++)
+   {
+      if((i % 0x10) == 0)
+         std::cout << std::endl;
+      std::cout << std::hex << std::setfill('0')  << std::setw(2) << (((int)buffer[i]) & 0xFF) << " ";
+   }
+
+   std::cout << std::endl;
+
    return 0;
 }
 
@@ -82,4 +102,13 @@ int SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(sd_context* ctx, char* buffer,
    }
 
    return STACK_CHECK_FAIL;
+}
+
+//initializes some globals
+
+void InitializeImportsContext()
+{
+   //TODO: figure out how it is initialized
+
+   _00BD84D8_THREAD_ID = 0xFFFFFFFF;
 }

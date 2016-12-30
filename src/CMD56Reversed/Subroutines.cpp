@@ -73,7 +73,7 @@ int sub_CA8E5C(char* buffer)
 //initializes 0x20 + 0x0C + 0x33 = 0x5F bytes of a_00BDCBF4_REQBUF
 int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_00BDCBC4, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF)
 {
-   char data_buffer[51];
+   char data_buffer[0x51];
 
    int var1C = var_009EA004;
 
@@ -125,6 +125,8 @@ char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDC
 
    if(r0_resp != 0)
       return r0_resp;
+
+   //TODO: does it really return -1
 
    if(a_00BDD04C_RESPBUF1[0x00] != 0x23)
       return -1;
@@ -291,9 +293,9 @@ int sub_CAC8E4(int* var97C)
 int exit_loc_CAC9D6(int r4, int var24)
 {
    if(var24 == var_009EA004)
-      return STACK_CHECK_FAIL;
-   else
       return r4;
+   else
+      return STACK_CHECK_FAIL;
 }
 
 int exit_loc_CACAA8(int var24)
@@ -347,15 +349,17 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
    if(r2 > 0x800)
       return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
 
-   if(r3 == 0x04 || r3 != 0x07)
+   if(r3 == 0x04 || r3 == 0x07)
    {
-      //what is the point of this comparison ?
-      //they should be equal - if not then it means that r2 is modified by other function
-      //since it is part of structure
+      //TODO: 
+      //not sure what this comparison mean
+      //values should be equal - if not then it means that r2 is modified by other function
+      //since r2 value is part of structure
 
       if(r7 != r2) 
          return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
 
+      //TODO:
       //not sure what this shifting means
       //28 is probably number of bits
       //probably not allowing sizes less than 0xFF ? - weird
@@ -528,7 +532,7 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 //source is of size 0x53, 0x40, 0xA3, 0xB3, 0x51, 0x116
 //destination is of size 0x200 (it is a_00BDCDF8_WB20 buffer)
 
-//i suspect that this function should also have context because:
+//I suspect that this function should also have context because:
 //it can be called with destination = 0 - like an initialization step
 //then it is called again with actual parameters
 
@@ -536,33 +540,31 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 //which means that it can use other internal subroutines that create and store context
 //this most likely happens in SceSblSmCommForKernel
 
+//TODO: I hope I reimplemented conditional logic correctly - too many if-else statements
+//TODO: Some commands do not match to corresponding sizes
+//      This includes commands 0x1C, 0x1E, 0x1F, 0x20
+//      this must not happen because non matching size leads directly to error and cmd56 initialization will be terminated
+//      which means that size is modified by imp_039c73b1 function
+//TODO: It looks like sub_CAC924 overflows buffer _00BDD018 with 0x116 bytes of data
+//      This buffer is 0x34 bytes long and after that goes _00BDD04C_RESPBUF1
+//      This can mean that the area is used as generic buffer of variable size
+
 int sub_CAC924(char* destination, char* source, int command, int size, int packet6_de)
 {
    int var97C = -1; //trigger for some cleanup on exit?
    int var978 = 0x00;
 
-   int var974 = 0x0C;
-   int var970 = 0x00;
-   int var96C = 0x00;
+   f10ab792_input state;
+   state.size = 0x0C; //must be 0xC
+   state.unk_4_var970 = 0x00;
+   state.unk_8_var96C = 0x00;
 
-   //I would assume that var968 is some sort of struct
-   //however first 4 bytes (that are probably size) are never set
-   //second dword contains value 2
-   //starting from third dword - some data is copied from dword_CADC10 - size is 0x90
-   //this is in total 0x90 + 0x08 = 0x98 bytes
-   //leaving space of another 0x98 bytes
-   //meaning this could also be array of 2 elements of size 0x98
-
-   char var968[0x130];
-
-   int var838 = 0x01;
-   int var834 = command;
-
-   char var830[0x800]; //working buffer
-
-   int var30 = packet6_de;
-   int var2C = size;
-   int var28 = 0x00;
+   _039c73b1_context ctx;
+   ctx.var838 = 0x01;
+   ctx.command = command;
+   ctx.packet6_de = packet6_de;
+   ctx.size = size;
+   ctx.var28 = 0x00;
 
    int var24 = var_009EA004; //stack cookie  
     
@@ -570,30 +572,30 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
       return exit_loc_CACAA8(var24);
 
    if(source != 0)
-      SceSblGcAuthMgr_SceSysclibForDriver_imp_8a0b0815(var830, source, size, 0x80C); //debug memcpy
+      SceSblGcAuthMgr_SceSysclibForDriver_imp_8a0b0815(ctx.data, source, size, 0x80C); //debug memcpy
 
-   int res0 = SceSblGcAuthMgr_SceSysrootForKernel_imp_f10ab792(0, &var974);
+   int res0 = SceSblGcAuthMgr_SceSysrootForKernel_imp_f10ab792(0, &state); //modify state structure
    if(res0 < 0)
       return exit_loc_CACAB2(&var97C, var24);
 
-   memset(var968, 0x00, 0x130);
+   memset(ctx.var968, 0x00, 0x130);
 
-   memcpy(var968 + 8, dword_CADC10, 0x90); //store to var960
+   memcpy(ctx.var968 + 8, dword_CADC10, 0x90); //store to var960
 
-   var968[0x04] = 0x02;
-   var968[0x128] = 0x02;
+   ctx.var968[0x04] = 0x02;
+   ctx.var968[0x128] = 0x02;
 
-   //I would assume that var970 and var96C are equal to 0 - unless they are modified somehow above which I do not see
-   int res1 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_039c73b1(0x00, var970, var96C, 0x00, var968, &var97C);
+   //it is important that arg1 and arg2 are initialized by imp_f10ab792
+   int res1 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, &ctx, &var97C);
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   int res2 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_db9fc204(var97C, 0x0001000B, &var978, &var838, 0x814);
+   int res2 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_db9fc204(var97C, 0x0001000B, &var978, &ctx.var838, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 
    if(var978 != 0)
       return exit_loc_CAC9CA(var978, &var97C, var24);
 
-   return sub_CAC924_command(var2C, var834, size, &var97C, var24, var830, destination);
+   return sub_CAC924_command(ctx.size, ctx.command, size, &var97C, var24, ctx.data, destination);
 }
