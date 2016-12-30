@@ -115,7 +115,7 @@ int packets1_to_6(int* cookie)
 
    std::pair<char, char> arg20_21;
 
-   int res4 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1); //packet 3 packet 4
+   int res4 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1, PACKET_4_INDEX); //packet 3 packet 4
    if(res4 != 0)
       return exit_loc_CA91D6(0x808A0705, *cookie);
 
@@ -255,7 +255,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
    //essentially what it does - it copies 3 bytes
    memcpy(input_buffer + 0x50, _00BDD04C_RESPBUF1 + 0x08 + 0x20, 0x03);   
 
-   int res4 = sub_CAC924(0, input_buffer, CAC924_COMMAND_1B, 0x53, _00BDCDF4_PACKET6_DE);
+   int res4 = sub_CAC924(0, input_buffer, CAC924_COMMAND_1B, 0x53, _00BDCDF4_PACKET6_DE); //preinit
    if(res4 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -326,7 +326,7 @@ int packet11_to_12(int* cookie)
 
    std::pair<char, char> arg20_21;
 
-   int r0 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1); //packet 11 packet 12
+   int r0 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1, PACKET_12_INDEX); //packet 11 packet 12
    if(r0 != 0)
       return exit_loc_CA91D6(0x808A0705, *cookie);
 
@@ -373,10 +373,9 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       
    sub_CA8C98(_00BDCDF8_WB20, 0x13, 0x43, 0x07, _00BDCBF4_REQBUF); //initialize cmd56 packet
 
-   arg24[0x00] = _00BDCBF4_REQBUF[0x2F + 0x00];
-   arg24[0x04] = _00BDCBF4_REQBUF[0x2F + 0x04];
-   arg24[0x08] = _00BDCBF4_REQBUF[0x2F + 0x08];
-   arg24[0x0C] = _00BDCBF4_REQBUF[0x2F + 0x0C];
+   // copy 0x10 bytes of the key
+
+   memcpy(arg24, _00BDCBF4_REQBUF + 0x2F, 0x10);
 
    time_0 = SceSblGcAuthMgr_SceThreadmgrForDriver_imp_sceKernelGetSystemTimeWideForDriver_f4ee4fa9();
 
@@ -432,45 +431,21 @@ int packet15_preinit(char* arg44, const char* arg24)
          {
             //copy 0x20 bytes
 
-            arg44[0x00] = _00BDCFF8[0x00];
-            arg44[0x04] = _00BDCFF8[0x04];
-            arg44[0x08] = _00BDCFF8[0x08];
-            arg44[0x0C] = _00BDCFF8[0x0C];
-
-            arg44[0x10 + 0x00] = _00BDCFF8[0x10 + 0x00];
-            arg44[0x10 + 0x04] = _00BDCFF8[0x10 + 0x04];
-            arg44[0x10 + 0x08] = _00BDCFF8[0x10 + 0x08];
-            arg44[0x10 + 0x0C] = _00BDCFF8[0x10 + 0x0C];
+            memcpy(arg44, _00BDCFF8, 0x20);
 
             //copy 0x30 bytes
                
-            arg44[0x20 + 0x00] = _00BDCBC4[0x00];
-            arg44[0x20 + 0x04] = _00BDCBC4[0x04];
-            arg44[0x20 + 0x08] = _00BDCBC4[0x08];
-            arg44[0x20 + 0x0C] = _00BDCBC4[0x0C];
-
-            arg44[0x20 + 0x10 + 0x00] = _00BDCBC4[0x10 + 0x00];
-            arg44[0x20 + 0x10 + 0x04] = _00BDCBC4[0x10 + 0x04];
-            arg44[0x20 + 0x10 + 0x08] = _00BDCBC4[0x10 + 0x08];
-            arg44[0x20 + 0x10 + 0x0C] = _00BDCBC4[0x10 + 0x0C];
-
-            arg44[0x20 + 0x20 + 0x00] = _00BDCBC4[0x20 + 0x00];
-            arg44[0x20 + 0x20 + 0x04] = _00BDCBC4[0x20 + 0x04];
-            arg44[0x20 + 0x20 + 0x08] = _00BDCBC4[0x20 + 0x08];
-            arg44[0x20 + 0x20 + 0x0C] = _00BDCBC4[0x20 + 0x0C];
+            memcpy(arg44 + 0x20, _00BDCBC4, 0x30);
 
             //copy 0x10 bytes
 
-            arg44[0x50 + 0x00] = arg24[0x00];
-            arg44[0x50 + 0x04] = arg24[0x04];
-            arg44[0x50 + 0x08] = arg24[0x08];
-            arg44[0x50 + 0x0C] = arg24[0x0C];
+            memcpy(arg44 + 0x50, arg24, 0x10);
 
             //copy 0x43 bytes
 
             memcpy(arg44 + 0x60, _00BDD04C_RESPBUF1 + 0x08, 0x43);
 
-            int res7 = sub_CAC924(0, arg44, CAC924_COMMAND_1D, 0xA3, _00BDCDF4_PACKET6_DE);
+            int res7 = sub_CAC924(0, arg44, CAC924_COMMAND_1D, 0xA3, _00BDCDF4_PACKET6_DE); //preinit
             if(res7 != 0)
             {
                return -3;
@@ -512,10 +487,14 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
 
    if(time_1.v1 == time_0.v1) //if highest part of time equals
    {
+      //TODO: this condition is really weird since it will break the initialization and lead to termination
+      //need to figure out what is really happening there
+
       //not sure if this is >= or > - this is for cmpeq r4,r2,  bcc
       //it would be strange if condition is >= since it would be always true
 
-      if(time_1.v0 >= time_0.v0) //check the lowest part of time
+      //if(time_1.v0 >= time_0.v0) //check the lowest part of time
+      if(time_1.v0 == time_0.v0) //check the lowest part of time
       {
          varC = varC - 1; //dec counter
          if(varC == 0)
@@ -556,7 +535,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
       return std::make_pair(c_continue, 0); // continue cycle
    }
 
-   int res7 = sub_CA8DC0(0x02, _00BDCDF4_PACKET6_DE, _00BDCFF8, _00BDCBC4, _00BDCDF8_WB20, _00BDCBF4_REQBUF); //init packet 15
+   int res7 = sub_CA8DC0((char)0x02, _00BDCDF4_PACKET6_DE, _00BDCFF8, _00BDCBC4, _00BDCDF8_WB20, _00BDCBF4_REQBUF); //init packet 15
    if(res7 != 0)
    {
       //no continuation here
@@ -564,15 +543,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
       return std::make_pair(c_error, error);
    }
 
-   arg24[0x00] = _00BDCBF4_REQBUF[0x2F + 0x00];
-   arg24[0x04] = _00BDCBF4_REQBUF[0x2F + 0x04];
-   arg24[0x08] = _00BDCBF4_REQBUF[0x2F + 0x08];
-   arg24[0x0C] = _00BDCBF4_REQBUF[0x2F + 0x0C];
-
-   arg24[0x10 + 0x00] = _00BDCBF4_REQBUF[0x2F + 0x10 + 0x10];
-   arg24[0x10 + 0x04] = _00BDCBF4_REQBUF[0x2F + 0x10 + 0x14];
-   arg24[0x10 + 0x08] = _00BDCBF4_REQBUF[0x2F + 0x10 + 0x18];
-   arg24[0x10 + 0x0C] = _00BDCBF4_REQBUF[0x2F + 0x10 + 0x1C];
+   memcpy(arg24, _00BDCBF4_REQBUF + 0x2F, 0x20);
 
    int res8 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //packet 15
    if(res8 != 0)
@@ -721,6 +692,8 @@ int sub_CA919C(int* argument0)
       return res5;
 
    //=============================
+
+   //TODO: need to convert this to normal cycle
 
    int varC = 0x03; //cycle counter
    

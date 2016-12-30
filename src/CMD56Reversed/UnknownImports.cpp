@@ -1,4 +1,6 @@
 #include <string>
+#include <chrono>
+#include <stdint.h>
 
 #include "UnknownImports.h"
 #include "Subroutines.h"
@@ -382,9 +384,20 @@ int SceSblGcAuthMgr_SceThreadmgrForDriver_imp_d270498b(int unk0, int unk1)
 //SceInt64 sceKernelGetSystemTimeWide(void);
 //I would assume that it returns the same value in kernel as well
 
+//TODO: this is just an imitation - I do not know what time format is used in vita (though I assume it is this format)
+
 sce_time SceSblGcAuthMgr_SceThreadmgrForDriver_imp_sceKernelGetSystemTimeWideForDriver_f4ee4fa9()
 {
-   return sce_time();
+   typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::microseconds> time_stamp;
+   
+   time_stamp timestamp = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
+   std::chrono::duration<int64_t, std::micro> duration = timestamp.time_since_epoch();
+   int64_t count = duration.count();
+   
+   sce_time scetime;
+   scetime.value = (uint64_t)count;
+         
+   return scetime;
 }
 
 //initializes some globals

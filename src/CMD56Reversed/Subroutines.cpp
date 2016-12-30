@@ -75,9 +75,13 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
 {
    char data_buffer[0x51];
 
-   int var1C = var_009EA004;
+   int cookie = var_009EA004;
+
+   //copy 0x20 bytes
 
    memcpy(data_buffer, a_00BDCFF8, 0x20);
+
+   //copy 0x30 bytes
 
    memcpy(data_buffer + 0x20, a_00BDCBC4, 0x30);
 
@@ -85,10 +89,9 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
 
    //size of data structure is exactly 0x51
    int r0 = sub_CAC924(a_00BDCDF8_WB20, data_buffer, CAC924_COMMAND_1E, 0x51, packet6_de);
-      
    if(r0 != 0)
    {
-      if(var1C == var_009EA004)
+      if(cookie == var_009EA004)
          return -1;
       else
          return STACK_CHECK_FAIL;
@@ -96,7 +99,7 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
 
    sub_CA8C98(a_00BDCDF8_WB20, 0x33, 0x43, 0x11, a_00BDCBF4_REQBUF); //initialize cmd56
 
-   if(var1C == var_009EA004)
+   if(cookie == var_009EA004)
       return r0;
    else
       return STACK_CHECK_FAIL;
@@ -108,7 +111,7 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
 //also used for packet 11 and packet 12
 //originally it had only 2 arguments 
 //however I decided to move globals to arguments to make sure I see all the dependencies
-char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1)
+char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, int packetIndex)
 {
    a_00BDCDF8_WB20[0x00] = 0xC2;
    a_00BDCDF8_WB20[0x01] = 0x00;
@@ -121,7 +124,7 @@ char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDC
    if(r0_req != 0)
       return r0_req;
 
-   int r0_resp = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(ctx, a_00BDD04C_RESPBUF1, 0x200, PACKET_4_INDEX); //response
+   int r0_resp = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(ctx, a_00BDD04C_RESPBUF1, 0x200, packetIndex); //response
 
    if(r0_resp != 0)
       return r0_resp;

@@ -11,10 +11,20 @@
 
 #include <stdint.h>
 
+//TODO: this type is weid just as the code that uses it
+//this needs to be fixed (however this code is not required, just good to know timing restrictions)
+
 struct sce_time
 {
-   uint32_t v0;
-   uint32_t v1;
+   union
+   {
+      struct
+      {
+         uint32_t v0;
+         uint32_t v1;
+      };
+      uint64_t value;
+   };
 };
 
 int SceSblSsMgr_SceSblSsMgrForDriver_exp_4dd1b2e5(char* buffer, int size, int unk);
