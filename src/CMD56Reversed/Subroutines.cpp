@@ -156,7 +156,7 @@ int exit_loc_CA9058(int r3, int var24)
       return STACK_CHECK_FAIL;
 }
 
-//this procedure is used to initialize and send packets 17 and 19 and get corresponding responces 18 and 20
+//this procedure is used to initialize and send packets 17 and 19 and get corresponding responses 18 and 20
 //originally it had only 2 arguments 
 //however I decided to move globals to arguments to make sure I see all the dependencies
 int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, const char* a_00BDCBC4, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, char* a_00BDD24C_RESPBUF2, char* a_00BDD018)
@@ -207,11 +207,11 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
 
    //packet 20
    
-   int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(sd_context, a_00BDD24C_RESPBUF2, 0x200, PACKET_20_INDEX);
+   int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(sd_context, a_00BDD24C_RESPBUF2, 0x200, PACKET_20_INDEX); //response
    if(res5 != 0)
       return exit_loc_CA9058(res5, var24);
 
-   //check responces
+   //check responses
 
    if(a_00BDD04C_RESPBUF1[0x00] != 0x11)
       return exit_loc_CA9058(-1, var24);
@@ -233,6 +233,10 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
 
    //finalize the data
    //total size would be 0x20 + 0x30 + 0x20 + 0x43 + 0x10 + 0x53 = 0x116
+
+   // even though a_00BDD018 is not used - this can still have some meaning
+   // sub_CAC924 may return an error code based on all the data in the final buffer
+   // which means that initialization did not go as expected and should be terminated
 
    char generic_buffer[0x116];
 
@@ -367,7 +371,7 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
       //28 is probably number of bits
       //probably not allowing sizes less than 0xFF ? - weird
 
-      if((r7 << 0x1C) == 0)
+      if((r7 << 28) == 0)
          return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
    
       if(r7 == 0)
@@ -544,13 +548,13 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 //this most likely happens in SceSblSmCommForKernel
 
 //TODO: I hope I reimplemented conditional logic correctly - too many if-else statements
-//TODO: Some commands do not match to corresponding sizes
+
+//INFO: Some commands do not match to corresponding sizes
 //      This includes commands 0x1C, 0x1E, 0x1F, 0x20
 //      this must not happen because non matching size leads directly to error and cmd56 initialization will be terminated
 //      which means that size is modified by imp_039c73b1 function
-//TODO: It looks like sub_CAC924 overflows buffer _00BDD018 with 0x116 bytes of data
-//      This buffer is 0x34 bytes long and after that goes _00BDD04C_RESPBUF1
-//      This can mean that the area is used as generic buffer of variable size
+//      this is also proved by buffer _00BDD018 which size we definitely know (it is 0x34)
+//      and sub_CAC924_command demands that for command 0x20 size should be 0x43
 
 int sub_CAC924(char* destination, char* source, int command, int size, int packet6_de)
 {
@@ -589,6 +593,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    ctx.var968[0x128] = 0x02;
 
    //it is important that arg1 and arg2 are initialized by imp_f10ab792
+   //TODO: it is proved by many factors that this procedure shrinks the data and changes ctx.size field to the required size in sub_CAC924_command
    int res1 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, &ctx, &var97C);
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);

@@ -91,7 +91,7 @@ int packets1_to_6(int* cookie)
 
    //receive packet 2
          
-   int res3 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_2_INDEX); //cmd56 responce
+   int res3 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_2_INDEX); //cmd56 response
 
    //================================================
 
@@ -302,7 +302,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
 
    //packet 10
 
-   int res7 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_10_INDEX); //responce
+   int res7 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_10_INDEX); //response
    if(res7 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -395,7 +395,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       
    //packet 14
       
-   int res8 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_14_INDEX); //responce
+   int res8 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_14_INDEX); //response
    if(res8 != 0) //loc_CA966A
    {
       varC = varC - 1; //dec counter
@@ -510,7 +510,12 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
 
    if((time_1.v1 - time_0.v1) == 0x0000) //highest time difference is 0
    {
-      if((time_1.v0 - time_0.v0) <= 0xC350) //lowest time difference is <= 50000
+      //TODO:
+      //this condition is weird as well - 50000 milliseconds is 50 seconds which is very large value
+      //maybe this should be inverted?
+
+      //if((time_1.v0 - time_0.v0) <= 0xC350) //lowest time difference is <= 50000
+      if((time_1.v0 - time_0.v0) >= 0xC350)
       {
          varC = varC - 1; //dec counter
          if(varC == 0)
@@ -586,56 +591,27 @@ int packet17_to_20(char* arg44, const char* arg24, int* cookie)
 
    //copy 0x20 bytes
 
-   arg44[0x00] = _00BDCFF8[0x00];
-   arg44[0x04] = _00BDCFF8[0x04];
-   arg44[0x08] = _00BDCFF8[0x08];
-   arg44[0x0C] = _00BDCFF8[0x0C];
-
-   arg44[0x10 + 0x00] = _00BDCFF8[0x10 + 0x00];
-   arg44[0x10 + 0x04] = _00BDCFF8[0x10 + 0x04];
-   arg44[0x10 + 0x08] = _00BDCFF8[0x10 + 0x08];
-   arg44[0x10 + 0x0C] = _00BDCFF8[0x10 + 0x0C];
+   memcpy(arg44, _00BDCFF8, 0x20);
 
    //copy 0x30 bytes
 
-   arg44[0x20 + 0x00] = _00BDCBC4[0x00];
-   arg44[0x20 + 0x04] = _00BDCBC4[0x04];
-   arg44[0x20 + 0x08] = _00BDCBC4[0x08];
-   arg44[0x20 + 0x0C] = _00BDCBC4[0x0C];
-      
-   arg44[0x20 + 0x10 + 0x00] = _00BDCBC4[0x10 + 0x00];
-   arg44[0x20 + 0x10 + 0x04] = _00BDCBC4[0x10 + 0x04];
-   arg44[0x20 + 0x10 + 0x08] = _00BDCBC4[0x10 + 0x08];
-   arg44[0x20 + 0x10 + 0x0C] = _00BDCBC4[0x10 + 0x0C];
-
-   arg44[0x20 + 0x20 + 0x00] = _00BDCBC4[0x20 + 0x00];
-   arg44[0x20 + 0x20 + 0x04] = _00BDCBC4[0x20 + 0x04];
-   arg44[0x20 + 0x20 + 0x08] = _00BDCBC4[0x20 + 0x08];
-   arg44[0x20 + 0x20 + 0x0C] = _00BDCBC4[0x20 + 0x0C];
-
-   //arg44.arg94 buffer is used differently - it is 0x10 buffer, however it is overflown to 0x10 bytes to 0xA4 area
+   memcpy(arg44 + 0x20, _00BDCBC4, 0x30);
       
    //copy 0x20 bytes
 
-   arg44[0x50 + 0x00] = arg24[0x00];
-   arg44[0x50 + 0x04] = arg24[0x04];
-   arg44[0x50 + 0x08] = arg24[0x08];
-   arg44[0x50 + 0x0C] = arg24[0x0C];
-
-   arg44[0x50 + 0x10 + 0x00] = arg24[0x10 + 0x00];
-   arg44[0x50 + 0x10 + 0x04] = arg24[0x10 + 0x04];
-   arg44[0x50 + 0x10 + 0x08] = arg24[0x10 + 0x08];
-   arg44[0x50 + 0x10 + 0x0C] = arg24[0x10 + 0x0C];
+   memcpy(arg44 + 0x50, arg24, 0x20);
 
    //copy 0x43 bytes
 
    memcpy(arg44 + 0x70, _00BDD04C_RESPBUF1 + 0x08, 0x43);
 
+   //TODO: is _00BDD44C used somewhere ?
+
    int res8 = sub_CAC924(_00BDD44C, arg44, CAC924_COMMAND_1F, 0xB3, _00BDCDF4_PACKET6_DE);
    if(res8 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
-   //what is the point of checking resp buffer - it was already checked - is it modified?
+   //TODO: what is the point of checking resp buffer - it was already checked - is it modified?
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 

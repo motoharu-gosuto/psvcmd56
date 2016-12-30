@@ -20,7 +20,12 @@ int main(int argc, char* argv[])
    InitializeUnknownContext();
 
    int arg0 = 0x10000;
-   sub_CA919C(&arg0);
+   int res = sub_CA919C(&arg0);
+
+   if(res == 0)
+      std::cout << "Initialization succeeded" << std::endl;
+   else
+      std::cout << "Initialization failed: " << std::hex << std::setfill('0') << std::setw(8) << res << std::endl;
    
 	return 0;
 }

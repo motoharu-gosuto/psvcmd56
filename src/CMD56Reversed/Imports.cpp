@@ -70,34 +70,34 @@ int SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(sd_context* ctx, char* buffer,
    switch(index)
    {
    case PACKET_2_INDEX:
-      memcpy(buffer, responce2, sizeof(responce2));
+      memcpy(buffer, response2, sizeof(response2));
       return 0;
    case PACKET_4_INDEX:
-      memcpy(buffer, responce4, sizeof(responce4));
+      memcpy(buffer, response4, sizeof(response4));
       return 0;
    case PACKET_6_INDEX:
-      memcpy(buffer, responce6, sizeof(responce6));
+      memcpy(buffer, response6, sizeof(response6));
       return 0;
    case PACKET_8_INDEX:
-      memcpy(buffer, responce8, sizeof(responce8));
+      memcpy(buffer, response8, sizeof(response8));
       return 0;
    case PACKET_10_INDEX:
-      memcpy(buffer, responce10, sizeof(responce10));
+      memcpy(buffer, response10, sizeof(response10));
       return 0;
    case PACKET_12_INDEX:
-      memcpy(buffer, responce12, sizeof(responce12));
+      memcpy(buffer, response12, sizeof(response12));
       return 0;
    case PACKET_14_INDEX:
-      memcpy(buffer, responce14, sizeof(responce14));
+      memcpy(buffer, response14, sizeof(response14));
       return 0;
    case PACKET_16_INDEX:
-      memcpy(buffer, responce16, sizeof(responce16));
+      memcpy(buffer, response16, sizeof(response16));
       return 0;
    case PACKET_18_INDEX:
-      memcpy(buffer, responce18, sizeof(responce18));
+      memcpy(buffer, response18, sizeof(response18));
       return 0;
    case PACKET_20_INDEX:
-      memcpy(buffer, responce20, sizeof(responce20));
+      memcpy(buffer, response20, sizeof(response20));
       return 0;
    }
 

@@ -4,15 +4,436 @@
 
 #include "UnknownImports.h"
 #include "Subroutines.h"
+#include "Constants.h"
 
 //CRITICAL - key generation
+
+int SceSblSsMgr_SceKernelSuspendForDriver_imp_4df40893(int unk)
+{
+   //does it return values?
+   return 0;
+}
+
+int SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(int unk)
+{
+   //does it return values ?
+   return 0;
+}
+
+int SceSblSsMgr_SceSysrootForDriver_imp_ee934615()
+{
+   //does it return values ?
+   return 0;
+}
+
+char* unk_B9CC90 = "SceSblDmac5Common";
+
+//TODO: looks like this function returns id
+//this can be easily checked
+//need to look at other known paired functions and see how id is formed there
+//looks like there is a special algorithm to convert pointer to id ?
+
+int SceSblSsMgr_SceDmacmgrForDriver_imp_7cd5088a(const char* name)
+{
+   return 0;
+}
+
+int SceSblSsMgr_SceDmacmgrForDriver_imp_fce4171a(int unk0, int unk1, int unk2, int unk3)
+{
+   return 0;
+}
+
+int SceSblSsMgr_SceDmacmgrForDriver_imp_01a599e0(int unk0, int unk1, int unk2)
+{
+   return 0;
+}
+
+int SceSblSsMgr_SceDmacmgrForDriver_imp_543f54cf(int unk0)
+{
+   return 0;
+}
+
+int SceSblSsMgr_SceDmacmgrForDriver_imp_397a917c(int unk0, int unk1, int unk2, int unk3)
+{
+   return 0;
+}
+
+int SceSblSsMgr_SceSysrootForDriver_imp_eef091a7()
+{
+   //does it return values?
+   return 0;
+}
+
+
+int sub_B9A684(int unk0, int unk1, int unk2)
+{
+   return 0;
+}
+
+int sub_B9A790(int unk0, int unk1)
+{
+   return 0;
+}
+
+int exit_loc_B99762(int r0, int* r5, int var2C)
+{
+   int r2 = var2C;
+   int r3 = r5[0];
+   if(r2 == r3)
+   {
+      return r0;
+   }
+   else
+   {
+      return STACK_CHECK_FAIL;
+   }
+}
+
+int exit_loc_B9975A(int r4, int* r5, int var2C)
+{
+   int r0 = 0x00;
+   int r0 = SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(r0);
+   int r0 = r4;
+   return exit_loc_B99762(r0, r5, var2C);
+}
+
+int exit_loc_B9979A(int* r5, int var2C)
+{
+   int r0 = 0x00;
+   int r0 = SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(r0);
+   int r0 = 0x800F1528;
+   return exit_loc_B99762(r0, r5, var2C);
+}
+
+
+
+//TODO: looks like this function has 8 or 9 arguments - need to verify this
+int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk0, int stack_unk1, int stack_unk2, int stack_unk3, int stack_unk4)
+{
+   /*
+   var_B0=	-0xB0
+   source_aligned_temp_A8=	-0xA8
+   var_A4=	-0xA4
+   var_A0=	-0xA0
+   var_9C=	-0x9C
+   var_98=	-0x98
+   var_94=	-0x94
+   var_90=	-0x90
+   var_8C=	-0x8C
+   var_84=	-0x84
+   var_78=	-0x78
+   var_74=	-0x74
+   var_2C=	-0x2C
+   stack_unk0=  0
+   stack_unk1=  4
+   stack_unk2=  8
+   stack_unk3=  0xC
+   arg_14=	 0x14 ; stack_unk4 ?
+   */
+
+   int r4 = stack_unk2;
+   int r5 = &var_009EA004;
+   int r7 = r0;
+   int lr = [r5];
+   int r12 = r1;
+   int r6 = r4 + 0x07;
+   int r0 = arg14; //what is this var?
+
+   int r1 = 0x00;
+   //STRD.W		R12, R2, [SP,#0x18]
+   var2C = lr;
+   varA4 = r0;
+
+   if(r6 == 0x03)
+   {
+      int r0 = r1 << 0x15; //21
+      var9c = r1;
+      if(true) //(BPL)
+      {
+         //goto loc_B99870  ================================
+      }
+      else
+      {
+         //goto loc_B99832  ================================
+      }
+   }
+   else
+   {
+      int r0 = 0x3000;
+      //STRD.W		R10, R0, [SP,#0x20]
+      int r10 = r4 & 0x38;
+
+      if(r6 != 0x04)
+      {
+         int r0 = r10;
+         if(r6 != 0x04) //this check is weird
+            int r0 = 0x01;
+
+         if(r6 == 0x01)
+            int r1 = r0; // moveq ?
+         else
+            int r1 = r0 | 0x01;
+
+         if(r1 != 0)
+         {
+            if(r6 == 0x02)
+            {
+               int r1 = r0;
+            }
+            else
+            {
+               int r1 = r0 | 0x01;
+            }
+
+            if(r1 == 0x00)
+            {
+               //goto loc_B996DA - next outer condition
+            }
+            else
+            {
+               //goto loc_B99846 ================================
+            }
+         }
+         else
+         {
+            r10 = r1;
+            //goto loc_B996DA - next outer condition
+         }
+      }
+
+      //loc_B996DA:
+      var78 = r1;
+      if(r8 != 0x00)
+      {
+         //loc_B997D8    ================================
+      }
+      else
+      {
+         var84 = r8;
+         if(r9 != 0x00)
+         {
+            //loc_B997AA ================================
+         }
+         else
+         {
+            int r0 = 0x00;
+            var74 = r9;
+            SceSblSsMgr_SceKernelSuspendForDriver_imp_4df40893(r0);
+
+            bool br0 = r10 & 0x29; //TST.W		R10, #0x29
+            if(br0)
+            {
+               int r3 = 0x00;
+            }
+            else
+            {
+               int r3 = 0x01;
+            }
+
+            if(r6 != 0x03)
+               int r3 = r3 | 0x01;
+
+            if(r3 != 0)
+            {
+               if(r6 != 0x04)
+               {
+                  if(r11 == 0xFF) //BLS = fix this
+                  {
+                     int r1 = r11;
+                     int r0 = &var98;
+                     int r0 = sub_B9A790(r0, r1);
+                     if(r0 != 0)
+                        return exit_loc_B9979A(r5, var2C);
+                  }
+                  else
+                  {
+                     int r1 = varA4;
+                     int r0 = var98;
+                     int r2 = r4;
+                     int r0 = sub_B9A684(r0, r1, r2);
+                     if(r0 != 0)
+                     {
+                        return exit_loc_B9979A(r5, var2C);
+                     }
+                     else
+                     {
+                        int r4 = r4 | 0x80;                        
+                     }
+                  }
+               }
+            }
+
+            //loc_B9970A:
+            int r3 = var8C;
+            int r0 = r7;
+            int r1 = 0x13;
+            int r2 = 0x00;
+            int r3 = r3 | r4; ; // ORRS signed!
+            var8C = r3;
+            int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_fce4171a(r0, r1, r2, r3);
+            int r6 = r0 - 0;
+            if(r6 < 0)
+            {
+               int r0 = 0x00;
+               int r0 =  SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(r0);
+               int r0 = r6;
+               return exit_loc_B99762(r0, r5, var2C);
+            }
+            else
+            {
+               r4 = r4 + 0x07;
+               int r0 = r7;
+               int* r1 = &var98;
+
+               if(r4 == 0x03)
+               {
+                  int r2 == 0x01;
+               }
+               else
+               {
+                  int r2 = 0x11;
+               }
+
+               int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_01a599e0(r0, r1, r2);
+               int r4 = r0;
+               if(r0 == 0)
+               {
+                  return exit_loc_B9975A(r4, r5, var2C);
+               }
+               else
+               {
+                  int r0 = r7;
+                  int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_543f54cf(r0);
+                  int r4 = r0 - 0x00;
+                  if(r4 < 0)
+                  {
+                     return exit_loc_B9975A(r4, r5, var2C);
+                  }
+                  else
+                  {
+                     int r0 = SceSblSsMgr_SceSysrootForDriver_imp_ee934615();
+                     int r2 = 0x00;
+                     int r0 = r7;
+                     int r1 = 0x02;
+                     int r3 = r2;
+
+                     int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_397a917c(r0, r1, r2, r3);
+                     int r4 = r0;
+                        
+                     int r0 = SceSblSsMgr_SceSysrootForDriver_imp_eef091a7();
+                        
+                     return exit_loc_B9975A(r4, r5, var2C);
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   
+
+
+
+   return 0;
+}
+
+int SceSblSsMgr_SceDmacmgrForDriver_imp_adff1186(int unk)
+{
+   return 0;
+}
+
+int exit_loc_B99C0A(int r0, int* r4, int var4)
+{
+   int r2 = var4;
+   int r3 = r4[0];
+   if(r2 == r3)
+   {
+      int r7 = r7 + 0x0C;
+      int sp = r7;
+      return r0;
+   }
+   else
+   {
+      return STACK_CHECK_FAIL;
+   }
+}
+
+//CHECK procedure sub_B99998
+//TODO: it shows all the arguments to sub_B99674 very intuitively !!!
 
 //assume - gen/buffer shift
 int SceSblSsMgr_SceSblSsMgrForDriver_exp_4dd1b2e5(char* buffer, int size, int unk)
 {
-   //TODO: for now just set buffer with constant 0xFF to see the byte area
-   memset(buffer, 0xFF, size);
-   return 0;
+   int size_98; //stack_unk0 ? - arg4
+   int stack_unk1_94; //stack_unk1 - arg5
+   int stack_unk2_90; //stack_unk2 - arg6
+   int param_8C;      //stack_unk3 - arg7
+                      //88 stack_unk4 - arg8
+   int var41;
+   int var4; //what is the offset
+   //-----------------------
+
+   char* r0 = buffer;
+   int r1 = size;
+   int r2 = unk; //always equal to 0x01
+   int* r4 = &var_009EA004;
+
+   int r3 = r4[0];
+   int r7 = sp + 0x18; // some stack variable
+
+   int r8 = r1;
+   int r6 = &var41; 
+   int r9 = r0;
+   int r10 = r2;
+
+   int r6 = r6 & (~0x3F); //this is weird - bit extraction
+   var4 = r3;
+
+   if(r1 > 0x40)
+      return exit_loc_B99C0A(0x800F1516, r4, var4);
+
+   char* r0 = unk_B9CC90;
+   int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_7cd5088a(r0);
+   int r11 = r0 - 0;
+
+   if(r11 < 0)
+      return exit_loc_B99C0A(0x800F1528, r4, var4);
+
+   int r3 = -1;
+   int r5 = 0x00;
+   int r3 = r3 >> 0x0E; //14
+   int lr = 4;
+   int r2 = 0x40;
+   stack_unk1_94 = r5;
+
+   if(r10 == r5)
+   {
+      r3 = r5;
+   }
+
+   size_98 = r2;
+   param_8C = r3;
+   int r1 = r6;
+   int r3 = r5;
+
+   //STRD.W		R5, R5,	[SP,#0x10]
+
+   int r2 = r6;
+   stack_unk2_90 = lr; 
+
+   int r0 = sub_B99674(r0, r1, r2, r3, ?, ?, ?, ?);
+   int r5 = r0;
+   int r0 = r11;
+   int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_adff1186(r0);
+   if(r0 != 0)
+      return exit_loc_B99C0A(r0, r4, var4);
+
+   int r0 = r9;
+   int r1 = r6;
+   int r2 = r8;
+   memcpy(r0, r1, r2);
+   int r0 = r5;
+   return exit_loc_B99C0A(r0, r4, var4);
 }
 
 //wrapper
