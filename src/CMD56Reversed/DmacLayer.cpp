@@ -4,11 +4,6 @@
 #include "GlobalVariables.h"
 #include "Constants.h"
 
-int SceKernelDmacMgr_SceIntrmgrForDriver_imp_182ee3e3(int r0)
-{
-   return 0;
-}
-
 struct global_008FE000
 {
    int unk_00;
@@ -22,42 +17,39 @@ struct global_008FE000
    int unk_20;
 };
 
-result_c8672a3d* SceKernelDmacMgr_SceSysmemForKernel_imp_c8672a3d(int unk0)
+//==========================================================================
+
+//arg can be char*
+int SceKernelDmacMgr_SceIntrmgrForDriver_imp_182ee3e3(int r0)
 {
    return 0;
 }
 
-int SceKernelDmacMgr_SceSysmemForKernel_imp_571660aa(int r0, int r1)
-{
-   return 0;
-}
+//==========================================================================
 
 int SceKernelDmacMgr_SceThreadmgrForDriver_imp_4336baa4(int unk0, int unk1, int unk2, int unk3)
 {
    return 0;
 }
 
-int SceKernelDmacMgr_SceSysmemForDriver_imp_e655852f(int unk0)
+int SceKernelDmacMgr_SceThreadmgrForDriver_imp_0c1d3f20(int unk0, int unk1, int unk2, int unk3)
 {
    return 0;
 }
 
-int SceKernelDmacMgr_SceCpuForDriver_imp_lock_int_d32ace9e(int *addr)
+int SceKernelDmacMgr_SceThreadmgrForDriver_imp_76c6555b(int unk0, int unk1, int unk2, int unk3)
 {
    return 0;
 }
 
-int SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(int *addr, int prev_state)
+int SceKernelDmacMgrSceThreadmgrForDriver_imp_71ecb352(int unk0)
 {
    return 0;
 }
 
-int SceKernelDmacMgr_SceCpuForDriver_imp_lock_bf82deb2(int *addr)
-{
-   return 0;
-}
+typedef unsigned int SceUInt;
 
-int SceKernelDmacMgr_SceCpuForDriver_imp_unlock_d6ed0c46(int *addr)
+int SceKernelDmacMgr_SceThreadmgrForDriver_imp_sceKernelDelayThread_4b675d05(SceUInt delay)
 {
    return 0;
 }
@@ -84,7 +76,77 @@ struct result_c8672a3d
    int unk_3C;
 };
 
+result_c8672a3d* SceKernelDmacMgr_SceSysmemForKernel_imp_c8672a3d(int unk0)
+{
+   return 0;
+}
+
+int SceKernelDmacMgr_SceSysmemForKernel_imp_571660aa(int r0, int r1)
+{
+   return 0;
+}
+
+//==========================================================================
+
+int SceKernelDmacMgr_SceSysmemForDriver_imp_e655852f(int unk0)
+{
+   return 0;
+}
+
+typedef unsigned int SceUID;
+typedef unsigned int SceSize;
+
+void* SceKernelDmacMgr_SceSysmemForDriver_imp_sceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize size)
+{
+   return 0;
+}
+
+void SceKernelDmacMgr_SceSysmemForDriver_imp_sceKernelMemPoolFree_3ebce343(SceUID pool, void *ptr)
+{
+}
+
+int SceKernelDmacMgr_SceSysmemForDriver_imp_sceKernelGetPaddr_8d160e65(int unk0, int unk1)
+{
+   //wrapper for SceSysmem.SceCpuForKernel._exp_67343a07 - very interesting
+   return 0;
+}
+
+int SceKernelDmacMgr_SceSysmemForDriver_imp_sceKernelGetPaddrList_e68beebd(int unk0, int unk1)
+{
+   return 0;
+}
+
+//==========================================================================
+
+int SceKernelDmacMgr_SceCpuForDriver_imp_lock_int_d32ace9e(int *addr)
+{
+   return 0;
+}
+
+int SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(int *addr, int prev_state)
+{
+   return 0;
+}
+
+int SceKernelDmacMgr_SceCpuForDriver_imp_lock_bf82deb2(int *addr)
+{
+   return 0;
+}
+
+int SceKernelDmacMgr_SceCpuForDriver_imp_unlock_d6ed0c46(int *addr)
+{
+   return 0;
+}
+
+int SceKernelDmacMgr_SceCpuForDriver_imp_cda96e81(int unk0, int unk1, int unk2)
+{
+   return 0;
+}
+
+//==========================================================================
+
 global_008FE000 _008FE000;
+
 char* unk_994808 = "SceDmacDefault";
 
 int _008FE278;
@@ -304,6 +366,31 @@ int SceKernelDmacMgr_SceDmacmgrForDriver_exp_fce4171a(void* unk0, int unk1, int 
 }
 
 //========================================
+
+int sub_99214C()
+{
+   return 0;
+}
+
+int sub_99214C()
+{
+   return 0;
+}
+
+int sub_992288()
+{
+   return 0;
+}
+
+int sub_99289C()
+{
+   return 0;
+}
+
+int sub_9921FC()
+{
+   return 0;
+}
 
 int SceKernelDmacMgr_SceDmacmgrForDriver_exp_167079fc(int r0, int r1, int r2, int r3)
 {
@@ -815,10 +902,21 @@ int SceKernelDmacMgr_SceDmacmgrForDriver_exp_543f54cf(int unk0)
 
 int SceKernelDmacMgr_SceDmacmgrForDriver_exp_397a917c(int unk0, int unk1, int unk2, int unk3)
 {
+   
    return 0;
 }
 
 //========================================
+
+int sub_992000()
+{
+   return 0;
+}
+
+int sub_992100()
+{
+   return 0;
+}
 
 int SceKernelDmacMgr_SceDmacmgrForDriver_exp_adff1186(int unk)
 {
