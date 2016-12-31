@@ -39,20 +39,10 @@ struct f10ab792_input
 
 int SceSblGcAuthMgr_SceSysrootForKernel_imp_f10ab792(int arg0, f10ab792_input* arg1);
 
-struct _039c73b1_context
-{
-   char var968[0x130];
-   int var838;
-   int command; //var834
-   char data[0x800]; //var830
-   int packet6_de; //var30
-   int size; //var2C
-   int var28;
-};
-
 int SceSblGcAuthMgr_SceSblSmCommForKernel_imp_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_context* ctx, int* unk1);
 
 int SceSblGcAuthMgr_SceSblSmCommForKernel_imp_db9fc204(int r0, int r1, int* r2, int* r3, int unk0);
+
 int SceSblGcAuthMgr_SceSblSmCommForKernel_imp_0631f8ed(int unk);
 
 int SceSblGcAuthMgr_SceThreadmgrForDriver_imp_3c8b55a9(int un0, int unk1, int unk2);
