@@ -1,4 +1,4 @@
-#include "Cpu.h"
+#include "SceCpu.h"
 
 int SceCpuForDriver_lock_int_d32ace9e(int *addr)
 {

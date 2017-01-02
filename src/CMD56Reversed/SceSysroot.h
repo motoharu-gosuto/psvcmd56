@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 struct f10ab792_input
 {
    uint32_t size; //input

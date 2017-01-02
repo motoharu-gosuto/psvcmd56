@@ -1,6 +1,15 @@
 #include <string>
+#include <stdint.h>
+#include <sstream>
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+#include "Constants.h"
 
 #include "SceSdif.h"
+
+#include "SceSdifResponsePackets.h"
 
 sd_context _C78040_CTX_ARRAY[3];
 

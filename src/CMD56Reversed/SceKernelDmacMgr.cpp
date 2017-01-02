@@ -1,8 +1,16 @@
 #include <string>
 
-#include "SceKernelDmacMgr.h"
 #include "GlobalVariables.h"
 #include "Constants.h"
+
+#include "SceKernelDmacMgr.h"
+
+#include "SceIntrmgr.h"
+#include "SceSysmem.h"
+#include "SceKernelDmacMgr.h"
+#include "SceThreadmgr.h"
+#include "SceCpu.h"
+
 
 struct global_008FE000
 {
@@ -39,7 +47,7 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
    int r0 = name;
    int r6 = r0;
-   int r0 = SceKernelDmacMgr_SceIntrmgrForDriver_imp_182ee3e3(r0);
+   int r0 = SceIntrmgrForDriver_182ee3e3(r0);
    if(r0 != 0)
       return 0x80027101;
 
@@ -49,7 +57,7 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
 
    if(r6 == 0)
       r6 = r3;
-   result_c8672a3d* r0 = SceKernelDmacMgr_SceSysmemForKernel_imp_c8672a3d(r0);
+   result_c8672a3d* r0 = SceSysmemForKernel_c8672a3d(r0);
    result_c8672a3d* r4 = r0;
    if(r0 == 0)
       return 0x8002710B;
@@ -65,19 +73,19 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
    int r2 = r1;
    int r3 = r1;
    r4->unk_30 = r7;
-   int r0 = SceKernelDmacMgr_SceThreadmgrForDriver_imp_4336baa4(r0, r1, r2, r3);
+   int r0 = SceThreadmgrForDriver_4336baa4(r0, r1, r2, r3);
    int r6 = r0 - 0;
    if(r6 < 0)
    {
       int r0 = r5->unk_20;
       int r1 = r4;
-      int r0 = SceKernelDmacMgr_SceSysmemForKernel_imp_571660aa(r0, r1);
+      int r0 = SceSysmemForKernel_571660aa(r0, r1);
       int r0 = r6;
       return r0;
    }
 
    int r6 = r4->unk_34;
-   int r0 = SceKernelDmacMgr_SceSysmemForDriver_imp_e655852f(r0);
+   int r0 = SceSysmemForDriver_e655852f(r0);
    int r3 = 0x01;
    r4->unk_3C = r0;
    r4->unk_38 = r3;
@@ -93,7 +101,7 @@ int exit_loc_992EAC()
 {
    int r0 = r6;
    int r1 = r2;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = 0x80027201; //SCE_KERNEL_ERROR_ALREADY_QUEUED
    return r0;
 }
@@ -103,7 +111,7 @@ int exit_loc_992EC2()
 {
    int r0 = r6;
    int r1 = r2;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = 0x80020005; //SCE_KERNEL_ERROR_INVALID_FLAGS
    return r0;
 }
@@ -112,7 +120,7 @@ int exit_loc_992ED6()
 {
    int r0 = r6;
    int r1 = r2;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = 0x80027207; //SCE_KERNEL_ERROR_NOT_UNDER_CONTROL
    return r0;
 }
@@ -121,7 +129,7 @@ int exit_loc_992EE8()
 {
    int r0 = r6;
    int r1 = r2;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = 0x80027205; //SCE_KERNEL_ERROR_NOT_INITIALIZED
    return r0;
 }
@@ -130,7 +138,7 @@ int exit_loc_992EFA()
 {
    int r0 = r6;
    int r1 = r2;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = 0x80027208; //SCE_UNKNOWN_ERROR_80027208
    return r0;
 }
@@ -152,7 +160,7 @@ int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
 
    int r6 = r4 + 0x2C;
    int r0 = r6;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_lock_int_d32ace9e(r0);
+   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
    int r3 = r4[0x38];
    int r2 = r0;
    int r0 = r3 << 0x1F;
@@ -235,7 +243,7 @@ int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
    int r1 = r2;
    int r3 = r3 & r5;
    r4[0x34] = r3;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = 0;
 
    return r0;
@@ -331,7 +339,7 @@ int SceDmacmgrForDriver_01a599e0(int unk0, int unk1, int unk2)
    var38 = r6;
    int r6 = r4[0x10];
    //STRD.W		R6, R5,	[SP,#0x1C]
-   int r0 = SceKernelDmacMgr_SceDmacmgrForDriver_exp_167079fc(r0, r1, r2, r3);
+   int r0 = SceDmacmgrForDriver_167079fc(r0, r1, r2, r3);
 
    if(r0 < 0)
       return exit_loc_993152(r0);
@@ -620,8 +628,8 @@ int exit_loc_993352()
    int r0 = r6;
    int r1 = r8;
    int r4 = 0x80027205;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
-   return loc_99330A();
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_99330A();
 }
 
 int exit_loc_993386()
@@ -629,7 +637,7 @@ int exit_loc_993386()
    int r0 = r6;
    int r1 = r8;
    int r4 = 0x80027203;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    return exit_loc_99330A();
 }
 
@@ -638,7 +646,7 @@ int exit_loc_99331C()
    int r4 = 0x80027201;
    int r0 = r6;
    int r1 = r8;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = r4;
    return r0;
 }  
@@ -648,7 +656,7 @@ int exit_loc_993364()
    int r0 = r6;
    int r1 = r8;
    int r4 = 0x80027206;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    return exit_loc_99330A();
 }
 
@@ -657,7 +665,7 @@ int exit_loc_993340()
    int r0 = r6;
    int r1 = r8;
    int r4 = 0x80027208;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    return exit_loc_99330A();
 }
 
@@ -665,7 +673,7 @@ int exit_loc_993302()
 {
    int r0 = r6;
    int r1 = r8;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    return exit_loc_99330A();
 }
 
@@ -673,7 +681,7 @@ int exit_loc_993376()
 {
    int r0 = r7;
    int r4 = 0x80027207;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_d6ed0c46(r0);
+   int r0 = SceCpuForDriver_unlock_d6ed0c46(r0);
    return exit_loc_993302();
 }
 
@@ -681,7 +689,7 @@ int exit_loc_9932FA()
 {
    int r0 = r7;
    int r4 = 0;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_unlock_d6ed0c46(r0);
+   int r0 = SceCpuForDriver_unlock_d6ed0c46(r0);
    return exit_loc_993302();
 }
 
@@ -716,7 +724,7 @@ int SceDmacmgrForDriver_543f54cf(int unk0)
 
    int r6 = r4 = 0x2C;
    int r0 = r6;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_lock_int_d32ace9e(r0);
+   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
 
    int r3 = r4[0x38];
    int r8 = r0;
@@ -750,7 +758,7 @@ int SceDmacmgrForDriver_543f54cf(int unk0)
    int r5 = r4[0x10];
    int r7 = r5 & 8;
    int r0 = r7;
-   int r0 = SceKernelDmacMgr_SceCpuForDriver_imp_lock_bf82deb2(r0);
+   int r0 = SceCpuForDriver_lock_bf82deb2(r0);
    int r3 = r5[0x10];
    if(r3 == 0)
       return exit_loc_993376();

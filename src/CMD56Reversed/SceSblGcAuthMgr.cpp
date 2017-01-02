@@ -7,13 +7,15 @@
 #include <iomanip>
 #include <stdint.h>
 
-#include "CMD56Initialization.h"
-#include "ResponsePackets.h"
-#include "GlobalConstants.h"
-#include "Subroutines.h"
-#include "Imports.h"
 #include "Constants.h"
-#include "UnknownImports.h"
+
+#include "SceSblGcAuthMgr.h"
+
+#include "SceSdif.h"
+#include "SceThreadmgr.h"
+#include "SceSblSsSmComm.h"
+#include "SceSblGcAuthMgrSubroutines.h"
+#include "SceSblGcAuthMgrGlobalVariables.h"
 
 //assume - some sort of deinit
 int SceSblGcAuthMgrDrmBBForDriver_bb451e83()
@@ -40,7 +42,7 @@ int exit_loc_CA91F0(int r6, int var2C)
 
 int exit_loc_CA91DA(int r6, int var2C)
 {
-   int r0 = SceSblGcAuthMgr_SceThreadmgrForDriver_imp_d270498b(_00BD84D8_THREAD_ID, 0x01);
+   int r0 = SceThreadmgrForDriver_d270498b(_00BD84D8_THREAD_ID, 0x01);
       
    if(r0 != 0)
       return exit_loc_CA91F0(0x808A0701, var2C);
@@ -50,7 +52,7 @@ int exit_loc_CA91DA(int r6, int var2C)
 
 int exit_loc_CA91D6(int r6, int var2C)
 {
-   SceSblGcAuthMgr_SceSblGcAuthMgrDrmBBForDriver_exp_bb451e83();
+   SceSblGcAuthMgrDrmBBForDriver_bb451e83();
    return exit_loc_CA91DA(r6, var2C);
 }
 
@@ -60,7 +62,7 @@ int initialize_sd(int* argument0, int* cookie)
 
    //do something with thread manager
 
-   int res0 = SceSblGcAuthMgr_SceThreadmgrForDriver_imp_3c8b55a9(_00BD84D8_THREAD_ID, 0x01, 0x00);
+   int res0 = SceThreadmgrForDriver_3c8b55a9(_00BD84D8_THREAD_ID, 0x01, 0x00);
 
    if(res0 != 0)
      return exit_loc_CA91F0(0x808A0701, *cookie);
@@ -74,11 +76,11 @@ int initialize_sd(int* argument0, int* cookie)
 
    //TODO: is this order of initialization correct?
 
-   _00BDCBC0_SD_CTX_ELM = SceSblGcAuthMgr_SceSdifForDriver_imp_6a71987f(0x01); //get element
+   _00BDCBC0_SD_CTX_ELM = SceSdifForDriver_6a71987f(0x01); //get element
    
    if(_00BDCBC0_SD_CTX_ELM == 0)
    {
-      int res1 = SceSblGcAuthMgr_SceSdifForDriver_imp_22c82e79(0x01, &_00BDCBC0_SD_CTX_ELM);
+      int res1 = SceSdifForDriver_22c82e79(0x01, &_00BDCBC0_SD_CTX_ELM);
       if(res1 != 0)
          return exit_loc_CA91D6(0x808A0703, *cookie);
    }
@@ -98,7 +100,7 @@ int packets1_to_6(int* cookie)
    
    sub_CA8C98(_00BDCDF8_WB20, 0x03, 0x13, 0x31, _00BDCBF4_REQBUF); //initialize cmd56 packet
 
-   int res2 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //cmd56 request
+   int res2 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //cmd56 request
    if(res2 != 0)
       return exit_loc_CA91D6(0x808A0704, *cookie);
 
@@ -106,7 +108,7 @@ int packets1_to_6(int* cookie)
 
    //receive packet 2
          
-   int res3 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_2_INDEX); //cmd56 response
+   int res3 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_2_INDEX); //cmd56 response
 
    //================================================
 
@@ -154,7 +156,7 @@ int packets1_to_6(int* cookie)
 
    sub_CA8C98(_00BDCDF8_WB20, 0x03, 0x2B, 0x02, _00BDCBF4_REQBUF); //initialize cmd56  packet
 
-   int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
+   int res5 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
    if(res5 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -162,7 +164,7 @@ int packets1_to_6(int* cookie)
 
    //packet6
 
-   int r6 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_6_INDEX);
+   int r6 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_6_INDEX);
    if(r6 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -217,13 +219,13 @@ int packet7_to_8(int* cookie)
    
    sub_CA8C98(_00BDCDF8_WB20, 0x15, 0x23, 0x03, _00BDCBF4_REQBUF); //initialize cmd56 packet
 
-   int res4 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200);
+   int res4 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200);
    if(res4 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
    // packet 8
 
-   int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_8_INDEX);
+   int res5 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_8_INDEX);
    if(res5 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -309,7 +311,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
    
    sub_CA8C98(_00BDCDF8_WB20, 0x33, 0x03, 0x05, _00BDCBF4_REQBUF); //initialize cmd56 packet
 
-   int res6 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
+   int res6 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
    if(res6 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -317,7 +319,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
 
    //packet 10
 
-   int res7 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_10_INDEX); //response
+   int res7 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_10_INDEX); //response
    if(res7 != 0)
       return exit_loc_CA91D6(0x808A0707, *cookie);
 
@@ -392,9 +394,9 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
 
    memcpy(arg24, _00BDCBF4_REQBUF + 0x2F, 0x10);
 
-   time_0 = SceSblGcAuthMgr_SceThreadmgrForDriver_imp_sceKernelGetSystemTimeWideForDriver_f4ee4fa9();
+   time_0 = SceThreadmgrForDriver_sceKernelGetSystemTimeWideForDriver_f4ee4fa9();
 
-   int res7 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //cmd request
+   int res7 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //cmd request
    if(res7 != 0) //loc_CA966A
    {
       varC = varC - 1; //dec counter
@@ -410,7 +412,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       
    //packet 14
       
-   int res8 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_14_INDEX); //response
+   int res8 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_14_INDEX); //response
    if(res8 != 0) //loc_CA966A
    {
       varC = varC - 1; //dec counter
@@ -493,7 +495,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
       
    //packet 15
       
-   sce_time time_1 = SceSblGcAuthMgr_SceThreadmgrForDriver_imp_sceKernelGetSystemTimeWideForDriver_f4ee4fa9();
+   sce_time time_1 = SceThreadmgrForDriver_sceKernelGetSystemTimeWideForDriver_f4ee4fa9();
       
    //copies data to arg24 buffer
    //layouts are:
@@ -565,7 +567,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
 
    memcpy(arg24, _00BDCBF4_REQBUF + 0x2F, 0x20);
 
-   int res8 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //packet 15
+   int res8 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //packet 15
    if(res8 != 0)
    {
       //no continuation here
@@ -577,7 +579,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
 
    //packet 16
 
-   int res9 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_16_INDEX); //packet 16
+   int res9 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_16_INDEX); //packet 16
    if(res9 != 0)
    {
       //no continuation here

@@ -9,9 +9,8 @@
 //SceKernelDmacMgr : 0x00992000
 //===================================
 
-#include "Imports.h"
+#include "SceSdif.h"
 
-extern int var_009EA004;
 extern int _00BD84D8_THREAD_ID;
 
 extern sd_context* _00BDCBC0_SD_CTX_ELM;

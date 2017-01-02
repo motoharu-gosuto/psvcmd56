@@ -11,7 +11,7 @@
 
 #include <map>
 
-#include "GlobalVariables.h"
+#include "SceSdif.h"
 
 void sub_CA8C98(const char* source_ptr, int size, int param1, int param2, char* destination_ptr);
 

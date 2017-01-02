@@ -3,7 +3,13 @@
 #include "SceSblSsMgr.h"
 
 #include "Constants.h"
+#include "GlobalVariables.h"
+
+#include "SceCpu.h"
+#include "SceSysroot.h"
+#include "SceSysmem.h"
 #include "SceKernelDmacMgr.h"
+#include "SceKernelSuspend.h"
 
 // ======================================
 
@@ -34,7 +40,7 @@ int exit_loc_B99762(int r0, int* r5, int var2C)
 int exit_loc_B9975A(int r4, int* r5, int var2C)
 {
    int r0 = 0x00;
-   int r0 = SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(r0);
+   int r0 = SceKernelSuspendForDriver_2bb92967(r0);
    int r0 = r4;
    return exit_loc_B99762(r0, r5, var2C);
 }
@@ -42,7 +48,7 @@ int exit_loc_B9975A(int r4, int* r5, int var2C)
 int exit_loc_B9979A(int* r5, int var2C)
 {
    int r0 = 0x00;
-   int r0 = SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(r0);
+   int r0 = SceKernelSuspendForDriver_2bb92967(r0);
    int r0 = 0x800F1528;
    return exit_loc_B99762(r0, r5, var2C);
 }
@@ -59,7 +65,7 @@ int sub_loc_B996DA()
       {
          int r0 = r12;
          //STRD.W		R3, R2,	[SP]
-         int r0 = SceSblSsMgr_SceCpuForDriver_imp_337cbdf3(r0);
+         int r0 = SceCpuForDriver_337cbdf3(r0);
       }
       else
       {
@@ -88,7 +94,7 @@ int sub_loc_B996DA()
       {
          int r0 = r2;
          varB0 = r3;
-         int r0 = SceSblSsMgr_SceCpuForDriver_imp_337cbdf3(r0);
+         int r0 = SceCpuForDriver_337cbdf3(r0);
          r3 = varB0;
       }
       else
@@ -123,7 +129,7 @@ int sub_loc_B996DA()
       if(r2 >= 0x8000000)
       {
          int r0 = r3;
-         r0 = SceSblSsMgr_SceCpuForDriver_imp_337cbdf3(r0);
+         r0 = SceCpuForDriver_337cbdf3(r0);
       }
       else
       {
@@ -150,7 +156,7 @@ int sub_loc_B996DA()
    #pragma region loc_B996EC
    int r0 = 0x00;
    var74 = r9;
-   SceSblSsMgr_SceKernelSuspendForDriver_imp_4df40893(r0);
+   SceKernelSuspendForDriver_4df40893(r0);
 
    bool br0 = r10 & 0x29; //TST.W		R10, #0x29
    if(br0)
@@ -203,12 +209,12 @@ int sub_loc_B996DA()
    int r2 = 0x00;
    int r3 = r3 | r4; ; // ORRS signed!
    var8C = r3;
-   int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_fce4171a(r0, r1, r2, r3);
+   int r0 = SceDmacmgrForDriver_fce4171a(r0, r1, r2, r3);
    int r6 = r0 - 0;
    if(r6 < 0)
    {
       int r0 = 0x00;
-      int r0 =  SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(r0);
+      int r0 =  SceKernelSuspendForDriver_2bb92967(r0);
       int r0 = r6;
       return exit_loc_B99762(r0, r5, var2C);
    }
@@ -227,7 +233,7 @@ int sub_loc_B996DA()
          int r2 = 0x11;
       }
 
-      int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_01a599e0(r0, r1, r2);
+      int r0 = SceDmacmgrForDriver_01a599e0(r0, r1, r2);
       int r4 = r0;
       if(r0 == 0)
       {
@@ -236,7 +242,7 @@ int sub_loc_B996DA()
       else
       {
          int r0 = r7;
-         int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_543f54cf(r0);
+         int r0 = SceDmacmgrForDriver_543f54cf(r0);
          int r4 = r0 - 0x00;
          if(r4 < 0)
          {
@@ -244,16 +250,16 @@ int sub_loc_B996DA()
          }
          else
          {
-            int r0 = SceSblSsMgr_SceSysrootForDriver_imp_ee934615();
+            int r0 = SceSysrootForDriver_ee934615();
             int r2 = 0x00;
             int r0 = r7;
             int r1 = 0x02;
             int r3 = r2;
 
-            int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_397a917c(r0, r1, r2, r3);
+            int r0 = SceDmacmgrForDriver_397a917c(r0, r1, r2, r3);
             int r4 = r0;
                         
-            int r0 = SceSblSsMgr_SceSysrootForDriver_imp_eef091a7();
+            int r0 = SceSysrootForDriver_eef091a7();
                         
             return exit_loc_B9975A(r4, r5, var2C);
          }
@@ -276,7 +282,7 @@ int sub_loc_B99846()
       int r1 = &var_A0;
       //STRD.W		R3, R2,	[SP]
       varA8 = r12;
-      int r0 = SceSblSsMgr_SceSysmemForDriver_imp_sceKernelGetPaddr_8d160e65(r0, r1);
+      int r0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(r0, r1);
       //LDRD.W		R3, R2,	[SP]
       int r12 = varA8;
                   
@@ -342,7 +348,7 @@ int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk
          int r1 = &var9C;
          //STRD.W		R3, R2,	[SP]
          varA8 = r12;
-         int r0 = SceSblSsMgr_SceSysmemForDriver_imp_sceKernelGetPaddr_8d160e65(r0, r1);
+         int r0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(r0, r1);
          //LDRD.W		R3, R2,	[SP]
          int r12 = varA8;
 
@@ -466,7 +472,7 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
       return exit_loc_B99C0A(0x800F1516, r4, var4);
 
    char* r0 = unk_B9CC90;
-   int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_7cd5088a(r0);
+   int r0 = SceDmacmgrForDriver_7cd5088a(r0);
    int r11 = r0 - 0;
 
    if(r11 < 0)
@@ -497,7 +503,7 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
    int r0 = sub_B99674(r0, r1, r2, r3, ?, ?, ?, ?);
    int r5 = r0;
    int r0 = r11;
-   int r0 = SceSblSsMgr_SceDmacmgrForDriver_imp_adff1186(r0);
+   int r0 = SceDmacmgrForDriver_adff1186(r0);
    if(r0 != 0)
       return exit_loc_B99C0A(r0, r4, var4);
 
@@ -512,5 +518,5 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
 //wrapper
 int SceSblSsMgrForDriver_ac57f4f0(char* buffer)
 {
-   return SceSblSsMgr_SceSblSsMgrForDriver_exp_4dd1b2e5(buffer, 0x40, 0x01);
+   return SceSblSsMgrForDriver_4dd1b2e5(buffer, 0x40, 0x01);
 }

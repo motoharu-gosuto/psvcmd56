@@ -1,10 +1,13 @@
-#include "Subroutines.h"
+#include "SceSblGcAuthMgrSubroutines.h"
 
-#include "GlobalConstants.h"
-#include "GlobalVariables.h"
 #include "Constants.h"
-#include "Imports.h"
-#include "UnknownImports.h"
+
+#include "SceSblSsMgr.h"
+#include "SceSysroot.h"
+#include "SceSysclib.h"
+#include "SceSblSsSmComm.h"
+#include "SceSblGcAuthMgrGlobalConstants.h"
+#include "SceSblGcAuthMgrGlobalVariables.h"
 
 //FULLY REVERSED
 
@@ -46,7 +49,7 @@ int sub_CA8E5C(char* buffer)
    for(int i = 0; i != 0x10; i++)
    {
       //this function either generates data per byte or shifts the buffer
-      r0 = SceSblGcAuthMgr_SceSblSsMgrForDriver_imp_ac57f4f0(var54);
+      r0 = SceSblSsMgrForDriver_ac57f4f0(var54);
       
       if(r0 != 0)
       {
@@ -119,12 +122,12 @@ char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDC
 
    sub_CA8C98(a_00BDCDF8_WB20, 0x03, 0x05, 0x23, a_00BDCBF4_REQBUF); //initialize cmd56 packet
 
-   int r0_req = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(ctx, a_00BDCBF4_REQBUF, 0x200); //request
+   int r0_req = SceSdifForDriver_b0996641(ctx, a_00BDCBF4_REQBUF, 0x200); //request
 
    if(r0_req != 0)
       return r0_req;
 
-   int r0_resp = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(ctx, a_00BDD04C_RESPBUF1, 0x200, packetIndex); //response
+   int r0_resp = SceSdifForDriver_134e06c4(ctx, a_00BDD04C_RESPBUF1, 0x200, packetIndex); //response
 
    if(r0_resp != 0)
       return r0_resp;
@@ -173,13 +176,13 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
    char var15C[0x20];
    memcpy(var15C, a_00BDCBF4_REQBUF + 0x2F, 0x20);
 
-   int res1 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
+   int res1 = SceSdifForDriver_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
    if(res1 != 0)
       return exit_loc_CA9058(res1, var24);
 
    //packet 18
 
-   int res2 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(sd_context, a_00BDD04C_RESPBUF1, 0x200, PACKET_18_INDEX);
+   int res2 = SceSdifForDriver_134e06c4(sd_context, a_00BDD04C_RESPBUF1, 0x200, PACKET_18_INDEX);
    if(res2 != 0)
       return exit_loc_CA9058(res2, var24);
 
@@ -201,13 +204,13 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
    char var16C[0x10];
    memcpy(var16C, a_00BDCBF4_REQBUF + 0x2F, 0x10);
 
-   int res4 = SceSblGcAuthMgr_SceSdifForDriver_imp_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
+   int res4 = SceSdifForDriver_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
    if(res4 != 0)
       return exit_loc_CA9058(res4, var24);
 
    //packet 20
    
-   int res5 = SceSblGcAuthMgr_SceSdifForDriver_imp_134e06c4(sd_context, a_00BDD24C_RESPBUF2, 0x200, PACKET_20_INDEX); //response
+   int res5 = SceSdifForDriver_134e06c4(sd_context, a_00BDD24C_RESPBUF2, 0x200, PACKET_20_INDEX); //response
    if(res5 != 0)
       return exit_loc_CA9058(res5, var24);
 
@@ -264,7 +267,7 @@ int sub_CAC8C0(int* var97C, std::pair<int, int>* arg1)
    {
       arg1->first = -1;
       arg1->second = -1;
-      return SceSblGcAuthMgr_SceSblSmCommForKernel_imp_0631f8ed(*var97C);
+      return SceSblSmCommForKernel_0631f8ed(*var97C);
    }
    else
    {
@@ -579,9 +582,9 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
       return exit_loc_CACAA8(var24);
 
    if(source != 0)
-      SceSblGcAuthMgr_SceSysclibForDriver_imp_8a0b0815(ctx.data, source, size, 0x80C); //debug memcpy
+      SceSysclibForDriver_8a0b0815(ctx.data, source, size, 0x80C); //debug memcpy
 
-   int res0 = SceSblGcAuthMgr_SceSysrootForKernel_imp_f10ab792(0, &state); //modify state structure
+   int res0 = SceSysrootForKernel_f10ab792(0, &state); //modify state structure
    if(res0 < 0)
       return exit_loc_CACAB2(&var97C, var24);
 
@@ -594,11 +597,11 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
 
    //it is important that arg1 and arg2 are initialized by imp_f10ab792
    //TODO: it is proved by many factors that this procedure shrinks the data and changes ctx.size field to the required size in sub_CAC924_command
-   int res1 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, &ctx, &var97C);
+   int res1 = SceSblSmCommForKernel_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, &ctx, &var97C);
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   int res2 = SceSblGcAuthMgr_SceSblSmCommForKernel_imp_db9fc204(var97C, 0x0001000B, &var978, &ctx.var838, 0x814);
+   int res2 = SceSblSmCommForKernel_db9fc204(var97C, 0x0001000B, &var978, &ctx.var838, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 

@@ -8,16 +8,13 @@
 
 #include <stdint.h>
 
-#include "ResponsePackets.h"
-#include "GlobalConstants.h"
-#include "Subroutines.h"
-#include "CMD56Initialization.h"
-#include "UnknownImports.h"
+#include "SceSblGcAuthMgr.h"
+#include "SceSysroot.h"
 
 int main(int argc, char* argv[])
 {
-   InitializeImportsContext();
-   InitializeUnknownContext();
+   SceSblGcAuthMgr_InitializeContext();
+   SceSysroot_InitializeContext();
 
    int arg0 = 0x10000;
    int res = sub_CA919C(&arg0);

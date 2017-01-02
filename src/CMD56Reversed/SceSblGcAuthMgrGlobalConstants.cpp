@@ -1,4 +1,4 @@
-#include "GlobalConstants.h"
+#include "SceSblGcAuthMgrGlobalConstants.h"
 
 //some kind of key ?
 char dword_CADA7C[0x20] = {0xDD, 0x10, 0x25, 0x44, 0x15, 0x23, 0xFD, 0xC0, 
