@@ -431,20 +431,12 @@ int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk
 
 // ================
 
-int exit_loc_B99C0A(int r0, int* r4, int var4)
+int exit_loc_B99C0A(int r0, int cookie, int var_s4)
 {
-   int r2 = var4;
-   int r3 = r4[0];
-   if(r2 == r3)
-   {
-      int r7 = r7 + 0x0C;
-      int sp = r7;
+   if(cookie == var_s4)
       return r0;
-   }
    else
-   {
       return STACK_CHECK_FAIL;
-   }
 }
 
 //CHECK procedure sub_B99998
@@ -453,82 +445,88 @@ int exit_loc_B99C0A(int r0, int* r4, int var4)
 char* unk_B9CC90 = "SceSblDmac5Common";
 
 //assume - gen/buffer shift
+//size - in our case is always 0x40 because passed by wrapper
+//unk - in our case is always 0x01 because passed by wrapper
 int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
 {
-   /*
-   int size_98; //stack_unk0 ? - arg4
-   int stack_unk1_94; //stack_unk1 - arg5
-   int stack_unk2_90; //stack_unk2 - arg6
-   int param_8C;      //stack_unk3 - arg7
-                      //88 stack_unk4 - arg8
-   int var41;
-   int var4; //what is the offset
+   int var_98;
+   int var_94;
+   int var_90;
+   int var_8C;
+
+   int var_88;
+   int var_84;
+
+   int var_41;
+
+   int var_s4;
+   
    //-----------------------
 
+
    char* r0 = buffer;
-   int r1 = size;
+   int r1 = size; //always equal to 0x40
    int r2 = unk; //always equal to 0x01
+
    int* r4 = &var_009EA004;
 
-   int r3 = r4[0];
-   int r7 = sp + 0x18; // some stack variable
+   int r3 = var_009EA004;
+   int* r7 = &var_s4;
 
    int r8 = r1;
-   int r6 = &var41; 
-   int r9 = r0;
+   int* r6 = &var_41; 
+   char* r9 = r0;
    int r10 = r2;
 
    int r6 = r6 & (~0x3F); //this is weird - bit extraction
-   var4 = r3;
+   var_s4 = r3;
 
    if(r1 > 0x40)
-      return exit_loc_B99C0A(0x800F1516, r4, var4);
+      return exit_loc_B99C0A(0x800F1516, var_s4);
 
    char* r0 = unk_B9CC90;
    int r0 = SceDmacmgrForDriver_7cd5088a(r0);
-   int r11 = r0 - 0;
+   int r11 = r0;
 
    if(r11 < 0)
-      return exit_loc_B99C0A(0x800F1528, r4, var4);
+      return exit_loc_B99C0A(0x800F1528, var_s4);
 
    int r3 = -1;
    int r5 = 0x00;
    int r3 = r3 >> 0x0E; //14
-   int lr = 4;
+   int lr = 0x04;
    int r2 = 0x40;
-   stack_unk1_94 = r5;
+   var_94 = r5;
 
    if(r10 == r5)
-   {
       r3 = r5;
-   }
 
-   size_98 = r2;
-   param_8C = r3;
+   var_98 = r2;
+   var_8C = r3;
    int r1 = r6;
    int r3 = r5;
-
-   //STRD.W		R5, R5,	[SP,#0x10]
+   
+   var_88 = r5;
+   var_84 = r5;
+   
 
    int r2 = r6;
-   stack_unk2_90 = lr; 
+   var_90 = lr; 
 
    int r0 = sub_B99674(r0, r1, r2, r3, ?, ?, ?, ?);
    int r5 = r0;
    int r0 = r11;
    int r0 = SceDmacmgrForDriver_adff1186(r0);
-   if(r0 != 0)
-      return exit_loc_B99C0A(r0, r4, var4);
+   int r0 = r5;
+   if(r5 != 0)
+      return exit_loc_B99C0A(r0, var_s4);
 
    int r0 = r9;
    int r1 = r6;
    int r2 = r8;
    memcpy(r0, r1, r2);
    int r0 = r5;
-   return exit_loc_B99C0A(r0, r4, var4);
-   */
-
-   return 0;
+   return exit_loc_B99C0A(r0, var_s4);   
 }
 
 //wrapper
