@@ -307,8 +307,8 @@ int sub_loc_B99846()
    return 0;
 }
 
-//TODO: looks like this function has 8 or 9 arguments - need to verify this
-int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk0, int stack_unk1, int stack_unk2, int stack_unk3, int stack_unk4)
+int sub_B99674(int id, void* ptr0, void* ptr1, int param0, 
+               int size, int param2, int num, int flags, int param5, int param6)
 {
    /*
    var_B0=	-0xB0
@@ -431,9 +431,9 @@ int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk
 
 // ================
 
-int exit_loc_B99C0A(int r0, int cookie, int var_s4)
+int exit_loc_B99C0A(int r0, int cookie)
 {
-   if(cookie == var_s4)
+   if(var_009EA004 == cookie)
       return r0;
    else
       return STACK_CHECK_FAIL;
@@ -447,86 +447,36 @@ char* unk_B9CC90 = "SceSblDmac5Common";
 //assume - gen/buffer shift
 //size - in our case is always 0x40 because passed by wrapper
 //unk - in our case is always 0x01 because passed by wrapper
-int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
+int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
 {
-   int var_98;
-   int var_94;
-   int var_90;
+   char sourceBuffer[0x40];   
+   int cookie = var_009EA004;
+     
+   if(size > 0x40)
+      return exit_loc_B99C0A(0x800F1516, cookie);
+
+   int id = SceDmacmgrForDriver_7cd5088a(unk_B9CC90);
+
+   if(id < 0)
+      return exit_loc_B99C0A(0x800F1528, cookie);
+   
    int var_8C;
 
-   int var_88;
-   int var_84;
+   if(unk == 0x00)
+      var_8C = 0x00000000;
+   else
+      var_8C = 0x0003ffff;
 
-   int var_41;
+   int res_0 = sub_B99674(id, sourceBuffer, sourceBuffer, 0x00, 0x40, 0x00, 0x04, var_8C, 0x00, 0x00);
 
-   int var_s4;
-   
-   //-----------------------
+   int res_1 = SceDmacmgrForDriver_adff1186(id);
 
+   if(res_0 != 0)
+      return exit_loc_B99C0A(res_0, cookie);
 
-   char* r0 = buffer;
-   int r1 = size; //always equal to 0x40
-   int r2 = unk; //always equal to 0x01
+   memcpy(outputBuffer, sourceBuffer, size);
 
-   int* r4 = &var_009EA004;
-
-   int r3 = var_009EA004;
-   int* r7 = &var_s4;
-
-   int r8 = r1;
-   int* r6 = &var_41; 
-   char* r9 = r0;
-   int r10 = r2;
-
-   int r6 = r6 & (~0x3F); //this is weird - bit extraction
-   var_s4 = r3;
-
-   if(r1 > 0x40)
-      return exit_loc_B99C0A(0x800F1516, var_s4);
-
-   char* r0 = unk_B9CC90;
-   int r0 = SceDmacmgrForDriver_7cd5088a(r0);
-   int r11 = r0;
-
-   if(r11 < 0)
-      return exit_loc_B99C0A(0x800F1528, var_s4);
-
-   int r3 = -1;
-   int r5 = 0x00;
-   int r3 = r3 >> 0x0E; //14
-   int lr = 0x04;
-   int r2 = 0x40;
-   var_94 = r5;
-
-   if(r10 == r5)
-      r3 = r5;
-
-   var_98 = r2;
-   var_8C = r3;
-   int r1 = r6;
-   int r3 = r5;
-   
-   var_88 = r5;
-   var_84 = r5;
-   
-
-   int r2 = r6;
-   var_90 = lr; 
-
-   int r0 = sub_B99674(r0, r1, r2, r3, ?, ?, ?, ?);
-   int r5 = r0;
-   int r0 = r11;
-   int r0 = SceDmacmgrForDriver_adff1186(r0);
-   int r0 = r5;
-   if(r5 != 0)
-      return exit_loc_B99C0A(r0, var_s4);
-
-   int r0 = r9;
-   int r1 = r6;
-   int r2 = r8;
-   memcpy(r0, r1, r2);
-   int r0 = r5;
-   return exit_loc_B99C0A(r0, var_s4);   
+   return exit_loc_B99C0A(res_0, cookie);
 }
 
 //wrapper
