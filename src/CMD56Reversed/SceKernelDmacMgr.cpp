@@ -1,6 +1,6 @@
 #include <string>
 
-#include "DmacLayer.h"
+#include "SceKernelDmacMgr.h"
 #include "GlobalVariables.h"
 #include "Constants.h"
 
@@ -20,14 +20,10 @@ struct global_008FE000
 //==========================================================================
 
 //arg can be char*
-int SceKernelDmacMgr_SceIntrmgrForDriver_imp_182ee3e3(int r0)
+int SceIntrmgrForDriver_182ee3e3(int r0)
 {
    return 0;
 }
-
-//==========================================================================
-
-
 
 //==========================================================================
 
@@ -45,7 +41,7 @@ int _008FE254;
 
 //==========================================================================
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_7cd5088a(const char* name)
+int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
    int r0 = name;
    int r6 = r0;
@@ -145,7 +141,7 @@ int exit_loc_992EFA()
    return r0;
 }
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_fce4171a(void* unk0, int unk1, int unk2, int unk3)
+int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
 {
    int r0 = r0 >> 1;
    int r5 = _008FE000;
@@ -278,7 +274,7 @@ int sub_9921FC()
    return 0;
 }
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_167079fc(int r0, int r1, int r2, int r3)
+int SceDmacmgrForDriver_167079fc(int r0, int r1, int r2, int r3)
 {
    return 0;
 }
@@ -301,7 +297,7 @@ int exit_loc_993162()
    return exit_loc_993152(r0);
 }
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_01a599e0(int unk0, int unk1, int unk2)
+int SceDmacmgrForDriver_01a599e0(int unk0, int unk1, int unk2)
 {
    int r10 = &var_009EA004;
    int r4 = r1;
@@ -713,7 +709,7 @@ int exit_loc_9932F4()
    return exit_loc_9932FA();
 }
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_543f54cf(int unk0)
+int SceDmacmgrForDriver_543f54cf(int unk0)
 {
    int r0 = r0 >> 1;
    int r3 = &_008FE000;
@@ -786,7 +782,7 @@ int SceKernelDmacMgr_SceDmacmgrForDriver_exp_543f54cf(int unk0)
 
 //========================================
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_397a917c(int unk0, int unk1, int unk2, int unk3)
+int SceDmacmgrForDriver_397a917c(int unk0, int unk1, int unk2, int unk3)
 {
    
    return 0;
@@ -804,7 +800,7 @@ int sub_992100()
    return 0;
 }
 
-int SceKernelDmacMgr_SceDmacmgrForDriver_exp_adff1186(int unk)
+int SceDmacmgrForDriver_adff1186(int unk)
 {
    return 0;
 }

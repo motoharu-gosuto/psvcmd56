@@ -1,50 +1,11 @@
 #include <string>
 
-#include "CryptoLayer.h"
+#include "SceSblSsMgr.h"
 
 #include "Constants.h"
-#include "DmacLayer.h"
+#include "SceKernelDmacMgr.h"
 
-// ====================================== SceSblSsMgr ======================================================
-
-//TODO: looks like this function returns id
-//this can be easily checked
-//need to look at other known paired functions and see how id is formed there
-//looks like there is a special algorithm to convert pointer to id ?
-
-//paired start function
-int SceSblSsMgr_SceDmacmgrForDriver_imp_7cd5088a(const char* name)
-{
-   return SceKernelDmacMgr_SceDmacmgrForDriver_exp_7cd5088a(name);
-}
-
-int SceSblSsMgr_SceDmacmgrForDriver_imp_fce4171a(int unk0, int unk1, int unk2, int unk3)
-{
-   return SceKernelDmacMgr_SceDmacmgrForDriver_exp_fce4171a(unk0, unk1, unk2, unk3);
-}
-
-int SceSblSsMgr_SceDmacmgrForDriver_imp_01a599e0(int unk0, int unk1, int unk2)
-{
-   return SceKernelDmacMgr_SceDmacmgrForDriver_exp_01a599e0(unk0, unk1, unk2);
-}
-
-int SceSblSsMgr_SceDmacmgrForDriver_imp_543f54cf(int unk0)
-{
-   return SceKernelDmacMgr_SceDmacmgrForDriver_exp_543f54cf(unk0);
-}
-
-int SceSblSsMgr_SceDmacmgrForDriver_imp_397a917c(int unk0, int unk1, int unk2, int unk3)
-{
-   return SceKernelDmacMgr_SceDmacmgrForDriver_exp_397a917c(unk0, unk1, unk2, unk3);
-}
-
-//paired exit function
-int SceSblSsMgr_SceDmacmgrForDriver_imp_adff1186(int unk)
-{
-   return SceKernelDmacMgr_SceDmacmgrForDriver_exp_adff1186(unk);
-}
-
-// ================
+// ======================================
 
 int sub_B9A684(int unk0, int unk1, int unk2)
 {
