@@ -7,49 +7,6 @@
 
 // ====================================== SceSblSsMgr ======================================================
 
-int SceSblSsMgr_SceSysmemForDriver_imp_sceKernelGetPaddr_8d160e65(int unk0, int unk1)
-{
-   return 0;
-}
-
-// ================
-
-int SceSblSsMgr_SceKernelSuspendForDriver_imp_4df40893(int unk)
-{
-   //does it return values?
-   return 0;
-}
-
-//paired end function
-int SceSblSsMgr_SceKernelSuspendForDriver_imp_2bb92967(int unk)
-{
-   //does it return values ?
-   return 0;
-}
-
-// ================
-
-int SceSblSsMgr_SceSysrootForDriver_imp_ee934615()
-{
-   //does it return values ?
-   return 0;
-}
-
-int SceSblSsMgr_SceSysrootForDriver_imp_eef091a7()
-{
-   //does it return values?
-   return 0;
-}
-
-// ================
-
-int SceSblSsMgr_SceCpuForDriver_imp_337cbdf3(int unk0)
-{
-   return 0;
-}
-
-// ================
-
 //TODO: looks like this function returns id
 //this can be easily checked
 //need to look at other known paired functions and see how id is formed there
