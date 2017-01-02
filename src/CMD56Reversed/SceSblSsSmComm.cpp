@@ -21,7 +21,7 @@ int sub_B864A8()
 }
 
 //assume - init
-int SceSblSsSmComm_SceSblSmCommForKernel_exp_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_context* ctx, int* unk1)
+int SceSblSmCommForKernel_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_context* ctx, int* unk1)
 {
    //many calls and subroutines
 
@@ -63,7 +63,7 @@ int SceSblSsSmComm_SceSblSmCommForKernel_exp_039c73b1(int r0, int r1, int r2, in
 // =============================
 
 //assume - gen/hash
-int SceSblSsSmComm_SceSblSmCommForKernel_exp_db9fc204(int r0, int r1, int* r2, int* r3, int unk0)
+int SceSblSmCommForKernel_db9fc204(int r0, int r1, int* r2, int* r3, int unk0)
 {
    //many globals, functionality is simplier
 
@@ -79,7 +79,7 @@ int sub_B862A0()
 }
 
 //assume - deinit
-int SceSblSsSmComm_SceSblSmCommForKernel_exp_0631f8ed(int unk)
+int SceSblSmCommForKernel_0631f8ed(int unk)
 {
    
    return 0;
