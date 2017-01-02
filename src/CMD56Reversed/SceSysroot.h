@@ -10,3 +10,8 @@ struct f10ab792_input
 int SceSysrootForDriver_ee934615();
 int SceSysrootForDriver_eef091a7();
 int SceSysrootForKernel_f10ab792(int arg0, f10ab792_input* arg1);
+
+//======================================
+
+//TODO: remove this function
+void SceSysroot_InitializeContext();

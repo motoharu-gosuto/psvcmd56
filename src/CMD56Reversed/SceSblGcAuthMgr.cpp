@@ -15,6 +15,21 @@
 #include "Constants.h"
 #include "UnknownImports.h"
 
+//assume - some sort of deinit
+int SceSblGcAuthMgrDrmBBForDriver_bb451e83()
+{
+   return 0;
+}
+
+void SceSblGcAuthMgr_InitializeContext()
+{
+   //TODO: figure out how it is initialized
+
+   _00BD84D8_THREAD_ID = 0xFFFFFFFF;
+}
+
+//==================================
+
 int exit_loc_CA91F0(int r6, int var2C)
 {
    if(var2C == var_009EA004)

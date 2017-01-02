@@ -298,3 +298,21 @@ int SceSysrootForKernel_f10ab792(int arg0, f10ab792_input* arg1)
    
    return 0;
 }
+
+//=========================================
+
+void SceSysroot_InitializeContext()
+{
+   //TODO: figure out how this is initialized in reality
+   _8BF5F8_g0.unk_0 = &_8BF5F8_g1;
+   _8BF5F8_g1.unk_3A0 = _8BF5F8_g2;
+
+   _8BF5F8_g2[0].unk_0 = 0xFFFFFFFF;
+   _8BF5F8_g2[0].unk_4 = 0xFFFFFFFF;
+   
+   _8BF5F8_g2[1].unk_0 = 0xDDDDDDDD;
+   _8BF5F8_g2[1].unk_4 = 0xDDDDDDDD;
+
+   _8BF5F8_g2[2].unk_0 = 0xAAAAAAAA;
+   _8BF5F8_g2[2].unk_4 = 0xAAAAAAAA;
+}
