@@ -1,6 +1,7 @@
 #include "SceSblGcAuthMgrSubroutines.h"
 
 #include "Constants.h"
+#include "GlobalVariables.h"
 
 #include "SceSblSsMgr.h"
 #include "SceSysroot.h"

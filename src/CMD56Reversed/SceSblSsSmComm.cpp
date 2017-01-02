@@ -12,7 +12,7 @@ int sub_B86218()
 
 int sub_B862A0()
 {
-   
+   //many globals   
    return 0;
 }
 
@@ -73,12 +73,6 @@ int SceSblSmCommForKernel_db9fc204(int r0, int r1, int* r2, int* r3, int unk0)
 }
 
 // =============================
-
-int sub_B862A0()
-{
-   //many globals   
-   return 0;
-}
 
 //assume - deinit
 int SceSblSmCommForKernel_0631f8ed(int unk)

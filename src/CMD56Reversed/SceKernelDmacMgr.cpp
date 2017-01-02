@@ -45,6 +45,7 @@ int _008FE254;
 
 int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
+   /*
    int r0 = name;
    int r6 = r0;
    int r0 = SceIntrmgrForDriver_182ee3e3(r0);
@@ -91,60 +92,64 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
    r4->unk_38 = r3;
    int r0 = r8;
    return r0;
+   */
+
+   return 0;
 }
 
 //==========================================================================
 
 //TODO: MARK KNOWN ERRORS WITH CONSTANTS
 
-int exit_loc_992EAC()
+int exit_loc_992EAC(int r2, int* r6)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r2;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = 0x80027201; //SCE_KERNEL_ERROR_ALREADY_QUEUED
-   return r0;
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0_ret = 0x80027201; //SCE_KERNEL_ERROR_ALREADY_QUEUED
+   return r0_ret;
 }
 
 //default case
-int exit_loc_992EC2()
+int exit_loc_992EC2(int r2, int* r6)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r2;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = 0x80020005; //SCE_KERNEL_ERROR_INVALID_FLAGS
-   return r0;
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0_ret = 0x80020005; //SCE_KERNEL_ERROR_INVALID_FLAGS
+   return r0_ret;
 }
 
-int exit_loc_992ED6()
+int exit_loc_992ED6(int r2, int* r6)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r2;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = 0x80027207; //SCE_KERNEL_ERROR_NOT_UNDER_CONTROL
-   return r0;
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0_ret = 0x80027207; //SCE_KERNEL_ERROR_NOT_UNDER_CONTROL
+   return r0_ret;
 }
 
-int exit_loc_992EE8()
+int exit_loc_992EE8(int r2, int* r6)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r2;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = 0x80027205; //SCE_KERNEL_ERROR_NOT_INITIALIZED
-   return r0;
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0_ret = 0x80027205; //SCE_KERNEL_ERROR_NOT_INITIALIZED
+   return r0_ret;
 }
 
-int exit_loc_992EFA()
+int exit_loc_992EFA(int r2, int* r6)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r2;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = 0x80027208; //SCE_UNKNOWN_ERROR_80027208
-   return r0;
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0_ret = 0x80027208; //SCE_UNKNOWN_ERROR_80027208
+   return r0_ret;
 }
 
 int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
 {
+   /*
    int r0 = r0 >> 1;
    int r5 = _008FE000;
    int r4 = r0 << 2;
@@ -247,14 +252,12 @@ int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
    int r0 = 0;
 
    return r0;
+   */
+
+      return 0;
 }
 
 //========================================
-
-int sub_99214C()
-{
-   return 0;
-}
 
 int sub_99214C()
 {
@@ -285,12 +288,16 @@ int SceDmacmgrForDriver_167079fc(int r0, int r1, int r2, int r3)
 
 int exit_loc_993152(int r0)
 {
+   /*
    int r2 = var24;
    int r3 = r10[0];
    if(r2 == r3)
       return r0;
    else
       return STACK_CHECK_FAIL;
+   */
+
+   return 0;
 }
 
 int exit_loc_993162()
@@ -301,6 +308,7 @@ int exit_loc_993162()
 
 int SceDmacmgrForDriver_01a599e0(int unk0, int unk1, int unk2)
 {
+   /*
    int r10 = &var_009EA004;
    int r4 = r1;
    int r1 = r10[0];
@@ -365,6 +373,9 @@ int SceDmacmgrForDriver_01a599e0(int unk0, int unk1, int unk2)
    r9[0x20] = r3;
 
    return exit_loc_993152(r0);
+   */
+
+   return 0;
 }
 
 //========================================
@@ -471,8 +482,8 @@ struct input2_992460
 
 struct input1_992460 //looks like to be array or contain array at offset 0
 {
-   int unk_0;
-   int unk_4;
+   input2_992460* unk_0;
+   input2_992460* unk_4;
    int unk_8;
    int unk_C;
 
@@ -483,6 +494,7 @@ struct input1_992460 //looks like to be array or contain array at offset 0
 
 void sub_992460(input1_992460* r0, input2_992460* r1)
 {
+   /*
    int r3 = r0->unk_C;
    if(r3 == 0)
       return;
@@ -606,11 +618,12 @@ void sub_992460(input1_992460* r0, input2_992460* r1)
    //STRD.W		R2, R2,	[R1]
    int r2 = r2 & r0;
    r1->unk_38 = r3;
+   */
 }
 
 //========================================
 
-int exit_loc_99330A()
+int exit_loc_99330A(int r4)
 {
    int r0 = r4;
    return r0;
@@ -623,96 +636,101 @@ int exit_loc_993310()
    return r0;
 }
 
-int exit_loc_993352()
+int exit_loc_993352(int* r6, int r8)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r8;
    int r4 = 0x80027205;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A();
+   int r0_ret = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_99330A(r4);
 }
 
-int exit_loc_993386()
+int exit_loc_993386(int* r6, int r8)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r8;
    int r4 = 0x80027203;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A();
+   int r0_ret = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_99330A(r4);
 }
 
-int exit_loc_99331C()
+int exit_loc_99331C(int* r6, int r8)
 {
    int r4 = 0x80027201;
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r8;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = r4;
-   return r0;
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0_ret = r4;
+   return r0_ret;
 }  
 
-int exit_loc_993364()
+int exit_loc_993364(int* r6, int r8)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r8;
    int r4 = 0x80027206;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A();
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_99330A(r4);
 }
 
-int exit_loc_993340()
+int exit_loc_993340(int* r6, int r8)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r8;
    int r4 = 0x80027208;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A();
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_99330A(r4);
 }
 
-int exit_loc_993302()
+int exit_loc_993302(int r4, int* r6, int r8)
 {
-   int r0 = r6;
+   int* r0 = r6;
    int r1 = r8;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A();
+   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_99330A(r4);
 }
 
-int exit_loc_993376()
+int exit_loc_993376(int* r6, int* r7, int r8)
 {
-   int r0 = r7;
+   int* r0 = r7;
    int r4 = 0x80027207;
-   int r0 = SceCpuForDriver_unlock_d6ed0c46(r0);
-   return exit_loc_993302();
+   int r0_res = SceCpuForDriver_unlock_d6ed0c46(r0);
+   return exit_loc_993302(r4, r6, r8);
 }
 
-int exit_loc_9932FA()
+int exit_loc_9932FA(int* r6, int* r7, int r8)
 {
-   int r0 = r7;
+   int* r0 = r7;
    int r4 = 0;
-   int r0 = SceCpuForDriver_unlock_d6ed0c46(r0);
-   return exit_loc_993302();
+   int r0_res = SceCpuForDriver_unlock_d6ed0c46(r0);
+   return exit_loc_993302(r4, r6, r8);
 }
 
-int exit_loc_993332()
+int exit_loc_993332(input1_992460* r5, int* r6, int* r7, int r8)
 {
-   int r4 = r5[4];
-   int r0 = r5;
-   r5[0] = r4;
-   int r1 = r4;
+   input2_992460* r4 = r5->unk_4;
+   input1_992460* r0 = r5;
+   r5->unk_0 = r4;
+   input2_992460* r1 = r4;
    sub_992460(r0, r1);
-   return exit_loc_9932FA();
+   return exit_loc_9932FA(r6, r7, r8);
 }
 
 int exit_loc_9932F4()
 {
+   /*
    int r4 = r3[4];
    int r3 = r4[0];
-   int r4 = r5[4];
+   int r4 = r5[4]; //WHAT?
    return exit_loc_9932FA();
+   */
+
+   return 0;
 }
 
 int SceDmacmgrForDriver_543f54cf(int unk0)
 {
+   /*
    int r0 = r0 >> 1;
    int r3 = &_008FE000;
    int r4 = r0 << 2;
@@ -780,6 +798,9 @@ int SceDmacmgrForDriver_543f54cf(int unk0)
    r4[4] = r2;
 
    return exit_loc_9932F4();
+   */
+
+   return 0;
 }
 
 //========================================

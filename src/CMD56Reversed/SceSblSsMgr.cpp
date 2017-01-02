@@ -40,21 +40,22 @@ int exit_loc_B99762(int r0, int* r5, int var2C)
 int exit_loc_B9975A(int r4, int* r5, int var2C)
 {
    int r0 = 0x00;
-   int r0 = SceKernelSuspendForDriver_2bb92967(r0);
-   int r0 = r4;
-   return exit_loc_B99762(r0, r5, var2C);
+   int r0_ret = SceKernelSuspendForDriver_2bb92967(r0);
+   int r0_res = r4;
+   return exit_loc_B99762(r0_res, r5, var2C);
 }
 
 int exit_loc_B9979A(int* r5, int var2C)
 {
    int r0 = 0x00;
-   int r0 = SceKernelSuspendForDriver_2bb92967(r0);
-   int r0 = 0x800F1528;
-   return exit_loc_B99762(r0, r5, var2C);
+   int r0_res = SceKernelSuspendForDriver_2bb92967(r0);
+   int r0_ret = 0x800F1528;
+   return exit_loc_B99762(r0_ret, r5, var2C);
 }
 
 int sub_loc_B996DA()
 {
+   /*
    #pragma region loc_B996DA
    var78 = r1;
    if(r8 != 0x00)
@@ -266,10 +267,14 @@ int sub_loc_B996DA()
       }
    }
    #pragma endregion
+   */
+
+   return 0;
 }
 
 int sub_loc_B99846()
 {
+   /*
    #pragma region loc_B99846
    if(r3 == 0)
    {
@@ -297,6 +302,9 @@ int sub_loc_B99846()
       }
    }
    #pragma endregion
+   */
+
+   return 0;
 }
 
 //TODO: looks like this function has 8 or 9 arguments - need to verify this
@@ -323,6 +331,7 @@ int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk
    arg_14=	 0x14 ; stack_unk4 ?
    */
 
+   /*
    int r4 = stack_unk2;
    int r5 = &var_009EA004;
    int r7 = r0;
@@ -415,6 +424,9 @@ int sub_B99674(int id, void *source_aligned, int size, int param0, int stack_unk
    }
        
    return sub_loc_B996DA();
+   */
+
+   return 0;
 }
 
 // ================
@@ -443,6 +455,7 @@ char* unk_B9CC90 = "SceSblDmac5Common";
 //assume - gen/buffer shift
 int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
 {
+   /*
    int size_98; //stack_unk0 ? - arg4
    int stack_unk1_94; //stack_unk1 - arg5
    int stack_unk2_90; //stack_unk2 - arg6
@@ -513,6 +526,9 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
    memcpy(r0, r1, r2);
    int r0 = r5;
    return exit_loc_B99C0A(r0, r4, var4);
+   */
+
+   return 0;
 }
 
 //wrapper

@@ -1,3 +1,6 @@
+#include <string>
+
+
 #include "SceSysclib.h"
 
 //this is wrapper for memcpy with ability to throw breakpoint exception

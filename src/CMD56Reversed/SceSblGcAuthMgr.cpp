@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include "Constants.h"
+#include "GlobalVariables.h"
 
 #include "SceSblGcAuthMgr.h"
 
