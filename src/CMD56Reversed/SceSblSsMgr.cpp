@@ -435,7 +435,7 @@ int exit_loc_B99C0A(int r0, int* r4, int var4)
 char* unk_B9CC90 = "SceSblDmac5Common";
 
 //assume - gen/buffer shift
-int SceSblSsMgr_SceSblSsMgrForDriver_exp_4dd1b2e5(char* buffer, int size, int unk)
+int SceSblSsMgrForDriver_4dd1b2e5(char* buffer, int size, int unk)
 {
    int size_98; //stack_unk0 ? - arg4
    int stack_unk1_94; //stack_unk1 - arg5
@@ -510,7 +510,7 @@ int SceSblSsMgr_SceSblSsMgrForDriver_exp_4dd1b2e5(char* buffer, int size, int un
 }
 
 //wrapper
-int SceSblSsMgr_SceSblSsMgrForDriver_exp_ac57f4f0(char* buffer)
+int SceSblSsMgrForDriver_ac57f4f0(char* buffer)
 {
    return SceSblSsMgr_SceSblSsMgrForDriver_exp_4dd1b2e5(buffer, 0x40, 0x01);
 }
