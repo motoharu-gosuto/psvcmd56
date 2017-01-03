@@ -288,16 +288,12 @@ int SceDmacmgrForDriver_167079fc(int r0, int r1, int r2, int r3)
 
 int exit_loc_993152(int r0)
 {
-   /*
-   int r2 = var24;
+   int r2 = var_24;
    int r3 = r10[0];
    if(r2 == r3)
       return r0;
    else
       return STACK_CHECK_FAIL;
-   */
-
-   return 0;
 }
 
 int exit_loc_993162()
@@ -306,47 +302,79 @@ int exit_loc_993162()
    return exit_loc_993152(r0);
 }
 
+//unk0 is id
+//unk1 is structure of size 0x6C
+//unk2 is 0x01 or 0x11
 int SceDmacmgrForDriver_01a599e0(int unk0, void* unk1, int unk2)
 {
-   /*
-   int r10 = &var_009EA004;
-   int r4 = r1;
+   int var_48;
+   int var_44;
+   int var_40;
+   int var_3C;
+   int var_38;
+   int var_34;
+   int var_30;
+   int var_2C;
+   int var_28;
+   int var_24;
+
+   //-----------------------
+
+   int r0 = unk0;
+   void* r1 = unk1;
+   int r2 = unk2;
+
+   int* r10 = &var_009EA004;
+   void* r4 = r1;
    int r1 = r10[0];
-   var24 = r1;
+   var_24 = r1;
 
    if(r4 = 0)
-      return exit_loc_993162();
+      return exit_loc_993162(); //invalid flags error
 
    int r9 = r0 >> 1;
    int r1 = &_008FE000;
    int r9 = r9 << 2;
    int r1 = r1 | 1;
    int r3 = r9[0x30];
-   int r3 = r1;
-
+   
    if(r3 != r1)
-      return exit_loc_993162();
+      return exit_loc_993162(); //invalid flags error
 
    int r3 = r9[0x3A];
-   int r5 = -1;
+   int r5 = 0xFFFFFFFF;
 
    if(r3 == 0x13)
    {
-      //LDREQD.W	R1, R3,	[R4,#0x1C]
-		//STREQD.W	R1, R3,	[SP,#0x14]
+      int r1 = r4[0x1C];
+      int r3 = r4[0x20];
+
+      var_34 = r1;
+      var_30 = r3;
    }
 
    int r3 = r2;
-   //LDRD.W		R7, R6,	[R4]
-   int r1 = &var44;
+   
+   int r7 = r4[0x00];
+   int r6 = r4[0x04];
+   
+   int r1 = &var_44;
    int r2 = 0;
-   //STRD.W		R7, R6,	[SP,#4]
-   int r6 = r4[8];
-   var3C = r6;
-   int r6 = r4[0xC];
-   var38 = r6;
+   
+   var_44 = r7;
+   var_40 = r6;
+
+   int r6 = r4[0x08];
+   var_3C = r6;
+
+   int r6 = r4[0x0C];
+   var_38 = r6;
+
    int r6 = r4[0x10];
-   //STRD.W		R6, R5,	[SP,#0x1C]
+
+   var_2C = r6;
+   var_28 = r5;
+
    int r0 = SceDmacmgrForDriver_167079fc(r0, r1, r2, r3);
 
    if(r0 < 0)
@@ -356,26 +384,26 @@ int SceDmacmgrForDriver_01a599e0(int unk0, void* unk1, int unk2)
    int r0 = 0;
    int r2 = r9[0x20];
 
+   int R3;
    if(r3 != 0x13)
    {
-      //LDRNE		R3, [R4,#0x18]
+      R3 = r4[0x18];
    }
    else
    {
-      //ADDEQ.W		R3, R4,	#0x1C
+      R3 = r4 + 0x1C;
    }
 
-   r9[0x28] = r3;
-   r4[0x14] = r3;
-   //BFC.W		R3, #0x12, #9
+   r9[0x28] = R3;
+
+   r3 = r4[0x14];
+
+   int r3 = r3 & (~0x07FC0000); //BFC.W		R3, #0x12, #9 - clear 9 bits starting from bit 18
 
    int r3 = r3 | r2;
    r9[0x20] = r3;
 
    return exit_loc_993152(r0);
-   */
-
-   return 0;
 }
 
 //========================================

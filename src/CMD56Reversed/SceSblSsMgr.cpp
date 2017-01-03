@@ -392,6 +392,7 @@ int sub_B99674(int id, void* ptr0, void* ptr1, void* param0,
    //int var_9C; //temp for function result int*
 
    //var_98 is also used by SceDmacmgrForDriver_01a599e0
+   //var_98 is structure of size 0x6C
 
    //beginning of structure
    void* var_98;   //0x00 - field of structure that is used - ptr0
