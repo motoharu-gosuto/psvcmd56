@@ -10,7 +10,58 @@ int SceDmacmgrForDriver_7cd5088a(const char* name);
 
 int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2, int unk3);
 
-int SceDmacmgrForDriver_01a599e0(int unk0, void* unk1, int unk2);
+struct input_01a599e0
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+
+   int unk_10;
+   int unk_14;
+   void* unk_18;
+   int unk_1C;
+
+   int unk_20;
+};
+
+struct r9_01a599e0
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   int unk_20;
+   int unk_24;
+   void* unk_28;
+   int unk_2C;
+
+   void* unk_30;
+   int unk_34;
+
+   short unk_38;
+   short unk_3A;
+};
+
+struct local_01a599e0
+{
+   int var_44; // used
+   int var_40; // used
+   int var_3C; // used
+   int var_38; // used
+   int var_34; // used
+   int var_30; // used
+   int var_2C; // used
+   int var_28; // used
+};
+
+int SceDmacmgrForDriver_01a599e0(int id, input_01a599e0* unk1, int unk2);
 
 int SceDmacmgrForDriver_543f54cf(int unk0);
 
@@ -19,4 +70,4 @@ int SceDmacmgrForDriver_397a917c(int unk0, int unk1, int unk2, int unk3);
 //paired exit function
 int SceDmacmgrForDriver_adff1186(int unk);
 
-int SceDmacmgrForDriver_167079fc(int r0, int r1, int r2, int r3);
+int SceDmacmgrForDriver_167079fc(int r0, void* r1, int r2, int r3);
