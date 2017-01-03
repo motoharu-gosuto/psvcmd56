@@ -306,7 +306,7 @@ int exit_loc_993162()
    return exit_loc_993152(r0);
 }
 
-int SceDmacmgrForDriver_01a599e0(int unk0, int unk1, int unk2)
+int SceDmacmgrForDriver_01a599e0(int unk0, void* unk1, int unk2)
 {
    /*
    int r10 = &var_009EA004;

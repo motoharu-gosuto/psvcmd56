@@ -27,7 +27,7 @@ int SceSysmemForDriver_sceKernelAllocMemBlockForKernel_c94850c9();
 int SceSysmemForDriver_sceKernelFreeMemBlockForKernel_009e1c61();
 int SceSysmemForDriver_sceKernelGetMemBlockBaseForDriver_a841edda();
 int SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(int unk0, int unk1);
-int SceSysmemForDriver_sceKernelGetPaddr_8d160e65(int unk0, int unk1);
+int SceSysmemForDriver_sceKernelGetPaddr_8d160e65(void* unk0, void** unk1);
 result_c8672a3d* SceSysmemForKernel_c8672a3d(int unk0);
 int SceSysmemForKernel_571660aa(int r0, int r1);
 int SceSysmemForDriver_e655852f(int unk0);

@@ -30,6 +30,7 @@ struct input_B9A684
    char unk_2C[0x40];
 };
 
+//source is array of size 0x20 at max
 int sub_B9A684(input_B9A684* dest, char* source, int sizeFlag)
 {
    int cookie = var_009EA004;
@@ -73,434 +74,387 @@ struct input_B9A790
    int unk_1C;
 };
 
-int sub_B9A790(input_B9A790* ptr, int value)
+int sub_B9A790_set_1C(input_B9A790* ptr, int value)
 {
    ptr->unk_1C = value;
    return 0;
 }
 
-int exit_loc_B99762(int r0, int* r5, int var2C)
+int exit_loc_B99762(int r0, int var2C)
 {
-   //good!
-
-   int r2 = var2C;
-   int r3 = r5[0];
-   if(r2 == r3)
-   {
+   if(var2C == var_009EA004)
       return r0;
+   else
+      return STACK_CHECK_FAIL;
+}
+
+int exit_loc_B9975A(int r4, int var2C)
+{
+   SceKernelSuspendForDriver_2bb92967(0x00);
+   return exit_loc_B99762(r4, var2C);
+}
+
+int exit_loc_B9979A(int var2C)
+{
+   SceKernelSuspendForDriver_2bb92967(0x00);
+   return exit_loc_B99762(0x800F1528, var2C);
+}
+
+int finalize_buffer(int id, int var_8C, int var_2C, int R4, void* var_98)
+{
+   int r0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00, var_8C);
+   if(r0 < 0)
+   {
+      SceKernelSuspendForDriver_2bb92967(0x00);
+      return exit_loc_B99762(r0, var_2C);
    }
    else
    {
-      return STACK_CHECK_FAIL;
-   }
-}
+      int R2;
+      if((R4 & 0x07) == 0x03)
+         R2 == 0x01;
+      else
+         R2 = 0x11;
 
-int exit_loc_B9975A(int r4, int* r5, int var2C)
-{
-   //good!
-
-   int r0 = 0x00;
-   int r0_ret = SceKernelSuspendForDriver_2bb92967(r0);
-   int r0_res = r4;
-   return exit_loc_B99762(r0_res, r5, var2C);
-}
-
-int exit_loc_B9979A(int* r5, int var2C)
-{
-   //good!
-
-   int r0 = 0x00;
-   int r0_res = SceKernelSuspendForDriver_2bb92967(r0);
-   int r0_ret = 0x800F1528;
-   return exit_loc_B99762(r0_ret, r5, var2C);
-}
-
-int sub_loc_B996DA()
-{
-   #pragma region loc_B996DA
-   var_78 = r1;
-   if(r8 != 0x00)
-   {
-      #pragma region loc_B997D8
-      int r1 = r12 + 0xE8000000;
-      if(r1 >= 0x8000000)
+      int r0 = SceDmacmgrForDriver_01a599e0(id, var_98, R2);
+      if(r0 == 0)
       {
-         int r0 = r12;
-         var_B0 = r3;
-         var_AC = r2;
-         int r0 = SceCpuForDriver_337cbdf3(r0);
-         int r3 = var_B0;
-         int r2 = var_AC;
+         return exit_loc_B9975A(r0, var_2C);
       }
       else
       {
-         int r0 = r12 + 0xA0000000;
-         int r12 = r12 + 0xE0000000;
-         if(r12 >= 0x20000000)
+         
+         int r0 = SceDmacmgrForDriver_543f54cf(id);
+         if(r0 < 0)
          {
-            if(r0 >= 0x21000000)
-               int r0 = 0;
-            else
-               int r0 = 1;
+            return exit_loc_B9975A(r0, var_2C);
          }
          else
          {
-            int r0 = 1;
+            SceSysrootForDriver_ee934615();
+
+            int r0 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
+                        
+            SceSysrootForDriver_eef091a7();
+                        
+            return exit_loc_B9975A(r0, var_2C);
+         }
+      }
+   }
+}
+
+int call_subs_update_r4_flag(int arg_8, int arg_4, char* arg_14, int R10, int var_2C, int& R4, void* var_98)
+{
+   int R3;
+   if((R10 & 0x29) > 0)
+      R3 = 0x00;
+   else
+      R3 = 0x01;
+
+   int mask = arg_8 & 0x07;
+
+   if(mask != 0x03)
+      R3 = R3 | 0x01;
+
+   if(R3 != 0)
+   {
+      if(mask != 0x04)
+      {
+         if(arg_4 <= 0xFF)
+         {
+            int res_3 = sub_B9A790_set_1C(var_98, arg_4); //this is very important !!!!!!
+            if(res_3 != 0)
+               return exit_loc_B9979A(var_2C);
+         }
+         else
+         {
+            int res_3 = sub_B9A684(var_98, arg_14, arg_8); //this is also important !!!
+            if(res_3 != 0)
+               return exit_loc_B9979A(var_2C);
+            else
+               R4 = arg_8 | 0x80;
+         }
+      }
+   }
+
+   return 0;
+}
+
+void update_r4_flag(void* param0, int arg_10, int& R4)
+{
+   if(arg_10 != 0x00)
+   {
+      int R0;
+
+      if(param0 + 0xE8000000 >= 0x8000000)
+      {
+         R0 = SceCpuForDriver_337cbdf3(param0);
+      }
+      else
+      {
+         int rng0 = param0 + 0xA0000000;
+         int rng1 = param0 + 0xE0000000;
+         if(rng1 >= 0x20000000)
+         {
+            if(rng0 >= 0x21000000)
+               R0 = 0;
+            else
+               R0 = 1;
+         }
+         else
+         {
+            R0 = 1;
          }
       }
 
-      if(r0 == 0)
-         int r4 = r4 | 0x1000000;
+      if(R0 == 0)
+         R4 = R4 | 0xC000000;
+   }
+}
+
+void get_r4_flag(void* ptr0, void* ptr1, void* param0, int arg_8, int arg_C, int& R4)
+{
+   if(arg_C != 0x00)
+   {
+      #pragma region loc_B997D8
+
+      int R0;
+      
+      if((ptr0 + 0xE8000000) >= 0x8000000)
+      {
+         R0 = SceCpuForDriver_337cbdf3(ptr0);
+      }
+      else
+      {
+         void* rng0 = ptr0 + 0xA0000000;
+         void* rng1 = ptr0 + 0xE0000000;
+
+         if(rng1 >= 0x20000000)
+         {
+            if(rng0 >= 0x21000000)
+               R0 = 0;
+            else
+               R0 = 1;
+         }
+         else
+         {
+            R0 = 1;
+         }
+      }
+
+      if(R0 == 0)
+         R4 = arg_8 | 0x1000000;
+
       #pragma endregion
          
       #pragma region loc_B997FE
-      int r1 = r2 + 0xE8000000;
-      if(r1 >= 0x8000000)
+      
+      if((ptr1 + 0xE8000000) >= 0x8000000)
       {
-         int r0 = r2;
-         varB0 = r3;
-         int r0 = SceCpuForDriver_337cbdf3(r0);
-         r3 = varB0;
+         R0 = SceCpuForDriver_337cbdf3(ptr1);         
       }
       else
       {
-         int r0 = r2 + 0xA0000000;
-         int r2 = r2 + 0xE0000000;
-         if(r2 >= 0x20000000)
+         void* rng0 = ptr1 + 0xA0000000;
+         void* rng1 = ptr1 + 0xE0000000;
+
+         if(rng1 >= 0x20000000)
          {
-            if(r0 >= 0x21000000)
-               int r0 = 0;
+            if(rng0 >= 0x21000000)
+               R0 = 0;
             else
-               int r0 = 1;
+               R0 = 1;
          }
          else
          {
-            int r0 = 1;
+            R0 = 1;
          }
       }
 
-      if(r0 == 0)
-         int r4 = r4 | 0x2000000;
+      if(R0 == 0)
+         R4 = R4 | 0x2000000;
+
       #pragma endregion
    }
-   #pragma endregion
-      
-   #pragma region loc_B996E2
-   var84 = r8;
-   if(r9 != 0x00)
-   {
-      //loc_B997AA:
-      int r2 = r3 + 0xE8000000;
-      if(r2 >= 0x8000000)
-      {
-         int r0 = r3;
-         r0 = SceCpuForDriver_337cbdf3(r0);
-      }
-      else
-      {
-         int r0 = r3 + 0xA0000000;
-         int r3 = r3 + 0xE0000000;
-         if(r3 >= 0x20000000)
-         {
-            if(r0 >= 0x21000000)
-               int r0 = 0;
-            else
-               int r0 = 1;
-         }
-         else
-         {
-            int r0 = 1;
-         }
-      }
-
-      if(r0 == 0)
-         int r4 = r4 | 0xC000000;
-   }
-   #pragma endregion
-    
-   #pragma region loc_B996EC
-   int r0 = 0x00;
-   var74 = r9;
-   SceKernelSuspendForDriver_4df40893(r0);
-
-   if((r10 & 0x29) > 0)
-   {
-      int r3 = 0x00;
-   }
-   else
-   {
-      int r3 = 0x01;
-   }
-
-   if(r6 != 0x03)
-      int r3 = r3 | 0x01;
-
-   if(r3 != 0)
-   {
-      if(r6 != 0x04)
-      {
-         if(r11 <= 0xFF) //BLS = fix this
-         {
-            int r1 = r11;
-            int r0 = &var98;
-            int r0 = sub_B9A790(r0, r1);
-            if(r0 != 0)
-               return exit_loc_B9979A(r5, var2C);
-         }
-         else
-         {
-            int r1 = varA4;
-            int r0 = var98;
-            int r2 = r4;
-            int r0 = sub_B9A684(r0, r1, r2);
-            if(r0 != 0)
-            {
-               return exit_loc_B9979A(r5, var2C);
-            }
-            else
-            {
-               int r4 = r4 | 0x80;
-            }
-         }
-      }
-   }
-   #pragma endregion
-   
-   #pragma region loc_B9970A
-   int r3 = var8C;
-   int r0 = r7;
-   int r1 = 0x13;
-   int r2 = 0x00;
-   int r3 = r3 | r4;
-   var8C = r3;
-   int r0 = SceDmacmgrForDriver_fce4171a(r0, r1, r2, r3);
-   int r6 = r0;
-   if(r6 < 0)
-   {
-      int r0 = 0x00;
-      int r0 =  SceKernelSuspendForDriver_2bb92967(r0);
-      int r0 = r6;
-      return exit_loc_B99762(r0, r5, var2C);
-   }
-   else
-   {
-      r4 = r4 + 0x07;
-      int r0 = r7;
-      int* r1 = &var98;
-
-      if(r4 == 0x03)
-      {
-         int r2 == 0x01;
-      }
-      else
-      {
-         int r2 = 0x11;
-      }
-
-      int r0 = SceDmacmgrForDriver_01a599e0(r0, r1, r2);
-      int r4 = r0;
-      if(r0 == 0)
-      {
-         return exit_loc_B9975A(r4, r5, var2C);
-      }
-      else
-      {
-         int r0 = r7;
-         int r0 = SceDmacmgrForDriver_543f54cf(r0);
-         int r4 = r0;
-         if(r4 < 0)
-         {
-            return exit_loc_B9975A(r4, r5, var2C);
-         }
-         else
-         {
-            int r0 = SceSysrootForDriver_ee934615();
-            int r2 = 0x00;
-            int r0 = r7;
-            int r1 = 0x02;
-            int r3 = r2;
-
-            int r0 = SceDmacmgrForDriver_397a917c(r0, r1, r2, r3);
-            int r4 = r0;
-                        
-            int r0 = SceSysrootForDriver_eef091a7();
-                        
-            return exit_loc_B9975A(r4, r5, var2C);
-         }
-      }
-   }
-   #pragma endregion
 }
 
-int sub_B99674(int id, void* ptr0, void* ptr1, int param0, 
-               int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, int arg_14)
+int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C, void*& R1, int& R10, int& var_90, void*& var_94, int& var_8C)
 {
-   /*
-   var_B0          = -0xB0
-   var_A8          = -0xA8
-   var_A4          = -0xA4
-   var_A0          = -0xA0
-   var_9C          = -0x9C
-   var_98          = -0x98
-   var_94          = -0x94
-   var_90          = -0x90
-   var_8C          = -0x8C
-   var_84          = -0x84
-   var_78          = -0x78
-   var_74          = -0x74
-   var_2C          = -0x2C
-   arg_0           =  0
-   arg_4           =  4
-   arg_8           =  8
-   arg_C           =  0xC
-   arg_10          =  0x10
-   arg_14          =  0x14
-   */  
-
-   
-   int r4 = arg_8;
-   int r5 = &var_009EA004;
-   int r7 = r0;
-   int lr = [r5];
-   int r12 = r1;
-   int r6 = r4 & 0x07;
-   int r0 = arg_14;
-
-   int r1 = 0x00;
-   var_98 = r12;
-   var_94 = r2;
-   
-   var_2C = lr;
-   var_A0 = r1;
-
-   r10 = arg_0;
-   r11 = arg_4;
-   r8 = arg_C;
-   r9 = arg_10;
-   
-   varA4 = r0;
-
    bool exec_B99846 = false;
+   
+   R10 = arg_0;
+   R1 = 0;
 
-   if(r6 == 0x03)
+   int mask = arg_8 & 0x07;
+
+   if(mask == 0x03)
    {
       #pragma region loc_B9982C
-      int r0 = r4 << 0x15; //21
-      var9c = r1;
-      if(r0 >= 0) //i do not understand this check yet
-      {
-         #pragma region loc_B99870
-         int r0 = r2;
-         int r1 = &var9C;
-         var_B0 = r3;
-         var_AC = r2;
-         var_A8 = r12;
-         int r0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(r0, r1);
-         int r3 = var_B0;
-         int r2 = var_AC;
-         int r12 = var_A8;
 
-         if(r0 < 0)
-         {
-            int r0 = 0x800F1528;
-            return exit_loc_B99762(r0, r5, var2C);
-         }
+      if((arg_8 << 0x15) >= 0) //i do not understand this check yet
+      {
+         void* var_9C = 0x00;
+         int res_0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(ptr1, &var_9C);
+         
+         if(res_0 < 0)
+            return exit_loc_B99762(0x800F1528, var_2C);
          else
-         {
-            r1 = var9C;
-         }
-         #pragma endregion
+            R1 = var_9C;
       }
 
-      #pragma region loc_B99832
-      int r10 = r10 | 0x10000000;
-      int r0 = 0x3000;
-      var_90 = r10;
-      r10 = r4 & 0x38;
-      var_94 = r1;
-      var_8C = r0;
+      var_90 = arg_0 | 0x10000000;
+      var_94 = R1;
+      var_8C = 0x3000;
+      R10 = arg_8 & 0x38;
      
-      exec_B99846 = true;
-
-      #pragma endregion
+      if(param0 == 0)
+      {
+         return exit_loc_B99762(0x800F1516, var_2C);
+      }
+      else
+      {
+         void* var_A0 = 0x00;
+         int res_1 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(param0, &var_A0);
+                           
+         if(res_1 < 0)
+            return exit_loc_B99762(0x800F1528, var_2C);
+         else
+            R1 = var_A0;
+      }
+      
       #pragma endregion
    }
    else
    {
       #pragma region loc_no_loc
-      int r0 = 0x3000;
-      var_90 = r10;
-      var_8C = r0;
-      int r10 = r4 & 0x38;
 
-      if(r6 != 0x04)
+      var_90 = arg_0;
+      var_8C = 0x3000;
+      R10 = arg_8 & 0x38;
+
+      if(mask != 0x04)
       {
-         int r0 = r10;
-         if(r0 != 0)
-            int r0 = 0x01;
+         int R0 = R10;
 
-         if(r6 == 0x01)
-            int r1 = r0;
+         if(R0 != 0)
+            R0 = 0x01;
+
+         if(mask == 0x01)
+            R1 = R0;
          else
-            int r1 = r0 | 0x01;
+            R1 = R0 | 0x01;
 
-         if(r1 == 0)
+         if(R1 == 0)
          {
-            r10 = r1;
+            R10 = 0; //assigns to zero
          }
          else
          {
-            #pragma region loc_B9989A
-            if(r6 == 0x02)
-               int r1 = r0;
+            if(mask == 0x02)
+               R1 = R0;
             else
-               int r1 = r0 | 0x01;
+               R1 = R0 | 0x01;
 
-            if(r1 != 0x00)
+            if(R1 != 0x00)
             {
-               exec_B99846 = true;
+               if(param0 == 0)
+               {
+                  return exit_loc_B99762(0x800F1516, var_2C);
+               }
+               else
+               {
+                  void* var_A0 = 0x00;
+                  int res_1 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(param0, &var_A0);
+                           
+                  if(res_1 < 0)
+                     return exit_loc_B99762(0x800F1528, var_2C);
+                  else
+                     R1 = var_A0;
+               }
             }
-
-            #pragma endregion
          }
       }
       #pragma endregion
    }
 
-   if(exec_B99846)
-   {      
-      #pragma region loc_B99846
-      if(r3 == 0)
-      {
-         int r0 = 0x800F1516;
-         return exit_loc_B99762(r0, r5, var2C);
-      }
-      else
-      {
-         int r0 = r3;
-         int r1 = &var_A0;
-         var_B0 = r3;
-         var_AC = r2;
-         var_A8 = r12;
-         int r0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(r0, r1);
-         int r3 = var_B0;
-         int r2 = var_AC;
-         int r12 = var_A8;
-                  
-         if(r0 < 0)
-         {
-            int r0 = 0x800F1528;
-            return exit_loc_B99762(r2, r5, var2C);
-         }
-         else
-         {
-            int r1 = var_A0;
-         }
-      }
-      #pragma endregion
-   }
-       
-   return sub_loc_B996DA();
+   return 0;
+}
+
+int sub_B99674(int id, void* ptr0, void* ptr1, void* param0, 
+               int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
+{
+   //void* var_B0; //temp for storing regs between calls
+   //void* var_AC; //temp for storing regs between calls
+   //void* var_A8; //temp for storing regs between calls
+
+   //int var_A4; //temp for storing arg_14
+   //int var_A0; //temp for function result int*
+   //int var_9C; //temp for function result int*
+
+   //var_98 is also used by SceDmacmgrForDriver_01a599e0
+
+   //beginning of structure
+   void* var_98;   //0x00 - field of structure that is used - ptr0
+   void* var_94;   //0x04 - field of structure that is used - ptr1 or (some result of sceKernelGetPaddr)
+   int var_90;     //0x08 - field of structure that is used - (arg_0) or (arg_0 | 0x10000000)
+   int var_8C;     //0x0C - field of structure that is used - 0x3000
+   int var_84;     //0x10 - field of structure that is used - arg_C
+   void* var_78;   //0x14 - field of structure that is used - 0 or ? or (some result of sceKernelGetPaddr)
+   int var_74;     //0x18 - field of structure that is used - arg_10
+                   //0x1C - can be set by sub_B9A790
+                   //0x20 - ?
+                   //0x24 - ?
+                   //0x28 - ?
+                   //0x2C - start of 0x40 buffer
+
+   //resulting structure will fit the stack exactly:
+   //0x2C + 0x40 = 0x6C
+   //0x98 - 0x6C = 0x2C - address of cookie
+
+   int var_2C = var_009EA004; //cookie
+
+   //----------------------
+   
+   var_98 = ptr0;
+   var_94 = ptr1; //it can be important that var_94 is pointer
+   
+   //----------------------
+   
+   void* R1;
+   int R10;
+
+   int res_0 = get_r1_r10_flags(ptr1, param0, arg_0, arg_8, var_2C, R1, R10, var_90, var_94, var_8C);
+   if(res_0 != 0)
+      return res_0;
+
+   var_78 = R1;
+
+   //----------------------
+
+   int R4;
+   get_r4_flag(ptr0, ptr1, param0, arg_8, arg_C, R4);
+   
+   //------------------------------------
+
+   var_84 = arg_C;
+
+   update_r4_flag(param0, arg_10, R4);
+
+   //------------------------------------
+
+   var_74 = arg_10;
+
+   SceKernelSuspendForDriver_4df40893(0x00);
+
+   int res_1 = call_subs_update_r4_flag(arg_8, arg_4, arg_14, R10, var_2C, R4, var_98);
+   if(res_1 != 0)
+      return res_1;
+
+  //------------------------------------
+   
+   var_8C = var_8C | R4;
+
+   return finalize_buffer(id, var_8C, var_2C, R4, &var_98);
 }
 
 // ================

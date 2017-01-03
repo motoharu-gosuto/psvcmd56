@@ -20,7 +20,7 @@ int SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(int unk0, int unk1)
    return 0;
 }
 
-int SceSysmemForDriver_sceKernelGetPaddr_8d160e65(int unk0, int unk1)
+int SceSysmemForDriver_sceKernelGetPaddr_8d160e65(void* unk0, void** unk1)
 {
    //wrapper for SceSysmem.SceCpuForKernel._exp_67343a07 - very interesting
    return 0;
