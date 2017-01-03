@@ -15,159 +15,50 @@
 
 struct input_B9A684
 {
-   int unk0;
-   int unk4;
-   int unk8;
-   int unkC;
-   int unk10;
-   int unk14;
-   int unk18;
-   int unk1C;
-   int unk20;
-   int unk24;
-   int unk28;
-   int unk2C;
-   int unk30;
-   int unk34;
-   int unk38;
-   int unk3C;
-   int unk40;
-   int unk44;
-   int unk48;
-   int unk4C;
-   int unk50;
-   int unk54;
-   int unk58;
-   int unk5C;
-   int unk60;
-   int unk64;
-   int unk68;
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+   int unk_20;
+   int unk_24;
+   int unk_28;
+   
+   char unk_2C[0x40];
 };
 
 int sub_B9A684(input_B9A684* dest, char* source, int sizeFlag)
 {
-   /*
-   var_5C= -0x5C - array of size 0x40
-   var_58= -0x58
-   var_54= -0x54
-   var_50= -0x50
-   var_4C= -0x4C
-   var_48= -0x48
-   var_44= -0x44
-   var_40= -0x40
-   var_3C= -0x3C
-   var_38= -0x38
-   var_34= -0x34
-   var_30= -0x30
-   var_2C= -0x2C
-   var_28= -0x28
-   var_24= -0x24
-   var_20= -0x20
-   var_1C= -0x1C
-   */
+   int cookie = var_009EA004;
+   int mask = (sizeFlag & 0x300);
+   int tempSize;
 
-   int r5 = &var_009EA004;
-   int r2 = r2 & 0x300;
-   int r4 = r0;
-   int r3 = r5[0];
-   int r6 = r1;
-
-   if(r2 != 0) //check if r2 is equal to 0x100 or 0x200 or to 0x300
-   {
-      if(r2 == 0x100)
-      {
-         int r7 = 0x10;
-      }
-      else
-      {
-         if(r2 == 0x300)
-         {
-            int r7 == 0x20;
-         }
-         else
-         {
-            if(r2 == 0x200)
-            {
-               int r7 = 0x18;
-            }
-            else
-            {
-               int r7 = 0x00;
-            }
-         }
-      }
-   }
-
-   int r1 = 0;
-   int r2 = 0x40;
-   int r0 = &var_5C;
-   memset(r0, r1, r2);
-
-   int r2 = r7;
-   int r0 = &var_5C;
-   int r1 = r6;
-   memcpy(r0, r1, r2);
-
-   int r0 = var_5C;
-   int r2 = var_1C;
-   int r3 = r5[0];
-   r4[0x2C] = r0;
-
-   int r0 = var_58;
-   r4[0x30] = r0;
-
-   int r0 = var_54;
-   r4[0x34] = r0;
-
-   int r0 = var_50;
-   r4[0x38] = r0;
-
-   int r0 = var_4C;
-   r4[0x3C] = r0;
-
-   int r0 = var_48;
-   r4[0x40] = r0;
-
-   int r0 = var_44;
-   r4[0x44] = r0;
-
-   int r0 = var_40;
-   r4[0x48] = r0;
-
-   int r0 = var_3C;
-   r4[0x4C] = r0;
-
-   int r0 = var_38;
-   r4[0x50] = r0;
-
-   int r0 = var_34;
-   r4[0x54] = r0;
-
-   int r0 = var_30;
-   r4[0x58] = r0;
-
-   int r0 = var_2C;
-   r4[0x5C] = r0;
-
-   int r0 = var_28;
-   r4[0x60] = r0;
-
-   int r0 = var_24;
-   r4[0x64] = r0;
-
-   int r0 = var_20;
-   r4[0x68] = r0;
-
-   int r0 = 0;
-
-   if(r2 == r3)
-   {
-      return 0
-   }
+   if(mask == 0) //check if r2 is equal to 0x100 or 0x200 or to 0x300
+      tempSize = 0x08;
+   else if(mask == 0x100)
+      tempSize = 0x10;
+   else if(mask == 0x300)
+      tempSize == 0x20;
+   else if(mask == 0x200)
+      tempSize = 0x18;
    else
-   {
+      tempSize = 0x00;
+
+   char buffer_temp[0x40];
+
+   memset(buffer_temp, 0, 0x40);
+
+   memcpy(buffer_temp, source, tempSize);
+   
+   memcpy(dest->unk_2C, buffer_temp, 0x40);
+
+   if(cookie == var_009EA004)
+      return 0;
+   else
       return STACK_CHECK_FAIL;
-   }
 }
 
 struct input_B9A790
