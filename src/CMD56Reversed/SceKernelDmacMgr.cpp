@@ -1944,7 +1944,7 @@ int SceDmacmgrForDriver_543f54cf(int unk0)
 
 //========================================
 
-int SceDmacmgrForDriver_397a917c(int unk0, int unk1, int unk2, int unk3)
+int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3)
 {
    
    return 0;
@@ -1952,17 +1952,234 @@ int SceDmacmgrForDriver_397a917c(int unk0, int unk1, int unk2, int unk3)
 
 //========================================
 
-int sub_992000()
+void sub_992000(void* r0)
 {
-   return 0;
+   int r3 = r0[0x38];
+   int r4 = r0[0x10];
+   int r1 = r0[0x14];
+   int r3 = r3 & 0x40;
+   if(r3 != 0)
+      return;
+
+   int r5 = r0[0x38];
+   int r2 = r1[0x00];
+   int r5 = r5 | 0x40;
+   r0[0x38] = r5;
+   r2[0x1C] = r3;
+
+   DSB(SY);
+
+   while(true) //this looks like infinite loop that waits for sync ?
+   {
+      int r3 = r2[0x24];
+      int r3 = r3 << 0x1F;
+      if(r3 >= 0)
+         break;
+   }
+
+   int r3 = r2[0x28];
+   if(r3 != 0)
+      return;
+
+   int r7 = r4 + 0x10C;
+   int r6 = r0[0x38];
+   int r7 = r7 - r1;
+   int r5 = r4[0xC];
+   //ASRS            R7, R7, #3
+   int lr = 1;
+   r1[0x04] = r3;
+   int r2 = 0xFFBF;
+   int r1 = lr << r7;
+   r0[0x14] = r3;
+   int r2 =r2 & r6;
+   int r3 = r5 | r1;
+   r4[0x0C] = r3;
+   r0[0x38] = r2;   
 }
 
-int sub_992100()
+//========================================
+
+void sub_992100(void* r0)
 {
-   return 0;
+   int r4 = r0;
+   int r5 = r0[0x10];
+   int r6 = r5 + 0x08;
+   int r0 = r6;
+   int r0 = SceCpuForDriver_lock_bf82deb2(r0);
+   int r3 = r5[0x00];
+   if(r3 == r4)
+   {
+      int r3 = r4[0x04];
+      r5[0x00] = r3;
+   }
+
+   int r3 = r5[0x04];
+   if(r3 == r4)
+   {
+      int r3 = r4[0x00];
+      r5[0x04] = r3;
+   }
+
+   int r3 = r4[0x00];
+   if(r3 != 0)
+   {
+      int r2 = r4[0x04];
+      r3[0x04] = r2;
+   }
+
+   int r2 = r4[0x04];
+   if(r2 != 0)
+   {
+      r2[0x00] = r3;
+   }
+
+   int r3 = 0;
+   int r0 = r6;
+   r4[0x00] = r3;
+   r4[0x04] = r3;
+   int r0 = SceCpuForDriver_unlock_d6ed0c46(r0);
+   int r2 = r4[0x38];
+   int r3 = 0xFFF7;
+   int r3 = r3 & r2;
+   r4[0x38] = r3;
 }
 
-int SceDmacmgrForDriver_adff1186(int unk)
+//========================================
+
+int exit_loc_992D5C(int r8)
 {
-   return 0;
+   int r0 = r8;
+   return r0;
+}
+
+int exit_loc_992DA2()
+{
+   int r8 = 0x80027101; //SCE_KERNEL_ERROR_ILLEGAL_CONTEXT
+   return exit_loc_992D5C(r8);
+}
+
+int exit_loc_992D8C()
+{
+   int r8 = 0x80020005; //SCE_KERNEL_ERROR_INVALID_FLAGS
+   int r0 = r8;
+   return r0;
+}
+
+int exit_loc_992DAC(int r5, int r7)
+{
+   int r0 = r5;
+   int r1 = r7;
+   int r8 = 0x80027205; //SCE_KERNEL_ERROR_NOT_INITIALIZED
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_992D5C(r8);
+}
+
+int exit_loc_992DBE(int r5, int r7)
+{
+   int r0 = r5;
+   int r1 = r7;
+   int r8 = 0x80027208;
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   return exit_loc_992D5C(r8);
+}
+
+int exit_busy()
+{
+   int r8 = 0x80010010; //SCE_ERROR_ERRNO_EBUSY
+   return exit_loc_992D5C(r8);
+}
+
+int SceDmacmgrForDriver_adff1186(int id)
+{
+   int r0 = id;
+   int r4 = r0;
+   int r0 = SceIntrmgrForDriver_182ee3e3(r0);
+   int r8 = r0;
+   if(r0 != 0)
+      return exit_loc_992DA2(); //illegal context error
+
+   int r4 = r4 >> 1;
+   int r9 = &_008FE000;
+   int r4 = r4 << 2;
+   int r2 = r9 | 1;
+   int r3 = r4[0x30];
+   if(r3 != r2)
+      return exit_loc_992D8C(); //invalid flags error
+
+   int r5 = r4 + 0x2C;
+   int r0 = r5;
+   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
+   int r3 = r4[0x38];
+   int r7 = r0;
+   int r6 = r3 << 0x1F;
+   if(r6 >= 0)
+      return exit_loc_992DAC(r5, r7); //not initialized error
+
+   int r3 = r4[0x38];
+   int r0 = r3 << 0x19;
+   if(r0 < 0)
+      return exit_loc_992DBE(r5, r7);
+
+   int r3 = r4[0x14];
+   if(r3 != 0)
+   {
+      int r0 = r4;
+      sub_992000(r0);
+      int r3 = r4[0x38];
+      int r1 = r3 << 0x19;
+
+      if(r1 < 0)
+      {
+         int r6 = 5;
+         int r1 = r7;
+         int r0 = r5;
+         int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+
+         while(true)
+         {
+            int r0 = 0x0A; //10 ms
+            int r0 = SceThreadmgrForDriver_sceKernelDelayThread_4b675d05(r0);
+            int r0 = r5;
+            int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
+            int r3 = r4[0x38];
+            int r7 = r0;
+            int r1 = r7;
+            int r0 = r5;
+            int r2 = r3 << 0x19;
+            if(r2 >= 0)
+               break;
+
+            int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+            int r6 = r6 - 1;
+
+            if(r6 == 0)
+               return exit_busy();
+         }
+      }
+   }
+
+   //loc_992D62:
+
+   int r3 = r4[0x38];
+   int r3 = r3 << 0x1C;
+   if(r3 < 0)
+   {
+      int r0 = r4;
+      sub_992100(r0);
+   }
+   
+   int r0 = r4[0x34]; //thread id?
+   int r0 = SceThreadmgrForDriver_71ecb352(r0); //is this exit function?
+   int r3 = r0;
+   int r0 = r5;
+   int r1 = r7;
+   r4[0x38] = (short) r3;
+   r4[0x30] = r3;
+   
+   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0 = r9[0x20];
+   int r1 = r4;
+   int r0 = SceSysmemForKernel_571660aa(r0, r1); //another cleanup exit function?
+   int r0 = r8;
+   return r0;
 }

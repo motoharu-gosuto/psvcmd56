@@ -66,9 +66,9 @@ int SceDmacmgrForDriver_01a599e0(int id, input_01a599e0* unk1, int unk2);
 
 int SceDmacmgrForDriver_543f54cf(int unk0);
 
-int SceDmacmgrForDriver_397a917c(int unk0, int unk1, int unk2, int unk3);
+int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3);
 
 //paired exit function
-int SceDmacmgrForDriver_adff1186(int unk);
+int SceDmacmgrForDriver_adff1186(int id);
 
 int SceDmacmgrForDriver_167079fc(int id, void* r1, int r2, int r3);

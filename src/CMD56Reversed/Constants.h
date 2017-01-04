@@ -10,3 +10,5 @@
 //===================================
 
 #define STACK_CHECK_FAIL -1
+
+#define DSB(option)
