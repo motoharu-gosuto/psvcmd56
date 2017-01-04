@@ -27,8 +27,6 @@ struct global_008FE000
 
 //==========================================================================
 
-//==========================================================================
-
 global_008FE000 _008FE000;
 
 char* unk_994808 = "SceDmacDefault";
@@ -45,7 +43,6 @@ int _008FE254;
 
 int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
-   /*
    int r0 = name;
    int r6 = r0;
    int r0 = SceIntrmgrForDriver_182ee3e3(r0);
@@ -92,9 +89,6 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
    r4->unk_38 = r3;
    int r0 = r8;
    return r0;
-   */
-
-   return 0;
 }
 
 //==========================================================================
@@ -149,7 +143,6 @@ int exit_loc_992EFA(int r2, int* r6)
 
 int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
 {
-   /*
    int r0 = r0 >> 1;
    int r5 = _008FE000;
    int r4 = r0 << 2;
@@ -252,9 +245,6 @@ int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
    int r0 = 0;
 
    return r0;
-   */
-
-      return 0;
 }
 
 //========================================
@@ -306,6 +296,8 @@ int sub_99214C()
       }
    }
 }
+
+//========================================
 
 int exit_loc_992402()
 {
@@ -633,6 +625,8 @@ int sub_992288(int unk0, int unk1, int unk2, int unk3,
    }
 }
 
+//========================================
+
 int exit_loc_9928F6(int r0, int* r5, int var_14)
 {
    int r2 = var_14;
@@ -703,6 +697,8 @@ int sub_99289C(int unk0)
    }
 }
 
+//========================================
+
 int sub_9921FC(int unk0, int unk1)
 {
    int r5 = r0;
@@ -768,6 +764,8 @@ int sub_9921FC(int unk0, int unk1)
       return r0;
    }
 }
+
+//========================================
 
 int exit_loc_992A7C(int r0, int var_74, int var_2C)
 {
@@ -1318,7 +1316,7 @@ int sub_992910(int unk0, int unk1, int unk2)
    return 0;
 }
 
-//---------------
+//========================================
 
 int exit_loc_993062(int* r6, int r10)
 {
@@ -1645,7 +1643,6 @@ struct input1_992460 //looks like to be array or contain array at offset 0
 
 void sub_992460(input1_992460* r0, input2_992460* r1)
 {
-   /*
    int r3 = r0->unk_C;
    if(r3 == 0)
       return;
@@ -1769,7 +1766,6 @@ void sub_992460(input1_992460* r0, input2_992460* r1)
    //STRD.W		R2, R2,	[R1]
    int r2 = r2 & r0;
    r1->unk_38 = r3;
-   */
 }
 
 //========================================
@@ -1869,19 +1865,14 @@ int exit_loc_993332(input1_992460* r5, int* r6, int* r7, int r8)
 
 int exit_loc_9932F4()
 {
-   /*
    int r4 = r3[4];
    int r3 = r4[0];
    int r4 = r5[4]; //WHAT?
    return exit_loc_9932FA();
-   */
-
-   return 0;
 }
 
 int SceDmacmgrForDriver_543f54cf(int unk0)
 {
-   /*
    int r0 = r0 >> 1;
    int r3 = &_008FE000;
    int r4 = r0 << 2;
@@ -1949,9 +1940,6 @@ int SceDmacmgrForDriver_543f54cf(int unk0)
    r4[4] = r2;
 
    return exit_loc_9932F4();
-   */
-
-   return 0;
 }
 
 //========================================
