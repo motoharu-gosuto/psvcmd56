@@ -20,7 +20,7 @@ int SceCpuForDriver_unlock_d6ed0c46(int *addr)
    return 0;
 }
 
-int SceCpuForDriver_cda96e81(int unk0, int unk1, int unk2)
+int SceCpuForDriver_cda96e81(void* unk0, int value, int flags)
 {
    return 0;
 }

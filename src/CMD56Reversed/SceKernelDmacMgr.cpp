@@ -277,7 +277,7 @@ int sub_99214C()
          
          int r0 = r0 + 0x20;
          int r1 = r4 + 0x10;
-         int r0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(r0, r1);
+         int r0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
          int r3 = r4[0x10];
          int r2 = 0;
          r4[0x10] = r2;
@@ -654,7 +654,7 @@ int sub_99289C(int unk0)
    int r0 = &var_1C;
    var_18 = r2;
    var_14 = r3;
-   int r0 = SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(r0, r1);
+   int r0 = SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(r0, r1);
    if(r0 < 0)
    {
       return exit_loc_9928F6(r0, r5, var_14);
@@ -674,7 +674,7 @@ int sub_99289C(int unk0)
          int r3 = &_008FE000;
          int r1 = r1 << 3;
          int r0 = r3[0x24];
-         int r0 = SceSysmemForDriver_sceKernelMemPoolAlloc_7b4cb60a(r0, r1);
+         int r0 = SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(r0, r1);
          int r3 = r0;
          if(r3 == 0)
          {
@@ -688,7 +688,7 @@ int sub_99289C(int unk0)
             r4[0x10] = r3;
             int r1 = r4;
             r4[0x04] = r2;
-            int r0 = SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(r0, r1);
+            int r0 = SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(r0, r1);
             //AND.W           R0, R0, R0,ASR#31
 
             return exit_loc_9928F6(r0, r5, var_14);
@@ -1026,7 +1026,7 @@ int sub_992910(int unk0, int unk1, int unk2)
          int r2 = var_78; //is this argument???
          int r1 = ptr_54;
          int r0 = r2[0x24];
-         SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
       }
       
       if(r9 <= 0)
@@ -1122,7 +1122,7 @@ int sub_992910(int unk0, int unk1, int unk2)
          int r9 = r0;
          int r1 = ptr_54;
          int r0 = r3[0x24];
-         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
          int r0 = r9;
          return exit_loc_992A7C(r0, var_74, var_2C);
       }
@@ -1150,7 +1150,7 @@ int sub_992910(int unk0, int unk1, int unk2)
       {
          int r0 = r10[0x24];
          int r1 = ptr_54;
-         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
       }
             
       int r3 = var_4C;
@@ -1158,7 +1158,7 @@ int sub_992910(int unk0, int unk1, int unk2)
       {
          int r0 = r10[0x24];
          int r1 = var_40;
-         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
       }
 
       if(r9 < 0)
@@ -1276,7 +1276,7 @@ int sub_992910(int unk0, int unk1, int unk2)
          int r2 = var_78;
          int r1 = var_40;
          int r0 = r4[0x24];
-         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
       }
       
       if(r9 < 0)

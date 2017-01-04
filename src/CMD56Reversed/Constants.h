@@ -16,3 +16,4 @@
 typedef int SceUID;
 typedef unsigned int SceSize;
 typedef unsigned int SceUInt;
+typedef unsigned int SceUInt32;

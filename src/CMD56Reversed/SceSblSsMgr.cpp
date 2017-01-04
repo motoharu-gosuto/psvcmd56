@@ -294,7 +294,7 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
       if((arg_8 << 0x15) >= 0) //i do not understand this check yet
       {
          void* var_9C = 0x00;
-         int res_0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(ptr1, &var_9C);
+         int res_0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(ptr1, &var_9C);
          
          if(res_0 < 0)
             return exit_loc_B99762(0x800F1528, var_2C);
@@ -314,7 +314,7 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
       else
       {
          void* var_A0 = 0x00;
-         int res_1 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(param0, &var_A0);
+         int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(param0, &var_A0);
                            
          if(res_1 < 0)
             return exit_loc_B99762(0x800F1528, var_2C);
@@ -364,7 +364,7 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
                else
                {
                   void* var_A0 = 0x00;
-                  int res_1 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(param0, &var_A0);
+                  int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(param0, &var_A0);
                            
                   if(res_1 < 0)
                      return exit_loc_B99762(0x800F1528, var_2C);

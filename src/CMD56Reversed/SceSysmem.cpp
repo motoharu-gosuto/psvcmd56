@@ -1,51 +1,53 @@
 #include "SceSysmem.h"
 
-int SceSysmemForDriver_sceKernelAllocMemBlockForKernel_c94850c9()
+result_c8672a3d* SceSysmemForKernel_c8672a3d(input1_c8672a3d* ctx)
 {
    return 0;
 }
 
-int SceSysmemForDriver_sceKernelFreeMemBlockForKernel_009e1c61()
+int SceSysmemForKernel_571660aa(input1_571660aa* ctx, int arg_1)
 {
    return 0;
 }
 
-int SceSysmemForDriver_sceKernelGetMemBlockBaseForDriver_a841edda()
+int SceSysmemForDriver_e655852f(int numerator_div2)
 {
    return 0;
 }
 
-int SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(int unk0, int unk1)
+//--------------------------------
+
+SceUID SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(const char *name, SceKernelMemBlockType type, int size, SceKernelAllocMemBlockKernelOpt *optp)
 {
    return 0;
 }
 
-int SceSysmemForDriver_sceKernelGetPaddr_8d160e65(void* unk0, void** unk1)
+int SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(SceUID uid)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_ksceKernelGetMemBlockBase_a841edda(SceUID uid, void **basep)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(addr_pair* input, paddr_list_req *req)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(void *vaddr, void **result)
 {
    //wrapper for SceSysmem.SceCpuForKernel._exp_67343a07 - very interesting
    return 0;
 }
 
-result_c8672a3d* SceSysmemForKernel_c8672a3d(int unk0)
+void* SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize size)
 {
    return 0;
 }
 
-int SceSysmemForKernel_571660aa(int r0, int r1)
-{
-   return 0;
-}
-
-int SceSysmemForDriver_e655852f(int unk0)
-{
-   return 0;
-}
-
-void* SceSysmemForDriver_sceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize size)
-{
-   return 0;
-}
-
-void SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(SceUID pool, void *ptr)
+void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, void *ptr)
 {
 }
