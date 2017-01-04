@@ -259,9 +259,52 @@ int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
 
 //========================================
 
+int exit_loc_992172(int r4)
+{
+   int r0 = r4;
+   return r0;
+}
+
 int sub_99214C()
 {
-   return 0;
+   int r5 = &_008FE000;
+   
+   //loc_992156:
+   while(true)
+   {
+      int r4 = r5[0x28];
+      int r3 = &_008FE000;
+      int r0 = r3 + 0x28;
+      int r1 = r4;
+   
+      if(r4 == 0)
+      {
+         r0 = r3[0x20];
+         SceSysmemForKernel_c8672a3d(r0);
+         int r4 = r0;
+         if(r0 == 0)
+            return exit_loc_992172(r4);
+         
+         int r0 = r0 + 0x20;
+         int r1 = r4 + 0x10;
+         int r0 = SceSysmemForDriver_sceKernelGetPaddr_8d160e65(r0, r1);
+         int r3 = r4[0x10];
+         int r2 = 0;
+         r4[0x10] = r2;
+         int r3 = r3 | 1;
+         r4[0x10] = r3;
+         return exit_loc_992172(r4);
+      }
+      else
+      {
+         int r2 = r4[0x00];
+         int r0 = SceCpuForDriver_cda96e81(r0, r1, r2);
+         if(r4 == r0)
+            return exit_loc_992172(r4);
+
+         //goto loc_992156
+      }
+   }
 }
 
 int sub_992288()
@@ -269,9 +312,70 @@ int sub_992288()
    return 0;
 }
 
+int exit_loc_9928F6(int r0, int* r5, int var_14)
+{
+   int r2 = var_14;
+   int r3 = r5[0];
+   if(r2 == r3)
+      return r0;
+   else
+      return STACK_CHECK_FAIL;
+}
+
 int sub_99289C(int unk0)
 {
-   return 0;
+   int r5 = &var_009EA004;
+   int r4 = r2;
+   int r6 = 0x14;
+   int r3 = r5[0];
+   int r2 = r1 & (~0xFF000000);
+   var_1C = r0;
+   int r1 = r4;
+   r4[0] = r6;
+   int r0 = &var_1C;
+   var_18 = r2;
+   var_14 = r3;
+   int r0 = SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(r0, r1);
+   if(r0 < 0)
+   {
+      return exit_loc_9928F6(r0, r5, var_14);
+   }
+   else
+   {
+      int r1 = r4[0x0C];
+      if(r1 == 1)
+         int r0 = 0;
+      
+      if(r1 == 1)
+      {
+         return exit_loc_9928F6(r0, r5, var_14);
+      }
+      else
+      {
+         int r3 = &_008FE000;
+         int r1 = r1 << 3;
+         int r0 = r3[0x24];
+         int r0 = SceSysmemForDriver_sceKernelMemPoolAlloc_7b4cb60a(r0, r1);
+         int r3 = r0;
+         if(r3 == 0)
+         {
+            int r0 = 0x8002710B; //SCE_KERNEL_ERROR_NO_MEMORY
+            return exit_loc_9928F6(r0, r5, var_14);
+         }
+         else
+         {
+            int r2 = r4[0x0C];
+            int r0 = &var_1C;
+            r4[0x10] = r3;
+            int r1 = r4;
+            r4[0x04] = r2;
+            int r0 = SceSysmemForDriver_sceKernelGetPaddrList_e68beebd(r0, r1);
+            //AND.W           R0, R0, R0,ASR#31
+
+            return exit_loc_9928F6(r0, r5, var_14);
+         }
+      }
+   }
 }
 
 int sub_9921FC(int unk0, int unk1)
