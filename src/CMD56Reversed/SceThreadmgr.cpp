@@ -2,7 +2,7 @@
 
 #include "SceThreadmgr.h"
 
-int SceThreadmgrForDriver_0c1d3f20(int unk0, int unk1, int unk2, int unk3)
+int SceThreadmgrForDriver_0c1d3f20(int unk0, int num1, int num2, int unk3)
 {
    return 0;
 }

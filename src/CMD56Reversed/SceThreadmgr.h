@@ -20,7 +20,7 @@ struct sce_time
 
 typedef unsigned int SceUInt;
 
-int SceThreadmgrForDriver_0c1d3f20(int unk0, int unk1, int unk2, int unk3);
+int SceThreadmgrForDriver_0c1d3f20(int unk0, int num1, int num2, int unk3);
 int SceThreadmgrForDriver_3c8b55a9(int un0, int unk1, int unk2);
 int SceThreadmgrForDriver_4336baa4(int unk0, int unk1, int unk2, int unk3);
 int SceThreadmgrForDriver_70627f3a();
