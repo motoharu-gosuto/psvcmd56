@@ -12,3 +12,7 @@
 #define STACK_CHECK_FAIL -1
 
 #define DSB(option)
+
+typedef int SceUID;
+typedef unsigned int SceSize;
+typedef unsigned int SceUInt;

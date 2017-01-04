@@ -1,4 +1,5 @@
 #include "SceSblGcAuthMgrGlobalVariables.h"
+#include "Constants.h"
 
 //GC AUTH STUFF
 
@@ -6,7 +7,7 @@
 
 //this variable is set by sub_CA9078
 //by call to SceSblGcAuthMgr_SceThreadmgrForDriver_imp_30e93c31
-int _00BD84D8_THREAD_ID; //I would assume this is thread id or something like that
+SceUID _00BD84D8_SEMA_ID; //This is confirmed to be thread id since it is used by ksceKernelSignalSema function
 
 sd_context* _00BDCBC0_SD_CTX_ELM; //size 4
 char  _00BDCBC4[0x30]; // temp buffer for storing parts of packets

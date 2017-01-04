@@ -2,44 +2,48 @@
 
 #include "SceThreadmgr.h"
 
-int SceThreadmgrForDriver_0c1d3f20(int unk0, int num1, int num2, int unk3)
+//------------------------------------
+
+int SceThreadmgrForDriver_70627f3a(int unk0)
 {
    return 0;
 }
 
-//assume - some thread init
-int SceThreadmgrForDriver_3c8b55a9(int un0, int unk1, int unk2)
+int SceThreadmgrForDriver_db395782(void* unk0)
 {
    return 0;
 }
 
-int SceThreadmgrForDriver_4336baa4(int unk0, int unk1, int unk2, int unk3)
-{
-   return 0;
-}
-
-int SceThreadmgrForDriver_70627f3a()
-{
-   return 0;
-}
+//------------------------------------
 
 int SceThreadmgrForDriver_71ecb352(int unk0)
 {
    return 0;
 }
 
-//assume - some thread deinit
-int SceThreadmgrForDriver_d270498b(int unk0, int unk1)
+//------------------------------------
+
+int SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits, SceUInt *timeout)
 {
    return 0;
 }
 
-int SceThreadmgrForDriver_db395782()
+int SceThreadmgrForDriver_ksceKernelPollEventFlag_76c6555b(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits)
 {
    return 0;
 }
 
-int SceThreadmgrForDriver_76c6555b(int unk0, int unk1, int unk2, int unk3)
+int SceThreadmgrForDriver_ksceKernelWaitSema_3c8b55a9(SceUID semaid, int signal, SceUInt *timeout)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_ksceKernelSignalSema_d270498b(SceUID semaid, int signal)
+{
+   return 0;
+}
+
+SceUID SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt)
 {
    return 0;
 }

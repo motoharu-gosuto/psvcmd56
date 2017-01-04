@@ -20,9 +20,6 @@ struct result_c8672a3d
    int unk_3C;
 };
 
-typedef unsigned int SceUID;
-typedef unsigned int SceSize;
-
 int SceSysmemForDriver_sceKernelAllocMemBlockForKernel_c94850c9();
 int SceSysmemForDriver_sceKernelFreeMemBlockForKernel_009e1c61();
 int SceSysmemForDriver_sceKernelGetMemBlockBaseForDriver_a841edda();

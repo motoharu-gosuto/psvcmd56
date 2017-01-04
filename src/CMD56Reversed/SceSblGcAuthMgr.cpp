@@ -28,7 +28,7 @@ void SceSblGcAuthMgr_InitializeContext()
 {
    //TODO: figure out how it is initialized
 
-   _00BD84D8_THREAD_ID = 0xFFFFFFFF;
+   _00BD84D8_SEMA_ID = 0xFFFFFFFF;
 }
 
 //==================================
@@ -43,7 +43,7 @@ int exit_loc_CA91F0(int r6, int var2C)
 
 int exit_loc_CA91DA(int r6, int var2C)
 {
-   int r0 = SceThreadmgrForDriver_d270498b(_00BD84D8_THREAD_ID, 0x01);
+   int r0 = SceThreadmgrForDriver_ksceKernelSignalSema_d270498b(_00BD84D8_SEMA_ID, 0x01);
       
    if(r0 != 0)
       return exit_loc_CA91F0(0x808A0701, var2C);
@@ -61,9 +61,9 @@ int initialize_sd(int* argument0, int* cookie)
 {
    //=============================
 
-   //do something with thread manager
+   //wait for sema - TODO: need to insert in global initialization function - function that creates sema (there is only one function that initializes _00BD84D8_SEMA_ID)
 
-   int res0 = SceThreadmgrForDriver_3c8b55a9(_00BD84D8_THREAD_ID, 0x01, 0x00);
+   int res0 = SceThreadmgrForDriver_ksceKernelWaitSema_3c8b55a9(_00BD84D8_SEMA_ID, 0x01, 0x00);
 
    if(res0 != 0)
      return exit_loc_CA91F0(0x808A0701, *cookie);

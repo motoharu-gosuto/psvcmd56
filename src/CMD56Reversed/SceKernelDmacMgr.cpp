@@ -71,7 +71,7 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
    int r2 = r1;
    int r3 = r1;
    r4->unk_30 = r7;
-   int r0 = SceThreadmgrForDriver_4336baa4(r0, r1, r2, r3);
+   SceUID r0 = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(r0, r1, r2, r3);
    int r6 = r0 - 0;
    if(r6 < 0)
    {
@@ -2059,12 +2059,12 @@ int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3)
             }
             else
             {
-               int r0 = r10;
+               SceUID r0 = r10;
                int r1 = r6;
-               int r3 = r8;
-               int r2 = 5;
-               int r0 = SceThreadmgrForDriver_76c6555b(r0, r1, r2, r3);
-               if(r0 >=0 )
+               unsigned int* r3 = r8;
+               int r2 = SCE_EVENT_WAIT_5;
+               int r0 = SceThreadmgrForDriver_ksceKernelPollEventFlag_76c6555b(r0, r1, r2, r3);
+               if(r0 >= 0)
                {
                   //goto loc_993860
                }
@@ -2084,8 +2084,8 @@ int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3)
    //loc_993854:
    {
       int r1 = 1;
-      int r2 = 5;
-      int r0 = SceThreadmgrForDriver_0c1d3f20(r0, r1, r2, ?);
+      int r2 = SCE_EVENT_WAIT_5;
+      int r0 = SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(r0, r1, r2, r3, ?);
       if(r0 == 0)
       {
          return exit_loc_993846(r0);

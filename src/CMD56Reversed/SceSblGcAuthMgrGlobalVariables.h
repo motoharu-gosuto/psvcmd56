@@ -11,7 +11,7 @@
 
 #include "SceSdif.h"
 
-extern int _00BD84D8_THREAD_ID;
+extern int _00BD84D8_SEMA_ID;
 
 extern sd_context* _00BDCBC0_SD_CTX_ELM;
 extern char  _00BDCBC4[0x30];
