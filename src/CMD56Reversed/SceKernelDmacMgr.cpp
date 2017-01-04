@@ -307,9 +307,330 @@ int sub_99214C()
    }
 }
 
-int sub_992288()
+int exit_loc_992402()
 {
-   return 0;
+   int r3 = 0x80020005; //SCE_KERNEL_ERROR_INVALID_FLAGS
+   int r0 = r3;
+   return r0;
+}
+
+int exit_loc_992368()
+{
+   int r3 = 0x8002710B; //SCE_KERNEL_ERROR_NO_MEMORY
+   int r0 = r3;
+   return r0;
+}
+
+int exit_loc_9923E8()
+{
+   int r7 = arg_C;
+   int r2 = 0;
+   r0[0x2C] = r3;
+   int r1 = 0xFFFFFFFF;
+   int r3 = r2;
+   r0[0x3C] = r1;
+   r0[0x00] = r2;
+   r7[0x00] = r0;
+   int r0 = r3;
+   return r0;
+}
+
+int sub_992288(int unk0, int unk1, int unk2, int unk3,
+               int arg_0, int arg_4, int arg_8, int arg_C)
+{
+   int var_40;
+   int var_3C;
+   int var_38;
+   int var_34;
+   int var_30;
+   int var_2C;
+
+   //-----------------------
+
+   int r0 = unk0;
+   int r1 = unk1;
+   int r2 = unk2;
+   int r3 = unk3;
+
+   int r7 = r0;
+   int r10 = arg_4;
+
+   if(r1 == 0)
+      return exit_loc_992402();
+   
+   int r5 = r3[0];
+   if(r5 == 0)
+      return exit_loc_992402();
+
+   int r4 = r2[0];
+   int r2 = arg_0;
+   int r0 = r10[0x18];
+   int r3 = r10[0x08];
+   int r6 = r2[0x00];
+   int r1 = r4 + (r1 << 3);
+   var_3C = r1;
+   int r1 = r3 & 0xFF000000;
+   int r9 = r6 + (r5 << 3);
+   var_34 = r1;
+  
+   if(r2 != 0)
+   {
+      int r2 = r2 - 1;
+   }
+
+   int r0 = r0 >> 0x10;
+   int r5 = 0;
+   int r11 = r9;
+   var_40 = r7;
+   if(r0 != 0) //not sure
+   {
+      int r0 = r0 + 0xFFFFFFFF;
+   }
+
+   int r8 = r5;
+   int r0 = r0 | r2;
+   int r2 = r3 & 0x0F000000;
+   int r3 = r3 & 0xF0000000;
+   var_38 = r0;
+   var_2C = r2;
+   int r9 = r5;
+   var_30 = r3;
+   int r0 = sub_99214C();
+   if(r0 == 0)
+      return exit_loc_992368();
+
+   //loc_9922F4:
+   int r1 = r4[0];
+   r0[0x0C] = r8;
+   r0[0x20] = r1;
+   int lr = r6[0];
+   r0[0x24] = lr;
+   int r3 = r4[0x04];
+   int r2 = r6[0x04];
+   if(r3 < r2)
+   {
+      if(r3 <= r2) //why this check ?
+      {
+         r4 = r4 + 0x08;
+         r6 = r6 + 0x08;
+      }
+
+      if(true) //do not understand this
+      {
+         //goto loc_99231C
+      }
+      else
+      {
+         int r7 = var_2C;
+         if(r7 == 0)
+         {
+            int r1 = r1 + r2;
+            int r3 = r3 - r2;
+            r4[0x00] = r1;
+            r4[0x04] = r2;
+            r4[0x08] = r3;
+         }
+
+         r1 = var_40;
+         int r3 = r2;
+         int r6 = r6 + 0x08;
+         int r8 = r8 + r3;
+         int r2 = r10[0x0C];
+         if(r1 != 0x13)
+         {
+            //goto loc_992328
+         }
+         else
+         {
+            //goto loc_99239C
+         }
+      }
+   }
+   else
+   {
+      int r7 = var_30;
+      if(r7 == 0)
+      {
+         int r1 = r3 + lr;
+         int r2 = r2 - r3;
+         r6[0x00] = r1;
+         r6[0x04] = r2;
+      }
+
+      int r4 = r4 + 0x08;
+
+      //goto loc_99231C
+   }
+
+   //loc_99231C
+   {
+      int r1 = var_40;
+      int r8 = r8 + r3;
+      int r2 = r10[0x0C];
+      if(r1 == 0x13)
+      {
+         //goto loc_99239C
+      }
+      else
+      {
+         //goto loc_992328
+      }
+   }
+
+   //loc_992328
+   {
+      int r7 = var_38;
+      int r3 = r3 & r7; //tst - probably r3 is not touched
+      if(r3 != 0) //not sure
+         return loc_992402();
+
+      int r1 = var_34;
+      int r3 = r3 | r1;
+      r0[0x28] = r3;
+
+      //goto loc_992334
+   }
+
+   //loc_99239C
+   {
+      int r1 = r10[0x10];
+      int lr = r2 & 0x07;
+      r0[0x28] = r3;
+      int r3 = r10[0x14];
+      r0[0x30] = r1;
+      r0[0x34] = r3;
+
+      if(lr != 3)
+      {
+         //goto loc_992334
+      }
+      else
+      {
+         int r3 = r2 & 0xC00;
+         if(r3 = 0x400)
+         {
+            if(r9 == 0)
+            {
+               //goto loc_992334
+            }
+            else
+            {
+               int r2 = r2 | 0xC00;
+               //goto loc_992334
+            }
+         }
+         else
+         {
+            if(r3 == 0x800)
+            {
+               int r2 = r2 | 0xC00;
+               //goto loc_992334
+            }
+            else
+            {
+               if(r3 != 0)
+               {
+                  //goto loc_992334
+               }
+               else
+               {
+                  if(r9 == 0)
+                  {
+                     int r2 = r2 & (~0xC00);
+                     int r2 = r2 | 0x400;
+                     //goto loc_992334
+                  }
+                  else
+                  {
+                     int r2 = r2 | 0xC00;
+                     //goto loc_992334
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   //goto loc_992334
+   {
+      int r3 = r10[0x18];
+      int r2 = r2 & ~(0x3000);
+      r0[0x2C] = r2;
+      r0[0x04] = r5;
+      r0[0x38] = r3;
+      
+      if(r5 == 0)
+      {
+         int r2 = arg_8;
+         r2[0] = r0;
+      }
+      else
+      {
+         int r3 = r0[0x10];
+         r5[0] = r0;
+         r5[0x3C] = r3;
+      }
+
+      int r3 = var_3C;
+      int r9 = r9 + 1;
+      r0[0x08] = r10;
+      if(r11 > r6)
+      {
+         if(r3 > r4)
+         {
+            int r5 = r0;
+            int r0 = sub_99214C();
+            if(r0 == 0)
+               return exit_loc_992368();
+            
+            //goto loc_9922F4
+         }
+         else
+         {
+            //goto loc_9923DE
+         }
+      }
+      else
+      {
+         //goto loc_9923DE
+      }
+   }
+
+   //loc_9923DE
+   {
+      int r7 = var_40;
+      int r3 = r10[0x0C];
+      if(r7 != 0x13)
+         return exit_loc_9923E8();
+
+      int r2 = r3 & 0x07;
+      if(r2 != 3)
+         return exit_loc_9923E8();
+
+      int r2 = r3 & 0xC00;
+      if(r2 == 0x400)
+      {
+         if(r9 > 1)
+            int r3 = r3 | 0xC00;
+
+         return exit_loc_9923E8();
+      }
+      else
+      {
+         if(r2 != 0x800)
+         {
+            if(r2 != 0)
+               return exit_loc_9923E8();
+
+            if(r9 <= 1)
+               return exit_loc_9923E8();
+         }
+         
+         int r3 = r3 & (~0xC00);
+         int r3 = r3 | 0x800;
+         return exit_loc_9923E8();
+      }
+   }
 }
 
 int exit_loc_9928F6(int r0, int* r5, int var_14)
@@ -324,6 +645,10 @@ int exit_loc_9928F6(int r0, int* r5, int var_14)
 
 int sub_99289C(int unk0)
 {
+   int var_1C;
+   int var_18;
+   int var_14;
+
    int r5 = &var_009EA004;
    int r4 = r2;
    int r6 = 0x14;
@@ -477,10 +802,12 @@ int exit_loc_992C10(int r9, int var_74, int var_2C)
 
 int sub_992910(int unk0, int unk1, int unk2)
 {
+   //these are most likely arguments
    int var_90;
    int var_8C;
    int var_88;
    int var_84;
+
    int var_80;
    int var_7C;
    int var_78;
@@ -693,7 +1020,7 @@ int sub_992910(int unk0, int unk1, int unk2)
       
       int r1 = var_60;
       var_84 = lr;
-      int r0 = sub_992288();
+      int r0 = sub_992288(r0, r1, r2,r3, ?, ?, ?, ?);
       int r3 = var_60;
       int r9 = r0;
       if(r3 > 1)
@@ -818,7 +1145,7 @@ int sub_992910(int unk0, int unk1, int unk2)
       int r3 = &var_4C;
       int r1 = var_60;
       var_84 = lr;
-      int r0 = sub_992288();
+      int r0 = sub_992288(r0, r1, r2,r3, ?, ?, ?, ?);
       int r3 = var_60;
       int r9 = r0;
       if(r3 > 1)
@@ -943,7 +1270,7 @@ int sub_992910(int unk0, int unk1, int unk2)
       var_8C = r4;
       var_88 = r10;
       var_84 = lr;
-      int r0 = sub_992288();
+      int r0 = sub_992288(r0, r1, r2,r3, ?, ?, ?, ?);
       int r2 = var_4C;
       int r9 = r0;
       if(r2 > 1)
