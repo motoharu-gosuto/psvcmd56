@@ -49,6 +49,7 @@ struct r9_01a599e0
    short unk_3A;
 };
 
+//size is 0x20
 struct local_01a599e0
 {
    int var_44; // used
@@ -70,4 +71,4 @@ int SceDmacmgrForDriver_397a917c(int unk0, int unk1, int unk2, int unk3);
 //paired exit function
 int SceDmacmgrForDriver_adff1186(int unk);
 
-int SceDmacmgrForDriver_167079fc(int r0, void* r1, int r2, int r3);
+int SceDmacmgrForDriver_167079fc(int id, void* r1, int r2, int r3);

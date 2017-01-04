@@ -269,18 +269,774 @@ int sub_992288()
    return 0;
 }
 
-int sub_99289C()
+int sub_99289C(int unk0)
 {
    return 0;
 }
 
-int sub_9921FC()
+int sub_9921FC(int unk0, int unk1)
 {
+   int r5 = r0;
+   int r3 = r0[0x14];
+   int r6 = &008FE000;
+   int r9 = r1;
+   int r7 = r0;
+   int r8 = r5[0];
+   if(r3 == 0)
+   {
+      //goto loc_99224A
+   }
+   else
+   {
+      //loc_992216:
+      if(r5 != r9)
+      {
+         int r3 = r8[0x14];
+         if(r3 != 0)
+         {
+            //goto loc_992240
+         }
+      }
+      
+      //loc_992220:
+      int r4 = r6[0x28];
+      int r0 = 0x008FE028;
+      int r2 = r7;
+      r5[0] = r4;
+      int r1 = r4;
+      int r0 = SceCpuForDriver_cda96e81(r0, r1, r2);
+      if(r4 != r0)
+      {
+         //goto loc_992220
+      }
+      
+      if(r5 == r9)
+         return r0;
+
+      //loc_99223C:
+      int r3 = r8[0x14];
+
+      //loc_992240:
+      int r5 = r8;
+      int r8 = r5[0];
+      if(r3 != 0)
+      {
+         //goto loc_992216
+      }
+   }
+
+   //loc_99224A
+   int r0 = r6[0x20];
+   int r1 = r5;
+   int r0 = SceSysmemForKernel_571660aa(r0, r1);
+   int r7 = r8;
+   if(r5 != r9)
+   {
+      //goto loc_99223C
+   }
+   else
+   {
+      return r0;
+   }
+}
+
+int exit_loc_992A7C(int r0, int var_74, int var_2C)
+{
+   int r5 = var_74;
+   int r2 = var_2C;
+   int r3 = r5[0];
+   if(r2 == r3)
+   {
+      return r0;
+   }
+   else
+   {
+      return STACK_CHECK_FAIL;
+   }
+}
+
+int exit_loc_992A76(int var_74, int var_2C)
+{
+   return exit_loc_992A7C(0x80020005, var_74, var_2C); //SCE_KERNEL_ERROR_INVALID_FLAGS
+}
+
+int exit_loc_992C20(int var_74, int var_2C)
+{
+   return exit_loc_992A7C(0x8002710B, var_74, var_2C); //SCE_KERNEL_ERROR_NO_MEMORY
+}
+
+int exit_loc_992C10(int r9, int var_74, int var_2C)
+{
+   int r0 = r9;
+   return exit_loc_992A7C(r0, var_74, var_2C);
+}
+
+int sub_992910(int unk0, int unk1, int unk2)
+{
+   int var_90;
+   int var_8C;
+   int var_88;
+   int var_84;
+   int var_80;
+   int var_7C;
+   int var_78;
+   int var_74;
+   int var_70;
+   int var_6C;
+   int var_68;
+   int var_64;
+   int var_60;
+   int var_5C;
+   int var_58;
+   int ptr_54;
+   int var_50;
+   int var_4C;
+   int var_48;
+   int var_44;
+   int var_40;
+   int var_3C;
+   int var_38;
+   int var_34;
+   int var_30;
+   int var_2C;
+
+   //-----------------------------
+
+   int r0 = unk0;
+   int r1 = unk1;
+   int r2 = unk2;
+
+   int r5 = &var_009EA004;
+   int r3 = r2 - 1;
+   int r4 = r2;
+   int r3 = r3 + 3;
+   int r2 = r5[0];
+
+   var_74 = r5;
+   var_7C = r0;
+   var_2C = r2;
+
+   if(true) //bhi - do not understand - complex comparison
+      return exit_loc_992A76(var_74, var_2C);
+
+   if(r1 == 0x10)
+   {
+      #pragma region
+      int r3 = 1;
+      int r0 = &_008FE000;
+      int r6 = 0;
+      int r8 = r3;
+      var_60 = r3;
+      int r3 = &var_34;
+      int r5 = r6;
+      var_78 = r0;
+      int r7 = &var_3C;
+      int r11 = &var_40;
+      int r10 = &var_6C;
+      ptr_54 = r3;
+      #pragma endregion
+
+      //goto loc_992BB0 - down
+   }
+   else
+   {
+      if(r1 > 0x10)
+      {
+         if(r1 == 0x11)
+         {
+            #pragma region
+            int r6 = 0;
+            int r10 = &_008FE000;
+            int r5 = r6;
+            int r7 = &var_3C;
+            int r11 = &var_64;
+            int r8 = 1;
+            #pragma endregion
+
+            //goto loc_992ABA - down
+         }
+         else
+         {
+            #pragma region
+            if(r1 != 0x100)
+               return exit_loc_992A76(var_74, var_2C);
+
+            int r0 = sub_99214C();
+            int r5 = r0;
+            if(r5 == 0)
+               return exit_loc_992C20(var_74, var_2C);
+
+            int r0 = sub_99214C();
+            int r6 = r0;
+            if(r0 == 0)
+            {
+               int r0 = r5;
+               int r1 = r5;
+               int r0 = sub_9921FC(r0, r1);
+               return exit_loc_992C20(var_74, var_2C);
+            }
+
+            int r1 = r4[0x08];
+            int r3 = 0;
+            int r2 = r4[0x0C];
+            int r12 = r4 + 0x20;
+            int r0 = r4[0x00];
+            int r11 = 0xFFFFFFFF;
+            int r7 = r4[0x04];
+            r5[0x28] = r1;
+
+            int r1 = r4[0x18];
+            r5[0x38] = r1;
+            int r1 = r4[0x1C];
+            r5[0x2C] = r2;
+            r5[0x3C] = r1;
+            int r1 = r4[0x2C];
+            r5[0x20] = r0;
+            r5[0x24] = r7;
+            int r9 = r4[0x3C];
+            int r8 = r4[0x20];
+            int lr = r4[0x24];
+            int r2 = r1;
+            int r7 = r4[0x28];
+            int r0 = r4[0x38];
+            int r10 = r6[0x10];
+            r5[0x00] = r6;
+            r5[0x08] = r4;
+            r5[0x0C] = r3;
+            r5[0x04] = r3;
+            r9[0x1C] = r10;
+            r6[0x20] = r8;
+            r6[0x24] = lr;
+            r6[0x28] = r7;
+            r6[0x2C] = r1;
+            r6[0x38] = r0;
+            r6[0x0C] = r3;
+            
+            r6[0x00] = r0;
+            r6[0x04] = r1;
+            r6[0x08] = r2;
+            r6[0x0C] = r3;
+
+            r6[0x3C] = r11;
+            r6[0x08] = r12;
+
+            #pragma endregion
+
+            //goto loc_992A56 - down
+         }
+      }
+      else
+      {
+         if(r1 == 0x00)
+         {
+            #pragma region
+            int r5 = r1;
+            int r7 = r1;
+            int r6 = r1;
+            #pragma endregion
+            
+            //goto loc_992B4E - down
+         }
+         else
+         {
+            #pragma region
+            if(r1 != 0x01)
+               return exit_loc_992A76(var_74, var_2C);
+
+            int r0 = &_008FE000;
+            int r6 = 0;
+            r3 = &var_34;
+            int r8 = r1;
+            int r5 = r6;
+            var_78 = r0;
+            int r7 = &var_3C;
+            int r11 = &var_64;
+            int r10 = &var_40;
+            var_4C = r1;
+            var_40 = r3;
+            #pragma endregion
+
+            //goto loc_99297A - down
+         }
+      }
+   }
+
+   //loc_99297A
+   {
+      #pragma region
+      int r1 = r4[0x08];
+      int r2 = r11;
+      int r3 = r4[0x04];
+      var_60 = r8;
+      int r0 = r1 & (~0xFF000000);
+      ptr_54 = r7;
+      var_34 = r3;
+      var_30 = r0;
+      int r0 = r4[0];
+      int r0 = sub_99289C(r0);
+      if(r0 < 0)
+         return exit_loc_992A7C(r0, var_74, var_2C);
+
+      int r1 = var_7C;
+      int lr = &var_68;
+      int r3 = &var_4C;
+      int r2 = &ptr_54;
+      short r0 = r1[0x3A];
+      int r1 = &var_6C;
+      var_88 = r1;
+      var_90 = r10;
+      var_8C = r4;
+      
+      int r1 = var_60;
+      var_84 = lr;
+      int r0 = sub_992288();
+      int r3 = var_60;
+      int r9 = r0;
+      if(r3 > 1)
+      {
+         int r2 = var_78; //is this argument???
+         int r1 = ptr_54;
+         int r0 = r2[0x24];
+         SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+      }
+      
+      if(r9 <= 0)
+         return exit_loc_992C10(r9, var_74, var_2C);
+
+      if(r5 != 0)
+      {
+         int r3 = var_6C;
+         int r2 = r3[0x10];
+         r6[0x00] = r3;
+         r6[0x3C] = r2;
+         r3[0x04] = r6;
+         int r6 = var_68;
+      }
+      else
+      {
+         int r5 = var_6C;
+         int r6 = var_68;
+      }
+
+      #pragma endregion
+
+      int r4 = r4[0x1C];
+      int r2 = r1 + 1;
+      if(r2 == 0) // is this correct
+      {
+         //goto loc_992C14 - down
+      }
+      else
+      {
+         //goto loc_99297A - up
+      }
+   }
+
+   //loc_992C14
+   {
+      int r2 = r6[0x2C];
+      //goto loc_992A56 - down
+   }
+
+   //loc_992A56
+   {
+      #pragma region
+
+      int r0 = var_7C;
+      int r2 = r2 | 0x1000;
+      int r3 = r0[0x18];
+      int r2 = r6[0x2C];
+      if(r3 == 0)
+      {
+         r1 = var_7C;
+         r1[0x18] = r5;
+      }
+      else
+      {
+         int r3 = r0[0x1C];
+         int r2 = r5[0x10];
+         r3[0x00] = r5;
+         r3[0x3C] = r2;
+      }
+
+      int r5 = var_7C;
+      int r0 = 0;
+      r5[0x1C] = r6;
+      return exit_loc_992A7C(r0, var_74, var_2C);
+
+      #pragma endregion
+   }
+
+   //loc_992ABA
+   {
+      #pragma region
+
+      var_60 = r8;
+      int r2 = r11;
+      ptr_54 = r7;
+      int r1 = r4[0x08];
+      int r0 = r4[0];
+      int r0 = sub_99289C(r0);
+      if(r0 < 0)
+         return exit_loc_992A7C(r0, var_74, var_2C);
+
+      int r0 = &var_34;
+      var_4C = r8;
+      var_40 = r0;
+      int r2 = var_50;
+      int r0 = r4[0x04];
+      int r1 = r4[0x08];
+      int r0 = sub_99289C(r0);
+      if(r0 < 0)
+      {
+         int r3 = &_008FE000;
+         int r9 = r0;
+         int r1 = ptr_54;
+         int r0 = r3[0x24];
+         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+         int r0 = r9;
+         return exit_loc_992A7C(r0, var_74, var_2C);
+      }
+
+      int r1 = var_7C;
+      int r2 = &var_40;
+      int r3 = &var_6C;
+      int lr = &var_68;
+      short r0 = r1[0x3A];
+
+      //stmea - not sure
+      var_90 = r2;
+      var_8C = r3;
+      var_88 = r4;
+
+      int r2 = &ptr_54;
+      var_88 = r3;
+      int r3 = &var_4C;
+      int r1 = var_60;
+      var_84 = lr;
+      int r0 = sub_992288();
+      int r3 = var_60;
+      int r9 = r0;
+      if(r3 > 1)
+      {
+         int r0 = r10[0x24];
+         int r1 = ptr_54;
+         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+      }
+            
+      int r3 = var_4C;
+      if(r3 > 1)
+      {
+         int r0 = r10[0x24];
+         int r1 = var_40;
+         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+      }
+
+      if(r9 < 0)
+         return exit_loc_992C10(r9, var_74, var_2C);
+
+      if(r5 != 0)
+      {
+         r3 = var_6C;
+         int r2 = r3[0x10];
+         r6[0x00] = r3;
+         r6[0x3C] = r2;
+         r3[0x04] = r6;
+         r6 = var_68;
+      }
+      else
+      {
+         r5 = var_6C;
+         r6 = var_68;
+      }
+
+      #pragma endregion
+
+      int r4 = r4[0x1C];
+      int r0 = r4 + 1;
+      if(r0 == 0)
+      {
+         //goto loc_992C14 - up
+      }
+      else
+      {
+         //goto loc_992ABA - up
+      }
+   }
+
+   //loc_992B4E
+   {
+      #pragma region
+      int r0 = sub_99214C();
+      if(r0 == 0)
+         return exit_loc_992C20(var_74, var_2C);
+
+      int r3 = r4[0x04];
+      r0[0x24] = r3;
+      int r3 = r4[0x18];
+      int r1 = r4[0x08];
+      int r2 = r4[0x0C];
+      r0[0x38] = r3;
+      int r3 = r4[0x00];
+      r0[0x28] = r1;
+      r0[0x2C] = r2;
+      r0[0x0C] = r7;
+      r0[0x20] = r3;
+      r0[0x00] = r7;
+      r0[0x04] = r6;
+      r0[0x08] = r4;
+      if(r5 != 0)
+      {
+         r3 = r0[0x10];
+         r6[0x00] = r0;
+         r6[0x3C] = r3;
+      }
+      else
+      {
+         r5 = r0;
+      }
+
+      #pragma endregion
+
+      int r4 = r4[0x1C];
+      int r6 = r6;
+      int r3 = r4 + 1;
+      if(r3 == 0)
+      {
+         r4 = r0[0x3C];
+         //goto loc_992A56 - up
+      }
+      else
+      {
+         //goto loc_992B4E - up
+      }
+   }
+
+   //loc_992BB0
+   {
+      #pragma region
+
+      int r1 = r4[0x08];
+      int r2 = &var_50;
+      int r3 = r4[0x00];
+      var_4C = r8;
+      r0 = r1 & (~FF000000);
+      var_40 = r7;
+      var_34 = r3;
+      var_30 = r0;
+      int r0 = r4[0x04];
+      int r0 = sub_99289C(r0);
+      if(r0 < 0)
+         return exit_loc_992A7C(r0, var_74, var_2C);
+
+      int r1 = var_7C;
+      int lr = &var_68;
+      int r2 = &ptr_54;
+      int r3 = &var_4C;
+      short r0 = r1[0x3A];
+      int r1 = var_60;
+      int r11 = var_90;
+      var_8C = r4;
+      var_88 = r10;
+      var_84 = lr;
+      int r0 = sub_992288();
+      int r2 = var_4C;
+      int r9 = r0;
+      if(r2 > 1)
+      {
+         int r2 = var_78;
+         int r1 = var_40;
+         int r0 = r4[0x24];
+         int r0 = SceSysmemForDriver_sceKernelMemPoolFree_3ebce343(r0, r1);
+      }
+      
+      if(r9 < 0)
+         return exit_loc_992C10(r9, var_74, var_2C);
+
+      if(r5 != 0)
+      {
+         int r3 = var_6C;
+         int r2 = r3[0x10];
+         r6[0x00] = r3;
+         r6[0x3C] = r2;
+         r3[0x04] = r6;
+         r6 = var_68;
+      }
+      else
+      {
+         int r5 =  var_6C;
+         int r6 = var_68;
+      }
+
+      #pragma endregion
+
+      //loc_992BAA:
+      int r4 = r4[0x1C];
+      int r1 = r4 + 1;
+      if(r1 == 0)
+      {
+         //goto loc_992C14 - up
+      }
+      else
+      {
+         //goto loc_992BB0 - up
+      }
+   }
+
+
    return 0;
 }
 
-int SceDmacmgrForDriver_167079fc(int r0, local_01a599e0* r1, int r2, int r3)
+//---------------
+
+int exit_loc_993062(int* r6, int r10)
 {
+   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
+   return 0x80020009; //SCE_KERNEL_ERROR_ILLEGAL_MODE
+}
+
+int exit_loc_993096(int* r6, int r10)
+{
+   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
+   return 0x80027205; //SCE_KERNEL_ERROR_NOT_INITIALIZED
+}
+
+int exit_loc_993082(int* r6, int r10)
+{
+   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
+   return 0x80027201; //SCE_KERNEL_ERROR_ALREADY_QUEUED
+}
+
+int exit_loc_9930AA(int* r6, int r10)
+{
+   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
+   return 0x80027208;
+}
+
+int exit_loc_993074(int r5, int* r6, int r10)
+{
+   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
+   return r5;
+}
+
+//r0 is id
+//r1 is structure of size 0x20
+//r2 is 0x00
+//r3 is 0x01 or 0x11
+int SceDmacmgrForDriver_167079fc(int id, local_01a599e0* r1, int r2, int r3)
+{
+   int r0 = r0 >> 1;
+   int r5 = 0x8FE000;
+   int r4 = r0 << 2;
+   int r6 = r5 | 1;
+   int r0 = r4[0x30];
+   int r8 = r1;
+   int r5 = r2;
+   int r9 = r3;
+
+   if(r0 != r6)
+      return 0x80020005;
+
+   int r6 = r4 + 0x2C;
+   int r0 = r6;
+   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
+   int r10 = r0;
+
+   if(r5 != 0)
+   {
+      int r3 = r5[0];
+      if(r4[0x3A] == 0x13)
+      {
+         if(r3 != 0x5C)
+            return exit_loc_993062(r6, r10);
+      }
+      else
+      {
+         if(r3 == 0x0C)
+            return exit_loc_993062(r6, r10);
+      }
+   }
+   
+   //loc_992FDE:
+
+   short r3 = r4[0x38];
+   int r1 = r3 << 0x1F;
+   if(r1 <= 0) // do not understand this check
+      return exit_loc_993096(r6, r10);
+
+   short r3 = r4[0x38];
+   int r2 = r3 << 0x1C;
+   if(r2 < 0) // do not understand this check
+      return exit_loc_993082(r6, r10);
+
+   int r3 = r4[0x14];
+   if(r3 != 0)
+      return exit_loc_993082(r6, r10);
+
+   short r3 = r4[0x38];
+   int r3 = r3 << 0x19;
+   if(r3 < 0)
+      return exit_loc_9930AA(r6, r10);
+
+   int r0 = r4[0x18];
+   if(r0 != 0)
+   {
+      int r1 = r4[0x1C];
+      sub_9921FC(r0, r1);
+   }
+
+   int r2 = 0;
+   int r3 = r2;
+   int r2 = 0x07FC0000; // I SAW THIS CONSTANT ALREADY! - this is a bit mask
+
+   r4[0x1C] = r3;
+   r4[0x20] = r2;
+   r4[0x18] = r3;
+
+   if(r5 != 0)
+   {
+      short r3 = r4[0x3A];
+      int r7 = r5[0x04];
+
+      r7 = r7 | 0x7F80000; // this is also a bit mask
+
+      if(r3 != 0x13)
+         r3 = r5[0x08];
+
+      r7 = r7 | 0x40000;
+      if(r7 == 0x00) //not sure about this check
+         r5 = r5 + 0x0C;
+
+      r4[0x20] = r7;
+
+      if(r7 == 0x00) //not sure about this check
+         r4[0x28] = r5;
+      else
+         r4[0x28] = r3;
+   }
+
+   int r1 = r9;
+   int r2 = r8;
+   int r0 = r4;
+   sub_992910(r0, r1, r2);
+   int r5 = r0 - 0;
+   if(r5 < 0)
+   {
+      return exit_loc_993074(r5, r6, r10);
+   }
+   else
+   {
+      short r2 = r4[0x38];
+      short r3 = 0xFFDF;
+      int r6 = r6;
+      int r1 = r10;
+      int r3 = r3 & r2;
+      r4[0x38] = r3;
+      SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+      int r0 = 0;
+      return r0;
+   }
+
    return 0;
 }
 
