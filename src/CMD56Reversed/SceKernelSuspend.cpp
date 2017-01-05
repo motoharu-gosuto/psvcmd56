@@ -1,15 +1,11 @@
 #include "SceKernelSuspend.h"
 
-//paired start function ?
-int SceKernelSuspendForDriver_4df40893(int unk)
+int SceKernelSuspendForDriver_4df40893(int arg_2)
 {
-   //does it return values?
    return 0;
 }
 
-//paired end function ?
-int SceKernelSuspendForDriver_2bb92967(int unk)
-{
-   //does it return values ?
+int SceKernelSuspendForDriver_2bb92967(int arg_0)
+{   
    return 0;
 }

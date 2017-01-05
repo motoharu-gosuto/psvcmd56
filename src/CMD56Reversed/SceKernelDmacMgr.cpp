@@ -45,7 +45,7 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
    int r0 = name;
    int r6 = r0;
-   int r0 = SceIntrmgrForDriver_182ee3e3(r0);
+   int r0 = SceIntrmgrForDriver_182ee3e3();
    if(r0 != 0)
       return 0x80027101;
 
@@ -2270,7 +2270,7 @@ int SceDmacmgrForDriver_adff1186(int id)
 {
    int r0 = id;
    int r4 = r0;
-   int r0 = SceIntrmgrForDriver_182ee3e3(r0);
+   int r0 = SceIntrmgrForDriver_182ee3e3();
    int r8 = r0;
    if(r0 != 0)
       return exit_loc_992DA2(); //illegal context error
