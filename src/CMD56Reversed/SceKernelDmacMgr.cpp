@@ -45,7 +45,7 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
    int r0 = name;
    int r6 = r0;
-   int r0 = SceIntrmgrForDriver_182ee3e3();
+   int r0 = SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
    if(r0 != 0)
       return 0x80027101;
 
@@ -55,7 +55,7 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
 
    if(r6 == 0)
       r6 = r3;
-   result_c8672a3d* r0 = SceSysmemForKernel_c8672a3d(r0);
+   result_c8672a3d* r0 = SceSysmemForKernel_functor_c8672a3d(r0);
    result_c8672a3d* r4 = r0;
    if(r0 == 0)
       return 0x8002710B;
@@ -77,13 +77,13 @@ int SceDmacmgrForDriver_7cd5088a(const char* name)
    {
       int r0 = r5->unk_20;
       int r1 = r4;
-      int r0 = SceSysmemForKernel_571660aa(r0, r1);
+      int r0 = SceSysmemForKernel_functor_571660aa(r0, r1);
       int r0 = r6;
       return r0;
    }
 
    int r6 = r4->unk_34;
-   int r0 = SceSysmemForDriver_e655852f(r0);
+   int r0 = SceSysmemForDriver_udiv_e655852f(r0);
    int r3 = 0x01;
    r4->unk_3C = r0;
    r4->unk_38 = r3;
@@ -270,7 +270,7 @@ int sub_99214C()
       if(r4 == 0)
       {
          r0 = r3[0x20];
-         SceSysmemForKernel_c8672a3d(r0);
+         SceSysmemForKernel_functor_c8672a3d(r0);
          int r4 = r0;
          if(r0 == 0)
             return exit_loc_992172(r4);
@@ -288,7 +288,7 @@ int sub_99214C()
       else
       {
          int r2 = r4[0x00];
-         int r0 = SceCpuForDriver_cda96e81(r0, r1, r2);
+         int r0 = SceCpuForDriver_atomic_set_xor_cda96e81(r0, r1, r2);
          if(r4 == r0)
             return exit_loc_992172(r4);
 
@@ -729,7 +729,7 @@ int sub_9921FC(int unk0, int unk1)
       int r2 = r7;
       r5[0] = r4;
       int r1 = r4;
-      int r0 = SceCpuForDriver_cda96e81(r0, r1, r2);
+      int r0 = SceCpuForDriver_atomic_set_xor_cda96e81(r0, r1, r2);
       if(r4 != r0)
       {
          //goto loc_992220
@@ -753,7 +753,7 @@ int sub_9921FC(int unk0, int unk1)
    //loc_99224A
    int r0 = r6[0x20];
    int r1 = r5;
-   int r0 = SceSysmemForKernel_571660aa(r0, r1);
+   int r0 = SceSysmemForKernel_functor_571660aa(r0, r1);
    int r7 = r8;
    if(r5 != r9)
    {
@@ -2270,7 +2270,7 @@ int SceDmacmgrForDriver_adff1186(int id)
 {
    int r0 = id;
    int r4 = r0;
-   int r0 = SceIntrmgrForDriver_182ee3e3();
+   int r0 = SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
    int r8 = r0;
    if(r0 != 0)
       return exit_loc_992DA2(); //illegal context error
@@ -2356,7 +2356,7 @@ int SceDmacmgrForDriver_adff1186(int id)
    int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
    int r0 = r9[0x20];
    int r1 = r4;
-   int r0 = SceSysmemForKernel_571660aa(r0, r1); //another cleanup exit function?
+   int r0 = SceSysmemForKernel_functor_571660aa(r0, r1); //another cleanup exit function?
    int r0 = r8;
    return r0;
 }

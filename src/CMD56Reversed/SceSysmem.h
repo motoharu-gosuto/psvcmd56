@@ -94,7 +94,7 @@ struct input1_c8672a3d
 
 //it looks like this function is some wrapper to a functor
 //but it does other functionality as well
-result_c8672a3d* SceSysmemForKernel_c8672a3d(input1_c8672a3d* ctx);
+result_c8672a3d* SceSysmemForKernel_functor_c8672a3d(input1_c8672a3d* ctx);
 
 //---------
 
@@ -170,7 +170,7 @@ struct input1_571660aa
 //this function returns 0
 //it looks like this function is some wrapper to a functor
 //but it does other functionality as well
-int SceSysmemForKernel_571660aa(input1_571660aa* ctx, int arg_1);
+int SceSysmemForKernel_functor_571660aa(input1_571660aa* ctx, int arg_1);
 
 //---------
 
@@ -178,7 +178,7 @@ int SceSysmemForKernel_571660aa(input1_571660aa* ctx, int arg_1);
 //numerator can have 0xF bits at max
 //denominator is taken internally
 //result of devision is likely to be returned
-int SceSysmemForDriver_e655852f(unsigned int numerator_div2);
+int SceSysmemForDriver_udiv_e655852f(unsigned int numerator_div2);
 
 //------------------------
 

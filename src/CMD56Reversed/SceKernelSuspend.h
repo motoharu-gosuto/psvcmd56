@@ -19,7 +19,7 @@
 //this function can be set with SceSysmem.SceKernelSuspendForDriver._exp_set_008B808C_function_c00826ac
 
 //this function also checks 008BF3F8 before deciding to call _exp_atomic_add_1f157dc3
-int SceKernelSuspendForDriver_4df40893(int arg_2);
+int SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(int arg_2);
 
 //this function is a wrapper for atomic_dec
 //SceSysmem.SceCpuForDriver._exp_atomic_dec_2a71b03c
@@ -31,4 +31,4 @@ int SceKernelSuspendForDriver_4df40893(int arg_2);
 //this function can be set with SceSysmem.SceKernelSuspendForDriver._exp_set_008B8084_function_0de3cc02
 
 //this function also checks 008BF3F8 before deciding to call _exp_atomic_dec_2a71b03c
-int SceKernelSuspendForDriver_2bb92967(int arg_0);
+int SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(int arg_0);

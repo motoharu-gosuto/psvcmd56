@@ -20,12 +20,12 @@ int SceCpuForDriver_unlock_d6ed0c46(int *addr)
    return 0;
 }
 
-int SceCpuForDriver_cda96e81(void* unk0, int value, int flags)
+int SceCpuForDriver_atomic_set_xor_cda96e81(int *var, int cond, int value)
 {
    return 0;
 }
 
-int SceCpuForDriver_337cbdf3(void* unk0)
+int SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(void *vaddr)
 {
    return 0;
 }

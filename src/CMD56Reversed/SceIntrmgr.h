@@ -13,4 +13,4 @@
 //https://www.daemon-systems.org/man/curcpu.9.html
 //The machine-dependent curcpu() macro returns a pointer to a cpu_info structure containing information of the CPU that this thread is running on.
 
-int SceIntrmgrForDriver_182ee3e3();
+int SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();

@@ -2,15 +2,13 @@
 
 #include "SceSysroot.h"
 
-int SceSysrootForDriver_ee934615()
+int SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615()
 {
-   //does it return values ?
    return 0;
 }
 
-int SceSysrootForDriver_eef091a7()
+int SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7()
 {
-   //does it return values?
    return 0;
 }
 

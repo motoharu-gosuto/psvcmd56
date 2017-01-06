@@ -90,13 +90,13 @@ int exit_loc_B99762(int r0, int var2C)
 
 int exit_loc_B9975A(int r4, int var2C)
 {
-   SceKernelSuspendForDriver_2bb92967(0x00);
+   SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
    return exit_loc_B99762(r4, var2C);
 }
 
 int exit_loc_B9979A(int var2C)
 {
-   SceKernelSuspendForDriver_2bb92967(0x00);
+   SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
    return exit_loc_B99762(0x800F1528, var2C);
 }
 
@@ -105,7 +105,7 @@ int finalize_buffer(int id, int var_8C, int var_2C, int R4, void* var_98)
    int r0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00, var_8C);
    if(r0 < 0)
    {
-      SceKernelSuspendForDriver_2bb92967(0x00);
+      SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
       return exit_loc_B99762(r0, var_2C);
    }
    else
@@ -131,11 +131,11 @@ int finalize_buffer(int id, int var_8C, int var_2C, int R4, void* var_98)
          }
          else
          {
-            SceSysrootForDriver_ee934615();
+            SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615();
 
             int r0 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
                         
-            SceSysrootForDriver_eef091a7();
+            SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7();
                         
             return exit_loc_B9975A(r0, var_2C);
          }
@@ -188,7 +188,7 @@ void update_r4_flag(void* param0, int arg_10, int& R4)
 
       if(param0 + 0xE8000000 >= 0x8000000)
       {
-         R0 = SceCpuForDriver_337cbdf3(param0);
+         R0 = SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(param0);
       }
       else
       {
@@ -222,7 +222,7 @@ void get_r4_flag(void* ptr0, void* ptr1, void* param0, int arg_8, int arg_C, int
       
       if((ptr0 + 0xE8000000) >= 0x8000000)
       {
-         R0 = SceCpuForDriver_337cbdf3(ptr0);
+         R0 = SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(ptr0);
       }
       else
       {
@@ -251,7 +251,7 @@ void get_r4_flag(void* ptr0, void* ptr1, void* param0, int arg_8, int arg_C, int
       
       if((ptr1 + 0xE8000000) >= 0x8000000)
       {
-         R0 = SceCpuForDriver_337cbdf3(ptr1);         
+         R0 = SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(ptr1);         
       }
       else
       {
@@ -445,7 +445,7 @@ int sub_B99674(int id, void* ptr0, void* ptr1, void* param0,
 
    var_74 = arg_10;
 
-   SceKernelSuspendForDriver_4df40893(0x00);
+   SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0x00);
 
    int res_1 = call_subs_update_r4_flag(arg_8, arg_4, arg_14, R10, var_2C, R4, var_98);
    if(res_1 != 0)
