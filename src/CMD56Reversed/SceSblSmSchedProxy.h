@@ -1,9 +1,105 @@
 #pragma once
 
-int SceSblSmSchedProxyForKernel_1916509b();
+/*
+//http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0301h/ch02s12s13.html
 
-int SceSblSmSchedProxyForKernel_723b382f();
+A Secure Monitor Call (SMC) is used to enter the Secure Monitor mode and perform a Secure Monitor kernel service call. 
+This instruction can only be executed in privileged modes, so when a User process wants to request a change from one 
+world to the other it must first execute a SVC instruction. 
+This changes the processor to a privileged mode 
+where the Supervisor call handler processes the SVC and executes a SMC, see Exceptions.
+*/
 
-int SceSblSmSchedProxyForKernel_8b84ac2a();
+//there is a 32 bit code function int proc_enterSMC_996000(int arg_0, int arg_1, int arg_2, int index, int monitorApiNumber)
+//that is used by many exports
+//it looks like this proxy library is used to perform Secure Monitor kernel service calls
 
-int SceSblSmSchedProxyForKernel_f35efc1a();
+//there is some info on xyz wiki - recirection from SMC
+//https://wiki.henkaku.xyz/vita/SceExcpmgr
+
+struct input_1916509b
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+};
+
+//wrapper for a 12D smc call
+//can return errors as int
+//smcArg3 is element ptr in the array of elements of size 0x80
+int SceSblSmSchedProxyForKernel_smc_12D_1916509b(int smcArg0, int smcArg1, int smcArg2, input_1916509b* unk3);
+
+struct input_723b382f
+{
+   int unk_0;
+   int unk_4;
+   int smcArg0;
+};
+
+//wrapper for a 133 smc call
+//can return errors as int
+
+//smcArg0 is taken from input structure
+//smcArg3 is 0
+int SceSblSmSchedProxyForKernel_smc_133_723b382f(input_723b382f* ptr, int smcArg1, int smcArg2);
+
+struct input_8b84ac2a
+{
+   int unk_0;
+   int unk_4;
+   int smcArg0;
+};
+
+typedef int (func_8b84ac2a)(input_8b84ac2a* basePtr, int funcArg1, int funcArg2, int unk3, int unk4);
+
+//wrapper for a 138 smc call
+//can return errors as int
+
+//smcArg0 is taken from input structure
+//smcArg2 is 0
+//smcArg3 is 0
+int SceSblSmSchedProxyForKernel_smc_138_8b84ac2a(input_8b84ac2a* basePtr, int smcArg1_funcArg1, func_8b84ac2a* func, int funcArg2);
+
+struct input_f35efc1a
+{
+   int unk_0;
+   int unk_4;
+   int smcArg0;
+};
+
+struct output_f35efc1a
+{
+   int unk_0;
+   int unk_4;
+};
+
+//wrapper for a 12E smc call
+//can return errors as int
+
+//smcArg0 is taken from input structure
+//smcArg1 is element ptr in the array of elements of size 0x80
+//smcArg2 is 0
+//smcArg3 is 0
+int SceSblSmSchedProxyForKernel_smc_12E_f35efc1a(input_f35efc1a* ptr, output_f35efc1a* result);
+ 
+//All other exports of SceSblSmSchedProxy:
+/*
+SceSblSmschedProxy.._exp_initialize_935cd196
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_check_affinity_initialize_a488d604
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_not_implemented_1dfc8624
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_not_implemented_984ec9d1
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_12D_1916509b
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_12E_f35efc1a
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_12F_27eb92f1
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_130_de4eac3c
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_133_723b382f
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_134_f70c04ec
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_135_3ce17233
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_136_15b0e4df
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_137_973a4a7d
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_138_8b84ac2a
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_139_85eda5fc
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_13B_33a3a1e2
+SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_13C_7894b6f0
+*/
