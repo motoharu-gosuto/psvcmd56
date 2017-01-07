@@ -60,7 +60,7 @@ that means that for all 16 memory domains access permissions are set to 'Client'
 //which is wrapper for int sub_9E3308(int maskPAR, int setDACR, void *vaddr, void **result, int **num2)
 //Their implementation is completely same even using same subroutines
 
-//this function tries to translate virtual address to physical address and returns 1 or 0
+//this function tries to translate virtual address to physical address and returns 1 on failure or 0 on success
 int SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(void *vaddr);
 
 //there is at least one more exported translation function
