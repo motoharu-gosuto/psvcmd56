@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include "GlobalVariables.h"
+#include "Errors.h"
 
 #include "SceSblSsMgr.h"
 #include "SceSysroot.h"
@@ -55,7 +56,7 @@ int sub_CA8E5C(char* buffer)
       if(r0 != 0)
       {
          if(var14 == var_009EA004)
-            return 0x808A0700;
+            return SCE_SBL_GC_AUTH_MGR_ERROR_808A0700;
          else
             return STACK_CHECK_FAIL;
       }
@@ -272,7 +273,7 @@ int sub_CAC8C0(int* var97C, std::pair<int, int>* arg1)
    }
    else
    {
-      return 0x800F1816;
+      return SCE_SBL_GC_AUTH_MGR_ERROR_800F1816;
    }
 }
 
@@ -290,10 +291,10 @@ int sub_CAC8E4(int* var97C)
    int var14 = var_009EA004;
 
    if(var97C == 0)
-      return exit_loc_CAC90A(0x800F1816, var14);
+      return exit_loc_CAC90A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1816, var14);
 
    if(((*var97C) + 1) == 0)
-      return exit_loc_CAC90A(0x800F1816, var14);
+      return exit_loc_CAC90A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1816, var14);
 
    int r0 = sub_CAC8C0(var97C, &var1C);
    (*var97C) = -1;
@@ -311,7 +312,7 @@ int exit_loc_CAC9D6(int r4, int var24)
 
 int exit_loc_CACAA8(int var24)
 {
-   return exit_loc_CAC9D6(0x800F1816, var24);
+   return exit_loc_CAC9D6(SCE_SBL_GC_AUTH_MGR_ERROR_800F1816, var24);
 }
 
 int exit_loc_CAC9CA(int r4, int* var97C, int var24)
@@ -329,7 +330,7 @@ int exit_loc_CAC9CA(int r4, int* var97C, int var24)
 
 int exit_loc_CACAB2(int* var97C, int var24)
 {
-   return exit_loc_CAC9CA(0x800F0016, var97C, var24);
+   return exit_loc_CAC9CA(SCE_SBL_GC_AUTH_MGR_ERROR_800F0016, var97C, var24);
 }
 
 int finish_CACA88(char* r8, char* var830, int r2, int r4, int* var97C, int var24)

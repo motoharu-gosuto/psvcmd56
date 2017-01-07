@@ -5,6 +5,7 @@
 
 #include "Constants.h"
 #include "GlobalVariables.h"
+#include "Errors.h"
 
 #include "SceCpu.h"
 #include "SceSysroot.h"
@@ -73,7 +74,7 @@ int exit_loc_B9975A(int r4, int cookie)
 int exit_loc_B9979A(int cookie)
 {
    SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
-   return exit_loc_B99762(0x800F1528, cookie);
+   return exit_loc_B99762(SCE_SBL_GC_AUTH_MGR_ERROR_800F1528, cookie);
 }
 
 //---------------------------------------------
@@ -273,12 +274,12 @@ int translateVaddr2(void* vaddr_2, void*& paddr_2, int cookie)
    paddr_2 = 0x00;
 
    if(vaddr_2 == 0)
-      return exit_loc_B99762(0x800F1516, cookie);
+      return exit_loc_B99762(SCE_SBL_GC_AUTH_MGR_ERROR_800F1516, cookie);
 
    void* paddr_2_temp = 0x00;
    int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_2, &paddr_2_temp);     
    if(res_1 < 0)
-      return exit_loc_B99762(0x800F1528, cookie);
+      return exit_loc_B99762(SCE_SBL_GC_AUTH_MGR_ERROR_800F1528, cookie);
 
    paddr_2 = paddr_2_temp;
 
@@ -294,7 +295,7 @@ int translateVaddr1(void* vaddr_1, int arg_8, void*& paddr_1, int cookie)
       void* paddr_1_temp = 0x00;
       int res_0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_1, &paddr_1_temp);
       if(res_0 < 0)
-         return exit_loc_B99762(0x800F1528, cookie);
+         return exit_loc_B99762(SCE_SBL_GC_AUTH_MGR_ERROR_800F1528, cookie);
          
       paddr_1 = paddr_1_temp;
    }
@@ -410,12 +411,12 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
    int cookie = var_009EA004;
      
    if(size > 0x40)
-      return exit_loc_B99C0A(0x800F1516, cookie);
+      return exit_loc_B99C0A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1516, cookie);
 
    int id = SceDmacmgrForDriver_7cd5088a(unk_B9CC90);
 
    if(id < 0)
-      return exit_loc_B99C0A(0x800F1528, cookie);
+      return exit_loc_B99C0A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1528, cookie);
    
    int var_8C = (unk == 0x00) ? 0x00000000 : 0x0003ffff;
 

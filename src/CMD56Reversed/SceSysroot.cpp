@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "Errors.h"
 #include "SceSysroot.h"
 
 int SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615()
@@ -271,25 +272,25 @@ _8BF5F8_global_0 _8BF5F8_g0;
 int SceSysrootForKernel_f10ab792(int arg0, f10ab792_input* arg1)
 {
    if(arg0 > 2) // looks like there can be only 3 elements in the array
-      return 0x80020005;
+      return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
    if(arg1 == 0)
-      return 0x80020006;
+      return SCE_KERNEL_ERROR_ILLEGAL_ADDR;
 
    if(arg1->size != 0x0C) //must be 0x0C
-      return 0x80020009;
+      return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
 
    _8BF5F8_global_0* g0 = &_8BF5F8_g0;
    _8BF5F8_global_1* g1 = g0->unk_0;
    _8BF5F8_global_2* g2 = g1->unk_3A0;
 
    if(g2 == 0)
-      return 0x8001000C;
+      return SCE_ERROR_ERRNO_ENOMEM;
 
    //this part looked differently originally, however it was obvious that it was an array access where array elements are of size 0x08
 
    if(g2[arg0].unk_4 == 0)
-      return 0x80010002;
+      return SCE_ERROR_ERRNO_ENOENT;
 
    arg1->unk_4_var970 = g2[arg0].unk_0;
    arg1->unk_8_var96C = g2[arg0].unk_4;

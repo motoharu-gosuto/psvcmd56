@@ -1,5 +1,8 @@
 #pragma once
 
+//there is new information about SMC services on Vita at xyz wiki:
+//https://wiki.henkaku.xyz/vita/F00D_Processor
+
 /*
 //http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0301h/ch02s12s13.html
 

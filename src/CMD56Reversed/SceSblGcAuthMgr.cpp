@@ -9,6 +9,7 @@
 
 #include "Constants.h"
 #include "GlobalVariables.h"
+#include "Errors.h"
 
 #include "SceSblGcAuthMgr.h"
 
@@ -46,7 +47,7 @@ int exit_loc_CA91DA(int r6, int var2C)
    int r0 = SceThreadmgrForDriver_ksceKernelSignalSema_d270498b(_00BD84D8_SEMA_ID, 0x01);
       
    if(r0 != 0)
-      return exit_loc_CA91F0(0x808A0701, var2C);
+      return exit_loc_CA91F0(SCE_SBL_GC_AUTH_MGR_ERROR_808A0701, var2C);
    else
       return exit_loc_CA91F0(r6, var2C);
 }
@@ -66,10 +67,10 @@ int initialize_sd(int* argument0, int* cookie)
    int res0 = SceThreadmgrForDriver_ksceKernelWaitSema_3c8b55a9(_00BD84D8_SEMA_ID, 0x01, 0x00);
 
    if(res0 != 0)
-     return exit_loc_CA91F0(0x808A0701, *cookie);
+     return exit_loc_CA91F0(SCE_SBL_GC_AUTH_MGR_ERROR_808A0701, *cookie);
 
    if(argument0[0] < 0x10000)
-      return exit_loc_CA91D6(0x808A0702, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0702, *cookie);
 
    //============================
 
@@ -83,7 +84,7 @@ int initialize_sd(int* argument0, int* cookie)
    {
       int res1 = SceSdifForDriver_22c82e79(0x01, &_00BDCBC0_SD_CTX_ELM);
       if(res1 != 0)
-         return exit_loc_CA91D6(0x808A0703, *cookie);
+         return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0703, *cookie);
    }
 
    return 0;
@@ -103,7 +104,7 @@ int packets1_to_6(int* cookie)
 
    int res2 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //cmd56 request
    if(res2 != 0)
-      return exit_loc_CA91D6(0x808A0704, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0704, *cookie);
 
    //================================================
 
@@ -116,16 +117,16 @@ int packets1_to_6(int* cookie)
    //check packet 2
 
    if(res3 != 0)
-      return exit_loc_CA91D6(0x808A0704, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0704, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x00] != 0x31)
-      return exit_loc_CA91D6(0x808A0704, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0704, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0x00)
-      return exit_loc_CA91D6(0x808A0704, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0704, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0x00)
-      return exit_loc_CA91D6(0x808A0704, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0704, *cookie);
 
    //================================================
 
@@ -135,17 +136,17 @@ int packets1_to_6(int* cookie)
 
    int res4 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1, PACKET_4_INDEX); //packet 3 packet 4
    if(res4 != 0)
-      return exit_loc_CA91D6(0x808A0705, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0705, *cookie);
 
    //================================================
 
    //check packet 4
 
    if(arg20_21.second != 0)
-      return exit_loc_CA91D6(0x808A0706, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0706, *cookie);
    
    if(arg20_21.first == 0)
-      return exit_loc_CA91D6(0x808A0706, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0706, *cookie);
 
    //================================================
 
@@ -159,7 +160,7 @@ int packets1_to_6(int* cookie)
 
    int res5 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
    if(res5 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //================================================
 
@@ -167,24 +168,24 @@ int packets1_to_6(int* cookie)
 
    int r6 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_6_INDEX);
    if(r6 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //================================================
 
    //check packet 6
 
    if(_00BDD04C_RESPBUF1[0x00] != 0x02)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0x00)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0x00)
    {
       //TODO: check again that call condition is correct
 
       memset(_00BDCFF8, 0x00, 0x20);
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
    }
 
    return 0;
@@ -201,7 +202,7 @@ int packet7_to_8(int* cookie)
    //TODO: this bit extraction is also weird
 
    if((_00BDCDF4_PACKET6_DE & (~0x8000)) != 1)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    _00BDCDF8_WB20[0x00] = (char)0xA2;
    _00BDCDF8_WB20[0x01] = (char)0x00;
@@ -214,7 +215,7 @@ int packet7_to_8(int* cookie)
 
    int res3 = sub_CA8E5C(_00BDCDF8_WB20 + 0x05); //generate 0x10 bytes
    if(res3 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    _00BDCDF8_WB20[0x05] = (_00BDCDF8_WB20[0x05] | (~0x7F));
    
@@ -222,13 +223,13 @@ int packet7_to_8(int* cookie)
 
    int res4 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200);
    if(res4 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    // packet 8
 
    int res5 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_8_INDEX);
    if(res5 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    return 0;
 }
@@ -244,13 +245,13 @@ int packet9_to_10(char* input_buffer, int* cookie)
    //check packet 8
       
    if(_00BDD04C_RESPBUF1[0x00] != 0x03)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //================================================
 
@@ -275,7 +276,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
 
    int res4 = sub_CAC924(0, input_buffer, CAC924_COMMAND_1B, 0x53, _00BDCDF4_PACKET6_DE); //preinit
    if(res4 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //================================================
    
@@ -296,7 +297,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
    
    int res5 = sub_CAC924(_00BDCDF8_WB20, input_buffer, CAC924_COMMAND_1C, 0x40, _00BDCDF4_PACKET6_DE);
    if(res5 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //================================================
 
@@ -314,7 +315,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
 
    int res6 = SceSdifForDriver_b0996641(_00BDCBC0_SD_CTX_ELM, _00BDCBF4_REQBUF, 0x200); //request
    if(res6 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //================================================
 
@@ -322,7 +323,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
 
    int res7 = SceSdifForDriver_134e06c4(_00BDCBC0_SD_CTX_ELM, _00BDD04C_RESPBUF1, 0x200, PACKET_10_INDEX); //response
    if(res7 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    return 0;
 }
@@ -334,25 +335,25 @@ int packet11_to_12(int* cookie)
    //packet 11 packet 12
 
    if(_00BDD04C_RESPBUF1[0x00] != 0x05)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    std::pair<char, char> arg20_21;
 
    int r0 = sub_CA8D30(_00BDCBC0_SD_CTX_ELM, &arg20_21, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1, PACKET_12_INDEX); //packet 11 packet 12
    if(r0 != 0)
-      return exit_loc_CA91D6(0x808A0705, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0705, *cookie);
 
    if(arg20_21.second != 0)
-      return exit_loc_CA91D6(0x808A0706, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0706, *cookie);
    
    if(arg20_21.first != 0)
-      return exit_loc_CA91D6(0x808A0706, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0706, *cookie);
 
    return 0;
 }
@@ -381,7 +382,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, *cookie);
+         int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -403,7 +404,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, *cookie);
+         int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -419,7 +420,7 @@ std::pair<cycle_state, int> packet13_to_14(char* arg24, sce_time& time_0, int& v
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, *cookie);
+         int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -517,7 +518,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
          varC = varC - 1; //dec counter
          if(varC == 0)
          {
-            int error = exit_loc_CA91D6(0x808A0707, *cookie);
+            int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
             return std::make_pair(c_error, error);
          }
          return std::make_pair(c_continue, 0); // continue cycle
@@ -538,7 +539,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
          varC = varC - 1; //dec counter
          if(varC == 0)
          {
-            int error = exit_loc_CA91D6(0x808A0707, *cookie);
+            int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
             return std::make_pair(c_error, error);
          }
          return std::make_pair(c_continue, 0); // continue cycle
@@ -552,7 +553,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
       varC = varC - 1; //dec counter
       if(varC == 0)
       {
-         int error = exit_loc_CA91D6(0x808A0707, *cookie);
+         int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
          return std::make_pair(c_error, error);
       }
       return std::make_pair(c_continue, 0); // continue cycle
@@ -562,7 +563,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
    if(res7 != 0)
    {
       //no continuation here
-      int error = exit_loc_CA91D6(0x808A0707, *cookie);
+      int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
       return std::make_pair(c_error, error);
    }
 
@@ -572,7 +573,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
    if(res8 != 0)
    {
       //no continuation here
-      int error = exit_loc_CA91D6(0x808A0707, *cookie);
+      int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
       return std::make_pair(c_error, error);
    }
 
@@ -584,7 +585,7 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
    if(res9 != 0)
    {
       //no continuation here
-      int error = exit_loc_CA91D6(0x808A0707, *cookie);
+      int error = exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
       return std::make_pair(c_error, error);
    }
 
@@ -599,13 +600,13 @@ std::pair<cycle_state, int> packet15_to_16(const sce_time& time_0, char* arg44, 
 int packet17_to_20(char* arg44, const char* arg24, int* cookie)
 {
    if(_00BDD04C_RESPBUF1[0x00] != 0x11)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x04] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //copy 0x20 bytes
 
@@ -627,16 +628,16 @@ int packet17_to_20(char* arg44, const char* arg24, int* cookie)
 
    int res8 = sub_CAC924(_00BDD44C, arg44, CAC924_COMMAND_1F, 0xB3, _00BDCDF4_PACKET6_DE);
    if(res8 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //TODO: what is the point of checking resp buffer - it was already checked - is it modified?
    if(_00BDD04C_RESPBUF1[0x0A] != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    //packet 17 packet 18 packet 19 packet 20
    int res9 = sub_CA8EA0(_00BDCBC0_SD_CTX_ELM, _00BDCDF4_PACKET6_DE, _00BDCFF8, _00BDCBC4, _00BDCDF8_WB20, _00BDCBF4_REQBUF, _00BDD04C_RESPBUF1, _00BDD24C_RESPBUF2, _00BDD018);
    if(res9 != 0)
-      return exit_loc_CA91D6(0x808A0707, *cookie);
+      return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
    return 0;
 }
