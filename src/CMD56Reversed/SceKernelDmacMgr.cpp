@@ -5,6 +5,8 @@
 #include "Errors.h"
 
 #include "SceKernelDmacMgr.h"
+#include "SceKernelDmacMgrGlobalConstants.h"
+#include "SceKernelDmacMgrGlobalVariables.h"
 
 #include "SceIntrmgr.h"
 #include "SceSysmem.h"
@@ -12,25 +14,7 @@
 #include "SceThreadmgr.h"
 #include "SceCpu.h"
 
-
-struct global_008FE000
-{
-   int unk_00;
-   int unk_04;
-   int unk_08;
-   int unk_0C;
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-   int unk_20;
-};
-
 //==========================================================================
-
-global_008FE000 _008FE000;
-
-char* unk_994808 = "SceDmacDefault";
 
 int _008FE278;
 
@@ -44,19 +28,19 @@ int _008FE254;
 
 int SceDmacmgrForDriver_7cd5088a(const char* name)
 {
-   int r0 = name;
-   int r6 = r0;
-   int r0 = SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
-   if(r0 != 0)
+   int res_0 = SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
+   if(res_0 != 0)
       return SCE_KERNEL_ERROR_ILLEGAL_CONTEXT;
 
+   const char* r6 = name;
+   if(r6 == 0)
+      r6 = unk_994808;
+
    global_008FE000* r5 = &_008FE000;
-   int r3 = unk_994808;
    int r0 = r5->unk_20;
 
-   if(r6 == 0)
-      r6 = r3;
    result_c8672a3d* r0 = SceSysmemForKernel_functor_c8672a3d(r0);
+   
    result_c8672a3d* r4 = r0;
    if(r0 == 0)
       return SCE_KERNEL_ERROR_NO_MEMORY;
