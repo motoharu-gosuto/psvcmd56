@@ -141,7 +141,7 @@ int exit_loc_992EFA(int r2, int* r6)
    return r0_ret;
 }
 
-int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2, int unk3)
+int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2)
 {
    int r0 = r0 >> 1;
    int r5 = _008FE000;
@@ -1482,7 +1482,7 @@ int exit_loc_993152(int r0, int var_24)
 //unk0 is id
 //unk1 is structure of size 0x6C
 //unk2 is 0x01 or 0x11
-int SceDmacmgrForDriver_01a599e0(int id, input_01a599e0* unk1, int unk2) //fix signature!!!
+int SceDmacmgrForDriver_01a599e0(int id, locals_B99674* unk1, int unk2)
 {
    int var_48; // is it used ? is it arg ?
    local_01a599e0 local;

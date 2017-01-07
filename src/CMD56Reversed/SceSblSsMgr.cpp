@@ -13,23 +13,6 @@
 
 // ======================================
 
-struct locals_B99674
-{
-   void* var_98_unk_0;
-   void* var_94_unk_4;
-   int var_90_unk_8;
-   int var_8C_unk_C;
-   int unk_10; //var_88 - ?
-   int var_84_unk_14;
-   int unk_18; //var_80 - ?
-   int unk_1C; //var_7C - used
-   void* var_78_unk_20;
-   int var_74_unk_24;
-   int unk_28; //var_70 - ?
-   
-   char unk_2C[0x40]; // -used
-};
-
 //source is array of size 0x20 at max
 //copies data from source to destination to unk_2C (size is based on sizeFlag) 
 int sub_B9A684(locals_B99674* dest, char* source, int sizeFlag)
@@ -92,48 +75,39 @@ int exit_loc_B9979A(int cookie)
    return exit_loc_B99762(0x800F1528, cookie);
 }
 
-int finalize_buffer(int id, int var_8C, int var_2C, int R4, void* var_98)
+//---------------------------------------------
+
+int call_dmac(int id, int var_8C, int cookie, int& R4, locals_B99674* dest)
 {
-   int r0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00, var_8C);
+   int r0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00);
    if(r0 < 0)
    {
       SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
-      return exit_loc_B99762(r0, var_2C);
+      return exit_loc_B99762(r0, cookie);
    }
-   else
-   {
-      int R2;
-      if((R4 & 0x07) == 0x03)
-         R2 == 0x01;
-      else
-         R2 = 0x11;
 
-      int r0 = SceDmacmgrForDriver_01a599e0(id, var_98, R2);
-      if(r0 == 0)
-      {
-         return exit_loc_B9975A(r0, var_2C);
-      }
-      else
-      {
-         
-         int r0 = SceDmacmgrForDriver_543f54cf(id);
-         if(r0 < 0)
-         {
-            return exit_loc_B9975A(r0, var_2C);
-         }
-         else
-         {
-            SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615();
+   R4 = R4 & 0x07;
 
-            int r0 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
-                        
-            SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7();
-                        
-            return exit_loc_B9975A(r0, var_2C);
-         }
-      }
-   }
+   int R2 = (R4 == 0x03) ? 0x01 : 0x11;
+      
+   int r0 = SceDmacmgrForDriver_01a599e0(id, dest, R2);
+   if(r0 < 0)
+      return exit_loc_B9975A(r0, cookie);
+  
+   int r0 = SceDmacmgrForDriver_543f54cf(id);
+   if(r0 < 0)
+      return exit_loc_B9975A(r0, cookie);
+
+   SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615();
+
+   int r0 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
+
+   SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7();
+
+   return exit_loc_B9975A(r0, cookie);
 }
+
+//---------------------------------------------
 
 int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int R10, int cookie, int& R4, locals_B99674* destination)
 {
@@ -391,8 +365,7 @@ int translate_vaddr1_vaddr2(void* vaddr_1, void* vaddr_2, int arg_0, int arg_8, 
 
 //----------------------------------------------------------------
 
-int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, 
-               int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
+int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
 {
    locals_B99674 locals;
 
@@ -412,9 +385,7 @@ int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2,
    if(res_1 != 0)
       return res_1;
 
-  //------------------------------------
-
-   return finalize_buffer(id, locals.var_8C_unk_C, cookie, R4, &var_98);
+   return call_dmac(id, locals.var_8C_unk_C, cookie, R4, &locals);
 }
 
 // ================

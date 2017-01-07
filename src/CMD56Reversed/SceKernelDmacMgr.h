@@ -8,8 +8,9 @@
 //paired start function
 int SceDmacmgrForDriver_7cd5088a(const char* name);
 
-int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2, int unk3);
+int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2);
 
+/*
 struct input_01a599e0
 {
    int unk_0;
@@ -23,6 +24,24 @@ struct input_01a599e0
    int unk_1C;
 
    int unk_20;
+};
+*/
+
+struct locals_B99674
+{
+   void* var_98_unk_0;
+   void* var_94_unk_4;
+   int var_90_unk_8;
+   int var_8C_unk_C;
+   int unk_10; //var_88 - ?
+   int var_84_unk_14;
+   int unk_18; //var_80 - ?
+   int unk_1C; //var_7C - used
+   void* var_78_unk_20;
+   int var_74_unk_24;
+   int unk_28; //var_70 - ?
+   
+   char unk_2C[0x40]; // -used
 };
 
 struct r9_01a599e0
@@ -62,7 +81,7 @@ struct local_01a599e0
    int var_28; // used
 };
 
-int SceDmacmgrForDriver_01a599e0(int id, input_01a599e0* unk1, int unk2);
+int SceDmacmgrForDriver_01a599e0(int id, locals_B99674* unk1, int unk2);
 
 int SceDmacmgrForDriver_543f54cf(int unk0);
 
