@@ -278,111 +278,103 @@ void get_r4_flag(void* ptr0, void* ptr1, void* param0, int arg_8, int arg_C, int
    }
 }
 
-int translateVaddr2(void* vaddr_2, void** R1, int cookie)
+int translateVaddr2(void* vaddr_2, void*& paddr_2, int cookie)
 {
+   paddr_2 = 0x00;
+
    if(vaddr_2 == 0)
       return exit_loc_B99762(0x800F1516, cookie);
 
-   void* paddr_2 = 0x00;
-   int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_2, &paddr_2);     
+   void* paddr_2_temp = 0x00;
+   int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_2, &paddr_2_temp);     
    if(res_1 < 0)
       return exit_loc_B99762(0x800F1528, cookie);
 
-   *R1 = paddr_2;
+   paddr_2 = paddr_2_temp;
 
    return 0;
 }
 
-int translateVaddr1(void* vaddr_1, int arg_8, void** R1, int cookie)
+int translateVaddr1(void* vaddr_1, int arg_8, void*& paddr_1, int cookie)
 {
-   if((arg_8 << 0x15) >= 0) //original condition is BPL - If the N flag is clear after an arithmetical operation.
+   paddr_1 = 0x00;
+
+   if((arg_8 << 0x15) >= 0)
    {
-      void* paddr_1 = 0x00;
-      int res_0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_1, &paddr_1);
+      void* paddr_1_temp = 0x00;
+      int res_0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_1, &paddr_1_temp);
       if(res_0 < 0)
          return exit_loc_B99762(0x800F1528, cookie);
          
-      *R1 = paddr_1;
+      paddr_1 = paddr_1_temp;
    }
 
    return 0;
 }
 
-int get_r1_r10_flags(void* vaddr_1, void* vaddr_2, int arg_0, int arg_8, int var_2C, void*& R1, int& R10, int& var_90, void*& var_94, int& var_8C)
+//optionally translates vaddr_1 and stores paddr to var_94 (based on arg_8) - if not translated - vaddr_1 is stored
+//optionally translates vaddr_2 and stores paddr to var_78 (based on arg_8) - if not translated - 0 is stored
+//sets var_90 to arg_0 or (arg_0 | 0x10000000) (based on arg_8)
+//sets var_8C to 0x3000
+//sets R10 to (arg_8 & 0x38) or 0 based on (based on arg_8)
+int translate_vaddr1_vaddr2(void* vaddr_1, void* vaddr_2, int arg_0, int arg_8, int cookie, int& R10, int& var_90, void*& var_94, int& var_8C, void*& var_78)
 {
-   R10 = arg_0;
-   R1 = 0x00;
-
    int mask = arg_8 & 0x07;
+
+   var_94 = vaddr_1;
+   var_8C = 0x3000;
+   R10 = arg_8 & 0x38;
+
+   var_90 = (mask == 0x03) ? (arg_0 | 0x10000000) : arg_0;
 
    if(mask == 0x03)
    {
-      #pragma region loc_B9982C
-
-      int res_0 = translateVaddr1(vaddr_1, arg_8, &R1, var_2C);
+      int res_0 = translateVaddr1(vaddr_1, arg_8, var_94, cookie);
       if(res_0 != 0)
          return res_0;
 
-      var_90 = arg_0 | 0x10000000;
-      var_94 = R1;
-      var_8C = 0x3000;
-      R10 = arg_8 & 0x38;
-    
-      int res_1 = translateVaddr2(vaddr_2, &R1, var_2C);
+      int res_1 = translateVaddr2(vaddr_2, var_78, cookie);
       if(res_1 != 0)
          return res_1;
       
-      #pragma endregion
+      return 0;
    }
    else
    {
-      #pragma region loc_no_loc
-
-      var_90 = arg_0;
-      var_8C = 0x3000;
-      R10 = arg_8 & 0x38;
-
-      if(mask != 0x04)
+      if(mask == 0x04)
       {
-         int R0 = R10;
-
-         if(R0 != 0) ; // original condition was NE - If the Z flag is clear after a comparison. 
-            R0 = 0x01;
-
-         if(mask == 0x01)
-            R1 = R0;
-         else
-            R1 = R0 | 0x01;
-
-         if(R1 == 0)
-         {
-            R10 = 0; //assigns to zero - this is done through optimization
-         }
-         else
-         {
-            if(mask == 0x02)
-               R1 = R0;
-            else
-               R1 = R0 | 0x01;
-
-            if(R1 != 0x00)
-            {
-               int res_1 = translateVaddr2(vaddr_2, &R1, var_2C);
-               if(res_1 != 0)
-                  return res_1;
-            }
-         }
+         var_78 = 0x00;
+         return 0;
       }
-      #pragma endregion
-   }
+      
+      int flag = ((arg_8 & 0x38) != 0) ? 0x01 : 0x00; //flag can only take values of 0 or 1
+      
+      int C1 = (mask == 0x01) ? flag : (flag | 0x01); //r1 can only take values of 0 and 1
+      if(C1 == 0)
+      {
+         R10 = 0;
+         var_78 = 0x00;
+         return 0;
+      }
 
-   return 0;
+      int C2 = (mask == 0x02) ? flag : (flag | 0x01); //r1 can only take values of 0 and 1
+      if(C2 == 0x00)
+      {
+         //could it be that at this point R10 can only equal 0
+         //but it is not set due to optimization?
+         var_78 = 0x00;
+         return 0;
+      }
+      
+      int res_1 = translateVaddr2(vaddr_2, var_78, cookie);
+      if(res_1 != 0)
+         return res_1;
+      
+      return 0;
+   }
 }
 
-//int sub_B99674(int id, void* ptr0, void* ptr1, void* param0, 
-//               int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
-
-int sub_B99674(int id, void* ptr0, void* vaddr_1, void* vaddr_2, 
+int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, 
                int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
 {
    //void* var_B0; //temp for storing regs between calls
@@ -397,7 +389,7 @@ int sub_B99674(int id, void* ptr0, void* vaddr_1, void* vaddr_2,
    //var_98 is structure of size 0x6C
 
    //beginning of structure
-   void* var_98;   //0x00 - field of structure that is used - ptr0
+   void* var_98;   //0x00 - field of structure that is used - vaddr_0
    void* var_94;   //0x04 - field of structure that is used - vaddr_1 or (some result of sceKernelGetPaddr)
    int var_90;     //0x08 - field of structure that is used - (arg_0) or (arg_0 | 0x10000000)
    int var_8C;     //0x0C - field of structure that is used - 0x3000
@@ -419,41 +411,21 @@ int sub_B99674(int id, void* ptr0, void* vaddr_1, void* vaddr_2,
    int var_2C = var_009EA004; //cookie
 
    //----------------------
-   //r4 = arg_8
-   //r5 = &var_009EA004
-   //r7 = r0 (id)
-   //lr = var_009EA004
-   //r12 = r1 (ptr0)
-   //r6 = r4 & 7
-   //r0 = arg_14
-   //r1 = 0
-   //r2 = r1 (vaddr_1)
-   //r10 = arg_0
-   //r11 = arg_4
-   //r8 = arg_C
-   //r9 = arg_10
-   //var_A4 = r0 (arg_14)
    
-   var_98 = ptr0;
-   var_94 = vaddr_1; //it can be important that var_94 is pointer
+   var_98 = vaddr_0;
    
    //----------------------
    
-   void* R1;
    int R10;
-
-   int res_0 = get_r1_r10_flags(vaddr_1, vaddr_2, arg_0, arg_8, var_2C, R1, R10, var_90, var_94, var_8C);
+   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, var_2C, R10, var_90, var_94, var_8C, var_78);
    if(res_0 != 0)
       return res_0;
 
+   //----------------------
    //loc_B996DA:
 
-   var_78 = R1;
-
-   //----------------------
-
    int R4;
-   get_r4_flag(ptr0, vaddr_1, vaddr_2, arg_8, arg_C, R4);
+   get_r4_flag(vaddr_0, vaddr_1, vaddr_2, arg_8, arg_C, R4);
    
    //------------------------------------
 
