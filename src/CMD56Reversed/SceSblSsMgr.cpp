@@ -180,40 +180,9 @@ int call_subs_update_r4_flag(int arg_8, int arg_4, char* arg_14, int R10, int va
    return 0;
 }
 
-void update_r4_flag(void* param0, int arg_10, int& R4)
-{
-   if(arg_10 != 0x00)
-   {
-      int R0;
+//------------------------------------------------------------
 
-      if(param0 + 0xE8000000 >= 0x8000000)
-      {
-         R0 = SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(param0);
-      }
-      else
-      {
-         int rng0 = param0 + 0xA0000000;
-         int rng1 = param0 + 0xE0000000;
-         if(rng1 >= 0x20000000)
-         {
-            if(rng0 >= 0x21000000)
-               R0 = 0;
-            else
-               R0 = 1;
-         }
-         else
-         {
-            R0 = 1;
-         }
-      }
-
-      if(R0 == 0)
-         R4 = R4 | 0xC000000;
-   }
-}
-
-
-void check_vaddr0(void* vaddr_0, int arg_8, int& R4)
+void check_vaddr0(void* vaddr_0, int& R4)
 {
    int R0;
       
@@ -238,11 +207,11 @@ void check_vaddr0(void* vaddr_0, int arg_8, int& R4)
 
    if(R0 == 0)
    {
-      R4 = arg_8 | 0x1000000;
+      R4 = R4 | 0x1000000;
    }
 }
 
-void check_vaddr1(void* vaddr_1, int arg_8, int& R4)
+void check_vaddr1(void* vaddr_1, int& R4)
 {
    int R0;
       
@@ -271,21 +240,59 @@ void check_vaddr1(void* vaddr_1, int arg_8, int& R4)
    }
 }
 
+void check_vaddr2(void* vaddr_2, int& R4)
+{
+   int R0;
+
+   if(((int64_t)vaddr_2 + 0xE8000000) >= 0x8000000) //original condition was BCC
+   {
+      R0 = SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(vaddr_2);
+   }
+   else
+   {
+      if(((int64_t)vaddr_2 + 0xE0000000) >= 0x20000000) //original condition was BCS
+      {
+         R0 = 1;
+      }
+      else
+      {
+         if(((int64_t)vaddr_2 + 0xA0000000) >= 0x21000000) //original condition was BCS
+            R0 = 1;
+         else
+            R0 = 0;
+      }
+   }
+
+   if(R0 == 0)
+   {
+      R4 = R4 | 0xC000000;
+   }
+}
+
 //adds to arg_8 mask 0x1000000 (based on vaddr_0 and arg_C)
 //adds to arg_8 mask 0x2000000 (based on vaddr_1 and arg_C)
+//adds to arg_8 mask 0xC000000 (based on vaddr_2 and arg_10)
 //sets var_84 to arg_C
-void update_r4_by_vaddr0_vaddr1(void* vaddr_0, void* vaddr_1, int arg_8, int arg_C, int& R4, int& var_84)
+//sets var_74 to arg_10
+void update_r4_by_vaddr0_vaddr1_vaddr2(void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_8, int arg_C, int arg_10, int& R4, int& var_84, int& var_74)
 {
    R4 = arg_8;
 
    if(arg_C != 0x00)
    {
-      check_vaddr0(vaddr_0, arg_8, R4);
+      check_vaddr0(vaddr_0, R4);
 
-      check_vaddr1(vaddr_1, arg_8, R4);
+      check_vaddr1(vaddr_1, R4);
    }
 
    var_84 = arg_C;
+
+   if(arg_10 != 0x00)
+   {
+      check_vaddr2(vaddr_2, R4);
+   }
+
+   var_74 = arg_10;
 }
 
 int translateVaddr2(void* vaddr_2, void*& paddr_2, int cookie)
@@ -426,18 +433,11 @@ int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2,
       return res_0;
 
    int R4;
-   update_r4_by_vaddr0_vaddr1(vaddr_0, vaddr_1, arg_8, arg_C, R4, var_84);
+   update_r4_by_vaddr0_vaddr1_vaddr2(vaddr_0, vaddr_1, vaddr_2, arg_8, arg_C, arg_10, R4, var_84, var_74);
    
    //------------------------------------
 
-   update_r4_flag(vaddr_2, arg_10, R4);
-
-   //------------------------------------
-
-   var_74 = arg_10;
-
    SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0x00);
-
 
    var_98 = vaddr_0;
 
