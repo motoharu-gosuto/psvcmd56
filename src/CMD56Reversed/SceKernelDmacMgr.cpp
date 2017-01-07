@@ -141,7 +141,7 @@ int exit_loc_992EFA(int r2, int* r6)
    return r0_ret;
 }
 
-int SceDmacmgrForDriver_fce4171a(void* unk0, int unk1, int unk2, int unk3)
+int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2, int unk3)
 {
    int r0 = r0 >> 1;
    int r5 = _008FE000;

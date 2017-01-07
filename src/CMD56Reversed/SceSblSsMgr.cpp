@@ -80,9 +80,9 @@ int sub_B9A790_set_1C(input_B9A790* ptr, int value)
    return 0;
 }
 
-int exit_loc_B99762(int r0, int var2C)
+int exit_loc_B99762(int r0, int cookie)
 {
-   if(var2C == var_009EA004)
+   if(cookie == var_009EA004)
       return r0;
    else
       return STACK_CHECK_FAIL;
@@ -278,12 +278,40 @@ void get_r4_flag(void* ptr0, void* ptr1, void* param0, int arg_8, int arg_C, int
    }
 }
 
-int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C, void*& R1, int& R10, int& var_90, void*& var_94, int& var_8C)
+int translateVaddr2(void* vaddr_2, void** R1, int cookie)
 {
-   bool exec_B99846 = false;
-   
+   if(vaddr_2 == 0)
+      return exit_loc_B99762(0x800F1516, cookie);
+
+   void* paddr_2 = 0x00;
+   int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_2, &paddr_2);     
+   if(res_1 < 0)
+      return exit_loc_B99762(0x800F1528, cookie);
+
+   *R1 = paddr_2;
+
+   return 0;
+}
+
+int translateVaddr1(void* vaddr_1, int arg_8, void** R1, int cookie)
+{
+   if((arg_8 << 0x15) >= 0) //original condition is BPL - If the N flag is clear after an arithmetical operation.
+   {
+      void* paddr_1 = 0x00;
+      int res_0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(vaddr_1, &paddr_1);
+      if(res_0 < 0)
+         return exit_loc_B99762(0x800F1528, cookie);
+         
+      *R1 = paddr_1;
+   }
+
+   return 0;
+}
+
+int get_r1_r10_flags(void* vaddr_1, void* vaddr_2, int arg_0, int arg_8, int var_2C, void*& R1, int& R10, int& var_90, void*& var_94, int& var_8C)
+{
    R10 = arg_0;
-   R1 = 0;
+   R1 = 0x00;
 
    int mask = arg_8 & 0x07;
 
@@ -291,36 +319,18 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
    {
       #pragma region loc_B9982C
 
-      if((arg_8 << 0x15) >= 0) //i do not understand this check yet
-      {
-         void* var_9C = 0x00;
-         int res_0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(ptr1, &var_9C);
-         
-         if(res_0 < 0)
-            return exit_loc_B99762(0x800F1528, var_2C);
-         else
-            R1 = var_9C;
-      }
+      int res_0 = translateVaddr1(vaddr_1, arg_8, &R1, var_2C);
+      if(res_0 != 0)
+         return res_0;
 
       var_90 = arg_0 | 0x10000000;
       var_94 = R1;
       var_8C = 0x3000;
       R10 = arg_8 & 0x38;
-     
-      if(param0 == 0)
-      {
-         return exit_loc_B99762(0x800F1516, var_2C);
-      }
-      else
-      {
-         void* var_A0 = 0x00;
-         int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(param0, &var_A0);
-                           
-         if(res_1 < 0)
-            return exit_loc_B99762(0x800F1528, var_2C);
-         else
-            R1 = var_A0;
-      }
+    
+      int res_1 = translateVaddr2(vaddr_2, &R1, var_2C);
+      if(res_1 != 0)
+         return res_1;
       
       #pragma endregion
    }
@@ -336,7 +346,7 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
       {
          int R0 = R10;
 
-         if(R0 != 0)
+         if(R0 != 0) ; // original condition was NE - If the Z flag is clear after a comparison. 
             R0 = 0x01;
 
          if(mask == 0x01)
@@ -346,7 +356,7 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
 
          if(R1 == 0)
          {
-            R10 = 0; //assigns to zero
+            R10 = 0; //assigns to zero - this is done through optimization
          }
          else
          {
@@ -357,20 +367,9 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
 
             if(R1 != 0x00)
             {
-               if(param0 == 0)
-               {
-                  return exit_loc_B99762(0x800F1516, var_2C);
-               }
-               else
-               {
-                  void* var_A0 = 0x00;
-                  int res_1 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(param0, &var_A0);
-                           
-                  if(res_1 < 0)
-                     return exit_loc_B99762(0x800F1528, var_2C);
-                  else
-                     R1 = var_A0;
-               }
+               int res_1 = translateVaddr2(vaddr_2, &R1, var_2C);
+               if(res_1 != 0)
+                  return res_1;
             }
          }
       }
@@ -380,7 +379,10 @@ int get_r1_r10_flags(void* ptr1, void* param0, int arg_0, int arg_8, int var_2C,
    return 0;
 }
 
-int sub_B99674(int id, void* ptr0, void* ptr1, void* param0, 
+//int sub_B99674(int id, void* ptr0, void* ptr1, void* param0, 
+//               int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
+
+int sub_B99674(int id, void* ptr0, void* vaddr_1, void* vaddr_2, 
                int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
 {
    //void* var_B0; //temp for storing regs between calls
@@ -396,7 +398,7 @@ int sub_B99674(int id, void* ptr0, void* ptr1, void* param0,
 
    //beginning of structure
    void* var_98;   //0x00 - field of structure that is used - ptr0
-   void* var_94;   //0x04 - field of structure that is used - ptr1 or (some result of sceKernelGetPaddr)
+   void* var_94;   //0x04 - field of structure that is used - vaddr_1 or (some result of sceKernelGetPaddr)
    int var_90;     //0x08 - field of structure that is used - (arg_0) or (arg_0 | 0x10000000)
    int var_8C;     //0x0C - field of structure that is used - 0x3000
    int var_84;     //0x10 - field of structure that is used - arg_C
@@ -412,34 +414,52 @@ int sub_B99674(int id, void* ptr0, void* ptr1, void* param0,
    //0x2C + 0x40 = 0x6C
    //0x98 - 0x6C = 0x2C - address of cookie
 
+   //---------------------------------------------------
+
    int var_2C = var_009EA004; //cookie
 
    //----------------------
+   //r4 = arg_8
+   //r5 = &var_009EA004
+   //r7 = r0 (id)
+   //lr = var_009EA004
+   //r12 = r1 (ptr0)
+   //r6 = r4 & 7
+   //r0 = arg_14
+   //r1 = 0
+   //r2 = r1 (vaddr_1)
+   //r10 = arg_0
+   //r11 = arg_4
+   //r8 = arg_C
+   //r9 = arg_10
+   //var_A4 = r0 (arg_14)
    
    var_98 = ptr0;
-   var_94 = ptr1; //it can be important that var_94 is pointer
+   var_94 = vaddr_1; //it can be important that var_94 is pointer
    
    //----------------------
    
    void* R1;
    int R10;
 
-   int res_0 = get_r1_r10_flags(ptr1, param0, arg_0, arg_8, var_2C, R1, R10, var_90, var_94, var_8C);
+   int res_0 = get_r1_r10_flags(vaddr_1, vaddr_2, arg_0, arg_8, var_2C, R1, R10, var_90, var_94, var_8C);
    if(res_0 != 0)
       return res_0;
+
+   //loc_B996DA:
 
    var_78 = R1;
 
    //----------------------
 
    int R4;
-   get_r4_flag(ptr0, ptr1, param0, arg_8, arg_C, R4);
+   get_r4_flag(ptr0, vaddr_1, vaddr_2, arg_8, arg_C, R4);
    
    //------------------------------------
 
    var_84 = arg_C;
 
-   update_r4_flag(param0, arg_10, R4);
+   update_r4_flag(vaddr_2, arg_10, R4);
 
    //------------------------------------
 
