@@ -1,6 +1,7 @@
 #include <string>
 
 #include "SceSblSsMgr.h"
+#include "SceSblSsMgrGlobalConstants.h"
 
 #include "Constants.h"
 #include "GlobalVariables.h"
@@ -11,7 +12,7 @@
 #include "SceKernelDmacMgr.h"
 #include "SceKernelSuspend.h"
 
-// ======================================
+//---------------------------------------------
 
 //source is array of size 0x20 at max
 //copies data from source to destination to unk_2C (size is based on sizeFlag) 
@@ -398,10 +399,7 @@ int exit_loc_B99C0A(int r0, int cookie)
       return STACK_CHECK_FAIL;
 }
 
-//CHECK procedure sub_B99998
-//TODO: it shows all the arguments to sub_B99674 very intuitively !!!
-
-char* unk_B9CC90 = "SceSblDmac5Common";
+//TODO: check procedure sub_B99998 - it shows all the arguments to sub_B99674 very intuitively
 
 //assume - gen/buffer shift
 //size - in our case is always 0x40 because passed by wrapper
@@ -419,13 +417,14 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
    if(id < 0)
       return exit_loc_B99C0A(0x800F1528, cookie);
    
-   int var_8C;
+   int var_8C = (unk == 0x00) ? 0x00000000 : 0x0003ffff;
 
-   if(unk == 0x00)
-      var_8C = 0x00000000;
-   else
-      var_8C = 0x0003ffff;
-
+   //it looks like:
+   //arg1 - is virtual address
+   //arg2 - will be translated to physical address
+   //arg_0 - is 0x40
+   //arg_8 - is 0x04
+   //arg_C - will be 0x0003ffff
    int res_0 = sub_B99674(id, sourceBuffer, sourceBuffer, 0x00, 0x40, 0x00, 0x04, var_8C, 0x00, 0x00);
 
    int res_1 = SceDmacmgrForDriver_adff1186(id);
