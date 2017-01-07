@@ -13,25 +13,26 @@
 
 // ======================================
 
-struct input_B9A684
+struct locals_B99674
 {
-   int unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-   int unk_20;
-   int unk_24;
-   int unk_28;
+   void* var_98_unk_0;
+   void* var_94_unk_4;
+   int var_90_unk_8;
+   int var_8C_unk_C;
+   int unk_10; //var_88 - ?
+   int var_84_unk_14;
+   int unk_18; //var_80 - ?
+   int unk_1C; //var_7C - used
+   void* var_78_unk_20;
+   int var_74_unk_24;
+   int unk_28; //var_70 - ?
    
-   char unk_2C[0x40];
+   char unk_2C[0x40]; // -used
 };
 
 //source is array of size 0x20 at max
-int sub_B9A684(input_B9A684* dest, char* source, int sizeFlag)
+//copies data from source to destination to unk_2C (size is based on sizeFlag) 
+int sub_B9A684(locals_B99674* dest, char* source, int sizeFlag)
 {
    int cookie = var_009EA004;
    int mask = (sizeFlag & 0x300);
@@ -62,23 +63,14 @@ int sub_B9A684(input_B9A684* dest, char* source, int sizeFlag)
       return STACK_CHECK_FAIL;
 }
 
-struct input_B9A790
+//sets unk_1C in destination to value
+int sub_B9A790_set_1C(locals_B99674* dest, int value)
 {
-   int unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-};
-
-int sub_B9A790_set_1C(input_B9A790* ptr, int value)
-{
-   ptr->unk_1C = value;
+   dest->unk_1C = value;
    return 0;
 }
+
+//---------------------------------------------
 
 int exit_loc_B99762(int r0, int cookie)
 {
@@ -88,16 +80,16 @@ int exit_loc_B99762(int r0, int cookie)
       return STACK_CHECK_FAIL;
 }
 
-int exit_loc_B9975A(int r4, int var2C)
+int exit_loc_B9975A(int r4, int cookie)
 {
    SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
-   return exit_loc_B99762(r4, var2C);
+   return exit_loc_B99762(r4, cookie);
 }
 
-int exit_loc_B9979A(int var2C)
+int exit_loc_B9979A(int cookie)
 {
    SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
-   return exit_loc_B99762(0x800F1528, var2C);
+   return exit_loc_B99762(0x800F1528, cookie);
 }
 
 int finalize_buffer(int id, int var_8C, int var_2C, int R4, void* var_98)
@@ -143,40 +135,46 @@ int finalize_buffer(int id, int var_8C, int var_2C, int R4, void* var_98)
    }
 }
 
-int call_subs_update_r4_flag(int arg_8, int arg_4, char* arg_14, int R10, int var_2C, int& R4, void* var_98)
+int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int R10, int cookie, int& R4, locals_B99674* destination)
 {
-   int R3;
-   if((R10 & 0x29) > 0)
-      R3 = 0x00;
-   else
-      R3 = 0x01;
+   destination->var_98_unk_0 = vaddr_0;
+
+   int R3 = ((R10 & 0x29) == 0) ? 0x00 : 0x01;
 
    int mask = arg_8 & 0x07;
 
    if(mask != 0x03)
       R3 = R3 | 0x01;
 
-   if(R3 != 0)
+   if(R3 == 0)
    {
-      if(mask != 0x04)
-      {
-         if(arg_4 <= 0xFF)
-         {
-            int res_3 = sub_B9A790_set_1C(var_98, arg_4); //this is very important !!!!!!
-            if(res_3 != 0)
-               return exit_loc_B9979A(var_2C);
-         }
-         else
-         {
-            int res_3 = sub_B9A684(var_98, arg_14, arg_8); //this is also important !!!
-            if(res_3 != 0)
-               return exit_loc_B9979A(var_2C);
-            else
-               R4 = arg_8 | 0x80;
-         }
-      }
+      destination->var_8C_unk_C = destination->var_8C_unk_C | R4;
+      return 0;
    }
 
+   if(mask == 0x04)
+   {
+      destination->var_8C_unk_C = destination->var_8C_unk_C | R4;
+      return 0;
+   }
+
+   if(arg_4 <= 0xFF)
+   {
+      int res_3 = sub_B9A790_set_1C(destination, arg_4);
+      if(res_3 != 0)
+         return exit_loc_B9979A(cookie);
+   }
+   else
+   {
+      int res_3 = sub_B9A684(destination, source, R4);
+      if(res_3 != 0)
+         return exit_loc_B9979A(cookie);
+      else
+         R4 = R4 | 0x80;
+   }
+
+   destination->var_8C_unk_C = destination->var_8C_unk_C | R4;
+   
    return 0;
 }
 
@@ -391,65 +389,32 @@ int translate_vaddr1_vaddr2(void* vaddr_1, void* vaddr_2, int arg_0, int arg_8, 
    }
 }
 
+//----------------------------------------------------------------
+
 int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, 
                int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
 {
-   //void* var_B0; //temp for storing regs between calls
-   //void* var_AC; //temp for storing regs between calls
-   //void* var_A8; //temp for storing regs between calls
+   locals_B99674 locals;
 
-   //int var_A4; //temp for storing arg_14
-   //int var_A0; //temp for function result int*
-   //int var_9C; //temp for function result int*
-
-   //var_98 is also used by SceDmacmgrForDriver_01a599e0
-   //var_98 is structure of size 0x6C
-
-   //beginning of structure
-   void* var_98;   //0x00 - field of structure that is used - vaddr_0
-   void* var_94;   //0x04 - field of structure that is used - vaddr_1 or (some result of sceKernelGetPaddr)
-   int var_90;     //0x08 - field of structure that is used - (arg_0) or (arg_0 | 0x10000000)
-   int var_8C;     //0x0C - field of structure that is used - 0x3000
-   int var_84;     //0x10 - field of structure that is used - arg_C
-   void* var_78;   //0x14 - field of structure that is used - 0 or ? or (some result of sceKernelGetPaddr)
-   int var_74;     //0x18 - field of structure that is used - arg_10
-                   //0x1C - can be set by sub_B9A790
-                   //0x20 - ?
-                   //0x24 - ?
-                   //0x28 - ?
-                   //0x2C - start of 0x40 buffer
-
-   //resulting structure will fit the stack exactly:
-   //0x2C + 0x40 = 0x6C
-   //0x98 - 0x6C = 0x2C - address of cookie
-
-   //---------------------------------------------------
-
-   int var_2C = var_009EA004; //cookie
+   int cookie = var_009EA004;
    
    int R10;
-   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, var_2C, R10, var_90, var_94, var_8C, var_78);
+   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, cookie, R10, locals.var_90_unk_8, locals.var_94_unk_4, locals.var_8C_unk_C, locals.var_78_unk_20);
    if(res_0 != 0)
       return res_0;
 
    int R4;
-   update_r4_by_vaddr0_vaddr1_vaddr2(vaddr_0, vaddr_1, vaddr_2, arg_8, arg_C, arg_10, R4, var_84, var_74);
-   
-   //------------------------------------
+   update_r4_by_vaddr0_vaddr1_vaddr2(vaddr_0, vaddr_1, vaddr_2, arg_8, arg_C, arg_10, R4, locals.var_84_unk_14, locals.var_74_unk_24);   
 
    SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0x00);
 
-   var_98 = vaddr_0;
-
-   int res_1 = call_subs_update_r4_flag(arg_8, arg_4, arg_14, R10, var_2C, R4, var_98);
+   int res_1 = update_dest_update_r4(vaddr_0, arg_8, arg_4, arg_14, R10, cookie, R4, &locals);
    if(res_1 != 0)
       return res_1;
 
   //------------------------------------
-   
-   var_8C = var_8C | R4;
 
-   return finalize_buffer(id, var_8C, var_2C, R4, &var_98);
+   return finalize_buffer(id, locals.var_8C_unk_C, cookie, R4, &var_98);
 }
 
 // ================
