@@ -111,7 +111,7 @@ int call_dmac(int id, int var_8C, int cookie, int& R4, locals_B99674* dest)
 
 int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int R10, int cookie, int& R4, locals_B99674* destination)
 {
-   destination->var_98_unk_0 = vaddr_0;
+   destination->unk_0 = vaddr_0;
 
    int R3 = ((R10 & 0x29) == 0) ? 0x00 : 0x01;
 
@@ -122,13 +122,13 @@ int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int
 
    if(R3 == 0)
    {
-      destination->var_8C_unk_C = destination->var_8C_unk_C | R4;
+      destination->unk_C = destination->unk_C | R4;
       return 0;
    }
 
    if(mask == 0x04)
    {
-      destination->var_8C_unk_C = destination->var_8C_unk_C | R4;
+      destination->unk_C = destination->unk_C | R4;
       return 0;
    }
 
@@ -147,7 +147,7 @@ int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int
          R4 = R4 | 0x80;
    }
 
-   destination->var_8C_unk_C = destination->var_8C_unk_C | R4;
+   destination->unk_C = destination->unk_C | R4;
    
    return 0;
 }
@@ -372,12 +372,12 @@ int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, i
    int cookie = var_009EA004;
    
    int R10;
-   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, cookie, R10, locals.var_90_unk_8, locals.var_94_unk_4, locals.var_8C_unk_C, locals.var_78_unk_20);
+   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, cookie, R10, locals.unk_8, locals.unk_4, locals.unk_C, locals.unk_20);
    if(res_0 != 0)
       return res_0;
 
    int R4;
-   update_r4_by_vaddr0_vaddr1_vaddr2(vaddr_0, vaddr_1, vaddr_2, arg_8, arg_C, arg_10, R4, locals.var_84_unk_14, locals.var_74_unk_24);   
+   update_r4_by_vaddr0_vaddr1_vaddr2(vaddr_0, vaddr_1, vaddr_2, arg_8, arg_C, arg_10, R4, locals.unk_14, locals.unk_24);   
 
    SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0x00);
 
@@ -385,7 +385,7 @@ int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, i
    if(res_1 != 0)
       return res_1;
 
-   return call_dmac(id, locals.var_8C_unk_C, cookie, R4, &locals);
+   return call_dmac(id, locals.unk_C, cookie, R4, &locals);
 }
 
 // ================

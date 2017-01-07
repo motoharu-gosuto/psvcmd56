@@ -29,19 +29,19 @@ struct input_01a599e0
 
 struct locals_B99674
 {
-   void* var_98_unk_0;
-   void* var_94_unk_4;
-   int var_90_unk_8;
-   int var_8C_unk_C;
-   int unk_10; //var_88 - ?
-   int var_84_unk_14;
-   int unk_18; //var_80 - ?
-   int unk_1C; //var_7C - used
-   void* var_78_unk_20;
-   int var_74_unk_24;
-   int unk_28; //var_70 - ?
+   void* unk_0;
+   void* unk_4;
+   int   unk_8;
+   int   unk_C;
+   int   unk_10; //var_88 - used ?
+   int   unk_14;
+   int   unk_18; //var_80 - used ?
+   int   unk_1C;
+   void* unk_20;
+   int   unk_24;
+   int   unk_28; //var_70 - used ?
    
-   char unk_2C[0x40]; // -used
+   char unk_2C[0x40];
 };
 
 struct r9_01a599e0
