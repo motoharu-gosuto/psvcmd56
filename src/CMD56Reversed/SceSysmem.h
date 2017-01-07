@@ -4,11 +4,17 @@
 
 #include "Constants.h"
 
+#define SCE_SYSMEM_PACK_ID(ptr) (((int)ptr >> 1) | 0x01)
+
 struct input1_c8672a3d;
 
 //arg0 is taken from func struct
 //arg1 is initialized internally
 typedef void(func_c8672a3d)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
+
+//arg0 is taken from func struct
+//arg1 is passed by caller function
+typedef void(func_571660aa)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
 
 struct result_c8672a3d
 {
@@ -24,19 +30,26 @@ struct result_c8672a3d
    int unk_24;
    int unk_28;
    int unk_2C;
+   
    int unk_30;
-   int unk_34;
-   int unk_38;
-   int unk_3C;
+   SceUID eventFlag_34;
+   short unk_38;
+   short unk_3A;
+   int unk_3C;   
 };
 
 struct func_pair_c8672a3d
 {
    int arg_0; //first argument to function
    func_c8672a3d* func_4; //pointer to some function
+   func_571660aa* func_8; // function pointer
 };
 
-struct input1_c8672a3d
+typedef void(func2_c8672a3d)(int* unk0, int unk1);
+
+typedef void(func3_c8672a3d)(input1_c8672a3d* unk0, int unk1, int unk2);
+
+struct input2_c8672a3d
 {
    int unk_0;
    int unk_4;
@@ -47,25 +60,51 @@ struct input1_c8672a3d
    int unk_14;
    int unk_18;
    int unk_1C;
-
+   
    int unk_20;
    int unk_24;
    int unk_28;
    int unk_2C;
 
    int unk_30;
-   int unk_34;
+   func2_c8672a3d* unk_34; //used
    int unk_38;
-   int unk_3C;
+};
 
-   int unk_40;
-   int unk_44;
+struct input1_c8672a3d
+{
+   int unk_0;
+   input2_c8672a3d* unk_4;
+   int unk_8;
+   int* unk_C; //used
+
+   int unk_10; //used
+   int unk_14;
+   int unk_18; //used
+   int unk_1C; //used
+
+   short unk_20; //used
+   short unk_22; //used
+   short unk_24; //used
+   short unk_26; //used
+
+   int lockable_int_28;
+   int unk_2C;
+
+   int unk_30; //used
+   int unk_34; //used
+   void* unk_38; //used
+   int unk_3C; //used
+
+   int* unk_40; //used
+   short unk_44; //used
+   short unk_46; //used
    int unk_48;
-   int unk_4C;
+   int unk_4C; //used
 
-   int unk_50;
+   void* unk_50; //used
    int unk_54;
-   int unk_58;
+   int unk_58; //used
    int unk_5C;
 
    int unk_60;
@@ -86,7 +125,9 @@ struct input1_c8672a3d
    int unk_90;
    int unk_94;
    int unk_98;
-   func_pair_c8672a3d* unk_9C;
+   func_pair_c8672a3d* unk_9C; //used
+
+   int unk_A0;
 };
 
 //number of args confirmed
@@ -96,73 +137,7 @@ struct input1_c8672a3d
 //but it does other functionality as well
 result_c8672a3d* SceSysmemForKernel_functor_c8672a3d(input1_c8672a3d* ctx);
 
-//---------
-
-struct input1_571660aa;
-
-//arg0 is taken from func struct
-//arg1 is passed by caller function
-typedef void(func_571660aa)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
-
-struct func_data_571660aa
-{
-   int arg_0; // first argument for function
-   int unk_4;
-   int func_571660aa; // function pointer
-};
-
-struct input1_571660aa
-{
-   int unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-
-   int unk_20;
-   int unk_24;
-   int unk_28;
-   int unk_2C;
-
-   int unk_30;
-   int unk_34;
-   int unk_38;
-   int unk_3C;
-
-   int unk_40;
-   int unk_44;
-   int unk_48;
-   int unk_4C;
-
-   int unk_50;
-   int unk_54;
-   int unk_58;
-   int unk_5C;
-
-   int unk_60;
-   int unk_64;
-   int unk_68;
-   int unk_6C;
-
-   int unk_70;
-   int unk_74;
-   int unk_78;
-   int unk_7C;
-
-   int unk_80;
-   int unk_84;
-   int unk_88;
-   int unk_8C;
-
-   int unk_90;
-   int unk_94;
-   int unk_98;
-   func_data_571660aa* unk_9C;
-};
+//-------------------------------------
 
 //number of args confirmed
 //return type confirmed
@@ -170,9 +145,9 @@ struct input1_571660aa
 //this function returns 0
 //it looks like this function is some wrapper to a functor
 //but it does other functionality as well
-int SceSysmemForKernel_functor_571660aa(input1_571660aa* ctx, int arg_1);
+int SceSysmemForKernel_functor_571660aa(input1_c8672a3d* ctx, result_c8672a3d* arg_1);
 
-//---------
+//-------------------------------------
 
 //this looks like wrapper of these functions: __aeabi_uidiv, __aeabi_uidivmod
 //numerator can have 0xF bits at max

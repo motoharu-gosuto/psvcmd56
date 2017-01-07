@@ -6,7 +6,7 @@
 //looks like there is a special algorithm to convert pointer to id ?
 
 //paired start function
-int SceDmacmgrForDriver_7cd5088a(const char* name);
+int SceDmacmgrForDriver_7cd5088a(const char* efName);
 
 int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2);
 

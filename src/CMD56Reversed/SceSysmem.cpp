@@ -5,7 +5,7 @@ result_c8672a3d* SceSysmemForKernel_functor_c8672a3d(input1_c8672a3d* ctx)
    return 0;
 }
 
-int SceSysmemForKernel_functor_571660aa(input1_571660aa* ctx, int arg_1)
+int SceSysmemForKernel_functor_571660aa(input1_c8672a3d* ctx, result_c8672a3d* arg_1)
 {
    return 0;
 }

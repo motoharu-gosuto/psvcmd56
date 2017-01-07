@@ -16,69 +16,38 @@
 
 //==========================================================================
 
-int _008FE278;
-
-int _008FE02C;
-
-int _008FE060;
-
-int _008FE254;
-
-//==========================================================================
-
-int SceDmacmgrForDriver_7cd5088a(const char* name)
+int SceDmacmgrForDriver_7cd5088a(const char* efName)
 {
    int res_0 = SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
    if(res_0 != 0)
       return SCE_KERNEL_ERROR_ILLEGAL_CONTEXT;
 
-   const char* r6 = name;
-   if(r6 == 0)
-      r6 = unk_994808;
-
-   global_008FE000* r5 = &_008FE000;
-   int r0 = r5->unk_20;
-
-   result_c8672a3d* r0 = SceSysmemForKernel_functor_c8672a3d(r0);
+   result_c8672a3d* r4 = SceSysmemForKernel_functor_c8672a3d(g_008FE000.unk_20);
    
-   result_c8672a3d* r4 = r0;
-   if(r0 == 0)
+   if(r4 == 0)
       return SCE_KERNEL_ERROR_NO_MEMORY;
 
-   int r3 = r0 >> 1;
-   int r1 = r7;
-   int r2 = 0x30;
-   int r8 = r3 | 0x01;
-   memset(r0, r1, r2);
-   int r1 = r7;
-   int r7 = r5 | 0x01;
-   int r0 = r6;
-   int r2 = r1;
-   int r3 = r1;
-   r4->unk_30 = r7;
-   SceUID r0 = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(r0, r1, r2, r3);
-   int r6 = r0 - 0;
-   if(r6 < 0)
+   memset(r4, 0x00, 0x30); //set first 12 fields to 0
+
+   r4->unk_30 = ((int)&g_008FE000) | 0x01;
+
+   const char* eventFlagName = (efName == 0) ? unk_994808 : efName;
+
+   SceUID eventFlagUid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(eventFlagName, 0x00, 0x00, 0x00);
+   if(eventFlagUid < 0)
    {
-      int r0 = r5->unk_20;
-      int r1 = r4;
-      int r0 = SceSysmemForKernel_functor_571660aa(r0, r1);
-      int r0 = r6;
-      return r0;
+      SceSysmemForKernel_functor_571660aa(g_008FE000.unk_20, r4);
+      return eventFlagUid;
    }
 
-   int r6 = r4->unk_34;
-   int r0 = SceSysmemForDriver_udiv_e655852f(r0);
-   int r3 = 0x01;
-   r4->unk_3C = r0;
-   r4->unk_38 = r3;
-   int r0 = r8;
-   return r0;
+   r4->eventFlag_34 = eventFlagUid;
+   r4->unk_3C = SceSysmemForDriver_udiv_e655852f(eventFlagUid);
+   r4->unk_38 = 0x01;
+   
+   return SCE_SYSMEM_PACK_ID(r4);
 }
 
 //==========================================================================
-
-//TODO: MARK KNOWN ERRORS WITH CONSTANTS
 
 int exit_loc_992EAC(int r2, int* r6)
 {
