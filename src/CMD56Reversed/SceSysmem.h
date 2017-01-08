@@ -4,8 +4,6 @@
 
 #include "Constants.h"
 
-#define SCE_SYSMEM_PACK_ID(ptr) (((int)ptr >> 1) | 0x01)
-
 struct input1_c8672a3d;
 
 //arg0 is taken from func struct
@@ -23,17 +21,17 @@ struct result_c8672a3d
    int unk_08;
    int unk_0C;
    int unk_10;
-   int unk_14;
+   int unk_14; //some flag ?
    int unk_18;
    int unk_1C;
    int unk_20;
    int unk_24;
    int unk_28;
-   int unk_2C;
+   int lockable_int_2C;
    
-   int unk_30;
-   SceUID eventFlag_34;
-   short unk_38;
+   int gxor_30; //(((int)&g_008FE000) | 0x01)
+   SceUID eventFlagUid_34;
+   short unk_38; //some flag ?
    short unk_3A;
    int unk_3C;   
 };

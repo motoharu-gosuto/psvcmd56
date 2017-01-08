@@ -413,7 +413,7 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
    if(size > 0x40)
       return exit_loc_B99C0A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1516, cookie);
 
-   int id = SceDmacmgrForDriver_7cd5088a(unk_B9CC90);
+   dmac_id id = SceDmacmgrForDriver_7cd5088a(unk_B9CC90);
 
    if(id < 0)
       return exit_loc_B99C0A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1528, cookie);
@@ -428,7 +428,7 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
    //arg_C - will be 0x0003ffff
    int res_0 = sub_B99674(id, sourceBuffer, sourceBuffer, 0x00, 0x40, 0x00, 0x04, var_8C, 0x00, 0x00);
 
-   int res_1 = SceDmacmgrForDriver_adff1186(id);
+   SceDmacmgrForDriver_adff1186(id);
 
    if(res_0 != 0)
       return exit_loc_B99C0A(res_0, cookie);

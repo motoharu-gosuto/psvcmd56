@@ -1,31 +1,21 @@
 #pragma once
 
-//TODO: looks like this function returns id
-//this can be easily checked
-//need to look at other known paired functions and see how id is formed there
-//looks like there is a special algorithm to convert pointer to id ?
+typedef int dmac_id;
+
+//packs result_c8672a3d* to number
+#define SCE_DMAC_PACK_ID(ptr) ((dmac_id)(((int)ptr >> 1) | 0x01))
+
+#define SCE_DMAC_UNPACK_ID(id) ((result_c8672a3d*)((id >> 0x01) << 0x02))
 
 //paired start function
-int SceDmacmgrForDriver_7cd5088a(const char* efName);
+dmac_id SceDmacmgrForDriver_7cd5088a(const char* efName);
+
+//paired exit function
+int SceDmacmgrForDriver_adff1186(dmac_id id);
+
+//---------------------------------------------------------------------------
 
 int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2);
-
-/*
-struct input_01a599e0
-{
-   int unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-
-   int unk_10;
-   int unk_14;
-   void* unk_18;
-   int unk_1C;
-
-   int unk_20;
-};
-*/
 
 struct locals_B99674
 {
@@ -35,7 +25,7 @@ struct locals_B99674
    int   unk_C;
    int   unk_10; //var_88 - used ?
    int   unk_14;
-   int   unk_18; //var_80 - used ?
+   int   unk_18; //var_80 - used ? - is this void* ?
    int   unk_1C;
    void* unk_20;
    int   unk_24;
@@ -86,8 +76,5 @@ int SceDmacmgrForDriver_01a599e0(int id, locals_B99674* unk1, int unk2);
 int SceDmacmgrForDriver_543f54cf(int unk0);
 
 int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3);
-
-//paired exit function
-int SceDmacmgrForDriver_adff1186(int id);
 
 int SceDmacmgrForDriver_167079fc(int id, void* r1, int r2, int r3);
