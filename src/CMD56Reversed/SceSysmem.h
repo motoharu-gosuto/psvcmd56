@@ -47,6 +47,15 @@ struct result_c8672a3d_10_unk
    int unk_C;
 };
 
+//looks like this structure is of size 0x0C
+//DO NOT ADD MORE FIELDS
+struct input_167079fc
+{
+   int unk_0;
+   int unk_4;
+   input_167079fc* unk_8;
+};
+
 struct result_c8672a3d
 {
    result_c8672a3d* unk_00; //linked list prev ?
@@ -59,7 +68,7 @@ struct result_c8672a3d
    int unk_1C;
    int unk_20; //used - flags?
    int unk_24;
-   int* unk_28;
+   input_167079fc* unk_28; //used
    int lockable_int_2C;
    
    int gxor_30; //(((int)&g_008FE000) | 0x01)
@@ -209,7 +218,7 @@ enum
   SCE_KERNEL_MEMBLOCK_TYPE_RW_UNK0 = 0x6020D006
 };
 
-typedef struct SceKernelAllocMemBlockKernelOpt 
+struct SceKernelAllocMemBlockKernelOpt 
 {
   SceSize size;
   SceUInt32 field_4;

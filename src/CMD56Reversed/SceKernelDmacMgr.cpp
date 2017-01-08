@@ -29,7 +29,7 @@ dmac_id SceDmacmgrForDriver_7cd5088a(const char* efName)
 
    memset(r4, 0x00, 0x30); //set first 12 fields to 0
 
-   r4->gxor_30 = (((int)&g_008FE000) | 0x01);
+   r4->gxor_30 = SCE_DMAC_GXOR(g_008FE000);
 
    const char* eventFlagName = (efName == 0) ? unk_994808 : efName;
 
@@ -780,7 +780,7 @@ int exit_loc_992C10(int r9, int var_74, int var_2C)
    return exit_loc_992A7C(r0, var_74, var_2C);
 }
 
-int sub_992910(int unk0, int unk1, int unk2)
+int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
 {
    /*
    //these are most likely arguments
@@ -1301,155 +1301,93 @@ int sub_992910(int unk0, int unk1, int unk2)
 
 //========================================
 
-int exit_loc_993062(int* r6, int r10)
+//id is a packed pointer to structure result_c8672a3d* created by SceSysmemForKernel_functor_c8672a3d
+//data is structure - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
+//ptr is 0x00
+//unk2 is 0x01 or 0x11 (in our case it is 0x11)
+int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079fc* ptr, int unk2)
 {
-   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
-   return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
-}
+   result_c8672a3d* r4 = SCE_DMAC_UNPACK_ID(id);
 
-int exit_loc_993096(int* r6, int r10)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
-   return SCE_KERNEL_ERROR_NOT_INITIALIZED;
-}
-
-int exit_loc_993082(int* r6, int r10)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
-   return SCE_KERNEL_ERROR_ALREADY_QUEUED;
-}
-
-int exit_loc_9930AA(int* r6, int r10)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
-   return SCE_KERNEL_ERROR_CANCELING;
-}
-
-int exit_loc_993074(int r5, int* r6, int r10)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r6, r10);
-   return r5;
-}
-
-//r0 is id
-//r1 is structure of size 0x20
-//r2 is 0x00
-//r3 is 0x01 or 0x11
-int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* r1, int r2, int r3)
-{
-   /*
-   int r0 = r0 >> 1;
-   int r5 = 0x8FE000;
-   int r4 = r0 << 2;
-   int r6 = r5 | 1;
-   int r0 = r4[0x30];
-   int r8 = r1;
-   int r5 = r2;
-   int r9 = r3;
-
-   if(r0 != r6)
+   int gxor = SCE_DMAC_GXOR(g_008FE000);
+   
+   if(r4->gxor_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   int r6 = r4 + 0x2C;
-   int r0 = r6;
-   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
-   int r10 = r0;
-
-   if(r5 != 0)
-   {
-      int r3 = r5[0];
-      if(r4[0x3A] == 0x13)
-      {
-         if(r3 != 0x5C)
-            return exit_loc_993062(r6, r10);
-      }
-      else
-      {
-         if(r3 == 0x0C)
-            return exit_loc_993062(r6, r10);
-      }
-   }
+   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->lockable_int_2C);
    
-   //loc_992FDE:
-
-   short r3 = r4[0x38];
-   int r1 = r3 << 0x1F;
-   if(r1 <= 0) // do not understand this check
-      return exit_loc_993096(r6, r10);
-
-   short r3 = r4[0x38];
-   int r2 = r3 << 0x1C;
-   if(r2 < 0) // do not understand this check
-      return exit_loc_993082(r6, r10);
-
-   int r3 = r4[0x14];
-   if(r3 != 0)
-      return exit_loc_993082(r6, r10);
-
-   short r3 = r4[0x38];
-   int r3 = r3 << 0x19;
-   if(r3 < 0)
-      return exit_loc_9930AA(r6, r10);
-
-   int r0 = r4[0x18];
-   if(r0 != 0)
+   if(ptr != 0)
    {
-      int r1 = r4[0x1C];
-      sub_9921FC(r0, r1);
-   }
-
-   int r2 = 0;
-   int r3 = r2;
-   int r2 = 0x07FC0000; // I SAW THIS CONSTANT ALREADY! - this is a bit mask
-
-   r4[0x1C] = r3;
-   r4[0x20] = r2;
-   r4[0x18] = r3;
-
-   if(r5 != 0)
-   {
-      short r3 = r4[0x3A];
-      int r7 = r5[0x04];
-
-      r7 = r7 | 0x7F80000; // this is also a bit mask
-
-      if(r3 != 0x13)
-         r3 = r5[0x08];
-
-      r7 = r7 | 0x40000;
-      if(r7 == 0x00) //not sure about this check
-         r5 = r5 + 0x0C;
-
-      r4[0x20] = r7;
-
-      if(r7 == 0x00) //not sure about this check
-         r4[0x28] = r5;
+      if(r4->unk_3A == 0x13)
+      {
+         if(ptr->unk_0 != 0x5C)
+         {
+            SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+            return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
+         }
+      }
       else
-         r4[0x28] = r3;
+      {
+         if(ptr->unk_0 != 0x0C)
+         {
+            SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+            return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
+         }
+      }
+   } 
+
+   if((r4->unk_38 << 0x1F) >= 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
-   int r1 = r9;
-   int r2 = r8;
-   int r0 = r4;
-   sub_992910(r0, r1, r2);
-   int r5 = r0 - 0;
-   if(r5 < 0)
+   if(((r4->unk_38) << 0x1C) < 0)
    {
-      return exit_loc_993074(r5, r6, r10);
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
-   else
+
+   if(r4->unk_14 != 0)
    {
-      short r2 = r4[0x38];
-      short r3 = 0xFFDF;
-      int r6 = r6;
-      int r1 = r10;
-      int r3 = r3 & r2;
-      r4[0x38] = r3;
-      SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-      int r0 = 0;
-      return r0;
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
-   */
+
+   if((r4->unk_38 << 0x19) < 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      return SCE_KERNEL_ERROR_CANCELING;
+   }
+
+   if(r4->unk_18 != 0)
+      sub_9921FC(r4->unk_18, r4->unk_1C);
+
+   r4->unk_18 = 0;
+   r4->unk_1C = 0;
+   r4->unk_20 = SCE_DMAC_BITMASK1;
+
+   if(ptr != 0)
+   {
+      r4->unk_20 = ptr->unk_4 | SCE_DMAC_BITMASK2 | 0x40000;
+
+      if(r4->unk_3A == 0x13) //TODO: not sure about this condition
+         r4->unk_28 = ptr + sizeof(input_167079fc); // looks like this is pointer to next element in array;
+      else
+         r4->unk_28 = ptr->unk_8;
+   }
+
+   int res_0 = sub_992910(r4, unk2, data);
+   if(res_0 < 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      return res_0;      
+   }
+
+   r4->unk_38 = 0xFFDF & r4->unk_38;
+
+   SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+
    return 0;
 }
 
@@ -1465,7 +1403,7 @@ int exit_loc_993152(int r0, int var_24)
 
 //id is a packed pointer to structure result_c8672a3d* created by SceSysmemForKernel_functor_c8672a3d
 //data is structure of size 0x6C - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
-//unk2 is 0x01 or 0x11 (int our case it is 0x11)
+//unk2 is 0x01 or 0x11 (in our case it is 0x11)
 int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
 {
    int var_48; // TODO: is it used ?
@@ -1476,7 +1414,7 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
       return exit_loc_993152(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_24);
 
    result_c8672a3d* ptr_9 = SCE_DMAC_UNPACK_ID(id);
-   int gxor = (((int)&g_008FE000) | 1);
+   int gxor = SCE_DMAC_GXOR(g_008FE000);
    
    if(ptr_9->gxor_30 != gxor)
       return exit_loc_993152(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_24);
@@ -1502,9 +1440,9 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
    if(ptr_9->unk_3A != 0x13)
       ptr_9->unk_28 = data->unk_18;
    else
-      ptr_9->unk_28 = &data->unk_1C;
+      ptr_9->unk_28 = (input_167079fc*)&data->unk_1C; //TODO: this is a weird cast. does this mean that input_167079fc is part of structure ?
 
-   int bits = (data->unk_14) & (~0x07FC0000); // TODO: need to test this - BTW this mask is used in other places as well!
+   int bits = (data->unk_14) & (~SCE_DMAC_BITMASK1); // TODO: need to test this
    ptr_9->unk_20 = bits | ptr_9->unk_20;
 
    return exit_loc_993152(0, var_24);
@@ -2202,7 +2140,7 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
       return SCE_KERNEL_ERROR_ILLEGAL_CONTEXT;
 
    result_c8672a3d* r4 = SCE_DMAC_UNPACK_ID(id);
-   int gxor = (((int)&g_008FE000) | 1);
+   int gxor = SCE_DMAC_GXOR(g_008FE000);
 
    if(r4->gxor_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;

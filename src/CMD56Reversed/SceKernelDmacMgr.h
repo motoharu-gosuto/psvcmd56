@@ -1,11 +1,18 @@
 #pragma once
 
+#include "SceSysmem.h"
+
 typedef int dmac_id;
 
 //packs result_c8672a3d* to number
 #define SCE_DMAC_PACK_ID(ptr) ((dmac_id)(((int)ptr >> 1) | 0x01))
 
 #define SCE_DMAC_UNPACK_ID(id) ((result_c8672a3d*)((id >> 0x01) << 0x02))
+
+#define SCE_DMAC_GXOR(g) (((int)&g) | 0x01)
+
+#define SCE_DMAC_BITMASK1 0x07FC0000
+#define SCE_DMAC_BITMASK2 0x07F80000
 
 //paired start function
 dmac_id SceDmacmgrForDriver_7cd5088a(const char* efName);
@@ -25,8 +32,8 @@ struct locals_B99674
    int   flag_C;
    int   unk_10; //var_88 - used ?
    int   unk_14; // = arg_C
-   int*   unk_18; //var_80 - used ?
-   int   unk_1C; // = arg_4
+   input_167079fc*   unk_18; //var_80 - used
+   int   unk_1C; // = arg_4 - looks like this is a beginning of structure input_167079fc
    void* paddr_20;
    int   unk_24; // = arg_10
    int   unk_28; //var_70 - used ?
@@ -53,4 +60,4 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id);
 
 int SceDmacmgrForDriver_397a917c(dmac_id id, int num, int unk2, int unk3);
 
-int SceDmacmgrForDriver_167079fc(dmac_id id, void* r1, int r2, int r3);
+int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079fc* ptr, int unk2);
