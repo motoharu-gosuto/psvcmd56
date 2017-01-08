@@ -2222,7 +2222,7 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
    if(C5 < 0)
       sub_992100(r4);
    
-   SceThreadmgrForDriver_71ecb352(r4->eventFlagUid_34);
+   SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(r4->eventFlagUid_34);
 
    r4->unk_38 = 0x00;
    r4->gxor_30 = 0x00;

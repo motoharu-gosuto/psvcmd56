@@ -18,7 +18,19 @@ int SceThreadmgrForDriver_db395782(void* unk0); // - not critical for now
 
 //number of args confirmed
 //return type confirmed - can return error
-int SceThreadmgrForDriver_71ecb352(SceUID evid); // - critical
+
+//this is a pairing end function for event flag that is created with SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4
+//int user level there are 2 sce functions for event flags that are both wrappers for sub_BCC19C
+//SceKernelThreadMgr.SceThreadmgr._exp_sceKernelDeleteEventFlag_5840162c
+//SceKernelThreadMgr.SceThreadmgr._exp_sceKernelCloseEventFlag_9a68f547
+//internally sub_BCC19C calls SceKernelThreadMgr.SceSysmemForDriver._imp_sceKernelDeleteUserUid_84a4af5e
+
+//however there are no kernel level ksce functions yet defined in sdk
+//SceThreadmgrForDriver_71ecb352 uses SceKernelThreadMgr.SceSysmemForDriver._imp_sceKernelDeleteUserUid_84a4af5e 
+//as well and it is a pairing function for evid created with ksce function
+//so I would assume that this is close or delete function for event flag
+
+int SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(SceUID evid);
 
 //------------------------------------------------
 

@@ -16,7 +16,7 @@ int SceThreadmgrForDriver_db395782(void* unk0)
 
 //------------------------------------
 
-int SceThreadmgrForDriver_71ecb352(SceUID evid)
+int SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(SceUID evid)
 {
    return 0;
 }

@@ -102,12 +102,17 @@ struct input2_c8672a3d
    int unk_38;
 };
 
+//it looks like this structure may have an array in the beginning
+//array is per CPU ID - meaning that there are 4 elements
+//size of each element is 0x10
+
+//however this does not match with overall layout of the structure
 struct input1_c8672a3d
 {
    int unk_0;
    input2_c8672a3d* unk_4;
    int unk_8;
-   int* unk_C; //used
+   int* unk_C; //used is this result_c8672a3d ?
 
    int unk_10; //used
    int unk_14;
