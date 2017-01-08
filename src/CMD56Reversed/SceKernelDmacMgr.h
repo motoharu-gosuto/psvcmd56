@@ -15,20 +15,20 @@ int SceDmacmgrForDriver_adff1186(dmac_id id);
 
 //---------------------------------------------------------------------------
 
-int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2);
+int SceDmacmgrForDriver_fce4171a(dmac_id unk0, int unk1, int unk2);
 
 struct locals_B99674
 {
-   void* unk_0;
-   void* unk_4;
-   int   unk_8;
-   int   unk_C;
+   void* source_vaddr_0;
+   void* source_paddr_4;
+   int   size_8;
+   int   flag_C;
    int   unk_10; //var_88 - used ?
-   int   unk_14;
+   int   unk_14; // = arg_C
    int   unk_18; //var_80 - used ? - is this void* ?
-   int   unk_1C;
-   void* unk_20;
-   int   unk_24;
+   int   unk_1C; // = arg_4
+   void* paddr_20;
+   int   unk_24; // = arg_10
    int   unk_28; //var_70 - used ?
    
    char unk_2C[0x40];
@@ -71,10 +71,10 @@ struct local_01a599e0
    int var_28; // used
 };
 
-int SceDmacmgrForDriver_01a599e0(int id, locals_B99674* unk1, int unk2);
+int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* unk1, int unk2);
 
-int SceDmacmgrForDriver_543f54cf(int unk0);
+int SceDmacmgrForDriver_543f54cf(dmac_id id);
 
-int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3);
+int SceDmacmgrForDriver_397a917c(dmac_id id, int num, int unk2, int unk3);
 
-int SceDmacmgrForDriver_167079fc(int id, void* r1, int r2, int r3);
+int SceDmacmgrForDriver_167079fc(dmac_id id, void* r1, int r2, int r3);

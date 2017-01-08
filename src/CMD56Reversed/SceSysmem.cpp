@@ -10,7 +10,7 @@ int SceSysmemForKernel_functor_571660aa(input1_c8672a3d* ctx, result_c8672a3d* a
    return 0;
 }
 
-int SceSysmemForDriver_udiv_e655852f(int numerator_div2)
+int SceSysmemForDriver_udiv_e655852f(unsigned int numerator_div2)
 {
    return 0;
 }

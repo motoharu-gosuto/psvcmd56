@@ -79,41 +79,41 @@ int exit_loc_B9979A(int cookie)
 
 //---------------------------------------------
 
-int call_dmac(int id, int var_8C, int cookie, int& R4, locals_B99674* dest)
+int call_dmac(dmac_id id, int cookie, int& R4, locals_B99674* dest)
 {
-   int r0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00);
-   if(r0 < 0)
+   int res_0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00);
+   if(res_0 < 0)
    {
       SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);
-      return exit_loc_B99762(r0, cookie);
+      return exit_loc_B99762(res_0, cookie);
    }
 
    R4 = R4 & 0x07;
 
    int R2 = (R4 == 0x03) ? 0x01 : 0x11;
       
-   int r0 = SceDmacmgrForDriver_01a599e0(id, dest, R2);
-   if(r0 < 0)
-      return exit_loc_B9975A(r0, cookie);
+   int res_1 = SceDmacmgrForDriver_01a599e0(id, dest, R2);
+   if(res_1 < 0)
+      return exit_loc_B9975A(res_1, cookie);
   
-   int r0 = SceDmacmgrForDriver_543f54cf(id);
-   if(r0 < 0)
-      return exit_loc_B9975A(r0, cookie);
+   int res_2 = SceDmacmgrForDriver_543f54cf(id);
+   if(res_2 < 0)
+      return exit_loc_B9975A(res_2, cookie);
 
    SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615();
 
-   int r0 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
+   int res_3 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
 
    SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7();
 
-   return exit_loc_B9975A(r0, cookie);
+   return exit_loc_B9975A(res_3, cookie);
 }
 
 //---------------------------------------------
 
 int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int R10, int cookie, int& R4, locals_B99674* destination)
 {
-   destination->unk_0 = vaddr_0;
+   destination->source_vaddr_0 = vaddr_0;
 
    int R3 = ((R10 & 0x29) == 0) ? 0x00 : 0x01;
 
@@ -124,13 +124,13 @@ int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int
 
    if(R3 == 0)
    {
-      destination->unk_C = destination->unk_C | R4;
+      destination->flag_C = destination->flag_C | R4;
       return 0;
    }
 
    if(mask == 0x04)
    {
-      destination->unk_C = destination->unk_C | R4;
+      destination->flag_C = destination->flag_C | R4;
       return 0;
    }
 
@@ -149,7 +149,7 @@ int update_dest_update_r4(void* vaddr_0, int arg_8, int arg_4, char* source, int
          R4 = R4 | 0x80;
    }
 
-   destination->unk_C = destination->unk_C | R4;
+   destination->flag_C = destination->flag_C | R4;
    
    return 0;
 }
@@ -367,14 +367,14 @@ int translate_vaddr1_vaddr2(void* vaddr_1, void* vaddr_2, int arg_0, int arg_8, 
 
 //----------------------------------------------------------------
 
-int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
+int sub_B99674(dmac_id id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14)
 {
    locals_B99674 locals;
 
    int cookie = var_009EA004;
    
    int R10;
-   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, cookie, R10, locals.unk_8, locals.unk_4, locals.unk_C, locals.unk_20);
+   int res_0 = translate_vaddr1_vaddr2(vaddr_1, vaddr_2, arg_0, arg_8, cookie, R10, locals.size_8, locals.source_paddr_4, locals.flag_C, locals.paddr_20);
    if(res_0 != 0)
       return res_0;
 
@@ -387,7 +387,7 @@ int sub_B99674(int id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, i
    if(res_1 != 0)
       return res_1;
 
-   return call_dmac(id, locals.unk_C, cookie, R4, &locals);
+   return call_dmac(id, cookie, R4, &locals);
 }
 
 // ================

@@ -95,8 +95,9 @@ int exit_loc_992EFA(int r2, int* r6)
    return r0_ret;
 }
 
-int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2)
+int SceDmacmgrForDriver_fce4171a(dmac_id unk0, int unk1, int unk2)
 {
+   /*
    int r0 = r0 >> 1;
    int r5 = _008FE000;
    int r4 = r0 << 2;
@@ -199,6 +200,9 @@ int SceDmacmgrForDriver_fce4171a(int unk0, int unk1, int unk2)
    int r0 = 0;
 
    return r0;
+   */
+
+   return 0;
 }
 
 //========================================
@@ -211,6 +215,7 @@ int exit_loc_992172(int r4)
 
 int sub_99214C()
 {
+   /*
    int r5 = &_008FE000;
    
    //loc_992156:
@@ -249,6 +254,9 @@ int sub_99214C()
          //goto loc_992156
       }
    }
+   */
+
+   return 0;
 }
 
 //========================================
@@ -269,6 +277,7 @@ int exit_loc_992368()
 
 int exit_loc_9923E8()
 {
+   /*
    int r7 = arg_C;
    int r2 = 0;
    r0[0x2C] = r3;
@@ -279,11 +288,15 @@ int exit_loc_9923E8()
    r7[0x00] = r0;
    int r0 = r3;
    return r0;
+   */
+
+   return 0;
 }
 
 int sub_992288(int unk0, int unk1, int unk2, int unk3,
                int arg_0, int arg_4, int arg_8, int arg_C)
 {
+   /*
    int var_40;
    int var_3C;
    int var_38;
@@ -577,6 +590,9 @@ int sub_992288(int unk0, int unk1, int unk2, int unk3,
          return exit_loc_9923E8();
       }
    }
+   */
+
+   return 0;
 }
 
 //========================================
@@ -593,6 +609,7 @@ int exit_loc_9928F6(int r0, int* r5, int var_14)
 
 int sub_99289C(int unk0)
 {
+   /*
    int var_1C;
    int var_18;
    int var_14;
@@ -649,12 +666,16 @@ int sub_99289C(int unk0)
          }
       }
    }
+   */
+
+   return 0;
 }
 
 //========================================
 
 int sub_9921FC(int unk0, int unk1)
 {
+   /*
    int r5 = r0;
    int r3 = r0[0x14];
    int r6 = &008FE000;
@@ -717,12 +738,16 @@ int sub_9921FC(int unk0, int unk1)
    {
       return r0;
    }
+   */
+
+   return 0;
 }
 
 //========================================
 
 int exit_loc_992A7C(int r0, int var_74, int var_2C)
 {
+   /*
    int r5 = var_74;
    int r2 = var_2C;
    int r3 = r5[0];
@@ -734,6 +759,9 @@ int exit_loc_992A7C(int r0, int var_74, int var_2C)
    {
       return STACK_CHECK_FAIL;
    }
+   */
+
+   return 0;
 }
 
 int exit_loc_992A76(int var_74, int var_2C)
@@ -754,6 +782,7 @@ int exit_loc_992C10(int r9, int var_74, int var_2C)
 
 int sub_992910(int unk0, int unk1, int unk2)
 {
+   /*
    //these are most likely arguments
    int var_90;
    int var_8C;
@@ -1266,7 +1295,7 @@ int sub_992910(int unk0, int unk1, int unk2)
       }
    }
 
-
+   */
    return 0;
 }
 
@@ -1306,8 +1335,9 @@ int exit_loc_993074(int r5, int* r6, int r10)
 //r1 is structure of size 0x20
 //r2 is 0x00
 //r3 is 0x01 or 0x11
-int SceDmacmgrForDriver_167079fc(int id, local_01a599e0* r1, int r2, int r3)
+int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* r1, int r2, int r3)
 {
+   /*
    int r0 = r0 >> 1;
    int r5 = 0x8FE000;
    int r4 = r0 << 2;
@@ -1419,7 +1449,7 @@ int SceDmacmgrForDriver_167079fc(int id, local_01a599e0* r1, int r2, int r3)
       int r0 = 0;
       return r0;
    }
-
+   */
    return 0;
 }
 
@@ -1436,8 +1466,9 @@ int exit_loc_993152(int r0, int var_24)
 //unk0 is id
 //unk1 is structure of size 0x6C
 //unk2 is 0x01 or 0x11
-int SceDmacmgrForDriver_01a599e0(int id, locals_B99674* unk1, int unk2)
+int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* unk1, int unk2)
 {
+   /*
    int var_48; // is it used ? is it arg ?
    local_01a599e0 local;
    int var_24 = var_009EA004;
@@ -1479,6 +1510,9 @@ int SceDmacmgrForDriver_01a599e0(int id, locals_B99674* unk1, int unk2)
    ptr_9->unk_20 = bits | ptr_9->unk_20;
 
    return exit_loc_993152(0, var_24);
+   */
+
+   return 0;
 }
 
 //========================================
@@ -1597,6 +1631,7 @@ struct input1_992460 //looks like to be array or contain array at offset 0
 
 void sub_992460(input1_992460* r0, input2_992460* r1)
 {
+   /*
    int r3 = r0->unk_C;
    if(r3 == 0)
       return;
@@ -1720,6 +1755,7 @@ void sub_992460(input1_992460* r0, input2_992460* r1)
    //STRD.W		R2, R2,	[R1]
    int r2 = r2 & r0;
    r1->unk_38 = r3;
+   */
 }
 
 //========================================
@@ -1819,14 +1855,19 @@ int exit_loc_993332(input1_992460* r5, int* r6, int* r7, int r8)
 
 int exit_loc_9932F4()
 {
+   /*
    int r4 = r3[4];
    int r3 = r4[0];
    int r4 = r5[4]; //WHAT?
    return exit_loc_9932FA();
+   */
+
+   return 0;
 }
 
-int SceDmacmgrForDriver_543f54cf(int unk0)
+int SceDmacmgrForDriver_543f54cf(dmac_id id)
 {
+   /*
    int r0 = r0 >> 1;
    int r3 = &_008FE000;
    int r4 = r0 << 2;
@@ -1894,6 +1935,9 @@ int SceDmacmgrForDriver_543f54cf(int unk0)
    r4[4] = r2;
 
    return exit_loc_9932F4();
+   */
+
+   return 0;
 }
 
 //========================================
@@ -1909,32 +1953,28 @@ int exit_loc_993840()
    return exit_loc_993846(r0);
 }
 
-int exit_loc_9938DC()
+int exit_loc_9938DC(int* r5, int r1)
 {
-   int r0 = r5;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = SCE_KERNEL_ERROR_NOT_INITIALIZED;
-   return exit_loc_993846(r0);
+   SceCpuForDriver_unlock_int_7bb9d5df(r5, r1);
+   return exit_loc_993846(SCE_KERNEL_ERROR_NOT_INITIALIZED);
 }
 
-int exit_loc_9938BC()
+int exit_loc_9938BC(int* r5, int r1)
 {
-   int r0 = r5;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = SCE_KERNEL_ERROR_NOT_SETUP;
-   return exit_loc_993846(r0);
+   SceCpuForDriver_unlock_int_7bb9d5df(r5, r1);
+   return exit_loc_993846(SCE_KERNEL_ERROR_NOT_SETUP);
 }
 
-int exit_loc_9938CC()
+int exit_loc_9938CC(int* r5, int r1)
 {
-   int r0 = r5;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0 = SCE_KERNEL_ERROR_CANCELING;
-   return exit_loc_993846(r0);
+   SceCpuForDriver_unlock_int_7bb9d5df(r5, r1);
+   return exit_loc_993846(SCE_KERNEL_ERROR_CANCELING);
 }
 
-int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3)
+int SceDmacmgrForDriver_397a917c(dmac_id id, int num, int unk2, int unk3)
 {
+   /*
+
    int var_38;
    int var_2C;
 
@@ -2077,6 +2117,7 @@ int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3)
       }
    }
 
+   */
 
    return 0;
 }
