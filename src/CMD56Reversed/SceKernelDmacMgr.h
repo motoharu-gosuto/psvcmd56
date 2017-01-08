@@ -25,7 +25,7 @@ struct locals_B99674
    int   flag_C;
    int   unk_10; //var_88 - used ?
    int   unk_14; // = arg_C
-   int   unk_18; //var_80 - used ? - is this void* ?
+   int*   unk_18; //var_80 - used ?
    int   unk_1C; // = arg_4
    void* paddr_20;
    int   unk_24; // = arg_10
@@ -34,44 +34,20 @@ struct locals_B99674
    char unk_2C[0x40];
 };
 
-struct r9_01a599e0
-{
-   int unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-
-   int unk_20;
-   int unk_24;
-   void* unk_28;
-   int unk_2C;
-
-   void* unk_30;
-   int unk_34;
-
-   short unk_38;
-   short unk_3A;
-};
-
 //size is 0x20
 struct local_01a599e0
 {
-   int var_44; // used
-   int var_40; // used
-   int var_3C; // used
-   int var_38; // used
-   int var_34; // used
-   int var_30; // used
+   void* source_vaddr_44; // used
+   void* source_paddr_40; // used
+   int size_3C; // used
+   int flag_38; // used
+   int var_34; // used - arg_4
+   void* paddr_30; // used
    int var_2C; // used
    int var_28; // used
 };
 
-int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* unk1, int unk2);
+int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2);
 
 int SceDmacmgrForDriver_543f54cf(dmac_id id);
 

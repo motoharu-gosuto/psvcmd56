@@ -57,9 +57,9 @@ struct result_c8672a3d
    result_c8672a3d_14_pair* unk_14; //used
    int unk_18;
    int unk_1C;
-   int unk_20;
+   int unk_20; //used - flags?
    int unk_24;
-   int unk_28;
+   int* unk_28;
    int lockable_int_2C;
    
    int gxor_30; //(((int)&g_008FE000) | 0x01)

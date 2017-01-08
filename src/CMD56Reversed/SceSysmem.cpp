@@ -1,12 +1,19 @@
+#include <string>
+
 #include "SceSysmem.h"
 
 result_c8672a3d* SceSysmemForKernel_functor_c8672a3d(input1_c8672a3d* ctx)
 {
-   return 0;
+   //TODO: this is just an immitation - need to figure out how this is really initialized
+   result_c8672a3d* var = new result_c8672a3d();
+   memset(var, 0, sizeof(result_c8672a3d)); 
+   return var;
 }
 
 int SceSysmemForKernel_functor_571660aa(input1_c8672a3d* ctx, result_c8672a3d* arg_1)
 {
+   //TODO: this is just an immitation - need to figure out how this is really initialized
+   delete arg_1;
    return 0;
 }
 

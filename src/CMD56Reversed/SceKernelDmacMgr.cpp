@@ -1463,37 +1463,35 @@ int exit_loc_993152(int r0, int var_24)
       return STACK_CHECK_FAIL;
 }
 
-//unk0 is id
-//unk1 is structure of size 0x6C
-//unk2 is 0x01 or 0x11
-int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* unk1, int unk2)
+//id is a packed pointer to structure result_c8672a3d* created by SceSysmemForKernel_functor_c8672a3d
+//data is structure of size 0x6C - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
+//unk2 is 0x01 or 0x11 (int our case it is 0x11)
+int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
 {
-   /*
-   int var_48; // is it used ? is it arg ?
+   int var_48; // TODO: is it used ?
    local_01a599e0 local;
    int var_24 = var_009EA004;
 
-   if(unk1 = 0)
+   if(data = 0)
       return exit_loc_993152(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_24);
 
-   r9_01a599e0* ptr_9 = (r9_01a599e0*)((id >> 1) << 2);
-   void* ptr_1 = (void*)(((int)&_008FE000) | 1);
-   void* ptr_3 = ptr_9->unk_30;
+   result_c8672a3d* ptr_9 = SCE_DMAC_UNPACK_ID(id);
+   int gxor = (((int)&g_008FE000) | 1);
    
-   if(ptr_3 != ptr_1)
+   if(ptr_9->gxor_30 != gxor)
       return exit_loc_993152(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_24);
 
    if(ptr_9->unk_3A == 0x13)
    {
-      local.var_34 = unk1->unk_1C;
-      local.var_30 = unk1->unk_20;
+      local.var_34 = data->unk_1C;
+      local.paddr_30 = data->paddr_20;
    }
 
-   local.var_44 = unk1->unk_0;
-   local.var_40 = unk1->unk_4;
-   local.var_3C = unk1->unk_8;
-   local.var_38 = unk1->unk_C;
-   local.var_2C = unk1->unk_10;
+   local.source_vaddr_44 = data->source_vaddr_0;
+   local.source_paddr_40 = data->source_paddr_4;
+   local.size_3C = data->size_8;
+   local.flag_38 = data->flag_C;
+   local.var_2C = data->unk_10; //TODO: unknown and do not know how it is initialized
    local.var_28 = 0xFFFFFFFF;
 
    int res_0 = SceDmacmgrForDriver_167079fc(id, &local, 0x00, unk2);
@@ -1502,17 +1500,14 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* unk1, int unk2)
       return exit_loc_993152(res_0, var_24);
 
    if(ptr_9->unk_3A != 0x13)
-      ptr_9->unk_28 = unk1->unk_18;
+      ptr_9->unk_28 = data->unk_18;
    else
-      ptr_9->unk_28 = &unk1->unk_1C;
+      ptr_9->unk_28 = &data->unk_1C;
 
-   int bits = (unk1->unk_14) & (~0x07FC0000); // TODO: need to test this
+   int bits = (data->unk_14) & (~0x07FC0000); // TODO: need to test this - BTW this mask is used in other places as well!
    ptr_9->unk_20 = bits | ptr_9->unk_20;
 
    return exit_loc_993152(0, var_24);
-   */
-
-   return 0;
 }
 
 //========================================
