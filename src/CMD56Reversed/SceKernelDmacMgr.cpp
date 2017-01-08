@@ -2122,54 +2122,42 @@ void sub_992000(result_c8672a3d* r0)
    r0->unk_14 = 0;
 }
 
-//========================================
+//----------------------
+
+//looks like this procedure does some operations with linked list
 
 void sub_992100(result_c8672a3d* r0)
 {
-   int r4 = r0;
-   int r5 = r0[0x10];
-   int r6 = r5 + 0x08;
-   int r0 = r6;
-   int r0 = SceCpuForDriver_lock_bf82deb2(r0);
-   int r3 = r5[0x00];
-   if(r3 == r4)
-   {
-      int r3 = r4[0x04];
-      r5[0x00] = r3;
-   }
+   result_c8672a3d_10_unk* N5 = r0->unk_10;
+   
+   SceCpuForDriver_lock_bf82deb2(&N5->lockable_8);
 
-   int r3 = r5[0x04];
-   if(r3 == r4)
-   {
-      int r3 = r4[0x00];
-      r5[0x04] = r3;
-   }
+   //this looks like some linked list operations
 
-   int r3 = r4[0x00];
-   if(r3 != 0)
-   {
-      int r2 = r4[0x04];
-      r3[0x04] = r2;
-   }
+   if(N5->unk_0 == r0)
+      N5->unk_0 = r0->unk_04;
 
-   int r2 = r4[0x04];
-   if(r2 != 0)
-   {
-      r2[0x00] = r3;
-   }
+   if(N5->unk_4 == r0)
+      N5->unk_4 = r0->unk_00;
 
-   int r3 = 0;
-   int r0 = r6;
-   r4[0x00] = r3;
-   r4[0x04] = r3;
-   int r0 = SceCpuForDriver_unlock_d6ed0c46(r0);
-   int r2 = r4[0x38];
-   int r3 = 0xFFF7;
-   int r3 = r3 & r2;
-   r4[0x38] = r3;
+   result_c8672a3d* N3 = r0->unk_00;
+   if(N3 != 0)
+      N3->unk_04 = r0->unk_04;
+
+   result_c8672a3d* N2 = r0->unk_04;
+   if(N2 != 0)
+      N2->unk_00 = N3;
+
+   result_c8672a3d* r4 = r0;
+
+   r0->unk_00 = 0x00;
+   r0->unk_04 = 0x00;
+   SceCpuForDriver_unlock_d6ed0c46(&N5->lockable_8);
+
+   r0->unk_38 = 0xFFF7 & r0->unk_38;
 }
 
-//========================================
+//----------------------
 
 int SceDmacmgrForDriver_adff1186(dmac_id id)
 {

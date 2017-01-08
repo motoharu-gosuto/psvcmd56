@@ -37,18 +37,20 @@ struct result_c8672a3d_14_pair
    int unk_4;
 };
 
+struct result_c8672a3d;
+
 struct result_c8672a3d_10_unk
 {
-   int unk_0;
-   int unk_4;
-   int unk_8;
+   result_c8672a3d* unk_0;
+   result_c8672a3d* unk_4;
+   int lockable_8;
    int unk_C;
 };
 
 struct result_c8672a3d
 {
-   int unk_00;
-   int unk_04;
+   result_c8672a3d* unk_00; //linked list prev ?
+   result_c8672a3d* unk_04; //linked list next ?
    int unk_08;
    int unk_0C;
    result_c8672a3d_10_unk* unk_10;
