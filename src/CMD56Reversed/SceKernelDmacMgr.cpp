@@ -1472,7 +1472,7 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
    local_01a599e0 local;
    int var_24 = var_009EA004;
 
-   if(data = 0)
+   if(data == 0)
       return exit_loc_993152(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_24);
 
    result_c8672a3d* ptr_9 = SCE_DMAC_UNPACK_ID(id);
