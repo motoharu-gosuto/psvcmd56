@@ -28,7 +28,7 @@ int sub_B9A684(locals_B99674* dest, char* source, int sizeFlag)
    else if(mask == 0x100)
       tempSize = 0x10;
    else if(mask == 0x300)
-      tempSize == 0x20;
+      tempSize = 0x20;
    else if(mask == 0x200)
       tempSize = 0x18;
    else
@@ -418,6 +418,8 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
    if(id < 0)
       return exit_loc_B99C0A(SCE_SBL_GC_AUTH_MGR_ERROR_800F1528, cookie);
    
+   //the rule for this value is the following
+   //it looks like it should not be greater than (~0x07FC0000) SCE_DMAC_BITMASK1
    int var_8C = (unk == 0x00) ? 0x00000000 : 0x0003ffff;
 
    //it looks like:
