@@ -2085,47 +2085,41 @@ int SceDmacmgrForDriver_397a917c(int id, int num, int unk2, int unk3)
 
 void sub_992000(result_c8672a3d* r0)
 {
-   int r3 = r0[0x38];
-   int r4 = r0[0x10];
-   int r1 = r0[0x14];
-   int r3 = r3 & 0x40;
-   if(r3 != 0)
+   int C0 = (int)r0->unk_38 & 0x40; //UXTH
+   if(C0 != 0)
       return;
 
-   int r5 = r0[0x38];
-   int r2 = r1[0x00];
-   int r5 = r5 | 0x40;
-   r0[0x38] = r5;
-   r2[0x1C] = r3;
+   r0->unk_38 = (r0->unk_38 | 0x40);
 
+   unk_14_pair_0* ptr2 = r0->unk_14->unk_0;
+   
+   ptr2->unk_1C = C0;
+   
    DSB(SY);
 
    while(true) //this looks like infinite loop that waits for sync ?
    {
-      int r3 = r2[0x24];
-      int r3 = r3 << 0x1F;
-      if(r3 >= 0)
+      int C1 = ptr2->unk_24 << 0x1F;
+      if(C1 >= 0)
          break;
    }
 
-   int r3 = r2[0x28];
-   if(r3 != 0)
+   if(ptr2->unk_28 != 0)
       return;
 
-   int r7 = r4 + 0x10C;
-   int r6 = r0[0x38];
-   int r7 = r7 - r1;
-   int r5 = r4[0xC];
-   //ASRS            R7, R7, #3
-   int lr = 1;
-   r1[0x04] = r3;
-   int r2 = 0xFFBF;
-   int r1 = lr << r7;
-   r0[0x14] = r3;
-   int r2 =r2 & r6;
-   int r3 = r5 | r1;
-   r4[0x0C] = r3;
-   r0[0x38] = r2;   
+   result_c8672a3d_10_unk* ptr3 = r0->unk_10;
+   result_c8672a3d_14_pair* ptr1 = r0->unk_14;
+
+   int V1 = (int)ptr3 + 0x10C;
+   int V2 = V1 - (int)ptr1;
+   int V3 = V2 >> 3; //ASRS
+   int V4 = 0x01 << (V3);
+
+   ptr3->unk_C = ptr3->unk_C | V4;
+   r0->unk_38 = 0xFFBF & r0->unk_38;
+   
+   ptr1->unk_4 = 0;
+   r0->unk_14 = 0;
 }
 
 //========================================

@@ -14,14 +14,45 @@ typedef void(func_c8672a3d)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* re
 //arg1 is passed by caller function
 typedef void(func_571660aa)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
 
+struct unk_14_pair_0
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+   
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   int unk_20;
+   int unk_24;
+   int unk_28;
+};
+
+struct result_c8672a3d_14_pair
+{
+   unk_14_pair_0* unk_0;
+   int unk_4;
+};
+
+struct result_c8672a3d_10_unk
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+};
+
 struct result_c8672a3d
 {
    int unk_00;
    int unk_04;
    int unk_08;
    int unk_0C;
-   int unk_10;
-   int unk_14; //some flag ?
+   result_c8672a3d_10_unk* unk_10;
+   result_c8672a3d_14_pair* unk_14; //used
    int unk_18;
    int unk_1C;
    int unk_20;
