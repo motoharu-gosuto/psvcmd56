@@ -207,12 +207,6 @@ int SceDmacmgrForDriver_fce4171a(dmac_id unk0, int unk1, int unk2)
 
 //========================================
 
-int exit_loc_992172(int r4)
-{
-   int r0 = r4;
-   return r0;
-}
-
 //is this a list element ?
 struct result_99214C
 {
@@ -237,50 +231,37 @@ struct result_99214C
    local_01a599e0* unk_3C;
 };
 
-result_99214C* sub_99214C()
+result_c8672a3d* sub_99214C()
 {
-   /*
-   int r5 = &_008FE000;
-   
-   //loc_992156:
    while(true)
-   {
-      int r4 = r5[0x28];
-      int r3 = &_008FE000;
-      int r0 = r3 + 0x28;
-      int r1 = r4;
-   
-      if(r4 == 0)
+   {     
+      if(g_008FE000.unk_28 == 0)
       {
-         r0 = r3[0x20];
-         SceSysmemForKernel_functor_c8672a3d(r0);
-         int r4 = r0;
-         if(r0 == 0)
-            return exit_loc_992172(r4);
-         
-         int r0 = r0 + 0x20;
-         int r1 = r4 + 0x10;
-         int r0 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
-         int r3 = r4[0x10];
-         int r2 = 0;
-         r4[0x10] = r2;
-         int r3 = r3 | 1;
-         r4[0x10] = r3;
-         return exit_loc_992172(r4);
+         result_c8672a3d* res_0 = SceSysmemForKernel_functor_c8672a3d(g_008FE000.unk_20);
+         if(res_0 == 0)
+            return 0;
+
+         //TODO: I do not understand first argument - it is void**
+         SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(&res_0->unk_20, &res_0->unk_10);
+
+         res_0->unk_14 = 0x00;
+         res_0->unk_10 = (void*)((int)res_0->unk_10 | 1);
+
+         return res_0;
       }
       else
       {
-         int r2 = r4[0x00];
-         int r0 = SceCpuForDriver_atomic_set_xor_cda96e81(r0, r1, r2);
-         if(r4 == r0)
-            return exit_loc_992172(r4);
+         //this code looks like going through list elements
 
-         //goto loc_992156
+         result_c8672a3d** r0 = &g_008FE000.unk_28;
+         result_c8672a3d*  r1 = g_008FE000.unk_28;
+         result_c8672a3d*  r2 = g_008FE000.unk_28->unk_00;
+
+         result_c8672a3d* res_0 = SceCpuForDriver_atomic_set_xor_cda96e81(r0, r1, r2);
+         if(g_008FE000.unk_28 == res_0)
+            return res_0;
       }
    }
-   */
-
-   return 0;
 }
 
 //========================================

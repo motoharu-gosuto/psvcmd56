@@ -9,7 +9,18 @@ int SceCpuForDriver_unlock_d6ed0c46(int *addr);
 //atomic set operation
 //set new value of 'value' into 'var'
 //return previous value of 'var' xor 'cond'
-int SceCpuForDriver_atomic_set_xor_cda96e81(int *var, int cond, int value);
+template<typename T>
+T SceCpuForDriver_atomic_set_xor_cda96e81(T* var, T cond, T value)
+{
+   //TODO: This is partial implementation omitting all sync primitives
+
+   T r3 = *var;
+   int teq = (int)r3 ^ (int)cond;
+   if(teq == 0)
+      *var = value;
+
+   return (T)teq;
+}
 
 /*
 //===================================================================================

@@ -14,6 +14,7 @@ struct global_008FE000
    int unk_1C;
    input1_c8672a3d* unk_20;
    SceUID poolUid_24;
+   result_c8672a3d* unk_28; //next element ?
 };
 
 extern global_008FE000 g_008FE000;

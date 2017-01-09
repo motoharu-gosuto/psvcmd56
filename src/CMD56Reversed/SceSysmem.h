@@ -39,6 +39,8 @@ struct result_c8672a3d_14_pair
 
 struct result_c8672a3d;
 
+//comment it out for now since I am not sure about this
+/*
 struct result_c8672a3d_10_unk
 {
    result_c8672a3d* unk_0;
@@ -46,6 +48,7 @@ struct result_c8672a3d_10_unk
    int lockable_8;
    int unk_C;
 };
+*/
 
 //looks like this structure is of size 0x0C
 //DO NOT ADD FIELDS - code depends on sizeof(input_167079fc)
@@ -67,11 +70,11 @@ struct result_c8672a3d
    result_c8672a3d* unk_04; //linked list next ?
    int unk_08;
    int unk_0C;
-   result_c8672a3d_10_unk* unk_10;
+   void* unk_10; //result_c8672a3d_10_unk ?
    result_c8672a3d_14_pair* unk_14; //used
    temp_r3* unk_18;
    temp_r6* unk_1C;
-   int unk_20; //used - flags?
+   void* unk_20; //used - flags?
    int unk_24;
    input_167079fc* unk_28; //used
    int lockable_int_2C; //some mutex ?
