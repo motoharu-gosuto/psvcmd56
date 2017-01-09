@@ -93,7 +93,7 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
    data_buffer[0x50] = idx;
 
    //size of data structure is exactly 0x51
-   int r0 = sub_CAC924(a_00BDCDF8_WB20, data_buffer, CAC924_COMMAND_1E, 0x51, packet6_de);
+   int r0 = sub_CAC924(a_00BDCDF8_WB20, data_buffer, KIRK_SERVICE_1E, 0x51, packet6_de);
    if(r0 != 0)
    {
       if(cookie == var_009EA004)
@@ -252,7 +252,7 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
    memcpy(generic_buffer + 0xB3, var16C, 0x10);
    memcpy(generic_buffer + 0xC3, a_00BDD24C_RESPBUF2 + 0x08, 0x53);
 
-   int res6 = sub_CAC924(a_00BDD018, generic_buffer, CAC924_COMMAND_20, 0x116, packet6_de);
+   int res6 = sub_CAC924(a_00BDD018, generic_buffer, KIRK_SERVICE_20, 0x116, packet6_de);
    if(res6 != 0)
       return exit_loc_CA9058(-3, var24);
 
@@ -350,9 +350,10 @@ int finish_CACA88(char* r8, char* var830, int r2, int r4, int* var97C, int var24
 //0x1E, 0x51 -  ! - must be 0x33
 //0x1F, 0xB3 -  ! - must be 0x20
 //0x20, 0x116 - ! - must be 0x34
-//some of them do not match the conditions meaning that data will not be copied into resulting buffer
-//this raises the question of - does some subroutine actually change size in r2 ?
-//since there is a condition that compares r7 and r2
+
+//some of sizes do not match the conditions
+//what I think is happening is that KIRK services substitute the size with response size for those commands that do have response (since r2 is part of the structure)
+//these correlates with the documentation in https://wiki.henkaku.xyz/vita/F00D_Commands
 
 #define CAC924_ERROR_CODE 0x10
 
@@ -361,12 +362,11 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
    if(r2 > 0x800)
       return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
 
-   if(r3 == 0x04 || r3 == 0x07)
+   if(r3 == KIRK_SERVICE_04 || r3 == KIRK_SERVICE_07)
    {
       //TODO: 
-      //not sure what this comparison mean
-      //values should be equal - if not then it means that r2 is modified by other function
-      //since r2 value is part of structure
+      //I believe that KIRK services may change size value with response size if service has response (since r2 is part of the structure)
+      //this can be once of the reasons why sizes are compared 
 
       if(r7 != r2) 
          return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
@@ -387,147 +387,147 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 
    switch(r3)
    {
-   case CAC924_COMMAND_0C:
+   case KIRK_SERVICE_0C:
       {
          if(r2 == 0x3C)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_0D:
+   case KIRK_SERVICE_0D:
       {
          if(r2 == 0x28)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_0E:
+   case KIRK_SERVICE_0E:
       {
          if(r2 == 0x14)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_10:
+   case KIRK_SERVICE_10:
       {
          if(r2 == 0x28)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_11:
+   case KIRK_SERVICE_11:
        {
          if(r2 == 0x64)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_12:
+   case KIRK_SERVICE_12:
       {
          if(r2 == 0xB8)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_14:
+   case KIRK_SERVICE_14:
       {
          if(r2 == 0x54)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_15:
+   case KIRK_SERVICE_15:
        {
          if(r2 == 0x38)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_16:
+   case KIRK_SERVICE_16:
       {
          if(r2 == 0x1C)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_17:
+   case KIRK_SERVICE_17:
       {
          if(r2 == 0x38)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24); 
       }
-   case CAC924_COMMAND_18:
+   case KIRK_SERVICE_18:
       {
          if(r2 == 0x8C)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_19:
+   case KIRK_SERVICE_19:
       {
          if(r2 == 0xE8)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_1B:
+   case KIRK_SERVICE_1B:
       {
          if(r2 == 0x53)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_1C:
+   case KIRK_SERVICE_1C:
       {
          if(r2 == 0x33)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_1D:
+   case KIRK_SERVICE_1D:
       {
          if(r2 == 0xA3)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_1E:
+   case KIRK_SERVICE_1E:
       {
          if(r2 == 0x33)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_1F:
+   case KIRK_SERVICE_1F:
       {
          if(r2 == 0x20)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_20:
+   case KIRK_SERVICE_20:
       {
          if(r2 == 0x34)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_21:
+   case KIRK_SERVICE_21:
       {
          if(r2 == 0x28)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case CAC924_COMMAND_22:
+   case KIRK_SERVICE_22:
       {
          if(r2 == 0x38)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24); 
       }
-   case CAC924_COMMAND_23:
+   case KIRK_SERVICE_23:
       {
          if(r2 == 0x20)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
@@ -539,10 +539,12 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
    }
 }
 
-//if sizes are so different, can this be some hashing function or something ?
-//this algo must be very generic
-//source is of size 0x53, 0x40, 0xA3, 0xB3, 0x51, 0x116
-//destination is of size 0x200 (it is a_00BDCDF8_WB20 buffer)
+//it turned out that this function is related to KIRK services
+//check here https://wiki.henkaku.xyz/vita/F00D_Commands
+//this function is a wrapper for different cryptographic KIRK services
+
+//result of this function is copied to
+//destination of size 0x200 (it is a_00BDCDF8_WB20 buffer)
 
 //I suspect that this function should also have context because:
 //it can be called with destination = 0 - like an initialization step
@@ -552,14 +554,16 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 //which means that it can use other internal subroutines that create and store context
 //this most likely happens in SceSblSmCommForKernel
 
+//Maybe KIRK can have context ? (I still have to read documentation about it an understand how it works)
+
 //TODO: I hope I reimplemented conditional logic correctly - too many if-else statements
 
-//INFO: Some commands do not match to corresponding sizes
-//      This includes commands 0x1C, 0x1E, 0x1F, 0x20
-//      this must not happen because non matching size leads directly to error and cmd56 initialization will be terminated
-//      which means that size is modified by imp_039c73b1 function
-//      this is also proved by buffer _00BDD018 which size we definitely know (it is 0x34)
-//      and sub_CAC924_command demands that for command 0x20 size should be 0x43
+// Regarding response sizes
+// KIRK services should change the size or otherwise it will not match the condition in sub_CAC924_command
+// which leads directly to error and cmd56 initialization will be terminated
+// one more proof is that buffer _00BDD018 which size we definitely know (it is 0x34)
+// will be overflown if size is not changed from 0x116 to 0x34
+// and for command 0x20 sub_CAC924_command demands that size should be 0x34
 
 int sub_CAC924(char* destination, char* source, int command, int size, int packet6_de)
 {
@@ -603,7 +607,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   int res2 = SceSblSmCommForKernel_db9fc204(var97C, 0x0001000B, &var978, &ctx.var838, 0x814);
+   int res2 = SceSblSmCommForKernel_db9fc204(var97C, GC_AUTH_MODE_1000B, &var978, &ctx.var838, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 

@@ -31,27 +31,27 @@ int SceSblSmCommForKernel_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_con
 
    switch(ctx->command)
    {
-   case CAC924_COMMAND_1B:
+   case KIRK_SERVICE_1B:
       //size is ok
       memset(ctx->data, 0xBB, ctx->size);
       break;
-   case CAC924_COMMAND_1C:
+   case KIRK_SERVICE_1C:
       ctx->size = 0x33;  // 0x40 -> 0x33
       memset(ctx->data, 0xBB, ctx->size);
       break;
-   case CAC924_COMMAND_1D:
+   case KIRK_SERVICE_1D:
       //size is ok
       memset(ctx->data, 0xBB, ctx->size);
       break;
-   case CAC924_COMMAND_1E:
+   case KIRK_SERVICE_1E:
       ctx->size = 0x33;  //0x51 -> 0x33
       memset(ctx->data, 0xBB, ctx->size);
       break;
-   case CAC924_COMMAND_1F:
+   case KIRK_SERVICE_1F:
       ctx->size = 0x20;  //0xB3 -> 0x20
       memset(ctx->data, 0xBB, ctx->size);
       break;
-   case CAC924_COMMAND_20:
+   case KIRK_SERVICE_20:
       ctx->size = 0x34; //0x116 -> 0x34
       memset(ctx->data, 0xBB, ctx->size);
       break;

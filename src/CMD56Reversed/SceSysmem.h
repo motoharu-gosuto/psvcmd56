@@ -56,6 +56,11 @@ struct input_167079fc
    input_167079fc* unk_8;
 };
 
+//check here about physical addresses:
+//https://wiki.henkaku.xyz/vita/F00D_Commands#Physical_Address_List
+//A common format used in these requests is a list of physical address and size. This simple structure is defined below. See SceSysmem#get_paddr_list for information on creating this list. 
+//This data format is used when passing large buffers of data to F00D. This is because the memory manager in kernel could allocate contiguous virtual addresses that corresponds to varying physical addresses. 
+
 struct result_c8672a3d
 {
    result_c8672a3d* unk_00; //linked list prev ?
