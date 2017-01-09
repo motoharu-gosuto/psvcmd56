@@ -41,17 +41,18 @@ struct locals_B99674
    char unk_2C[0x40];
 };
 
-//size is 0x20
+//size is 0x20 - DO NOT ADD FIELDS - code depends on sizeof(local_01a599e0)
+//size can be proven by stack layout used for struct local variable
 struct local_01a599e0
 {
-   void* source_vaddr_44; // used
-   void* source_paddr_40; // used
-   int size_3C; // used
-   int flag_38; // used
-   int var_34; // used - arg_4
-   void* paddr_30; // used
-   int var_2C; // used
-   int var_28; // used
+   void* source_vaddr_44_00; // used
+   void* source_paddr_40_04; // used
+   int size_3C_08;           // used
+   int flag_38_0C;           // used
+   int var_34_10;            // used - arg_4
+   void* paddr_30_14;        // used
+   int var_2C_18;            // used
+   local_01a599e0* var_28_1C; // used - looks like pointer to next element in list
 };
 
 int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2);

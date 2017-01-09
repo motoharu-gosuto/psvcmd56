@@ -213,7 +213,31 @@ int exit_loc_992172(int r4)
    return r0;
 }
 
-int sub_99214C()
+//is this a list element ?
+struct result_99214C
+{
+   result_99214C* unk_0; //prev ?
+   result_99214C* unk_4; //next ?
+   local_01a599e0* unk_8;
+   int unk_C;
+
+   local_01a599e0* unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   void* unk_20;
+   void* unk_24;
+   int unk_28;
+   int unk_2C;
+
+   int unk_30;
+   int unk_34;
+   int unk_38;
+   local_01a599e0* unk_3C;
+};
+
+result_99214C* sub_99214C()
 {
    /*
    int r5 = &_008FE000;
@@ -293,8 +317,43 @@ int exit_loc_9923E8()
    return 0;
 }
 
-int sub_992288(int unk0, int unk1, int unk2, int unk3,
-               int arg_0, int arg_4, int arg_8, int arg_C)
+struct temp_r6;
+
+struct temp_r3
+{
+   int unk_0;
+   temp_r6* unk_4;
+   int unk_8;
+   int unk_C;
+   
+   int unk_10;
+};
+
+struct temp_r6
+{
+   temp_r3* unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   int unk_20;
+   int unk_24;
+   int unk_28;
+   int unk_2C;
+
+   int unk_30;
+   int unk_34;
+   int unk_38;
+   int unk_3C;
+};
+
+int sub_992288(short unk0, int unk1, void** unk2, int* unk3,
+               void** arg_0, local_01a599e0* arg_4, temp_r3** arg_8, temp_r6** arg_C)
 {
    /*
    int var_40;
@@ -607,7 +666,7 @@ int exit_loc_9928F6(int r0, int* r5, int var_14)
       return STACK_CHECK_FAIL;
 }
 
-int sub_99289C(int unk0)
+int sub_99289C(void* buffer, int size, int* result)
 {
    /*
    int var_1C;
@@ -673,7 +732,7 @@ int sub_99289C(int unk0)
 
 //========================================
 
-int sub_9921FC(int unk0, int unk1)
+int sub_9921FC(result_99214C* unk0, result_99214C* unk1)
 {
    /*
    int r5 = r0;
@@ -745,558 +804,376 @@ int sub_9921FC(int unk0, int unk1)
 
 //========================================
 
-int exit_loc_992A7C(int r0, int var_74, int var_2C)
+int exit_loc_992A7C(int r0, int cookie)
 {
-   /*
-   int r5 = var_74;
-   int r2 = var_2C;
-   int r3 = r5[0];
-   if(r2 == r3)
-   {
+   if(cookie == var_009EA004)
       return r0;
+   else
+      return STACK_CHECK_FAIL;
+}
+
+int final_loc_992A56(int r2, result_c8672a3d* var_7C, temp_r6* r6, temp_r3* r5, int cookie)
+{
+   r6->unk_2C = r2 | 0x1000;
+
+   if(var_7C->unk_18 == 0)
+   {
+      var_7C->unk_18 = r5;
    }
    else
    {
-      return STACK_CHECK_FAIL;
+      temp_r6* r3 = var_7C->unk_1C;
+      int r2 = r5->unk_10;
+      r3->unk_0 = r5;
+      r3->unk_3C = r2;
    }
-   */
 
-   return 0;
-}
-
-int exit_loc_992A76(int var_74, int var_2C)
-{
-   return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_74, var_2C);
-}
-
-int exit_loc_992C20(int var_74, int var_2C)
-{
-   return exit_loc_992A7C(SCE_KERNEL_ERROR_NO_MEMORY, var_74, var_2C);
-}
-
-int exit_loc_992C10(int r9, int var_74, int var_2C)
-{
-   int r0 = r9;
-   return exit_loc_992A7C(r0, var_74, var_2C);
+   var_7C->unk_1C = r6;
+   return exit_loc_992A7C(0, cookie);
 }
 
 int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
 {
-   /*
-   //these are most likely arguments
-   int var_90;
-   int var_8C;
-   int var_88;
-   int var_84;
+   //this four are used for args
+   int** var_90;
+   local_01a599e0* var_8C;
+   int* var_88;
+   int* var_84;
 
+   //locals
    int var_80;
-   int var_7C;
-   int var_78;
-   int var_74;
+   result_c8672a3d* var_7C;
+   global_008FE000* var_78;
+   int* var_74;
    int var_70;
-   int var_6C;
-   int var_68;
+   temp_r3* var_6C;
+   temp_r6* var_68;
    int var_64;
    int var_60;
    int var_5C;
    int var_58;
-   int ptr_54;
+   void* ptr_54;
    int var_50;
    int var_4C;
    int var_48;
    int var_44;
-   int var_40;
+   void* var_40;
    int var_3C;
    int var_38;
-   int var_34;
+   void* var_34;
    int var_30;
-   int var_2C;
 
    //-----------------------------
 
-   int r0 = unk0;
-   int r1 = unk1;
-   int r2 = unk2;
+   int var_2C = var_009EA004; //cookie
 
-   int r5 = &var_009EA004;
-   int r3 = r2 - 1;
-   int r4 = r2;
-   int r3 = r3 + 3;
-   int r2 = r5[0];
+   //-----------------------------
 
-   var_74 = r5;
-   var_7C = r0;
-   var_2C = r2;
+   local_01a599e0* r4 = data;
 
-   if(true) //bhi - do not understand - complex comparison
-      return exit_loc_992A76(var_74, var_2C);
+   var_74 = &var_009EA004;
+   var_7C = ctx;
 
-   if(r1 == 0x10)
+   if(data == 0) //original condition was strange - BHI (data - 1 + 3)
+      return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_2C);
+
+   if(unk2 == 0x10)
    {
       #pragma region
-      int r3 = 1;
-      int r0 = &_008FE000;
-      int r6 = 0;
-      int r8 = r3;
-      var_60 = r3;
-      int r3 = &var_34;
-      int r5 = r6;
-      var_78 = r0;
-      int r7 = &var_3C;
-      int r11 = &var_40;
-      int r10 = &var_6C;
-      ptr_54 = r3;
-      #pragma endregion
 
-      //goto loc_992BB0 - down
+      temp_r3* r5 = 0x00;
+      temp_r6* r6 = 0x00;
+
+      var_60 = 0x01;
+      var_78 = &g_008FE000;
+      
+      ptr_54 = &var_34;
+
+      while(true) //loc_992BB0
+      {
+         var_4C = 0x01;
+
+         var_40 = (void*)&var_3C; //TODO: remove cast
+         var_34 = r4->source_vaddr_44_00;
+         var_30 = r4->size_3C_08 & (~0xFF000000);
+
+         int res_0 = sub_99289C(r4->source_paddr_40_04, r4->size_3C_08, &var_50);
+         if(res_0 < 0)
+            return exit_loc_992A7C(res_0, var_2C);
+
+         int res_1 = sub_992288(var_7C->unk_3A, var_60, &ptr_54, &var_4C, &var_40, r4, &var_6C, &var_68);
+
+         if(var_4C > 1)
+            SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, var_40);
+      
+         if(res_1 < 0)
+            return exit_loc_992A7C(res_1, var_2C);
+
+         if(r5 != 0)
+         {
+            temp_r3* r3 = var_6C;
+            int r2 = r3->unk_10;
+            r6->unk_0 = r3;
+            r6->unk_3C = r2;
+            r3->unk_4 = r6;
+            r6 = var_68;
+         }
+         else
+         {
+            r5 = var_6C;
+            r6 = var_68;
+         }
+      
+         r4 = r4->var_28_1C; //going to next element in list ?
+
+         if((r4 + 1) == 0)
+         {
+            return final_loc_992A56(r6->unk_2C, var_7C, r6, r5, var_2C);
+         }
+      }
+
+      #pragma endregion
+   }
+   else if(unk2 > 0x10)
+   {
+      if(unk2 == 0x11)
+      {
+         #pragma region
+
+         temp_r3* r5 = 0x00;
+         temp_r6* r6 = 0x00;
+         
+         while(true) //loc_992ABA
+         {            
+            var_60 = 0x01;           
+            ptr_54 = (void*)&var_3C; //TODO: remove cast
+
+            int res_0 = sub_99289C(r4->source_vaddr_44_00, r4->size_3C_08, &var_64);
+            if(res_0 < 0)
+               return exit_loc_992A7C(res_0, var_2C);
+
+            var_4C = 0x01;
+            var_40 = (void*)&var_34; //TODO: remove cast
+
+            int res_1 = sub_99289C(r4->source_paddr_40_04, r4->size_3C_08, &var_50);
+            if(res_1 < 0)
+            {
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, ptr_54);
+               return exit_loc_992A7C(res_1, var_2C);
+            }
+
+            int res_2 = sub_992288(var_7C->unk_3A, var_60, &ptr_54, &var_4C, &var_40, r4, &var_6C, &var_68);
+            
+            if(var_60 > 1)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, ptr_54);
+            
+            if(var_4C > 1)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_40);
+
+            if(res_2 < 0)
+               return exit_loc_992A7C(res_2, var_2C);
+
+            if(r5 != 0)
+            {
+               temp_r3* r3 = var_6C;
+               int r2 = r3->unk_10;
+               r6->unk_0 = r3;
+               r6->unk_3C = r2;
+               r3->unk_4 = r6;
+               r6 = var_68;
+            }
+            else
+            {
+               r5 = var_6C;
+               r6 = var_68;
+            }
+
+            r4 = r4->var_28_1C; //going to next element in list ?
+            if(r4 + 1 == 0)
+            {
+               return final_loc_992A56(r6->unk_2C, var_7C, r6, r5, var_2C);
+            }
+         }
+
+         #pragma endregion
+      }
+      else
+      {
+         #pragma region
+
+         if(unk2 != 0x100)
+            return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_2C);
+
+         result_99214C* r5 = sub_99214C();
+         if(r5 == 0)
+            return exit_loc_992A7C(SCE_KERNEL_ERROR_NO_MEMORY, var_2C);
+
+         result_99214C* r6 = sub_99214C();
+         if(r6 == 0)
+         {
+            sub_9921FC(r5, r5);
+            return exit_loc_992A7C(SCE_KERNEL_ERROR_NO_MEMORY, var_2C);
+         }
+
+         r5->unk_28 = r4->size_3C_08;
+         r5->unk_38 = r4->var_2C_18;
+         r5->unk_2C = r4->flag_38_0C;
+         r5->unk_3C = r4->var_28_1C;
+
+         r5->unk_20 = r4->source_vaddr_44_00;
+         r5->unk_24 = r4->source_paddr_40_04;
+
+         local_01a599e0* r9 = (r4 + sizeof(local_01a599e0))->var_28_1C; //what?
+
+         r5->unk_0 = r6;
+
+         r5->unk_8 = r4;
+         r5->unk_C = 0x00;
+
+         r5->unk_4 = 0x00;
+
+         r9->var_28_1C = r6->unk_10;
+
+         r6->unk_20 = (r4 + sizeof(local_01a599e0))->source_vaddr_44_00; //what?
+         r6->unk_24 = (r4 + sizeof(local_01a599e0))->source_paddr_40_04; //what?
+
+         r6->unk_28 = (r4 + sizeof(local_01a599e0))->size_3C_08; //what ?
+         r6->unk_2C = (r4 + sizeof(local_01a599e0))->flag_38_0C; //what ?
+
+         r6->unk_38 = (r4 + sizeof(local_01a599e0))->var_2C_18; //what ?;
+         r6->unk_C = 0x00;
+            
+         r6->unk_0 = 0x00;
+         r6->unk_4 = r5;
+         
+         r6->unk_3C = (local_01a599e0*)0xFFFFFFFF; //looks like end element index ?
+         r6->unk_8 = r4 + sizeof(local_01a599e0); //next element ?
+
+         //this will be used later
+         int r2 = (r4 + sizeof(local_01a599e0))->flag_38_0C; //what ?
+
+         return final_loc_992A56(r2, var_7C, r6, r5, var_2C);
+
+         #pragma endregion
+      }
    }
    else
    {
-      if(r1 > 0x10)
+      if(unk2 == 0x00)
       {
-         if(r1 == 0x11)
+         #pragma region
+
+         result_99214C* r5 = 0x00;
+         result_99214C* r6 = 0x00;
+         
+         while(true) //loc_992B4E
          {
-            #pragma region
-            int r6 = 0;
-            int r10 = &_008FE000;
-            int r5 = r6;
-            int r7 = &var_3C;
-            int r11 = &var_64;
-            int r8 = 1;
-            #pragma endregion
-
-            //goto loc_992ABA - down
-         }
-         else
-         {
-            #pragma region
-            if(r1 != 0x100)
-               return exit_loc_992A76(var_74, var_2C);
-
-            int r0 = sub_99214C();
-            int r5 = r0;
-            if(r5 == 0)
-               return exit_loc_992C20(var_74, var_2C);
-
-            int r0 = sub_99214C();
-            int r6 = r0;
+            
+            result_99214C* r0 = sub_99214C();
             if(r0 == 0)
+               return exit_loc_992A7C(SCE_KERNEL_ERROR_NO_MEMORY, var_2C);
+
+            r0->unk_24 = r4->source_paddr_40_04;
+            r0->unk_38 = r4->var_2C_18;
+            r0->unk_28 = r4->size_3C_08;
+            r0->unk_2C = r4->flag_38_0C;
+
+            r0->unk_C = 0x00;
+            r0->unk_20 = r4->source_vaddr_44_00;
+
+            r0->unk_0 = 0x00;
+            r0->unk_4 = r6;
+            r0->unk_8 = r4;
+
+            if(r5 != 0)
             {
-               int r0 = r5;
-               int r1 = r5;
-               int r0 = sub_9921FC(r0, r1);
-               return exit_loc_992C20(var_74, var_2C);
+               local_01a599e0* r3 = r0->unk_10;
+               r6->unk_0 = r0;
+               r6->unk_3C  = r3;
+            }
+            else
+            {
+               r5 = r0;
             }
 
-            int r1 = r4[0x08];
-            int r3 = 0;
-            int r2 = r4[0x0C];
-            int r12 = r4 + 0x20;
-            int r0 = r4[0x00];
-            int r11 = 0xFFFFFFFF;
-            int r7 = r4[0x04];
-            r5[0x28] = r1;
+            r4 = r4->var_28_1C; //going to next element in list ?
+            r6 = r0;
 
-            int r1 = r4[0x18];
-            r5[0x38] = r1;
-            int r1 = r4[0x1C];
-            r5[0x2C] = r2;
-            r5[0x3C] = r1;
-            int r1 = r4[0x2C];
-            r5[0x20] = r0;
-            r5[0x24] = r7;
-            int r9 = r4[0x3C];
-            int r8 = r4[0x20];
-            int lr = r4[0x24];
-            int r2 = r1;
-            int r7 = r4[0x28];
-            int r0 = r4[0x38];
-            int r10 = r6[0x10];
-            r5[0x00] = r6;
-            r5[0x08] = r4;
-            r5[0x0C] = r3;
-            r5[0x04] = r3;
-            r9[0x1C] = r10;
-            r6[0x20] = r8;
-            r6[0x24] = lr;
-            r6[0x28] = r7;
-            r6[0x2C] = r1;
-            r6[0x38] = r0;
-            r6[0x0C] = r3;
-            
-            r6[0x00] = r0;
-            r6[0x04] = r1;
-            r6[0x08] = r2;
-            r6[0x0C] = r3;
-
-            r6[0x3C] = r11;
-            r6[0x08] = r12;
-
-            #pragma endregion
-
-            //goto loc_992A56 - down
+            if((r4 + 1) == 0)
+            {
+               r4 = r0->unk_3C; //why is this needed ?
+               return final_loc_992A56(?, var_7C, r6, r5, var_2C);
+            }
          }
+
+         #pragma endregion
       }
       else
       {
-         if(r1 == 0x00)
+         #pragma region
+
+         if(unk2 != 0x01)
+            return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_2C);
+
+         temp_r3* r5 = 0x00;
+         temp_r6* r6 = 0x00;
+
+         var_78 = &g_008FE000;
+
+         var_4C = 0x01;
+         var_40 = &var_34;
+
+         while(true) //loc_99297A
          {
-            #pragma region
-            int r5 = r1;
-            int r7 = r1;
-            int r6 = r1;
-            #pragma endregion
+            var_60 = 0x01;
+
+            ptr_54 = &var_3C;
+
+            var_34 = r4->source_paddr_40_04;
+            var_30 = (r4->size_3C_08) & (~0xFF000000);
+
+            int res_0 = sub_99289C(r4->source_vaddr_44_00, r4->size_3C_08, &var_64);
+            if(res_0 < 0)
+               return exit_loc_992A7C(res_0, var_2C);
+
+            int res_1 = sub_992288(var_7C->unk_3A, var_60, &ptr_54, &var_4C, &var_40, r4, &var_6C, &var_68);
+
+            int r3 = var_60;
             
-            //goto loc_992B4E - down
+            if(r3 > 1)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, ptr_54);
+
+            if(res_1 < 0)
+               return exit_loc_992A7C(res_1, var_2C);
+
+            if(r5 != 0)
+            {
+               temp_r3* r3 = var_6C;
+               int r2 = r3->unk_10;
+               r6->unk_0 = r3;
+               r6->unk_3C = r2;
+               r3->unk_4 = r6;
+               r6 = var_68;
+            }
+            else
+            {
+               r5 = var_6C;
+               r6 = var_68;
+            }
+
+            r4 = r4->var_28_1C; //going to next element in list ?
+
+            if(r4 + 1 == 0)
+            {
+               return final_loc_992A56(r6->unk_2C, var_7C, r6, r5, var_2C);
+            }
          }
-         else
-         {
-            #pragma region
-            if(r1 != 0x01)
-               return exit_loc_992A76(var_74, var_2C);
 
-            int r0 = &_008FE000;
-            int r6 = 0;
-            r3 = &var_34;
-            int r8 = r1;
-            int r5 = r6;
-            var_78 = r0;
-            int r7 = &var_3C;
-            int r11 = &var_64;
-            int r10 = &var_40;
-            var_4C = r1;
-            var_40 = r3;
-            #pragma endregion
-
-            //goto loc_99297A - down
-         }
+         #pragma endregion
       }
    }
-
-   //loc_99297A
-   {
-      #pragma region
-      int r1 = r4[0x08];
-      int r2 = r11;
-      int r3 = r4[0x04];
-      var_60 = r8;
-      int r0 = r1 & (~0xFF000000);
-      ptr_54 = r7;
-      var_34 = r3;
-      var_30 = r0;
-      int r0 = r4[0];
-      int r0 = sub_99289C(r0);
-      if(r0 < 0)
-         return exit_loc_992A7C(r0, var_74, var_2C);
-
-      int r1 = var_7C;
-      int lr = &var_68;
-      int r3 = &var_4C;
-      int r2 = &ptr_54;
-      short r0 = r1[0x3A];
-      int r1 = &var_6C;
-      var_88 = r1;
-      var_90 = r10;
-      var_8C = r4;
-      
-      int r1 = var_60;
-      var_84 = lr;
-      int r0 = sub_992288(r0, r1, r2,r3, ?, ?, ?, ?);
-      int r3 = var_60;
-      int r9 = r0;
-      if(r3 > 1)
-      {
-         int r2 = var_78; //is this argument???
-         int r1 = ptr_54;
-         int r0 = r2[0x24];
-         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
-      }
-      
-      if(r9 <= 0)
-         return exit_loc_992C10(r9, var_74, var_2C);
-
-      if(r5 != 0)
-      {
-         int r3 = var_6C;
-         int r2 = r3[0x10];
-         r6[0x00] = r3;
-         r6[0x3C] = r2;
-         r3[0x04] = r6;
-         int r6 = var_68;
-      }
-      else
-      {
-         int r5 = var_6C;
-         int r6 = var_68;
-      }
-
-      #pragma endregion
-
-      int r4 = r4[0x1C];
-      int r2 = r1 + 1;
-      if(r2 == 0) // is this correct
-      {
-         //goto loc_992C14 - down
-      }
-      else
-      {
-         //goto loc_99297A - up
-      }
-   }
-
-   //loc_992C14
-   {
-      int r2 = r6[0x2C];
-      //goto loc_992A56 - down
-   }
-
-   //loc_992A56
-   {
-      #pragma region
-
-      int r0 = var_7C;
-      int r2 = r2 | 0x1000;
-      int r3 = r0[0x18];
-      int r2 = r6[0x2C];
-      if(r3 == 0)
-      {
-         r1 = var_7C;
-         r1[0x18] = r5;
-      }
-      else
-      {
-         int r3 = r0[0x1C];
-         int r2 = r5[0x10];
-         r3[0x00] = r5;
-         r3[0x3C] = r2;
-      }
-
-      int r5 = var_7C;
-      int r0 = 0;
-      r5[0x1C] = r6;
-      return exit_loc_992A7C(r0, var_74, var_2C);
-
-      #pragma endregion
-   }
-
-   //loc_992ABA
-   {
-      #pragma region
-
-      var_60 = r8;
-      int r2 = r11;
-      ptr_54 = r7;
-      int r1 = r4[0x08];
-      int r0 = r4[0];
-      int r0 = sub_99289C(r0);
-      if(r0 < 0)
-         return exit_loc_992A7C(r0, var_74, var_2C);
-
-      int r0 = &var_34;
-      var_4C = r8;
-      var_40 = r0;
-      int r2 = var_50;
-      int r0 = r4[0x04];
-      int r1 = r4[0x08];
-      int r0 = sub_99289C(r0);
-      if(r0 < 0)
-      {
-         int r3 = &_008FE000;
-         int r9 = r0;
-         int r1 = ptr_54;
-         int r0 = r3[0x24];
-         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
-         int r0 = r9;
-         return exit_loc_992A7C(r0, var_74, var_2C);
-      }
-
-      int r1 = var_7C;
-      int r2 = &var_40;
-      int r3 = &var_6C;
-      int lr = &var_68;
-      short r0 = r1[0x3A];
-
-      //stmea - not sure
-      var_90 = r2;
-      var_8C = r3;
-      var_88 = r4;
-
-      int r2 = &ptr_54;
-      var_88 = r3;
-      int r3 = &var_4C;
-      int r1 = var_60;
-      var_84 = lr;
-      int r0 = sub_992288(r0, r1, r2,r3, ?, ?, ?, ?);
-      int r3 = var_60;
-      int r9 = r0;
-      if(r3 > 1)
-      {
-         int r0 = r10[0x24];
-         int r1 = ptr_54;
-         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
-      }
-            
-      int r3 = var_4C;
-      if(r3 > 1)
-      {
-         int r0 = r10[0x24];
-         int r1 = var_40;
-         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
-      }
-
-      if(r9 < 0)
-         return exit_loc_992C10(r9, var_74, var_2C);
-
-      if(r5 != 0)
-      {
-         r3 = var_6C;
-         int r2 = r3[0x10];
-         r6[0x00] = r3;
-         r6[0x3C] = r2;
-         r3[0x04] = r6;
-         r6 = var_68;
-      }
-      else
-      {
-         r5 = var_6C;
-         r6 = var_68;
-      }
-
-      #pragma endregion
-
-      int r4 = r4[0x1C];
-      int r0 = r4 + 1;
-      if(r0 == 0)
-      {
-         //goto loc_992C14 - up
-      }
-      else
-      {
-         //goto loc_992ABA - up
-      }
-   }
-
-   //loc_992B4E
-   {
-      #pragma region
-      int r0 = sub_99214C();
-      if(r0 == 0)
-         return exit_loc_992C20(var_74, var_2C);
-
-      int r3 = r4[0x04];
-      r0[0x24] = r3;
-      int r3 = r4[0x18];
-      int r1 = r4[0x08];
-      int r2 = r4[0x0C];
-      r0[0x38] = r3;
-      int r3 = r4[0x00];
-      r0[0x28] = r1;
-      r0[0x2C] = r2;
-      r0[0x0C] = r7;
-      r0[0x20] = r3;
-      r0[0x00] = r7;
-      r0[0x04] = r6;
-      r0[0x08] = r4;
-      if(r5 != 0)
-      {
-         r3 = r0[0x10];
-         r6[0x00] = r0;
-         r6[0x3C] = r3;
-      }
-      else
-      {
-         r5 = r0;
-      }
-
-      #pragma endregion
-
-      int r4 = r4[0x1C];
-      int r6 = r6;
-      int r3 = r4 + 1;
-      if(r3 == 0)
-      {
-         r4 = r0[0x3C];
-         //goto loc_992A56 - up
-      }
-      else
-      {
-         //goto loc_992B4E - up
-      }
-   }
-
-   //loc_992BB0
-   {
-      #pragma region
-
-      int r1 = r4[0x08];
-      int r2 = &var_50;
-      int r3 = r4[0x00];
-      var_4C = r8;
-      r0 = r1 & (~FF000000);
-      var_40 = r7;
-      var_34 = r3;
-      var_30 = r0;
-      int r0 = r4[0x04];
-      int r0 = sub_99289C(r0);
-      if(r0 < 0)
-         return exit_loc_992A7C(r0, var_74, var_2C);
-
-      int r1 = var_7C;
-      int lr = &var_68;
-      int r2 = &ptr_54;
-      int r3 = &var_4C;
-      short r0 = r1[0x3A];
-      int r1 = var_60;
-      int r11 = var_90;
-      var_8C = r4;
-      var_88 = r10;
-      var_84 = lr;
-      int r0 = sub_992288(r0, r1, r2,r3, ?, ?, ?, ?);
-      int r2 = var_4C;
-      int r9 = r0;
-      if(r2 > 1)
-      {
-         int r2 = var_78;
-         int r1 = var_40;
-         int r0 = r4[0x24];
-         int r0 = SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(r0, r1);
-      }
-      
-      if(r9 < 0)
-         return exit_loc_992C10(r9, var_74, var_2C);
-
-      if(r5 != 0)
-      {
-         int r3 = var_6C;
-         int r2 = r3[0x10];
-         r6[0x00] = r3;
-         r6[0x3C] = r2;
-         r3[0x04] = r6;
-         r6 = var_68;
-      }
-      else
-      {
-         int r5 =  var_6C;
-         int r6 = var_68;
-      }
-
-      #pragma endregion
-
-      //loc_992BAA:
-      int r4 = r4[0x1C];
-      int r1 = r4 + 1;
-      if(r1 == 0)
-      {
-         //goto loc_992C14 - up
-      }
-      else
-      {
-         //goto loc_992BB0 - up
-      }
-   }
-
-   */
-   return 0;
+   
+   return -1;
 }
 
 //========================================
@@ -1307,22 +1184,22 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
 //unk2 is 0x01 or 0x11 (in our case it is 0x11)
 int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079fc* ptr, int unk2)
 {
-   result_c8672a3d* r4 = SCE_DMAC_UNPACK_ID(id);
+   result_c8672a3d* ctx = SCE_DMAC_UNPACK_ID(id);
 
    int gxor = SCE_DMAC_GXOR(g_008FE000);
    
-   if(r4->gxor_30 != gxor)
+   if(ctx->gxor_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->lockable_int_2C);
+   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&ctx->lockable_int_2C);
    
    if(ptr != 0)
    {
-      if(r4->unk_3A == 0x13)
+      if(ctx->unk_3A == 0x13)
       {
          if(ptr->unk_0 != 0x5C)
          {
-            SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+            SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
          }
       }
@@ -1330,63 +1207,63 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
       {
          if(ptr->unk_0 != 0x0C)
          {
-            SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+            SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
          }
       }
    } 
 
-   if((r4->unk_38 << 0x1F) >= 0)
+   if((ctx->unk_38 << 0x1F) >= 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
-   if(((r4->unk_38) << 0x1C) < 0)
+   if(((ctx->unk_38) << 0x1C) < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
-   if(r4->unk_14 != 0)
+   if(ctx->unk_14 != 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
-   if((r4->unk_38 << 0x19) < 0)
+   if((ctx->unk_38 << 0x19) < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
       return SCE_KERNEL_ERROR_CANCELING;
    }
 
-   if(r4->unk_18 != 0)
-      sub_9921FC(r4->unk_18, r4->unk_1C);
+   if(ctx->unk_18 != 0)
+      sub_9921FC(ctx->unk_18, ctx->unk_1C);
 
-   r4->unk_18 = 0;
-   r4->unk_1C = 0;
-   r4->unk_20 = SCE_DMAC_BITMASK1;
+   ctx->unk_18 = 0;
+   ctx->unk_1C = 0;
+   ctx->unk_20 = SCE_DMAC_BITMASK1;
 
    if(ptr != 0)
    {
-      r4->unk_20 = ptr->unk_4 | SCE_DMAC_BITMASK2 | 0x40000;
+      ctx->unk_20 = ptr->unk_4 | SCE_DMAC_BITMASK2 | 0x40000;
 
-      if(r4->unk_3A == 0x13) //TODO: not sure about this condition
-         r4->unk_28 = ptr + sizeof(input_167079fc); // looks like this is pointer to next element in array;
+      if(ctx->unk_3A == 0x13) //TODO: not sure about this condition
+         ctx->unk_28 = ptr + sizeof(input_167079fc); // looks like this is pointer to next element in array;
       else
-         r4->unk_28 = ptr->unk_8;
+         ctx->unk_28 = ptr->unk_8;
    }
 
-   int res_0 = sub_992910(r4, unk2, data);
+   int res_0 = sub_992910(ctx, unk2, data);
    if(res_0 < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
       return res_0;      
    }
 
-   r4->unk_38 = 0xFFDF & r4->unk_38;
+   ctx->unk_38 = 0xFFDF & ctx->unk_38;
 
-   SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+   SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
 
    return 0;
 }

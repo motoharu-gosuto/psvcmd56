@@ -48,7 +48,7 @@ struct result_c8672a3d_10_unk
 };
 
 //looks like this structure is of size 0x0C
-//DO NOT ADD MORE FIELDS
+//DO NOT ADD FIELDS - code depends on sizeof(input_167079fc)
 struct input_167079fc
 {
    int unk_0;
@@ -64,12 +64,12 @@ struct result_c8672a3d
    int unk_0C;
    result_c8672a3d_10_unk* unk_10;
    result_c8672a3d_14_pair* unk_14; //used
-   int unk_18;
-   int unk_1C;
+   temp_r3* unk_18;
+   temp_r6* unk_1C;
    int unk_20; //used - flags?
    int unk_24;
    input_167079fc* unk_28; //used
-   int lockable_int_2C;
+   int lockable_int_2C; //some mutex ?
    
    int gxor_30; //(((int)&g_008FE000) | 0x01)
    SceUID eventFlagUid_34;
