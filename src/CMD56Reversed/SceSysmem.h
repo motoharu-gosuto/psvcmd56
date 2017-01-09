@@ -255,19 +255,21 @@ int SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(SceUID uid);
 
 int SceSysmemForDriver_ksceKernelGetMemBlockBase_a841edda(SceUID uid, void **basep);
 
+//size is 0x08 - DO NOT ADD FIELDS as code depends on sizeof(addr_pair)
 struct addr_pair
 {
-    uint32_t addr;
+    void* addr;
     uint32_t length;
 };
 
+//size is 0x14 - DO NOT ADD FIELDS as code depends on sizeof(paddr_list_req)
 struct paddr_list_req
 {
-    uint32_t size; // 0x14
-    uint32_t output_buffer_size;
-    uint32_t unk;
-    uint32_t ret_count;
-    addr_pair *output_buffer;
+    uint32_t size; // = 0x14     // 0x00
+    uint32_t output_buffer_size; // 0x04
+    uint32_t unk;                // 0x08
+    uint32_t ret_count;          // 0x0C
+    addr_pair* output_buffer;    // 0x10
 };
 
 //This function takes in two parameters: an array of length 2 specifying the virtual address and the size of the block of memory and a request information. The function will write into output_buffer an array of addr_pair that encompasses the block of memory specified in the input. req->ret_count will contain the number of entries written. If output_buffer is null, it will just write the count. 

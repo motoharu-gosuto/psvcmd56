@@ -656,78 +656,44 @@ int sub_992288(short unk0, int unk1, void** unk2, int* unk3,
 
 //========================================
 
-int exit_loc_9928F6(int r0, int* r5, int var_14)
+int exit_loc_9928F6(int r0, int cookie)
 {
-   int r2 = var_14;
-   int r3 = r5[0];
-   if(r2 == r3)
+   if(cookie == var_009EA004)
       return r0;
    else
       return STACK_CHECK_FAIL;
 }
 
-int sub_99289C(void* buffer, int size, int* result)
+int sub_99289C(void* vaddr, int size, paddr_list_req* result)
 {
-   /*
-   int var_1C;
-   int var_18;
-   int var_14;
+   addr_pair ap; //var_1C, var_18
+   ap.addr = vaddr;
+   ap.length = size & (~0xFF000000);
+   
+   int cookie = var_009EA004; //cookie
 
-   int r5 = &var_009EA004;
-   int r4 = r2;
-   int r6 = 0x14;
-   int r3 = r5[0];
-   int r2 = r1 & (~0xFF000000);
-   var_1C = r0;
-   int r1 = r4;
-   r4[0] = r6;
-   int r0 = &var_1C;
-   var_18 = r2;
-   var_14 = r3;
-   int r0 = SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(r0, r1);
-   if(r0 < 0)
-   {
-      return exit_loc_9928F6(r0, r5, var_14);
-   }
-   else
-   {
-      int r1 = r4[0x0C];
-      if(r1 == 1)
-         int r0 = 0;
-      
-      if(r1 == 1)
-      {
-         return exit_loc_9928F6(r0, r5, var_14);
-      }
-      else
-      {
-         int r3 = &_008FE000;
-         int r1 = r1 << 3;
-         int r0 = r3[0x24];
-         int r0 = SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(r0, r1);
-         int r3 = r0;
-         if(r3 == 0)
-         {
-            int r0 = SCE_KERNEL_ERROR_NO_MEMORY;
-            return exit_loc_9928F6(r0, r5, var_14);
-         }
-         else
-         {
-            int r2 = r4[0x0C];
-            int r0 = &var_1C;
-            r4[0x10] = r3;
-            int r1 = r4;
-            r4[0x04] = r2;
-            int r0 = SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(r0, r1);
-            //AND.W           R0, R0, R0,ASR#31
+   result->size = sizeof(paddr_list_req); //0x14
+   
+   int res_0 = SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(&ap, result);
+   if(res_0 < 0)
+      return exit_loc_9928F6(res_0, cookie);
 
-            return exit_loc_9928F6(r0, r5, var_14);
-         }
-      }
-   }
-   */
+   if(result->ret_count == 1)
+      return exit_loc_9928F6(0, cookie);
 
-   return 0;
+   int poolSize = result->ret_count * sizeof(addr_pair); //0x08
+   addr_pair* listPool = (addr_pair*)SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(g_008FE000.poolUid_24, poolSize);
+   
+   if(listPool == 0)
+      return exit_loc_9928F6(SCE_KERNEL_ERROR_NO_MEMORY, cookie);
+
+   result->output_buffer = listPool;
+   result->output_buffer_size = result->ret_count;
+
+   int res_1 = SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(&ap, result);
+   int ret = res_1 & (res_1 >> 0x31); //AND.W R0, R0, R0,ASR#31
+   
+   return exit_loc_9928F6(ret, cookie);
 }
 
 //========================================
