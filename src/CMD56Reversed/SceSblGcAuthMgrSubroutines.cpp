@@ -174,7 +174,7 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
    if(res0 != 0)
       return exit_loc_CA9058(res0, var24);
 
-   //copy 0x10 bytes from request (data will be initialized with sub_CA8DC0)
+   //copy 0x20 bytes from request (data will be initialized with sub_CA8DC0)
    char var15C[0x20];
    memcpy(var15C, a_00BDCBF4_REQBUF + 0x2F, 0x20);
 
