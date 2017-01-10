@@ -25,6 +25,13 @@ int SceSblGcAuthMgrDrmBBForDriver_bb451e83()
    return 0;
 }
 
+//all that this function does is copying 0x20 bytes of _00BDD018 to destination buffer
+int SceSblGcAuthMgrDrmBBForDriver_bb70ddc0(char* dest)
+{
+   memcpy(dest, _00BDD018, 0x20);
+   return 0;
+}
+
 void SceSblGcAuthMgr_InitializeContext()
 {
    //TODO: figure out how it is initialized
