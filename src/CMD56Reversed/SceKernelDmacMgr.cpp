@@ -298,40 +298,7 @@ int exit_loc_9923E8()
    return 0;
 }
 
-struct temp_r6;
 
-struct temp_r3
-{
-   int unk_0;
-   temp_r6* unk_4;
-   int unk_8;
-   int unk_C;
-   
-   int unk_10;
-};
-
-struct temp_r6
-{
-   temp_r3* unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-
-   int unk_20;
-   int unk_24;
-   int unk_28;
-   int unk_2C;
-
-   int unk_30;
-   int unk_34;
-   int unk_38;
-   int unk_3C;
-};
 
 int sub_992288(short unk0, int unk1, void** unk2, int* unk3,
                void** arg_0, local_01a599e0* arg_4, temp_r3** arg_8, temp_r6** arg_C)
@@ -793,18 +760,28 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
    global_008FE000* var_78;
    int* var_74;
    int var_70;
+   
    temp_r3* var_6C;
    temp_r6* var_68;
-   int var_64;
-   int var_60;
-   int var_5C;
-   int var_58;
-   void* ptr_54;
-   int var_50;
-   int var_4C;
-   int var_48;
-   int var_44;
-   void* var_40;
+
+   paddr_list_req var_64;
+   /*
+   int var_64; - size
+   int var_60; - output_buffer_size
+   int var_5C; - unk
+   int var_58; - ret_count
+   void* ptr_54; - output_buffer
+   */
+
+   paddr_list_req var_50;
+   /*
+   int var_50; - size
+   int var_4C; - output_buffer_size
+   int var_48; - unk
+   int var_44; - ret_count
+   void* var_40; - output_buffer
+   */
+
    int var_3C;
    int var_38;
    void* var_34;
@@ -1049,7 +1026,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
             if((r4 + 1) == 0)
             {
                r4 = r0->unk_3C; //why is this needed ?
-               return final_loc_992A56(?, var_7C, r6, r5, var_2C);
+               return final_loc_992A56(r2, var_7C, r6, r5, var_2C);
             }
          }
 
@@ -1187,8 +1164,8 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
    if(ctx->unk_18 != 0)
       sub_9921FC(ctx->unk_18, ctx->unk_1C);
 
-   ctx->unk_18 = 0;
-   ctx->unk_1C = 0;
+   ctx->unk_18 = 0x00;
+   ctx->unk_1C = 0x00;
    ctx->unk_20 = SCE_DMAC_BITMASK1;
 
    if(ptr != 0)
@@ -1245,16 +1222,16 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
 
    if(ptr_9->unk_3A == 0x13)
    {
-      local.var_34 = data->unk_1C;
-      local.paddr_30 = data->paddr_20;
+      local.var_34_10 = data->unk_1C;
+      local.paddr_30_14 = data->paddr_20;
    }
 
-   local.source_vaddr_44 = data->source_vaddr_0;
-   local.source_paddr_40 = data->source_paddr_4;
-   local.size_3C = data->size_8;
-   local.flag_38 = data->flag_C;
-   local.var_2C = data->unk_10; //TODO: unknown and do not know how it is initialized
-   local.var_28 = 0xFFFFFFFF;
+   local.source_vaddr_44_00 = data->source_vaddr_0;
+   local.source_paddr_40_04 = data->source_paddr_4;
+   local.size_3C_08 = data->size_8;
+   local.flag_38_0C = data->flag_C;
+   local.var_2C_18 = data->unk_10; //TODO: unknown and do not know how it is initialized
+   local.var_28_1C = (local_01a599e0*)0xFFFFFFFF;
 
    int res_0 = SceDmacmgrForDriver_167079fc(id, &local, 0x00, unk2);
 

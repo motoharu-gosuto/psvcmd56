@@ -39,16 +39,13 @@ struct result_c8672a3d_14_pair
 
 struct result_c8672a3d;
 
-//comment it out for now since I am not sure about this
-/*
-struct result_c8672a3d_10_unk
+struct result_c8672a3d_10_unk //this is some linked list type
 {
    result_c8672a3d* unk_0;
    result_c8672a3d* unk_4;
    int lockable_8;
    int unk_C;
 };
-*/
 
 //looks like this structure is of size 0x0C
 //DO NOT ADD FIELDS - code depends on sizeof(input_167079fc)
@@ -57,6 +54,42 @@ struct input_167079fc
    int unk_0;
    int unk_4;
    input_167079fc* unk_8;
+};
+
+//looks like these types are also result_c8672a3d
+struct temp_r6;
+
+struct temp_r3
+{
+   int unk_0;
+   temp_r6* unk_4;
+   int unk_8;
+   int unk_C;
+   
+   int unk_10;
+};
+
+struct temp_r6
+{
+   temp_r3* unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   int unk_20;
+   int unk_24;
+   int unk_28;
+   int unk_2C;
+
+   int unk_30;
+   int unk_34;
+   int unk_38;
+   int unk_3C;
 };
 
 //check here about physical addresses:
@@ -70,7 +103,7 @@ struct result_c8672a3d
    result_c8672a3d* unk_04; //linked list next ?
    int unk_08;
    int unk_0C;
-   void* unk_10; //result_c8672a3d_10_unk ?
+   result_c8672a3d_10_unk* unk_10;  //used
    result_c8672a3d_14_pair* unk_14; //used
    temp_r3* unk_18;
    temp_r6* unk_1C;
