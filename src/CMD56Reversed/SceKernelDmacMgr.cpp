@@ -207,30 +207,6 @@ int SceDmacmgrForDriver_fce4171a(dmac_id unk0, int unk1, int unk2)
 
 //========================================
 
-//is this a list element ?
-struct result_99214C
-{
-   result_99214C* unk_0; //prev ?
-   result_99214C* unk_4; //next ?
-   local_01a599e0* unk_8;
-   int unk_C;
-
-   local_01a599e0* unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-
-   void* unk_20;
-   void* unk_24;
-   int unk_28;
-   int unk_2C;
-
-   int unk_30;
-   int unk_34;
-   int unk_38;
-   local_01a599e0* unk_3C;
-};
-
 result_c8672a3d* sub_99214C()
 {
    while(true)
@@ -300,8 +276,8 @@ int exit_loc_9923E8()
 
 
 
-int sub_992288(short unk0, int unk1, void** unk2, int* unk3,
-               void** arg_0, local_01a599e0* arg_4, temp_r3** arg_8, temp_r6** arg_C)
+int sub_992288(short unk0, uint32_t unk1, addr_pair** unk2, uint32_t* unk3,
+               addr_pair** arg_0, local_01a599e0* arg_4, temp_r3** arg_8, temp_r6** arg_C)
 {
    /*
    int var_40;
@@ -772,7 +748,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
    int var_58; - ret_count
    void* ptr_54; - output_buffer
    */
-
+   
    paddr_list_req var_50;
    /*
    int var_50; - size
@@ -781,11 +757,18 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
    int var_44; - ret_count
    void* var_40; - output_buffer
    */
+   
+   addr_pair var_3C;
+   /*
+   int var_3C; - addr
+   int var_38; - length
+   */
 
-   int var_3C;
-   int var_38;
-   void* var_34;
-   int var_30;
+   addr_pair var_34;
+   /*
+   void* var_34; - addr
+   int var_30; - length
+   */
 
    //-----------------------------
 
@@ -808,27 +791,27 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
       temp_r3* r5 = 0x00;
       temp_r6* r6 = 0x00;
 
-      var_60 = 0x01;
+      var_64.output_buffer_size = 0x01;
+      var_64.output_buffer = &var_34;
+
       var_78 = &g_008FE000;
       
-      ptr_54 = &var_34;
-
       while(true) //loc_992BB0
       {
-         var_4C = 0x01;
+         var_50.output_buffer_size = 0x01;
+         var_50.output_buffer = &var_3C;
 
-         var_40 = (void*)&var_3C; //TODO: remove cast
-         var_34 = r4->source_vaddr_44_00;
-         var_30 = r4->size_3C_08 & (~0xFF000000);
+         var_34.addr = r4->source_vaddr_44_00;
+         var_34.length = r4->size_3C_08 & (~0xFF000000);
 
          int res_0 = sub_99289C(r4->source_paddr_40_04, r4->size_3C_08, &var_50);
          if(res_0 < 0)
             return exit_loc_992A7C(res_0, var_2C);
 
-         int res_1 = sub_992288(var_7C->unk_3A, var_60, &ptr_54, &var_4C, &var_40, r4, &var_6C, &var_68);
+         int res_1 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
 
-         if(var_4C > 1)
-            SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, var_40);
+         if(var_50.output_buffer_size > 1)
+            SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, var_50.output_buffer);
       
          if(res_1 < 0)
             return exit_loc_992A7C(res_1, var_2C);
@@ -869,30 +852,30 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
          
          while(true) //loc_992ABA
          {            
-            var_60 = 0x01;           
-            ptr_54 = (void*)&var_3C; //TODO: remove cast
+            var_64.output_buffer_size = 0x01;           
+            var_64.output_buffer = &var_3C;
 
             int res_0 = sub_99289C(r4->source_vaddr_44_00, r4->size_3C_08, &var_64);
             if(res_0 < 0)
                return exit_loc_992A7C(res_0, var_2C);
 
-            var_4C = 0x01;
-            var_40 = (void*)&var_34; //TODO: remove cast
+            var_50.output_buffer_size = 0x01;
+            var_50.output_buffer = &var_34;
 
             int res_1 = sub_99289C(r4->source_paddr_40_04, r4->size_3C_08, &var_50);
             if(res_1 < 0)
             {
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, ptr_54);
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_64.output_buffer);
                return exit_loc_992A7C(res_1, var_2C);
             }
 
-            int res_2 = sub_992288(var_7C->unk_3A, var_60, &ptr_54, &var_4C, &var_40, r4, &var_6C, &var_68);
+            int res_2 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
             
-            if(var_60 > 1)
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, ptr_54);
+            if(var_64.output_buffer_size > 1)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_64.output_buffer);
             
-            if(var_4C > 1)
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_40);
+            if(var_50.output_buffer_size > 1)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_50.output_buffer);
 
             if(res_2 < 0)
                return exit_loc_992A7C(res_2, var_2C);
@@ -947,7 +930,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
          r5->unk_20 = r4->source_vaddr_44_00;
          r5->unk_24 = r4->source_paddr_40_04;
 
-         local_01a599e0* r9 = (r4 + sizeof(local_01a599e0))->var_28_1C; //what?
+         local_01a599e0* r9 = (r4 + sizeof(local_01a599e0))->var_28_1C; //what?  + 0x20
 
          r5->unk_0 = r6;
 
@@ -1044,28 +1027,25 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
 
          var_78 = &g_008FE000;
 
-         var_4C = 0x01;
-         var_40 = &var_34;
+         var_50.output_buffer_size = 0x01;
+         var_50.output_buffer = &var_34;
 
          while(true) //loc_99297A
          {
-            var_60 = 0x01;
+            var_64.output_buffer_size = 0x01;
+            var_64.output_buffer = &var_3C;
 
-            ptr_54 = &var_3C;
-
-            var_34 = r4->source_paddr_40_04;
-            var_30 = (r4->size_3C_08) & (~0xFF000000);
+            var_34.addr = r4->source_paddr_40_04;
+            var_34.length = (r4->size_3C_08) & (~0xFF000000);
 
             int res_0 = sub_99289C(r4->source_vaddr_44_00, r4->size_3C_08, &var_64);
             if(res_0 < 0)
                return exit_loc_992A7C(res_0, var_2C);
 
-            int res_1 = sub_992288(var_7C->unk_3A, var_60, &ptr_54, &var_4C, &var_40, r4, &var_6C, &var_68);
+            int res_1 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
 
-            int r3 = var_60;
-            
-            if(r3 > 1)
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, ptr_54);
+            if(var_64.output_buffer_size > 1)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, var_64.output_buffer);
 
             if(res_1 < 0)
                return exit_loc_992A7C(res_1, var_2C);
@@ -1166,7 +1146,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
 
    ctx->unk_18 = 0x00;
    ctx->unk_1C = 0x00;
-   ctx->unk_20 = SCE_DMAC_BITMASK1;
+   ctx->unk_20 = (void*)SCE_DMAC_BITMASK1;
 
    if(ptr != 0)
    {
@@ -1244,7 +1224,7 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
       ptr_9->unk_28 = (input_167079fc*)&data->unk_1C; //TODO: this is a weird cast. does this mean that input_167079fc is part of structure ?
 
    int bits = (data->unk_14) & (~SCE_DMAC_BITMASK1); // TODO: need to test this
-   ptr_9->unk_20 = bits | ptr_9->unk_20;
+   ptr_9->unk_20 = (void*)(bits | (int)ptr_9->unk_20); //TODO: weird cast again
 
    return exit_loc_993152(0, var_24);
 }

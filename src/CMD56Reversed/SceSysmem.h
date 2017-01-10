@@ -56,6 +56,68 @@ struct input_167079fc
    input_167079fc* unk_8;
 };
 
+//----------------------------------------------
+
+/*
+in SceDmacmgrForDriver_167079fc
+  call sub_9921FC(ctx->unk_18, ctx->unk_1C);
+  where unk_18 is temp_r3* and unk_1C* is temp_r6
+  
+in sub_992910 in one of the branches
+  call sub_9921FC(r5, r5);
+  where r5 is result_99214C*
+  it is important that call is done with same variable => type is same
+  
+  if type is same then temp_r3* and temp_r6* are actually same type
+  
+  however there is one more important note
+  I have done so that sub_99214C returns result_99214C*
+  but in reality it returns result_c8672a3d* from SceSysmemForKernel_functor_c8672a3d
+  
+all this means that temp_r3, temp_r6 and result_99214C are all result_c8672a3d
+size of result_99214C is 0x3C and layout is nearly same
+size of temp_r6 is 0x3C and layout is vaguely same
+size of temp_r3 is 0x14 (parts missing) but layout is vaguely same
+*/
+
+//size is 0x20 - DO NOT ADD FIELDS - code depends on sizeof(local_01a599e0)
+//size can be proven by stack layout used for struct local variable
+struct local_01a599e0
+{
+   void* source_vaddr_44_00; // used
+   void* source_paddr_40_04; // used
+   int size_3C_08;           // used
+   int flag_38_0C;           // used
+   int var_34_10;            // used - arg_4
+   void* paddr_30_14;        // used
+   int var_2C_18;            // used
+   local_01a599e0* var_28_1C; // used - looks like pointer to next element in list
+};
+
+//is this a list element ?
+struct result_99214C
+{
+   result_99214C* unk_0; //prev ?
+   result_99214C* unk_4; //next ?
+   local_01a599e0* unk_8;
+   int unk_C;
+
+   local_01a599e0* unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   void* unk_20;
+   void* unk_24;
+   int unk_28;
+   int unk_2C;
+
+   int unk_30;
+   int unk_34;
+   int unk_38;
+   local_01a599e0* unk_3C;
+};
+
 //looks like these types are also result_c8672a3d
 struct temp_r6;
 
@@ -105,6 +167,7 @@ struct result_c8672a3d
    int unk_0C;
    result_c8672a3d_10_unk* unk_10;  //used
    result_c8672a3d_14_pair* unk_14; //used
+
    temp_r3* unk_18;
    temp_r6* unk_1C;
    void* unk_20; //used - flags?
@@ -118,6 +181,8 @@ struct result_c8672a3d
    short unk_3A;
    int unk_3C;   
 };
+
+//----------------------------------------------
 
 struct func_pair_c8672a3d
 {
