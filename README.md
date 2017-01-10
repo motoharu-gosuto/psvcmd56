@@ -378,6 +378,9 @@ response size - 0x20 (this is validated by sub_CAC924)
 I am not sure if _00BDD44C is used somewhere so I do not know if this a data validation or data generation call  
 Maybe it changes 0x20 bytes from Kirk service 1E and returns them ?  
   
+The only other 1 place where _00BDD44C is used are:  
+SceSblGcAuthMgrDrmBBForDriver_bb451e83 - this function clears sensitive data from buffers  
+  
 packet that is sent is 0x51 bytes long  
 as temp buffer 'data_buffer' is used  
   
@@ -486,12 +489,6 @@ response size - 0x34
   
 I am not sure if _00BDD018 is used somewhere so I do not know if this a data validation or data generation call  
   
-## other thoughts  
-  
-_00BDD018 this variable is actually used by   
-SceSblGcAuthMgr.SceSblGcAuthMgrDrmBBForDriver._exp_bb70ddc0  
-I am not sure where this export is used and how it is used  
-  
-Can it be related to SceSblGcAuthMgrDrmBBForDriver_bb451e83 ?  
-I need to check that procedure as well  
-  
+The only other 2 places where _00BDD018 is used are:  
+SceSblGcAuthMgrDrmBBForDriver_bb451e83 - this function clears sensitive data from buffers  
+SceSblGcAuthMgrDrmBBForDriver_bb70ddc0 - this function copies _00BDD018 buffer to destination  
