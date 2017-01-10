@@ -11,7 +11,7 @@
 
 int sub_CA919C(int* argument0);
 
-int SceSblGcAuthMgrDrmBBForDriver_bb451e83();
+int SceSblGcAuthMgrDrmBBForDriver_clear_sensitive_data_bb451e83();
 
 void SceSblGcAuthMgr_InitializeContext();
 
