@@ -10,6 +10,7 @@
 #include "SceCpu.h"
 #include "SceSysroot.h"
 #include "SceSysmem.h"
+#include "SceSysmemGlobalVariables.h"
 #include "SceKernelDmacMgr.h"
 #include "SceKernelSuspend.h"
 

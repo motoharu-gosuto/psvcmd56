@@ -11,6 +11,8 @@
 #include "SceSblGcAuthMgrGlobalConstants.h"
 #include "SceSblGcAuthMgrGlobalVariables.h"
 
+#include "SceSysmemGlobalVariables.h"
+
 //FULLY REVERSED
 
 //initializes cmd56 request packet

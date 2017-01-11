@@ -5,6 +5,8 @@
 
 //globals map
 
+//this map is incomplete
+
 /*
 008B8000 - 16
 008B8004 - 1
@@ -120,3 +122,14 @@
 008BF5FC - 2
 008BF600 - 2
 */
+
+extern int var_009EA004;
+
+struct g_008B8144
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+};
+
+extern g_008B8144* _008B8144;
