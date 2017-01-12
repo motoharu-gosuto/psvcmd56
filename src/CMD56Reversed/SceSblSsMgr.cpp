@@ -91,9 +91,9 @@ int call_dmac(dmac_id id, int cookie, int& R4, locals_B99674* dest)
 
    R4 = R4 & 0x07;
 
-   int R2 = (R4 == 0x03) ? 0x01 : 0x11;
+   int creationMode = (R4 == 0x03) ? MODE_01a599e0_1 : MODE_01a599e0_11; //this selects list creation mode
       
-   int res_1 = SceDmacmgrForDriver_01a599e0(id, dest, R2);
+   int res_1 = SceDmacmgrForDriver_01a599e0(id, dest, creationMode); //this creates list and assigns it to id
    if(res_1 < 0)
       return exit_loc_B9975A(res_1, cookie);
   

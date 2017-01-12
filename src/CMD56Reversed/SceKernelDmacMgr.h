@@ -41,10 +41,16 @@ struct locals_B99674
    char unk_2C[0x40];
 };
 
-int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int unk2);
+#define MODE_01a599e0_0 0x00
+#define MODE_01a599e0_1 0x01
+#define MODE_01a599e0_10 0x10
+#define MODE_01a599e0_11 0x11
+#define MODE_01a599e0_100 0x100
+
+int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int creationMode);
 
 int SceDmacmgrForDriver_543f54cf(dmac_id id);
 
 int SceDmacmgrForDriver_397a917c(dmac_id id, int num, int unk2, int unk3);
 
-int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_167079fc* ptr, int unk2);
+int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_167079fc* ptr, int creationMode);

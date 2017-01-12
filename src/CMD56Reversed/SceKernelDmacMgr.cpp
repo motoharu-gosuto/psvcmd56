@@ -627,9 +627,9 @@ int final_loc_992A56(int r2, result_c8672a3d* var_7C, result_c8672a3d* r6, resul
 
 
 //ctx - root element ?
-//unk2 is 0x01 or 0x11 (in our case it is 0x11)
+//creationMode is 0x01 or 0x11 (in our case it is 0x11)
 //data - input data that is not changed (const modifier) - contains address of buffer that should hold data in the end
-int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
+int sub_992910(result_c8672a3d* ctx, int creationMode, const local_01a599e0* data)
 {
    //this four are used for args
    //int** var_90;
@@ -687,7 +687,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
    if(data == 0) //original condition was strange - BHI (data - 1 + 3)
       return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_2C);
 
-   if(unk2 == 0x10)
+   if(creationMode == MODE_01a599e0_10)
    {
       #pragma region
 
@@ -744,9 +744,9 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
 
       #pragma endregion
    }
-   else if(unk2 > 0x10)
+   else if(creationMode > 0x10)
    {
-      if(unk2 == 0x11)
+      if(creationMode == MODE_01a599e0_11)
       {
          #pragma region
 
@@ -818,7 +818,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
       {
          #pragma region
 
-         if(unk2 != 0x100)
+         if(creationMode != MODE_01a599e0_100)
             return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_2C);
 
          result_c8672a3d* r5 = sub_99214C();
@@ -881,7 +881,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
    }
    else
    {
-      if(unk2 == 0x00)
+      if(creationMode == MODE_01a599e0_0)
       {
          #pragma region
 
@@ -940,7 +940,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
       {
          #pragma region
 
-         if(unk2 != 0x01)
+         if(creationMode != MODE_01a599e0_1)
             return exit_loc_992A7C(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_2C);
 
          result_c8672a3d* r5 = 0x00;
@@ -1005,12 +1005,12 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
 //id is a packed pointer to structure result_c8672a3d* created by SceSysmemForKernel_functor_c8672a3d
 //data is structure - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
 //ptr is 0x00
-//unk2 is 0x01 or 0x11 (in our case it is 0x11)
+//creationMode is 0x01 or 0x11 (in our case it is 0x11)
 
 //most important thing that this procedure does is creating list of items where:
 //ctx->unk_18 - is start pointer
 //ctx->unk_1C - is end pointer
-int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_167079fc* ptr, int unk2)
+int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_167079fc* ptr, int creationMode)
 {
    result_c8672a3d* ctx = SCE_DMAC_UNPACK_ID(id);
 
@@ -1086,7 +1086,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_1
    }
    */
 
-   int res_0 = sub_992910(ctx, unk2, data);
+   int res_0 = sub_992910(ctx, creationMode, data);
    if(res_0 < 0)
    {
       SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
@@ -1112,10 +1112,10 @@ int exit_loc_993152(int r0, int var_24)
 
 //id is a packed pointer to structure result_c8672a3d* created by SceSysmemForKernel_functor_c8672a3d
 //data is structure of size 0x6C - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
-//unk2 is 0x01 or 0x11 (in our case it is 0x11)
+//creationMode is 0x01 or 0x11 (in our case it is 0x11)
 
 //this should construct list of items linked to 2 lists of paddrs and link it to id that is actually pointer to structure
-int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int unk2)
+int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int creationMode)
 {
    int var_48; // TODO: is it used ?
    local_01a599e0 local;
@@ -1144,7 +1144,7 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int unk2
    local.var_1C = (local_01a599e0*)-1; //specify that this element is single element in the list
 
    //construct list of elements and link to id
-   int res_0 = SceDmacmgrForDriver_167079fc(id, &local, 0x00, unk2);
+   int res_0 = SceDmacmgrForDriver_167079fc(id, &local, 0x00, creationMode);
 
    if(res_0 < 0)
       return exit_loc_993152(res_0, var_24);
