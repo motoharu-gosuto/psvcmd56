@@ -53,10 +53,10 @@ struct input_167079fc
 //size can be proven by stack layout used for struct local variable
 struct local_01a599e0
 {
-   void* source_vaddr_00;  // used - var44
-   void* source_paddr_04;  // used - var40
+   void* source_vaddr_00;  // used - var44 - is this can be pointer to result_c8672a3d
+   void* source_paddr_04;  // used - var40 - is this can be pointer to result_c8672a3d
    
-   int size_08;            // used - var3C
+   int size_08;            // used - var3C - this size is used as lockable by SceDmacmgrForDriver_543f54cf
    int flag_0C;            // used - var38
    
    int var_10;             // used - var34 arg_4
@@ -121,7 +121,7 @@ struct result_c8672a3d
 
    local_01a599e0* unk_10; // this should be pointer - set by sub_992288, by sub_992910
    
-   int unk_14; // not sure, can be 0x00
+   int unk_14; // not sure, can be 0x00 - I would assume this is some error state - should be 0x00 if everything is ok
 
    result_c8672a3d* unk_18; // set by sub_992910 - pointer to start of list created by sub_992288
    result_c8672a3d* unk_1C; // is set by sub_992910 - pointer to end of list created by sub_992288
@@ -130,12 +130,12 @@ struct result_c8672a3d
    void* unk_24; // paddr list element - set by sub_992288
 
    int unk_28; // definitely int - used by sub_992288 - size field
-   int unk_2C; // used by sub_992288, by sub_992910. used by SceDmacmgrForDriver_167079fc as lockable int
+   int unk_2C; // used by sub_992288, by sub_992910. used by SceDmacmgrForDriver_167079fc and SceDmacmgrForDriver_543f54cf as lockable int
 
    int unk_30; // used by sub_992288
    void* unk_34; // paddr - is not it SceUID ? - set by sub_992288 but can be wrong?
    
-   short unk_38; // definitely short
+   short unk_38; // definitely short - this is error state flag heavily checked by SceDmacmgrForDriver_543f54cf
    short unk_3A; // definitely short
 
    local_01a599e0* unk_3C; //set by sub_992910 - this is definitely pointer at 

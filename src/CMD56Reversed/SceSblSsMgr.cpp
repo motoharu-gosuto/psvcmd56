@@ -82,7 +82,7 @@ int exit_loc_B9979A(int cookie)
 
 int call_dmac(dmac_id id, int cookie, int& R4, locals_B99674* dest)
 {
-   int res_0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00);
+   int res_0 = SceDmacmgrForDriver_fce4171a(id, 0x13, 0x00); //0x13 is important number - seen it all the way
    if(res_0 < 0)
    {
       SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0x00);

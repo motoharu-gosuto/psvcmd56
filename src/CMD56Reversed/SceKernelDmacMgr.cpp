@@ -1164,6 +1164,8 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int crea
 
 //========================================
 
+//TODO: this types need to be consolidated because they are copy of local_01a599e0 and result_c8672a3d
+
 struct input2_992460_r2
 {
    int unk_0;
@@ -1276,7 +1278,8 @@ struct input1_992460 //looks like to be array or contain array at offset 0
    int unk_10C;
 };
 
-void sub_992460(input1_992460* r0, input2_992460* r1)
+//void sub_992460(input1_992460* r0, input2_992460* r1)
+void sub_992460(local_01a599e0* r0, result_c8672a3d* r1)
 {
    /*
    int r3 = r0->unk_C;
@@ -1407,183 +1410,93 @@ void sub_992460(input1_992460* r0, input2_992460* r1)
 
 //========================================
 
-int exit_loc_99330A(int r4)
-{
-   int r0 = r4;
-   return r0;
-}
-
-int exit_loc_993310()
-{
-   int r4 = SCE_KERNEL_ERROR_INVALID_ARGUMENT;
-   int r0 = r4;
-   return r0;
-}
-
-int exit_loc_993352(int* r6, int r8)
-{
-   int* r0 = r6;
-   int r1 = r8;
-   int r4 = SCE_KERNEL_ERROR_NOT_INITIALIZED;
-   int r0_ret = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A(r4);
-}
-
-int exit_loc_993386(int* r6, int r8)
-{
-   int* r0 = r6;
-   int r1 = r8;
-   int r4 = SCE_KERNEL_ERROR_NOT_SETUP;
-   int r0_ret = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A(r4);
-}
-
-int exit_loc_99331C(int* r6, int r8)
-{
-   int r4 = SCE_KERNEL_ERROR_ALREADY_QUEUED;
-   int* r0 = r6;
-   int r1 = r8;
-   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   int r0_ret = r4;
-   return r0_ret;
-}  
-
-int exit_loc_993364(int* r6, int r8)
-{
-   int* r0 = r6;
-   int r1 = r8;
-   int r4 = SCE_KERNEL_ERROR_TRANSFERRED;
-   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A(r4);
-}
-
-int exit_loc_993340(int* r6, int r8)
-{
-   int* r0 = r6;
-   int r1 = r8;
-   int r4 = SCE_KERNEL_ERROR_CANCELING;
-   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A(r4);
-}
-
-int exit_loc_993302(int r4, int* r6, int r8)
-{
-   int* r0 = r6;
-   int r1 = r8;
-   int r0_res = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   return exit_loc_99330A(r4);
-}
-
-int exit_loc_993376(int* r6, int* r7, int r8)
-{
-   int* r0 = r7;
-   int r4 = SCE_KERNEL_ERROR_NOT_UNDER_CONTROL;
-   int r0_res = SceCpuForDriver_unlock_d6ed0c46(r0);
-   return exit_loc_993302(r4, r6, r8);
-}
-
-int exit_loc_9932FA(int* r6, int* r7, int r8)
-{
-   int* r0 = r7;
-   int r4 = 0;
-   int r0_res = SceCpuForDriver_unlock_d6ed0c46(r0);
-   return exit_loc_993302(r4, r6, r8);
-}
-
-int exit_loc_993332(input1_992460* r5, int* r6, int* r7, int r8)
-{
-   input2_992460* r4 = r5->unk_4;
-   input1_992460* r0 = r5;
-   r5->unk_0 = r4;
-   input2_992460* r1 = r4;
-   sub_992460(r0, r1);
-   return exit_loc_9932FA(r6, r7, r8);
-}
-
-int exit_loc_9932F4()
-{
-   /*
-   int r4 = r3[4];
-   int r3 = r4[0];
-   int r4 = r5[4]; //WHAT?
-   return exit_loc_9932FA();
-   */
-
-   return 0;
-}
-
 int SceDmacmgrForDriver_543f54cf(dmac_id id)
 {
-   /*
-   int r0 = r0 >> 1;
-   int r3 = &_008FE000;
-   int r4 = r0 << 2;
-   int r3 = r3 | 1;
-   int r2 = r4[0x30];
+   result_c8672a3d* r4 = SCE_DMAC_UNPACK_ID(id);
+   int gxor = SCE_DMAC_GXOR(g_008FE000);
+   
+   if(r4->unk_30 != gxor)
+      return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   if(r2 != r3)
-      return exit_loc_993310();
+   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->unk_2C);
+       
+   if((r4->unk_38 << 0x1F) >= 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_NOT_INITIALIZED;
+   }
 
-   int r6 = r4 = 0x2C;
-   int r0 = r6;
-   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
+   // pointer to start of the list must be initialized
+   if(r4->unk_18 == 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_NOT_SETUP;
+   }
 
-   int r3 = r4[0x38];
-   int r8 = r0;
-   int r0 = r3 << 0x1F;
-   if(true) //BPL
-      return exit_loc_993352(r0);
+   if((r4->unk_38 << 0x1C) < 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_ALREADY_QUEUED;
+   }
 
-   int r3 = r4[0x18];
-   if(r3 == 0)
-      return exit_loc_993386();
+   if(r4->unk_14 != 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_ALREADY_QUEUED;
+   }
 
-   int r3 = r4[0x38];
-   int r1 = r3 << 0x1C;
-   if(true) //BMI
-      return exit_loc_99331C();
+   if((r4->unk_38 << 0x1A) < 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_TRANSFERRED;
+   }
 
-   int r3 = r4[0x14];
-   if(r3 != 0)
-      return exit_loc_99331C();
+   if((r4->unk_38 << 0x19) < 0)
+   {
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_CANCELING;
+   }
 
-   int r3 = r4[0x38];
-   int r2 = r3 << 0x1A;
-   if(true) // BMI
-      return exit_loc_993364();
+   local_01a599e0* r5 = r4->unk_10;
+   int res_0 = SceCpuForDriver_lock_bf82deb2(&r5->size_08);
+   if(r5->var_10 == 0)
+   {
+      SceCpuForDriver_unlock_d6ed0c46(&r5->size_08);
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_NOT_UNDER_CONTROL;
+   }
 
-   int r3 = r4[0x38];
-   int r3 = r3 << 0x19;
-   if(true) // BMI
-      return exit_loc_993340();
+   r4->unk_38 = r4->unk_38 | 0x08;
 
-   int r5 = r4[0x10];
-   int r7 = r5 & 8;
-   int r0 = r7;
-   int r0 = SceCpuForDriver_lock_bf82deb2(r0);
-   int r3 = r5[0x10];
-   if(r3 == 0)
-      return exit_loc_993376();
+   if(r5->source_vaddr_00 == 0) //check destination buffer address
+   {
+      r5->source_vaddr_00 = r4;
+      r5->source_paddr_04 = r4;
+      local_01a599e0* r0 = r5;
+      result_c8672a3d* r1 = r4;
 
-   int r2 = r4[0x38];
-   int r3 = r5[0];
-   int r2 = r2 | 8;
-   r4[0x38] = r2;
+      sub_992460(r0, r1);
 
-   if(r3 == 0)
-      return exit_loc_993332();
+      SceCpuForDriver_unlock_d6ed0c46(&r5->size_08);
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return 0;
+   }
 
-   int r3 = r5[4];
-   int r2 = r3[4];
-   if(r2 == 0)
-      return exit_loc_9932F4();
-
-   r2[0] = r4;
-   r4[4] = r2;
-
-   return exit_loc_9932F4();
-   */
-
+   result_c8672a3d* r3 = (result_c8672a3d*)r5->source_paddr_04; //TODO: this is valid cast but need to change type in structure
+   result_c8672a3d* r2 = r3->unk_04; // this cast is correct - check assignment below
+   
+   if(r2 != 0)
+   {
+      r2->unk_00 = r4;
+      r4->unk_04 = r2;
+   }
+      
+   r3->unk_04 = r4;
+   r4->unk_00 = r3;
+   r5->source_paddr_04 = r4;
+   
+   SceCpuForDriver_unlock_d6ed0c46(&r5->size_08);
+   SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
    return 0;
 }
 
