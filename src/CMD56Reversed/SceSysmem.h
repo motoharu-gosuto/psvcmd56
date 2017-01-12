@@ -106,7 +106,8 @@ struct result_c8672a3d
 {
    result_c8672a3d* unk_00;
    result_c8672a3d* unk_04;
-   local_01a599e0* unk_08; //set by sub_992910 and by sub_992288
+
+   const local_01a599e0* unk_08; //set by sub_992910 and by sub_992288
    
    int unk_0C; // definitely int - used by sub_992288 - offset field
 
@@ -114,8 +115,8 @@ struct result_c8672a3d
    
    int unk_14; // not sure, can be 0x00
 
-   result_c8672a3d* unk_18; // set by sub_992910
-   result_c8672a3d* unk_1C; // is set by sub_992910
+   result_c8672a3d* unk_18; // set by sub_992910 - pointer to start of list created by sub_992288
+   result_c8672a3d* unk_1C; // is set by sub_992910 - pointer to end of list created by sub_992288
 
    void* unk_20; // paddr list element - set by sub_992288
    void* unk_24; // paddr list element - set by sub_992288

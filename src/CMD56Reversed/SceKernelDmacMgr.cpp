@@ -265,7 +265,7 @@ int exit_loc_9923E8(result_c8672a3d* r0, result_c8672a3d** end_ptr, int r3)
    return 0;
 }
 
-void update_loc_99239C(local_01a599e0* arg_4, result_c8672a3d* r0, int size, int r9, int& r2)
+void update_loc_99239C(const local_01a599e0* arg_4, result_c8672a3d* r0, int size, int r9, int& r2)
 {
    r0->unk_28 = size;
    r0->unk_30 = arg_4->var_10;
@@ -306,7 +306,7 @@ void update_loc_99239C(local_01a599e0* arg_4, result_c8672a3d* r0, int size, int
 
 //each element of the list is linked with arg_4 (original input arguments with dest buffer vaddr)
 //and with entry in list1 and list2 (which should contain list of physical addresses for vaddr)
-int sub_992288(short unk0, uint32_t size1, addr_pair** list1, uint32_t* size2, addr_pair** list2, local_01a599e0* arg_4, result_c8672a3d** start_ptr, result_c8672a3d** end_ptr)
+int sub_992288(short unk0, uint32_t size1, addr_pair** list1, uint32_t* size2, addr_pair** list2, const local_01a599e0* arg_4, result_c8672a3d** start_ptr, result_c8672a3d** end_ptr)
 {
    int var_38; //some or mask of shorts
    int var_34; //masked size
@@ -493,7 +493,6 @@ int exit_loc_9928F6(int r0, int cookie)
 
 int sub_99289C(void* vaddr, int size, paddr_list_req* result)
 {
-   /*
    addr_pair ap; //var_1C, var_18
    ap.addr = vaddr;
    ap.length = size & (~0xFF000000);
@@ -522,9 +521,6 @@ int sub_99289C(void* vaddr, int size, paddr_list_req* result)
    int ret = res_1 & (res_1 >> 0x31); //AND.W R0, R0, R0,ASR#31
    
    return exit_loc_9928F6(ret, cookie);
-   */
-
-   return 0;
 }
 
 //========================================
@@ -629,7 +625,11 @@ int final_loc_992A56(int r2, result_c8672a3d* var_7C, result_c8672a3d* r6, resul
    return exit_loc_992A7C(0, cookie);
 }
 
-int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
+
+//ctx - root element ?
+//unk2 is 0x01 or 0x11 (in our case it is 0x11)
+//data - input data that is not changed (const modifier) - contains address of buffer that should hold data in the end
+int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
 {
    //this four are used for args
    //int** var_90;
@@ -679,7 +679,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
 
    //-----------------------------
 
-   local_01a599e0* r4 = data;
+   const local_01a599e0* r4 = data;
 
    var_74 = &var_009EA004;
    var_7C = ctx;
@@ -758,6 +758,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
             var_64.output_buffer_size = 0x01;           
             var_64.output_buffer = &var_3C;
 
+            //get list of physical addresses for source_vaddr_00
             int res_0 = sub_99289C(r4->source_vaddr_00, r4->size_08, &var_64);
             if(res_0 < 0)
                return exit_loc_992A7C(res_0, var_2C);
@@ -765,6 +766,7 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
             var_50.output_buffer_size = 0x01;
             var_50.output_buffer = &var_34;
 
+            //get list of physical addresses for source_paddr_04
             int res_1 = sub_99289C(r4->source_paddr_04, r4->size_08, &var_50);
             if(res_1 < 0)
             {
@@ -772,6 +774,10 @@ int sub_992910(result_c8672a3d* ctx, int unk2, local_01a599e0* data)
                return exit_loc_992A7C(res_1, var_2C);
             }
 
+            //construct new list of result_c8672a3d items 
+            //this procedure should take each list of physical addresses and assign each element to newly created result_c8672a3d
+            //this item should also be linked with local_01a599e0
+            //finally all items together are linked into a list where var_6C is the start and var_68 is the end of the list
             int res_2 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
             
             if(var_64.output_buffer_size > 1)
@@ -1016,7 +1022,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
    {
       if(ctx->unk_3A == 0x13)
       {
-         if(ptr->unk_0 != 0x5C)
+         if(ptr->unk_0 != 0x5C) //check structure size ?
          {
             SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
@@ -1024,7 +1030,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
       }
       else
       {
-         if(ptr->unk_0 != 0x0C)
+         if(ptr->unk_0 != 0x0C) //check structure size ?
          {
             SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
