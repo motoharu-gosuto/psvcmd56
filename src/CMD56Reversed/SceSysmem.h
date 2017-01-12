@@ -62,7 +62,7 @@ struct local_01a599e0
    int var_10;             // used - var34 arg_4
    void* paddr_14;         // used - var30
 
-   int var_18;             // used - var2C
+   int var_18;             // used - var2C - this value is actually combination of two short values, shomehow related to length of items in paddr list
    local_01a599e0* var_1C; // used - var28 - this is definitely pointer to next element or -1 value - enumerated by sub_992910
 };
 

@@ -1113,9 +1113,10 @@ int exit_loc_993152(int r0, int var_24)
 //id is a packed pointer to structure result_c8672a3d* created by SceSysmemForKernel_functor_c8672a3d
 //data is structure of size 0x6C - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
 //unk2 is 0x01 or 0x11 (in our case it is 0x11)
-int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
+
+//this should construct list of items linked to 2 lists of paddrs and link it to id that is actually pointer to structure
+int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int unk2)
 {
-   /*
    int var_48; // TODO: is it used ?
    local_01a599e0 local;
    int var_24 = var_009EA004;
@@ -1126,39 +1127,39 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, locals_B99674* data, int unk2)
    result_c8672a3d* ptr_9 = SCE_DMAC_UNPACK_ID(id);
    int gxor = SCE_DMAC_GXOR(g_008FE000);
    
-   if(ptr_9->gxor_30 != gxor)
+   if(ptr_9->unk_30 != gxor)
       return exit_loc_993152(SCE_KERNEL_ERROR_INVALID_ARGUMENT, var_24);
 
    if(ptr_9->unk_3A == 0x13)
    {
-      local.var_34_10 = data->unk_1C;
-      local.paddr_30_14 = data->paddr_20;
+      local.var_10 = data->unk_1C;
+      local.paddr_14 = data->paddr_20;
    }
 
-   local.source_vaddr_44_00 = data->source_vaddr_0;
-   local.source_paddr_40_04 = data->source_paddr_4;
-   local.size_3C_08 = data->size_8;
-   local.flag_38_0C = data->flag_C;
-   local.var_2C_18 = data->unk_10; //TODO: unknown and do not know how it is initialized
-   local.var_28_1C = 0xFFFFFFFF;
+   local.source_vaddr_00 = data->source_vaddr_0;
+   local.source_paddr_04 = data->source_paddr_4;
+   local.size_08 = data->size_8;
+   local.flag_0C = data->flag_C;
+   local.var_18 = data->unk_10; //TODO: unknown and do not know how it is initialized
+   local.var_1C = (local_01a599e0*)-1; //specify that this element is single element in the list
 
+   //construct list of elements and link to id
    int res_0 = SceDmacmgrForDriver_167079fc(id, &local, 0x00, unk2);
 
    if(res_0 < 0)
       return exit_loc_993152(res_0, var_24);
 
+   /*
    if(ptr_9->unk_3A != 0x13)
       ptr_9->unk_28 = data->unk_18;
    else
       ptr_9->unk_28 = (input_167079fc*)&data->unk_1C; //TODO: this is a weird cast. does this mean that input_167079fc is part of structure ?
-
+   
    int bits = (data->unk_14) & (~SCE_DMAC_BITMASK1); // TODO: need to test this
    ptr_9->unk_20 = (void*)(bits | (int)ptr_9->unk_20); //TODO: weird cast again
-
-   return exit_loc_993152(0, var_24);
    */
 
-   return 0;
+   return exit_loc_993152(0, var_24);
 }
 
 //========================================
