@@ -4,15 +4,9 @@
 
 #include "Constants.h"
 
-struct input1_c8672a3d;
+//=========================================================================================
 
-//arg0 is taken from func struct
-//arg1 is initialized internally
-typedef void(func_c8672a3d)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
-
-//arg0 is taken from func struct
-//arg1 is passed by caller function
-typedef void(func_571660aa)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
+struct result_c8672a3d;
 
 struct unk_14_pair_0
 {
@@ -37,8 +31,6 @@ struct result_c8672a3d_14_pair
    int unk_4;
 };
 
-struct result_c8672a3d;
-
 struct result_c8672a3d_10_unk //this is some linked list type
 {
    result_c8672a3d* unk_0;
@@ -56,102 +48,22 @@ struct input_167079fc
    input_167079fc* unk_8;
 };
 
-//----------------------------------------------
-
-/*
-in SceDmacmgrForDriver_167079fc
-  call sub_9921FC(ctx->unk_18, ctx->unk_1C);
-  where unk_18 is temp_r3* and unk_1C* is temp_r6
-  
-in sub_992910 in one of the branches
-  call sub_9921FC(r5, r5);
-  where r5 is result_99214C*
-  it is important that call is done with same variable => type is same
-  
-  if type is same then temp_r3* and temp_r6* are actually same type
-  
-  however there is one more important note
-  I have done so that sub_99214C returns result_99214C*
-  but in reality it returns result_c8672a3d* from SceSysmemForKernel_functor_c8672a3d
-  
-all this means that temp_r3, temp_r6 and result_99214C are all result_c8672a3d
-size of result_99214C is 0x3C and layout is nearly same
-size of temp_r6 is 0x3C and layout is vaguely same
-size of temp_r3 is 0x14 (parts missing) but layout is vaguely same
-*/
 
 //size is 0x20 - DO NOT ADD FIELDS - code depends on sizeof(local_01a599e0)
 //size can be proven by stack layout used for struct local variable
 struct local_01a599e0
 {
-   void* source_vaddr_44_00; // used
-   void* source_paddr_40_04; // used
-   int size_3C_08;           // used
-   int flag_38_0C;           // used
-   int var_34_10;            // used - arg_4
-   void* paddr_30_14;        // used
-   int var_2C_18;            // used
-   local_01a599e0* var_28_1C; // used - looks like pointer to next element in list
-};
-
-//is this a list element ?
-struct result_99214C
-{
-   result_99214C* unk_0; //prev ?
-   result_99214C* unk_4; //next ?
-   local_01a599e0* unk_8;
-   int unk_C;
-
-   local_01a599e0* unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-
-   void* unk_20;
-   void* unk_24;
-   int unk_28;
-   int unk_2C;
-
-   int unk_30;
-   int unk_34;
-   int unk_38;
-   local_01a599e0* unk_3C;
-};
-
-//looks like these types are also result_c8672a3d
-struct temp_r6;
-
-struct temp_r3
-{
-   int unk_0;
-   temp_r6* unk_4;
-   int unk_8;
-   int unk_C;
+   void* source_vaddr_00;  // used - var44
+   void* source_paddr_04;  // used - var40
    
-   int unk_10;
-};
+   int size_08;            // used - var3C
+   int flag_0C;            // used - var38
+   
+   int var_10;             // used - var34 arg_4
+   void* paddr_14;         // used - var30
 
-struct temp_r6
-{
-   temp_r3* unk_0;
-   int unk_4;
-   int unk_8;
-   int unk_C;
-
-   int unk_10;
-   int unk_14;
-   int unk_18;
-   int unk_1C;
-
-   int unk_20;
-   int unk_24;
-   int unk_28;
-   int unk_2C;
-
-   int unk_30;
-   int unk_34;
-   int unk_38;
-   int unk_3C;
+   int var_18;             // used - var2C
+   local_01a599e0* var_1C; // used - var28 - this is definitely pointer to next element or -1 value - enumerated by sub_992910
 };
 
 //check here about physical addresses:
@@ -159,30 +71,79 @@ struct temp_r6
 //A common format used in these requests is a list of physical address and size. This simple structure is defined below. See SceSysmem#get_paddr_list for information on creating this list. 
 //This data format is used when passing large buffers of data to F00D. This is because the memory manager in kernel could allocate contiguous virtual addresses that corresponds to varying physical addresses. 
 
+/*
 struct result_c8672a3d
 {
    result_c8672a3d* unk_00; //linked list prev ?
    result_c8672a3d* unk_04; //linked list next ?
+   //local_01a599e0* unk_08; // not sure about the type, should be result_c8672a3d ?
    int unk_08;
+
    int unk_0C;
-   result_c8672a3d_10_unk* unk_10;  //used
+   //result_c8672a3d_10_unk* unk_10;  //used
+   result_c8672a3d* unk_10;
+
    result_c8672a3d_14_pair* unk_14; //used
 
-   temp_r3* unk_18;
-   temp_r6* unk_1C;
+   result_c8672a3d* unk_18;
+   result_c8672a3d* unk_1C;
    void* unk_20; //used - flags?
-   int unk_24;
-   input_167079fc* unk_28; //used
+   void* unk_24;
+   //input_167079fc* unk_28; //used
+   int unk_28;
    int lockable_int_2C; //some mutex ?
    
    int gxor_30; //(((int)&g_008FE000) | 0x01)
    SceUID eventFlagUid_34;
    short unk_38; //some flag ?
    short unk_3A;
-   int unk_3C;   
+   //local_01a599e0* unk_3C; // not sure about the type, should be result_c8672a3d ?
+   result_c8672a3d* unk_3C;
+};
+*/
+
+struct result_c8672a3d
+{
+   result_c8672a3d* unk_00;
+   result_c8672a3d* unk_04;
+   local_01a599e0* unk_08; //set by sub_992910 and by sub_992288
+   
+   int unk_0C; // definitely int - used by sub_992288 - offset field
+
+   local_01a599e0* unk_10; // this should be pointer - set by sub_992288, by sub_992910
+   
+   int unk_14; // not sure, can be 0x00
+
+   result_c8672a3d* unk_18; // set by sub_992910
+   result_c8672a3d* unk_1C; // is set by sub_992910
+
+   void* unk_20; // paddr list element - set by sub_992288
+   void* unk_24; // paddr list element - set by sub_992288
+
+   int unk_28; // definitely int - used by sub_992288 - size field
+   int unk_2C; // used by sub_992288, by sub_992910
+
+   int unk_30; // used by sub_992288
+   void* unk_34; // paddr - is not it SceUID ? - set by sub_992288 but can be wrong?
+   
+   short unk_38; // definitely short
+   short unk_3A; // definitely short
+
+   local_01a599e0* unk_3C; //set by sub_992910 - this is definitely pointer at 
+                           //least because it is initialized by sub_992288 with -1 value
 };
 
-//----------------------------------------------
+//=========================================================================================
+
+struct input1_c8672a3d;
+
+//arg0 is taken from func struct
+//arg1 is initialized internally
+typedef void(func_c8672a3d)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
+
+//arg0 is taken from func struct
+//arg1 is passed by caller function
+typedef void(func_571660aa)(int arg_0, input1_c8672a3d* ctx, int arg_1, void* retAddr);
 
 struct func_pair_c8672a3d
 {
