@@ -269,7 +269,9 @@ void update_loc_99239C(const local_01a599e0* arg_4, result_c8672a3d* r0, int siz
 {
    r0->unk_28 = size;
    r0->unk_30 = arg_4->var_10;
-   r0->unk_34 = arg_4->paddr_14;
+   /*
+   r0->unk_34 = arg_4->paddr_14; //TODO: fix field
+   */
     
    r2 = arg_4->flag_0C;
   
@@ -1502,182 +1504,98 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id)
 
 //========================================
 
-int exit_loc_993846(int r0)
+int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
 {
-   return r0;
-}
+   result_c8672a3d* r4 = SCE_DMAC_UNPACK_ID(id);
+   int gxor = SCE_DMAC_GXOR(g_008FE000);
 
-int exit_loc_993840()
-{
-   int r0 = SCE_KERNEL_ERROR_INVALID_ARGUMENT;
-   return exit_loc_993846(r0);
-}
+   int r7 = r4->unk_30;
 
-int exit_loc_9938DC(int* r5, int r1)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r5, r1);
-   return exit_loc_993846(SCE_KERNEL_ERROR_NOT_INITIALIZED);
-}
+   if(r7 != gxor)
+      return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-int exit_loc_9938BC(int* r5, int r1)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r5, r1);
-   return exit_loc_993846(SCE_KERNEL_ERROR_NOT_SETUP);
-}
+   int var_2C = unk2;
 
-int exit_loc_9938CC(int* r5, int r1)
-{
-   SceCpuForDriver_unlock_int_7bb9d5df(r5, r1);
-   return exit_loc_993846(SCE_KERNEL_ERROR_CANCELING);
-}
+   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->unk_2C);
 
-int SceDmacmgrForDriver_397a917c(dmac_id id, int num, int unk2, int unk3)
-{
-   /*
-
-   int var_38;
-   int var_2C;
-
-   int r0 = r0 >> 1;
-   int r5 = _008FE000;
-   int r4 = r0 << 2;
-   int r5 = r5 | 1;
-   int r7 = r4[0x30];
-   var_2C = r2;
-   int r6 = r1;
-   int r9 = r3;
-   if(r7 != r5)
-      return exit_loc_993840(); //invalid flags
-
-   int r5 = r4 + 0x2C;
-   int r0 = r5;
-   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
-   int r3 = r4[0x38];
-   int r1 = r0;
-   int r2 = r3 << 0x1F;
-   if(r2 >=0 )
-      return exit_loc_9938DC(); // not initialized
-
-   int r3 = r4[0x18];
-   if(r3 == 0)
+   if((r4->unk_38 << 0x1F) >= 0)
    {
-      int r3 = r4[0x14];
-      if(r3 == 0)
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_NOT_INITIALIZED;
+   }
+
+   if(r4->unk_18 == 0)
+   {
+      if(r4->unk_14 == 0)
       {
-         int r3 = r4[0x38];
-         int r3 = r3 << 0x1A;
-         if(r3 >=0 )
-            return exit_loc_9938BC(); //not setup
+         if(((r4->unk_38) << 0x1A) >= 0)
+         {
+            SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+            return SCE_KERNEL_ERROR_NOT_SETUP;
+         }
       }
    }
 
-   //loc_993812:
-   short r8 = r4[0x38];
-   int r8 = r8 & 0x40;
-   if(r8 != 0)
-      return exit_loc_9938CC();
+   int r8 = (r4->unk_38 & 0x40);
 
-   short r3 = r4[0x38];
-   int r0 = r5;
-   int r10 = r4[0x34];
-   int r11 = r3;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-   if(r6 == 2)
+   if(r8 != 0)
    {
-      var_38 = r8;
-      int r0 = r10;
-      int r3 = r8;
-      //goto loc_993854
+      SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+      return SCE_KERNEL_ERROR_CANCELING;
+   }
+
+   SceUID r10 = r4->unk_34;
+   int r11 = r4->unk_38;
+
+   SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
+
+   if(mode == MODE_397a917c_2)
+   {
+      //TODO: fix call
+      int res_0 = 0; //SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(r10, 0x01, SCE_EVENT_WAIT_5, r8, r8);
+      if(res_0 < 0)
+         return res_0;
    }
    else
    {
-      if(r6 == 3)
+      if(mode == MODE_397a917c_3)
       {
-         int r0 = r10;
-         int r3 = r8;
-         int r2 = &var_2C;
-         var_38 = r2;
-         //goto loc_993854
+         //TODO: fix call
+         int res_0 = 0; //SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(r10, 0x01, SCE_EVENT_WAIT_5, &var_2C, r8, &var_2C);
+         if(res_0 < 0)
+            return res_0;
       }
       else
       {
-         if(r6 == 1)
+         if(mode == MODE_397a917c_1)
          {
-            int temp_tst =  r11 & 0x20; //r11 is not touched
-            if(temp_tst == 0) //not sure
-               int r0 = r6;
+            if((r11 & 0x20) == 0)
+               return 1;
 
-            if(temp_tst == 0)
-            {
-               return exit_loc_993846(r0);
-            }
-            else
-            {
-               SceUID r0 = r10;
-               int r1 = r6;
-               unsigned int* r3 = r8;
-               int r2 = SCE_EVENT_WAIT_5;
-               int r0 = SceThreadmgrForDriver_ksceKernelPollEventFlag_76c6555b(r0, r1, r2, r3);
-               if(r0 >= 0)
-               {
-                  //goto loc_993860
-               }
-               else
-               {
-                  return exit_loc_993846(r0);
-               }
-            }
+            //TODO: fix call
+            int res_0 = 0; //SceThreadmgrForDriver_ksceKernelPollEventFlag_76c6555b(r10, 0x01, SCE_EVENT_WAIT_5, r8);
+            
+            if(res_0 < 0)
+               return res_0;
          }
          else
          {
-            return exit_loc_993840();
+            return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
          }
       }
    }
 
-   //loc_993854:
+   if(unk3 == 0)
+      return 0;
+
+   prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->unk_2C);
+
+   if(r7 == r4->unk_30)
    {
-      int r1 = 1;
-      int r2 = SCE_EVENT_WAIT_5;
-      int r0 = SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(r0, r1, r2, r3, ?);
-      if(r0 == 0)
-      {
-         return exit_loc_993846(r0);
-      }
-      else
-      {
-         //goto loc_993860
-      }
+      (*unk3) = r4->unk_24; //paddr list end
    }
 
-   //loc_993860:
-   {
-      int r0 = r9;
-      if(r9 == 0)
-      {
-         return exit_loc_993846(r0);
-      }
-      else
-      {
-         int r0 = r5;
-         int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
-         int r3 = r4[0x30];
-         int r1 = r0;
-         int r0 = r5;
-
-         if(r7 == r3)
-         {
-            int r3 = r4[0x24];
-            r9[0x00] = r3;
-         }
-
-         int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
-         int r0 = 0;
-         return r0;
-      }
-   }
-
-   */
+   SceCpuForDriver_unlock_int_7bb9d5df(&r4->unk_2C, prev_state);
 
    return 0;
 }

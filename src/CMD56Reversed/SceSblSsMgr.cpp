@@ -97,13 +97,13 @@ int call_dmac(dmac_id id, int cookie, int& R4, locals_B99674* dest)
    if(res_1 < 0)
       return exit_loc_B9975A(res_1, cookie);
   
-   int res_2 = SceDmacmgrForDriver_543f54cf(id);
+   int res_2 = SceDmacmgrForDriver_543f54cf(id); //do some validation of id structure including created list
    if(res_2 < 0)
       return exit_loc_B9975A(res_2, cookie);
 
    SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615();
 
-   int res_3 = SceDmacmgrForDriver_397a917c(id, 0x02, 0x00, 0x00);
+   int res_3 = SceDmacmgrForDriver_397a917c(id, MODE_397a917c_2, 0x00, 0x00); // wait / poll event flags
 
    SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7();
 

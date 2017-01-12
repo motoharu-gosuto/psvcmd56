@@ -60,7 +60,7 @@ struct local_01a599e0
    int flag_0C;            // used - var38
    
    int var_10;             // used - var34 arg_4
-   void* paddr_14;         // used - var30
+   void* paddr_14;         // used - var30 - uid ?
 
    int var_18;             // used - var2C - this value is actually combination of two short values, shomehow related to length of items in paddr list
    local_01a599e0* var_1C; // used - var28 - this is definitely pointer to next element or -1 value - enumerated by sub_992910
@@ -130,10 +130,12 @@ struct result_c8672a3d
    void* unk_24; // paddr list element - set by sub_992288
 
    int unk_28; // definitely int - used by sub_992288 - size field
-   int unk_2C; // used by sub_992288, by sub_992910. used by SceDmacmgrForDriver_167079fc and SceDmacmgrForDriver_543f54cf as lockable int
+   int unk_2C; // used by sub_992288, by sub_992910. used by SceDmacmgrForDriver_167079fc and 
+               //                                            SceDmacmgrForDriver_543f54cf and 
+               //                                            SceDmacmgrForDriver_397a917c as lockable int
 
    int unk_30; // used by sub_992288
-   void* unk_34; // paddr - is not it SceUID ? - set by sub_992288 but can be wrong?
+   SceUID unk_34; // paddr - is not it SceUID ? - set by sub_992288 but can be wrong? - proved by SceDmacmgrForDriver_397a917c that it is UID
    
    short unk_38; // definitely short - this is error state flag heavily checked by SceDmacmgrForDriver_543f54cf
    short unk_3A; // definitely short

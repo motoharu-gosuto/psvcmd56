@@ -51,6 +51,10 @@ int SceDmacmgrForDriver_01a599e0(dmac_id id, const locals_B99674* data, int crea
 
 int SceDmacmgrForDriver_543f54cf(dmac_id id);
 
-int SceDmacmgrForDriver_397a917c(dmac_id id, int num, int unk2, int unk3);
+#define MODE_397a917c_1 0x01
+#define MODE_397a917c_2 0x02
+#define MODE_397a917c_3 0x03
+
+int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3);
 
 int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_167079fc* ptr, int creationMode);
