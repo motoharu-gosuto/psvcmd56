@@ -1006,17 +1006,20 @@ int sub_992910(result_c8672a3d* ctx, int unk2, const local_01a599e0* data)
 //data is structure - it contains pointer to a buffer that will be copied as a key later in SblGcAuthMgr
 //ptr is 0x00
 //unk2 is 0x01 or 0x11 (in our case it is 0x11)
-int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079fc* ptr, int unk2)
+
+//most important thing that this procedure does is creating list of items where:
+//ctx->unk_18 - is start pointer
+//ctx->unk_1C - is end pointer
+int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_167079fc* ptr, int unk2)
 {
-   /*
    result_c8672a3d* ctx = SCE_DMAC_UNPACK_ID(id);
 
    int gxor = SCE_DMAC_GXOR(g_008FE000);
    
-   if(ctx->gxor_30 != gxor)
+   if(ctx->unk_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&ctx->lockable_int_2C);
+   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&ctx->unk_2C);
    
    if(ptr != 0)
    {
@@ -1024,7 +1027,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
       {
          if(ptr->unk_0 != 0x5C) //check structure size ?
          {
-            SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+            SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
          }
       }
@@ -1032,7 +1035,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
       {
          if(ptr->unk_0 != 0x0C) //check structure size ?
          {
-            SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+            SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
          }
       }
@@ -1040,35 +1043,38 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
 
    if((ctx->unk_38 << 0x1F) >= 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
    if(((ctx->unk_38) << 0x1C) < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
    if(ctx->unk_14 != 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
    if((ctx->unk_38 << 0x19) < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_CANCELING;
    }
 
    if(ctx->unk_18 != 0)
       sub_9921FC(ctx->unk_18, ctx->unk_1C);
 
-   ctx->unk_18 = 0x00;
-   ctx->unk_1C = 0x00;
+   ctx->unk_18 = 0x00; //this is pointer to the start of the list that will be created
+   ctx->unk_1C = 0x00; //this is pointer to the end of the list that will be created
+
    ctx->unk_20 = (void*)SCE_DMAC_BITMASK1;
 
+   //TODO: this part is weird, commented it out for now - in our case this condition is not triggered anyway
+   /*
    if(ptr != 0)
    {
       ctx->unk_20 = ptr->unk_4 | SCE_DMAC_BITMASK2 | 0x40000;
@@ -1078,18 +1084,19 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, local_01a599e0* data, input_167079f
       else
          ctx->unk_28 = ptr->unk_8;
    }
+   */
 
    int res_0 = sub_992910(ctx, unk2, data);
    if(res_0 < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
+      SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
       return res_0;      
    }
 
    ctx->unk_38 = 0xFFDF & ctx->unk_38;
 
-   SceCpuForDriver_unlock_int_7bb9d5df(&ctx->lockable_int_2C, prev_state);
-   */
+   SceCpuForDriver_unlock_int_7bb9d5df(&ctx->unk_2C, prev_state);
+   
    return 0;
 }
 

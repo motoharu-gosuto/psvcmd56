@@ -102,6 +102,14 @@ struct result_c8672a3d
 };
 */
 
+//This is important!
+//I may assume that in root element that is created by SceDmacmgrForDriver_167079fc some fields may be used differently ?
+//Other procedures also apply
+//for examle there are some problems with unk_34 which is used as pointer or as uid
+//not sure about unk_30 - can be used as gxor or smth else ? is it a THUMB pointer ?
+//field unk_28 can be used as a size, or as a pointer to input_167079fc
+//field unk_20 can be used as paddr list element or some other value like 7FC0000
+
 struct result_c8672a3d
 {
    result_c8672a3d* unk_00;
@@ -122,7 +130,7 @@ struct result_c8672a3d
    void* unk_24; // paddr list element - set by sub_992288
 
    int unk_28; // definitely int - used by sub_992288 - size field
-   int unk_2C; // used by sub_992288, by sub_992910
+   int unk_2C; // used by sub_992288, by sub_992910. used by SceDmacmgrForDriver_167079fc as lockable int
 
    int unk_30; // used by sub_992288
    void* unk_34; // paddr - is not it SceUID ? - set by sub_992288 but can be wrong?
