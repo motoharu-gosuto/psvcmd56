@@ -592,7 +592,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
       return exit_loc_CACAA8(var24);
 
    if(source != 0)
-      SceSysclibForDriver_memcpy_assert_8a0b0815(ctx.data, source, size, 0x80C); //debug memcpy
+      SceSysclibForDriver_memcpy_assert_8a0b0815(ctx.data, source, size, 0x80C); //debug memcpy - 0x800 buffer + 3 fields of size 0x0C
 
    int res0 = SceSysrootForKernel_f10ab792(0, &state); //modify state structure
    if(res0 < 0)

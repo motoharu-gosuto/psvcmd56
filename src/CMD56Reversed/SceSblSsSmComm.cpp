@@ -72,6 +72,17 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int mode, int* e
       break;
    }
 
+   //more imitations
+   smc_133_input in;
+   in.size = 0x40 + size;
+   in.mode = mode;
+   in.smcArg0 = 0x00;
+   in.unk = 0x00;
+
+   memcpy(&in.data, ctx, 0x814);
+
+   SceSblSmSchedProxyForKernel_smc_133_723b382f(&in, 1, &in);
+
    return 0;
 }
 
