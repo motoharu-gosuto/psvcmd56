@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Constants.h"
+
 //there is new information about SMC services on Vita at xyz wiki:
 //https://wiki.henkaku.xyz/vita/F00D_Processor
 
@@ -33,11 +35,42 @@ struct input_1916509b
 //smcArg3 is element ptr in the array of elements of size 0x80
 int SceSblSmSchedProxyForKernel_smc_12D_1916509b(int smcArg0, int smcArg1, int smcArg2, input_1916509b* unk3);
 
-struct input_723b382f
+//TODO: there should be some info about this structure in wiki
+struct context_db9fc204
 {
-   int unk_0;
-   int unk_4;
-   int smcArg0;
+   //this is a structure of size 0x814
+
+   int var838;
+   int command; //var834
+   char data[0x800]; //var830
+   int packet6_de; //var30
+   int size; //var2C
+   int var28;
+};
+
+struct smc_133_input
+{
+   SceSize size; //0x40 + 0x814
+   int mode; //for example 1000B
+   int smcArg0; // or error state
+   int unk; // is 0
+
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+
+   int unk_20;
+   int unk_24;
+   int unk_28;
+   int unk_2C;
+
+   int unk_30;
+   int unk_34;
+   int unk_38;
+   int unk_3C;
+
+   context_db9fc204 data; //request / response area
 };
 
 //wrapper for a 133 smc call
@@ -45,7 +78,7 @@ struct input_723b382f
 
 //smcArg0 is taken from input structure
 //smcArg3 is 0
-int SceSblSmSchedProxyForKernel_smc_133_723b382f(input_723b382f* ptr, int smcArg1, int smcArg2);
+int SceSblSmSchedProxyForKernel_smc_133_723b382f(smc_133_input* vaddr, int smcArg1_num, smc_133_input* smcArg2_paddr);
 
 struct input_8b84ac2a
 {

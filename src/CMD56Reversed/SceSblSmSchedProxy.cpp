@@ -5,7 +5,7 @@ int SceSblSmSchedProxyForKernel_1916509b(int smcArg0, int smcArg1, int smcArg2, 
    return 0;
 }
 
-int SceSblSmSchedProxyForKernel_723b382f(input_723b382f* ptr, int smcArg1, int smcArg2)
+int SceSblSmSchedProxyForKernel_723b382f(smc_133_input* vaddr, int smcArg1_num, smc_133_input* smcArg2_paddr)
 {
    return 0;
 }

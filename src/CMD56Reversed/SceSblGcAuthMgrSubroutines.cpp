@@ -271,7 +271,7 @@ int sub_CAC8C0(int* var97C, std::pair<int, int>* arg1)
    {
       arg1->first = -1;
       arg1->second = -1;
-      return SceSblSmCommForKernel_0631f8ed(*var97C);
+      return SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(*var97C);
    }
    else
    {
@@ -570,14 +570,16 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 int sub_CAC924(char* destination, char* source, int command, int size, int packet6_de)
 {
    int var97C = -1; //trigger for some cleanup on exit?
-   int var978 = 0x00;
+   int var978 = 0x00; // error state
 
-   f10ab792_input state;
+   input_f10ab792 state;
    state.size = 0x0C; //must be 0xC
    state.unk_4_var970 = 0x00;
    state.unk_8_var96C = 0x00;
 
-   _039c73b1_context ctx;
+   char var968[0x130]; // two structures of size ox98 ?
+
+   context_db9fc204 ctx;
    ctx.var838 = 0x01;
    ctx.command = command;
    ctx.packet6_de = packet6_de;
@@ -596,20 +598,20 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    if(res0 < 0)
       return exit_loc_CACAB2(&var97C, var24);
 
-   memset(ctx.var968, 0x00, 0x130);
+   memset(var968, 0x00, 0x130);
 
-   memcpy(ctx.var968 + 8, dword_CADC10, 0x90); //store to var960
+   memcpy(var968 + 8, dword_CADC10, 0x90); //store to var960
 
-   ctx.var968[0x04] = 0x02;
-   ctx.var968[0x128] = 0x02;
+   var968[0x04] = 0x02;
+   var968[0x128] = 0x02;
 
    //it is important that arg1 and arg2 are initialized by imp_f10ab792
    //TODO: it is proved by many factors that this procedure shrinks the data and changes ctx.size field to the required size in sub_CAC924_command
-   int res1 = SceSblSmCommForKernel_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, &ctx, &var97C);
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStartSm_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, var968, &var97C);
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   int res2 = SceSblSmCommForKernel_db9fc204(var97C, GC_AUTH_MODE_1000B, &var978, &ctx.var838, 0x814);
+   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GC_AUTH_MODE_1000B, &var978, &ctx, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 

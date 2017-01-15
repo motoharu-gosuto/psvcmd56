@@ -23,7 +23,7 @@ char  _00BDD018[0x34]; // it is very important that this buffer is of size 0x34
                        // data would overflow to the _00BDD04C
                        // together with the fact that condition in sub_CAC924 for command 0x20 
                        // demands that the size is 0x34 
-                       // it proves that SceSblGcAuthMgr_SceSblSmCommForKernel_imp_039c73b1 procedure
+                       // it proves that SceSblGcAuthMgr_SceSblSmCommForKernel_imp_sceSblSmCommStartSm_039c73b1 procedure
                        // changes size of data and the corresponding field in the structure
                        // size is proved by SceSblGcAuthMgrDrmBBForDriver_bb451e83
 char  _00BDD04C_RESPBUF1[0x200]; // first response buffer

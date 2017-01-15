@@ -2,6 +2,8 @@
 
 #include "SceSblSsSmComm.h"
 
+#include "Constants.h"
+
 // =============================
 
 int sub_B86218()
@@ -22,10 +24,23 @@ int sub_B864A8()
    return 0;
 }
 
-//assume - init
-int SceSblSmCommForKernel_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_context* ctx, int* unk1)
+memory_block_data_entry g_B85010[0x20]; //there are 0x20 entries in SceSblSsSmComm module
+
+int SceSblSmCommForKernel_sceSblSmCommStartSm_039c73b1(int r0, int r1, int r2, int r3, char* ctx, int* id)
 {
    //many calls and subroutines
+
+   
+
+   return 0;
+}
+
+// =============================
+
+
+int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int mode, int* err_state, context_db9fc204* ctx, int size)
+{
+   //many globals, functionality is simplier
 
    //TODO: imitating size change and encryption - need to figure out what is going on here
 
@@ -58,24 +73,12 @@ int SceSblSmCommForKernel_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_con
    }
 
    return 0;
-
-   
 }
 
 // =============================
 
-//assume - gen/hash
-int SceSblSmCommForKernel_db9fc204(int r0, int r1, int* r2, int* r3, int unk0)
-{
-   //many globals, functionality is simplier
 
-   return 0;
-}
-
-// =============================
-
-//assume - deinit
-int SceSblSmCommForKernel_0631f8ed(int unk)
+int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id)
 {
    
    return 0;

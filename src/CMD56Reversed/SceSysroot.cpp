@@ -269,7 +269,7 @@ _8BF5F8_global_1 _8BF5F8_g1;
 _8BF5F8_global_0 _8BF5F8_g0;
 
 //modifies input arg1
-int SceSysrootForKernel_f10ab792(int arg0, f10ab792_input* arg1)
+int SceSysrootForKernel_f10ab792(int arg0, input_f10ab792* arg1)
 {
    if(arg0 > 2) // looks like there can be only 3 elements in the array
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;

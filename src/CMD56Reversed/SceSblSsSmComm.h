@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SceSblSmSchedProxy.h"
+
 //I used documentation from this source to clarify lots of things about gc commands
 //https://wiki.henkaku.xyz/vita/F00D_Commands
 
@@ -15,18 +17,6 @@
 
 //more things about KIRK from Proxima
 //http://wololo.net/talk/viewtopic.php?f=6&t=7224
-
-//TODO: there should be some info about this structure in wiki
-struct _039c73b1_context
-{
-   char var968[0x130];
-   int var838;
-   int command; //var834
-   char data[0x800]; //var830
-   int packet6_de; //var30
-   int size; //var2C
-   int var28;
-};
 
 //it turned out that these commands are documented in xyz wiki:
 //https://wiki.henkaku.xyz/vita/F00D_Commands
@@ -165,11 +155,16 @@ struct _039c73b1_context
 //They are related to interrupt 0xC8
 //Which stands for 'SceSblSmSchedCry2Arm0'
 
-//assume - init
-int SceSblSmCommForKernel_039c73b1(int r0, int r1, int r2, int r3, _039c73b1_context* ctx, int* unk1);
+struct memory_block_data_entry
+{
+   smc_133_input* ptr; //this will be used as input to db9fc204
+   int unk;
+   SceUID mid; //memory block id
+   SceUID eid; //event flag id
+};
 
-//assume - encrypt
-int SceSblSmCommForKernel_db9fc204(int r0, int r1, int* r2, int* r3, int unk0);
+int SceSblSmCommForKernel_sceSblSmCommStartSm_039c73b1(int r0, int r1, int r2, int r3, char* ctx, int* id);
 
-//assume - deinit
-int SceSblSmCommForKernel_0631f8ed(int unk);
+int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int mode, int* err_state, context_db9fc204* ctx, int size);
+
+int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id);
