@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "Constants.h"
+#include "SceSysmemGlobalVariables.h"
 
 #include "SceSdif.h"
 #include "SceSdifGlobalVariables.h"
@@ -16,7 +17,7 @@
 //get context from array
 sd_context_part* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index)
 {
-   return _C78040_CTX_ARRAY[sd_ctx_index].ctx_data.ctx;
+   return var_00C78040[sd_ctx_index].ctx_data.ctx;
 }
 
 //initialize sd card
@@ -93,6 +94,40 @@ int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part* ctx, char* buff
 
 int SceSdifForDriver_init_0eb0ef86()
 {
+   /*
+   int var_A0;
+   int var_A4;
+   int var_AC;
+   int var_2C;
+   int var_9C;
+
+   int r7 = &var_009EA004;
+   int r10 = &PADDR_SceSdif3_00C72C9C;
+   int r3 = *r7;
+
+   var_A0 = r7;
+   int r7 = &PADDR_SceSdif0_00C72C90;
+   int r6 = 0;
+   var_AC = r7;
+   int r7 = &dword_C72FA8;
+   int r0 = &00C78040;
+   var_A4 = r7;
+   int r7 = &00C78004;
+   int r1 = r6;
+   int r2 = 6E40; // 24C0 * 3
+   int r10 = &PADDR_SceSdif3_00C72C9C;
+   int r4 = &00C7A4D4;
+   var_2C = r3;
+   var_9C = r7;
+   memset(r0, r1, r2);
+
+   int r3 = 3;
+   *r7 = r3;
+
+   //loc_C68942:
+   */
+
+
    return 0;
 }
 
