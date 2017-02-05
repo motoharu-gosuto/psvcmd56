@@ -10,9 +10,12 @@
 
 #include "SceSblGcAuthMgr.h"
 #include "SceSysroot.h"
+#include "SceSdif.h"
 
 int main(int argc, char* argv[])
 {
+   SceSdif_module_start_935cd196();
+
    SceSblGcAuthMgr_InitializeContext();
    SceSysroot_InitializeContext();
 

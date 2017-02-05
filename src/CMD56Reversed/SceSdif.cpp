@@ -14,6 +14,8 @@
 
 #include "SceSdifResponsePackets.h"
 
+#include "SceSysmem.h"
+
 //get context from array
 sd_context_part* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index)
 {
@@ -124,6 +126,19 @@ void init_intr_opts()
    intr_opt2_00C72F50.unk_24 = 0;
 }
 
+void init_constants()
+{
+   var_00C72C90[0] = PADDR_SceSdif0_00C72C90;
+   var_00C72C90[1] = PADDR_SceSdif1_00C72C94;
+   var_00C72C90[2] = PADDR_SceSdif2_00C72C98;
+   var_00C72C90[3] = PADDR_SceSdif3_00C72C9C;
+
+   var_00C72CA0[0] = aScesdif0_00C72F78;
+   var_00C72CA0[1] = aScesdif1_00C72F84;
+   var_00C72CA0[2] = aScesdif2_00C72F90;
+   var_00C72CA0[3] = aScesdif3_00C72F9C;
+}
+
 int SceSdifForDriver_init_0eb0ef86()
 {
    init_intr_opts();
@@ -131,24 +146,83 @@ int SceSdifForDriver_init_0eb0ef86()
    int* var_A0;
    reg_intr_opt* var_A4;
    void** var_AC;
+   sd_context_global* ctx_B0;
    uint32_t* var_9C;
+   SceKernelAllocMemBlockKernelOpt opt_ptr_84;
+
+
    int var_2C = var_009EA004; //cookie
 
    var_A0 = &var_009EA004;
-   var_AC = &PADDR_SceSdif0_00C72C90;
+   var_AC = &var_00C72C90[0];
    var_A4 = &intr_opt_C72FA8;
    var_9C = &var_00C78000.max_array_index;
 
    memset(&var_00C78040[0], 0, sizeof(sd_context_global) * 3); // clear 0x6E40 = 24C0 * 3
 
-   void** r10 = &PADDR_SceSdif3_00C72C9C;
+   char** r10 = &var_00C72CA0[0];
    char* r4 = (char*)(&var_00C78040[0]) + 0x2480 + 0x14 ; // var_00C78040 + 0x2480 + 0x14 = C7A4D4
    
    var_00C78000.max_array_index = 3;
 
+   uint32_t* r7 = &var_00C78000.max_array_index;
+
+   int r6 = 0;
    int r3 = 3;
 
    //loc_C68942:
+
+   char* r8 = (*r10)++; //this is a bit different in original code (preincrement and not post increment)
+
+   void** r7;
+   if(r6 <= 3)
+   {
+      r7 = var_AC; //pointer to physical address
+   }
+
+   sd_context_global* r3 = r4 - 0x2480 - 0x14;  // get current context global
+
+   r4[-0x74] = r6; //store current index
+   int r0 = ;
+
+   void* r11 = r7[r6]; //get current paddr
+   int r7 = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
+   
+   if(r6 > 3)
+   {
+      r11 = 0;
+   }
+
+   ctx_B0 = r3; // store current context global
+
+   int r9 = 2;
+
+   memset(&opt_ptr_84, 0, sizeof(SceKernelAllocMemBlockKernelOpt));
+
+   int r1 = 0x201000806;
+
+   if(r6 <= 3)
+   {
+      int r2 = 0x1000;
+   }
+   else
+   {
+      int r2 = 0;
+   }
+   
+   SceKernelAllocMemBlockKernelOpt* r3 = &opt_ptr_84;
+
+   int r0 = r8;
+   opt_ptr_84.size = r7;
+   var_74 = r11; //field of opt ?
+   var_7C = r9; //field of opt ?
+   int r0 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r0, r1, r2, r3);
+   int r3 = r0 - 0;
+
+   if(r3 < 0)
+   {
+      //goto loc_C68B4A
+   }
 
    return 0;
 }
