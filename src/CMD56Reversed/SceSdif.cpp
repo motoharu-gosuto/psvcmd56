@@ -105,6 +105,11 @@ int callback_00C68001(int code, int unk)
    return 0;
 }
 
+int callback_interrupt_handler_DC_DD_DE_C68FF8(int unk, void* userCtx)
+{
+   return 0;
+}
+
 void init_intr_opts()
 {
    intr_opt_C72FA8.size = 0x14;
@@ -231,16 +236,29 @@ int exit_loc_C68BA8(int r0, int r6, uint32_t* r11, int cookie_2C, sd_context_glo
    return exit_loc_C68ACA(r11, r6, r0, cookie_2C, ctx_B0);
 }     
 
+int exit_loc_C68ABE(uint32_t* r4, int r6, int r11, int cookie_2C, sd_context_global* ctx_B0)
+{
+   SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(ctx_B0->ctx_data.evid_40);
+   return exit_loc_C68ACA(r4, r6, r11, cookie_2C, ctx_B0);
+}
+
+int exit_loc_C68BAE(int r3, int r6, uint32_t* r11, int cookie_2C, sd_context_global* ctx_B0)
+{
+   return exit_loc_C68ABE(r11, r6, r3, cookie_2C, ctx_B0);
+}
+
 int SceSdifForDriver_init_0eb0ef86()
 {
    init_intr_opts();
    
-   int* var_A0;
-   reg_intr_opt* var_A4;
-   void** var_AC;
    sd_context_global* ctx_B0;
+   void** var_AC;
+   int code_A8;
+   reg_intr_opt* var_A4;
+   int* var_A0;
    uint32_t* var_9C;
    void* base_98;
+
    SceKernelAllocMemBlockKernelOpt opt_ptr_84;
    
 
@@ -317,8 +335,14 @@ int SceSdifForDriver_init_0eb0ef86()
    if(evid < 0)
       return exit_loc_C68BA8(evid, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0);
 
-
+   code_A8 = curr_gc->ctx_data.array_idx + INTR_CODE_SceSdif0; //[R4,#-0x74]
    
+   int res1 = SceIntrmgrForDriver_register_interrupt_5c1feb29(code_A8, r8, 0, callback_interrupt_handler_DC_DD_DE_C68FF8, ctx_B0, 0x80, 0xF, var_A4);
+   if(res1 < 0)
+      return exit_loc_C68BAE(res1, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0);
+
+   //init core
+   //5 more code chunks
 
    return 0;
 }
