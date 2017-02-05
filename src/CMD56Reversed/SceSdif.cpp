@@ -140,6 +140,8 @@ void init_constants()
    var_00C72CA0[3] = aScesdif3_00C72F9C;
 }
 
+//------------------------
+
 int exit_loc_C68B38(int r8, int cookie_2C)
 {
    if(cookie_2C == var_009EA004)
@@ -156,9 +158,7 @@ int exit_loc_C68AEA(int r6, int r8, int cookie_2C)
    }
    else
    {
-      //loc_C68AF6;
-
-      sd_context_global* r5 = &var_00C78040[0]; //(char*)(&var_00C78040[0]) + 0x2400 + 0x44 ; // 00C78040 + 0x2400 + 0x44 = 00C7A484;
+      sd_context_global* r5 = &var_00C78040[0]; // 00C78040 + 0x2400 + 0x44 = 00C7A484;
       int r4 = 0;
 
       while(true)
@@ -166,6 +166,7 @@ int exit_loc_C68AEA(int r6, int r8, int cookie_2C)
          int r7 = r5->ctx_data.array_idx; //[R5,#-0x24]
          int r4 = r4 + 1;
 
+         //TODO: do not really get what this means
          char* r3 = ((char*)&var_00C81260) + 0x40;
          PLD(r3) ; //PLD.W [R3] //preload, caching
 
@@ -196,6 +197,40 @@ int exit_loc_C68B4A(int r3, int r6, int cookie_2C)
    return exit_loc_C68AEA(r6, r3, cookie_2C);
 }
 
+int exit_loc_C68ADC(int r6, int r11, int cookie_2C, sd_context_global* ctx_B0)
+{
+   int r8 = r11;
+   SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(ctx_B0->ctx_data.uid_1000);
+   return exit_loc_C68AEA(r6, r8, cookie_2C);
+}
+
+int exit_loc_C68B4E(int r3, int r6, int cookie_2C, sd_context_global* ctx_B0)
+{
+   return exit_loc_C68ADC(r6, r3, cookie_2C, ctx_B0);
+}
+
+int exit_loc_C68AD0(int r6, int r11, int cookie_2C, sd_context_global* ctx_B0)
+{
+   SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(ctx_B0->ctx_data.uid_10000);
+   return exit_loc_C68ADC(r6, r11, cookie_2C, ctx_B0);
+}
+
+int exit_loc_C68B52(int r3, int r6, int cookie_2C, sd_context_global* ctx_B0)
+{
+   return exit_loc_C68AD0(r6, r3, cookie_2C, ctx_B0);
+}
+
+int exit_loc_C68ACA(uint32_t* r4, int r6, int r11, int cookie_2C, sd_context_global* ctx_B0)
+{
+   SceThreadmgrForDriver_11fe84a1(r4);
+   return exit_loc_C68AD0(r6, r11, cookie_2C, ctx_B0);
+}
+
+int exit_loc_C68BA8(int r0, int r6, uint32_t* r11, int cookie_2C, sd_context_global* ctx_B0)
+{
+   return exit_loc_C68ACA(r11, r6, r0, cookie_2C, ctx_B0);
+}     
+
 int SceSdifForDriver_init_0eb0ef86()
 {
    init_intr_opts();
@@ -205,6 +240,7 @@ int SceSdifForDriver_init_0eb0ef86()
    void** var_AC;
    sd_context_global* ctx_B0;
    uint32_t* var_9C;
+   void* base_98;
    SceKernelAllocMemBlockKernelOpt opt_ptr_84;
    
 
@@ -240,21 +276,49 @@ int SceSdifForDriver_init_0eb0ef86()
    //--------
 
    memset(&opt_ptr_84, 0, sizeof(SceKernelAllocMemBlockKernelOpt));
-   opt_ptr_84.size = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
 
    int r2 = (r6 <= 3) ? 0x1000 : 0;
-   
    void** r7 = (r6 <= 3) ? var_AC : 0; //pointer to array of physical addresses
    
+   opt_ptr_84.size = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
    opt_ptr_84.paddr = (r6 <= 3) ? (SceUInt32)r7[r6] : (SceUInt32)0; //get current paddr and set it
    opt_ptr_84.attr = 2; //set attr
-   int r0 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r8, 0x201000806, r2, &opt_ptr_84);
-   int r3 = r0 - 0;
+   SceUID uid1 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r8, 0x201000806, r2, &opt_ptr_84);
+   if(uid1 < 0)
+      return exit_loc_C68B4A(uid1, r6, var_2C);
 
-   if(r3 < 0)
-      return exit_loc_C68B4A(r3, r6, var_2C);
+   curr_gc->ctx_data.uid_1000 = uid1; //[R4,#-0x58]
 
-   int r9 = 2;
+   SceSysmemForDriver_ksceKernelGetMemBlockBase_a841edda(uid1, &base_98);
+   
+   curr_gc->ctx_data.membase_1000 = base_98 ; // [R4,#-0x64]
+
+   memset(&opt_ptr_84, 0, sizeof(SceKernelAllocMemBlockKernelOpt));
+      
+   opt_ptr_84.size = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
+   opt_ptr_84.attr = 0x200000;
+
+   SceUID uid2 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r8, SCE_KERNEL_MEMBLOCK_TYPE_KERNEL_RW, 0x10000, &opt_ptr_84);
+   if(uid2 < 0)
+      return exit_loc_C68B4E(uid2, r6, var_2C, ctx_B0);
+
+   curr_gc->ctx_data.uid_10000 = uid2; // [R4,#-0x10]
+   
+   SceSysmemForDriver_ksceKernelGetMemBlockBase_a841edda(uid2, &curr_gc->ctx_data.membase_10000);
+
+   int res0 = SceThreadmgrForDriver_af8e1266(&curr_gc->ctx_data.unk_44, r8, 2, 0);
+
+   if(res0 < 0)
+      return exit_loc_C68B52(res0, r6, var_2C, ctx_B0);
+
+   int evid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(r8, 0, 0, 0);
+   curr_gc->ctx_data.evid_40 = evid; // [R4,#-0x54]
+   
+   if(evid < 0)
+      return exit_loc_C68BA8(evid, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0);
+
+
+   
 
    return 0;
 }

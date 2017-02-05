@@ -6,6 +6,8 @@
 
 //------------------------------------------------
 
+int SceThreadmgrForDriver_af8e1266(uint32_t* unk, char* name, int num0, int num1);
+
 int SceThreadmgrForDriver_11fe84a1(uint32_t* unk);
 
 //number of args confirmed
