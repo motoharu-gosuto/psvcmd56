@@ -139,6 +139,59 @@ void init_constants()
    var_00C72CA0[3] = aScesdif3_00C72F9C;
 }
 
+int exit_loc_C68B38(int r8, int cookie_2C)
+{
+   if(cookie_2C == var_009EA004)
+      return r8;
+   else
+      return STACK_CHECK_FAIL;
+}
+
+int exit_loc_C68AEA(int r6, int r8, int cookie_2C)
+{
+   if(r6 == 0)
+   {
+      return exit_loc_C68B38(r8, cookie_2C);
+   }
+   else
+   {
+      char* r5 = (char*)(&var_00C78040[0]) + 0x2400 + 0x44 ; // 00C78040 + 0x2400 + 0x44 = 00C7A484;
+      int r4 = 0;
+
+      /*
+      loc_C68AF6              ; R5 - global
+      LDR.W           R7, [R5,#-0x24]
+      ADD.W           R3, R5, #0x6E00
+      ADDS            R3, #0x1C
+      ADDS            R4, #1
+      PLD.W           [R3]
+      ADDS            R7, #0xDC ;  - SceSdif0
+      MOV             R0, R7  ; value
+      BLX             SceSdif.SceIntrmgrForDriver._imp_180435ec
+      MOV             R0, R7  ; value
+      BLX             SceSdif.SceIntrmgrForDriver._imp_d6009b98
+      LDR.W           R0, [R5,#-4] ; data
+      BLX             SceSdif.SceThreadmgrForDriver._imp_71ecb352
+      MOV             R0, R5  ; data
+      BLX             SceSdif.SceThreadmgrForDriver._imp_11fe84a1
+      LDR             R0, [R5,#0x40] ; uid
+      BLX             SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61
+      LDR.W           R0, [R5,#-8] ; uid
+      ADD.W           R5, R5, #0x24C0
+      BLX             SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61
+      CMP             R4, R6
+      BNE             loc_C68AF6
+      */
+
+      return exit_loc_C68B38(r8, cookie_2C);
+   }
+}     
+
+int exit_loc_C68B4A(int r3, int r6, int cookie_2C)
+{
+   return exit_loc_C68AEA(r6, r3, cookie_2C);
+}
+
 int SceSdifForDriver_init_0eb0ef86()
 {
    init_intr_opts();
@@ -195,9 +248,7 @@ int SceSdifForDriver_init_0eb0ef86()
    int r3 = r0 - 0;
 
    if(r3 < 0)
-   {
-      //goto loc_C68B4A
-   }
+      return exit_loc_C68B4A(r3, r6, var_2C);
 
    int r9 = 2;
 
