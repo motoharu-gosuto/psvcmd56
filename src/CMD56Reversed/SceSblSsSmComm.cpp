@@ -26,12 +26,19 @@ int sub_B864A8()
 
 memory_block_data_entry g_B85010[0x20]; //there are 0x20 entries in SceSblSsSmComm module
 
-int SceSblSmCommForKernel_sceSblSmCommStartSm_039c73b1(int r0, int r1, int r2, int r3, char* ctx, int* id)
+int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_data, int elf_size, int num1, sm_comm_ctx_130* ctx_130, int* id)
 {
    //many calls and subroutines
 
    
 
+   return 0;
+}
+
+// =============================
+
+int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_path, int num1, sm_comm_ctx_130* ctx_130, int* id)
+{
    return 0;
 }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "SceSblSmSchedProxy.h"
 
 //I used documentation from this source to clarify lots of things about gc commands
@@ -163,7 +165,19 @@ struct memory_block_data_entry
    SceUID eid; //event flag id
 };
 
-int SceSblSmCommForKernel_sceSblSmCommStartSm_039c73b1(int r0, int r1, int r2, int r3, char* ctx, int* id);
+typedef struct sm_comm_ctx_130
+{
+   uint32_t unk_0;
+   uint32_t unk_4; // 2
+   char data0[0x90]; //hardcoded data
+   char data1[0x90];
+   uint32_t unk_128; // 2
+   uint32_t unk_12C;   
+}sm_comm_ctx_130;
+
+int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_data, int elf_size, int num1, sm_comm_ctx_130* ctx_130, int* id);
+
+int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_path, int num1, sm_comm_ctx_130* ctx_130, int* id);
 
 int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int mode, int* err_state, context_db9fc204* ctx, int size);
 

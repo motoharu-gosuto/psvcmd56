@@ -572,12 +572,12 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    int var97C = -1; //trigger for some cleanup on exit?
    int var978 = 0x00; // error state
 
-   input_f10ab792 state;
+   elf_info_pair state;
    state.size = 0x0C; //must be 0xC
-   state.unk_4_var970 = 0x00;
-   state.unk_8_var96C = 0x00;
+   state.elf_data = 0x00;
+   state.elf_size = 0x00;
 
-   char var968[0x130]; // two structures of size ox98 ?
+   sm_comm_ctx_130 var968;
 
    context_db9fc204 ctx;
    ctx.var838 = 0x01;
@@ -598,16 +598,16 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    if(res0 < 0)
       return exit_loc_CACAB2(&var97C, var24);
 
-   memset(var968, 0x00, 0x130);
+   memset(&var968, 0x00, 0x130);
 
-   memcpy(var968 + 8, dword_CADC10, 0x90); //store to var960
+   memcpy(var968.data0, dword_CADC10, 0x90); //store to var960
 
-   var968[0x04] = 0x02;
-   var968[0x128] = 0x02;
+   var968.unk_4 = 0x02;
+   var968.unk_128 = 0x02;
 
    //it is important that arg1 and arg2 are initialized by imp_f10ab792
    //TODO: it is proved by many factors that this procedure shrinks the data and changes ctx.size field to the required size in sub_CAC924_command
-   int res1 = SceSblSmCommForKernel_sceSblSmCommStartSm_039c73b1(0x00, state.unk_4_var970, state.unk_8_var96C, 0x00, var968, &var97C);
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0x00, state.elf_data, state.size, 0x00, &var968, &var97C);
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 

@@ -15,8 +15,8 @@ int SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7()
 
 struct _8BF5F8_global_2 // this is just a pair of values of size 0x08
 {
-   uint32_t unk_0;
-   uint32_t unk_4;
+   char* elf_data;
+   uint32_t elf_size;
 };
 
 struct _8BF5F8_global_1
@@ -269,7 +269,7 @@ _8BF5F8_global_1 _8BF5F8_g1;
 _8BF5F8_global_0 _8BF5F8_g0;
 
 //modifies input arg1
-int SceSysrootForKernel_f10ab792(int arg0, input_f10ab792* arg1)
+int SceSysrootForKernel_f10ab792(int arg0, elf_info_pair* arg1)
 {
    if(arg0 > 2) // looks like there can be only 3 elements in the array
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
@@ -289,11 +289,11 @@ int SceSysrootForKernel_f10ab792(int arg0, input_f10ab792* arg1)
 
    //this part looked differently originally, however it was obvious that it was an array access where array elements are of size 0x08
 
-   if(g2[arg0].unk_4 == 0)
+   if(g2[arg0].elf_size == 0)
       return SCE_ERROR_ERRNO_ENOENT;
 
-   arg1->unk_4_var970 = g2[arg0].unk_0;
-   arg1->unk_8_var96C = g2[arg0].unk_4;
+   arg1->elf_data = g2[arg0].elf_data;
+   arg1->elf_size = g2[arg0].elf_size;
    
    return 0;
 }
@@ -306,12 +306,12 @@ void SceSysroot_InitializeContext()
    _8BF5F8_g0.unk_0 = &_8BF5F8_g1;
    _8BF5F8_g1.unk_3A0 = _8BF5F8_g2;
 
-   _8BF5F8_g2[0].unk_0 = 0xFFFFFFFF;
-   _8BF5F8_g2[0].unk_4 = 0xFFFFFFFF;
+   _8BF5F8_g2[0].elf_data = 0;
+   _8BF5F8_g2[0].elf_size = 0xFFFFFFFF;
    
-   _8BF5F8_g2[1].unk_0 = 0xDDDDDDDD;
-   _8BF5F8_g2[1].unk_4 = 0xDDDDDDDD;
+   _8BF5F8_g2[1].elf_data = 0;
+   _8BF5F8_g2[1].elf_size = 0xDDDDDDDD;
 
-   _8BF5F8_g2[2].unk_0 = 0xAAAAAAAA;
-   _8BF5F8_g2[2].unk_4 = 0xAAAAAAAA;
+   _8BF5F8_g2[2].elf_data = 0;
+   _8BF5F8_g2[2].elf_size = 0xAAAAAAAA;
 }
