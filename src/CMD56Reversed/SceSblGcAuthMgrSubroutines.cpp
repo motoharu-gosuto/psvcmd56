@@ -118,7 +118,7 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
 //also used for packet 11 and packet 12
 //originally it had only 2 arguments 
 //however I decided to move globals to arguments to make sure I see all the dependencies
-char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, int packetIndex)
+char sub_CA8D30(sd_context_part* ctx, std::pair<char,char>* result_ptr, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, int packetIndex)
 {
    a_00BDCDF8_WB20[0x00] = 0xC2;
    a_00BDCDF8_WB20[0x01] = 0x00;
@@ -126,12 +126,12 @@ char sub_CA8D30(sd_context* ctx, std::pair<char,char>* result_ptr, char* a_00BDC
 
    sub_CA8C98(a_00BDCDF8_WB20, 0x03, 0x05, 0x23, a_00BDCBF4_REQBUF); //initialize cmd56 packet
 
-   int r0_req = SceSdifForDriver_b0996641(ctx, a_00BDCBF4_REQBUF, 0x200); //request
+   int r0_req = SceSdifForDriver_gc_cmd56_request_b0996641(ctx, a_00BDCBF4_REQBUF, 0x200); //request
 
    if(r0_req != 0)
       return r0_req;
 
-   int r0_resp = SceSdifForDriver_134e06c4(ctx, a_00BDD04C_RESPBUF1, 0x200, packetIndex); //response
+   int r0_resp = SceSdifForDriver_gc_cmd56_response_134e06c4(ctx, a_00BDD04C_RESPBUF1, 0x200, packetIndex); //response
 
    if(r0_resp != 0)
       return r0_resp;
@@ -166,7 +166,7 @@ int exit_loc_CA9058(int r3, int var24)
 //this procedure is used to initialize and send packets 17 and 19 and get corresponding responses 18 and 20
 //originally it had only 2 arguments 
 //however I decided to move globals to arguments to make sure I see all the dependencies
-int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, const char* a_00BDCBC4, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, char* a_00BDD24C_RESPBUF2, char* a_00BDD018)
+int sub_CA8EA0(sd_context_part* sd_context, int packet6_de, const char* a_00BDCFF8, const char* a_00BDCBC4, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, char* a_00BDD24C_RESPBUF2, char* a_00BDD018)
 {
    int var24 = var_009EA004; //stack cookie
 
@@ -180,13 +180,13 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
    char var15C[0x20];
    memcpy(var15C, a_00BDCBF4_REQBUF + 0x2F, 0x20);
 
-   int res1 = SceSdifForDriver_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
+   int res1 = SceSdifForDriver_gc_cmd56_request_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
    if(res1 != 0)
       return exit_loc_CA9058(res1, var24);
 
    //packet 18
 
-   int res2 = SceSdifForDriver_134e06c4(sd_context, a_00BDD04C_RESPBUF1, 0x200, PACKET_18_INDEX);
+   int res2 = SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context, a_00BDD04C_RESPBUF1, 0x200, PACKET_18_INDEX);
    if(res2 != 0)
       return exit_loc_CA9058(res2, var24);
 
@@ -208,13 +208,13 @@ int sub_CA8EA0(sd_context* sd_context, int packet6_de, const char* a_00BDCFF8, c
    char var16C[0x10];
    memcpy(var16C, a_00BDCBF4_REQBUF + 0x2F, 0x10);
 
-   int res4 = SceSdifForDriver_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
+   int res4 = SceSdifForDriver_gc_cmd56_request_b0996641(sd_context, a_00BDCBF4_REQBUF, 0x200); //request
    if(res4 != 0)
       return exit_loc_CA9058(res4, var24);
 
    //packet 20
    
-   int res5 = SceSdifForDriver_134e06c4(sd_context, a_00BDD24C_RESPBUF2, 0x200, PACKET_20_INDEX); //response
+   int res5 = SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context, a_00BDD24C_RESPBUF2, 0x200, PACKET_20_INDEX); //response
    if(res5 != 0)
       return exit_loc_CA9058(res5, var24);
 
@@ -332,7 +332,7 @@ int exit_loc_CAC9CA(int r4, int* var97C, int var24)
 
 int exit_loc_CACAB2(int* var97C, int var24)
 {
-   return exit_loc_CAC9CA(SCE_SBL_GC_AUTH_MGR_ERROR_800F0016, var97C, var24);
+   return exit_loc_CAC9CA(SCE_SBL_ERROR_COMMON_EINVAL, var97C, var24);
 }
 
 int finish_CACA88(char* r8, char* var830, int r2, int r4, int* var97C, int var24)

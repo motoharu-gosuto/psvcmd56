@@ -1,9 +1,6 @@
 #pragma once
 
-struct sd_context
-{
-   char data[0x24C0];
-};
+#include "SceSdifTypes.h"
 
 #define PACKET_2_INDEX 2
 #define PACKET_4_INDEX 4
@@ -16,10 +13,10 @@ struct sd_context
 #define PACKET_18_INDEX 18
 #define PACKET_20_INDEX 20
 
-sd_context* SceSdifForDriver_6a71987f(int index);
+sd_context_part* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index);
 
-int SceSdifForDriver_22c82e79(int index, sd_context** element);
+int SceSdifForDriver_initialize_mmc_device_22c82e79(int sd_ctx_index, sd_context_part** result);
 
-int SceSdifForDriver_b0996641(sd_context* ctx, char* buffer, int size);
+int SceSdifForDriver_gc_cmd56_request_b0996641(sd_context_part* ctx, char* buffer, int length);
 
-int SceSdifForDriver_134e06c4(sd_context* ctx, char* buffer, int size, int index);
+int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part* ctx, char* buffer, int length, int index);
