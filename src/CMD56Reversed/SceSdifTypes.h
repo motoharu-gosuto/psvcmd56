@@ -3,6 +3,8 @@
 #include "Constants.h"
 #include <stdint.h>
 
+#pragma pack(push, 1)
+
 typedef struct sdif_context_general //size is 0x40
 {
     uint32_t suspend_callback_id;
@@ -128,3 +130,5 @@ typedef struct sd_context_global // size is 0x24C0
     struct cmd_input commands[16];
     struct sd_context_data ctx_data;
 } sd_context_global;
+
+#pragma pack(pop)

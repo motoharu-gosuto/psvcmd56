@@ -92,41 +92,63 @@ int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part* ctx, char* buff
    return STACK_CHECK_FAIL;
 }
 
+int callback_00C680A9(int code, int unk)
+{
+   return 0;
+}
+
+int callback_00C68001(int code, int unk)
+{
+   return 0;
+}
+
+void init_intr_opts()
+{
+   intr_opt_C72FA8.size = 0x14;
+   intr_opt_C72FA8.num = 9;
+   intr_opt_C72FA8.opt2 = &intr_opt2_00C72F50;
+   intr_opt_C72FA8.unk_C = 0;
+   intr_opt_C72FA8.unk_10 = 0;
+
+   intr_opt2_00C72F50.size = 0x28;
+   intr_opt2_00C72F50.unk_4 = 0;
+   intr_opt2_00C72F50.unk_8 = 0;
+   intr_opt2_00C72F50.unk_C = 0;
+
+   intr_opt2_00C72F50.fptr0 = &callback_00C680A9;
+   intr_opt2_00C72F50.fptr1 = &callback_00C68001;
+   intr_opt2_00C72F50.fptr2 = &callback_00C680A9;
+
+   intr_opt2_00C72F50.unk_1C = 0;
+   intr_opt2_00C72F50.unk_20 = 0;
+   intr_opt2_00C72F50.unk_24 = 0;
+}
+
 int SceSdifForDriver_init_0eb0ef86()
 {
-   /*
-   int var_A0;
-   int var_A4;
-   int var_AC;
-   int var_2C;
-   int var_9C;
+   init_intr_opts();
+   
+   int* var_A0;
+   reg_intr_opt* var_A4;
+   void** var_AC;
+   uint32_t* var_9C;
+   int var_2C = var_009EA004; //cookie
 
-   int r7 = &var_009EA004;
-   int r10 = &PADDR_SceSdif3_00C72C9C;
-   int r3 = *r7;
+   var_A0 = &var_009EA004;
+   var_AC = &PADDR_SceSdif0_00C72C90;
+   var_A4 = &intr_opt_C72FA8;
+   var_9C = &var_00C78000.max_array_index;
 
-   var_A0 = r7;
-   int r7 = &PADDR_SceSdif0_00C72C90;
-   int r6 = 0;
-   var_AC = r7;
-   int r7 = &dword_C72FA8;
-   int r0 = &00C78040;
-   var_A4 = r7;
-   int r7 = &00C78004;
-   int r1 = r6;
-   int r2 = 6E40; // 24C0 * 3
-   int r10 = &PADDR_SceSdif3_00C72C9C;
-   int r4 = &00C7A4D4;
-   var_2C = r3;
-   var_9C = r7;
-   memset(r0, r1, r2);
+   memset(&var_00C78040[0], 0, sizeof(sd_context_global) * 3); // clear 0x6E40 = 24C0 * 3
+
+   void** r10 = &PADDR_SceSdif3_00C72C9C;
+   char* r4 = (char*)(&var_00C78040[0]) + 0x2480 + 0x14 ; // var_00C78040 + 0x2480 + 0x14 = C7A4D4
+   
+   var_00C78000.max_array_index = 3;
 
    int r3 = 3;
-   *r7 = r3;
 
    //loc_C68942:
-   */
-
 
    return 0;
 }
