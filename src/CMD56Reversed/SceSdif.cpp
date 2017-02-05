@@ -149,9 +149,11 @@ int SceSdifForDriver_init_0eb0ef86()
    sd_context_global* ctx_B0;
    uint32_t* var_9C;
    SceKernelAllocMemBlockKernelOpt opt_ptr_84;
-
+   
 
    int var_2C = var_009EA004; //cookie
+
+   //---------
 
    var_A0 = &var_009EA004;
    var_AC = &var_00C72C90[0];
@@ -160,69 +162,44 @@ int SceSdifForDriver_init_0eb0ef86()
 
    memset(&var_00C78040[0], 0, sizeof(sd_context_global) * 3); // clear 0x6E40 = 24C0 * 3
 
-   char** r10 = &var_00C72CA0[0];
+   //---------
+
    char* r4 = (char*)(&var_00C78040[0]) + 0x2480 + 0x14 ; // var_00C78040 + 0x2480 + 0x14 = C7A4D4
-   
+   char** r10 = &var_00C72CA0[0]; //pointer to array of names
+   sd_context_global* curr_gc = &var_00C78040[0]; // r4 - 0x2480 - 0x14;
+
    var_00C78000.max_array_index = 3;
+   int r6 = 0; //counter
 
-   uint32_t* r7 = &var_00C78000.max_array_index;
+   //---------
 
-   int r6 = 0;
-   int r3 = 3;
-
-   //loc_C68942:
+   //loc_C68942: - beginning of cycle
 
    char* r8 = (*r10)++; //this is a bit different in original code (preincrement and not post increment)
+   ctx_B0 = curr_gc; // store current context global
 
-   void** r7;
-   if(r6 <= 3)
-   {
-      r7 = var_AC; //pointer to physical address
-   }
-
-   sd_context_global* r3 = r4 - 0x2480 - 0x14;  // get current context global
-
-   r4[-0x74] = r6; //store current index
-   int r0 = ;
-
-   void* r11 = r7[r6]; //get current paddr
-   int r7 = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
+   curr_gc->ctx_data.array_idx = r6; // r4[-0x74] ; store current index
    
-   if(r6 > 3)
-   {
-      r11 = 0;
-   }
-
-   ctx_B0 = r3; // store current context global
-
-   int r9 = 2;
+   //--------
 
    memset(&opt_ptr_84, 0, sizeof(SceKernelAllocMemBlockKernelOpt));
+   opt_ptr_84.size = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
 
-   int r1 = 0x201000806;
-
-   if(r6 <= 3)
-   {
-      int r2 = 0x1000;
-   }
-   else
-   {
-      int r2 = 0;
-   }
+   int r2 = (r6 <= 3) ? 0x1000 : 0;
    
-   SceKernelAllocMemBlockKernelOpt* r3 = &opt_ptr_84;
-
-   int r0 = r8;
-   opt_ptr_84.size = r7;
-   var_74 = r11; //field of opt ?
-   var_7C = r9; //field of opt ?
-   int r0 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r0, r1, r2, r3);
+   void** r7 = (r6 <= 3) ? var_AC : 0; //pointer to array of physical addresses
+   
+   opt_ptr_84.paddr = (r6 <= 3) ? (SceUInt32)r7[r6] : (SceUInt32)0; //get current paddr and set it
+   opt_ptr_84.attr = 2; //set attr
+   int r0 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r8, 0x201000806, r2, &opt_ptr_84);
    int r3 = r0 - 0;
 
    if(r3 < 0)
    {
       //goto loc_C68B4A
    }
+
+   int r9 = 2;
 
    return 0;
 }
