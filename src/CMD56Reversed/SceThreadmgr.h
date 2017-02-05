@@ -6,6 +6,8 @@
 
 //------------------------------------------------
 
+int SceThreadmgrForDriver_11fe84a1(uint32_t* unk);
+
 //number of args confirmed
 //return type confirmed - can return error
 int SceThreadmgrForDriver_70627f3a(int unk0); // - not critical for now

@@ -72,7 +72,7 @@ typedef struct sd_context_data // size is 0xC0
     uint32_t unk_38;
     SceUID uid_1000; // UID of SceSdif (0,1,2) memblock of size 0x1000
 
-    uint32_t unk_40; // SceKernelThreadMgr related, probably UID for SceSdif (0,1,2)
+    SceUID evid_40; // SceKernelThreadMgr related, probably UID for SceSdif (0,1,2)
     uint32_t unk_44;
     uint32_t unk_48;
     uint32_t unk_4C;

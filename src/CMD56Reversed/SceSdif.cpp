@@ -15,6 +15,7 @@
 #include "SceSdifResponsePackets.h"
 
 #include "SceSysmem.h"
+#include "SceThreadmgr.h"
 
 //get context from array
 sd_context_part* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index)
@@ -155,33 +156,36 @@ int exit_loc_C68AEA(int r6, int r8, int cookie_2C)
    }
    else
    {
-      char* r5 = (char*)(&var_00C78040[0]) + 0x2400 + 0x44 ; // 00C78040 + 0x2400 + 0x44 = 00C7A484;
+      //loc_C68AF6;
+
+      sd_context_global* r5 = &var_00C78040[0]; //(char*)(&var_00C78040[0]) + 0x2400 + 0x44 ; // 00C78040 + 0x2400 + 0x44 = 00C7A484;
       int r4 = 0;
 
-      /*
-      loc_C68AF6              ; R5 - global
-      LDR.W           R7, [R5,#-0x24]
-      ADD.W           R3, R5, #0x6E00
-      ADDS            R3, #0x1C
-      ADDS            R4, #1
-      PLD.W           [R3]
-      ADDS            R7, #0xDC ;  - SceSdif0
-      MOV             R0, R7  ; value
-      BLX             SceSdif.SceIntrmgrForDriver._imp_180435ec
-      MOV             R0, R7  ; value
-      BLX             SceSdif.SceIntrmgrForDriver._imp_d6009b98
-      LDR.W           R0, [R5,#-4] ; data
-      BLX             SceSdif.SceThreadmgrForDriver._imp_71ecb352
-      MOV             R0, R5  ; data
-      BLX             SceSdif.SceThreadmgrForDriver._imp_11fe84a1
-      LDR             R0, [R5,#0x40] ; uid
-      BLX             SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61
-      LDR.W           R0, [R5,#-8] ; uid
-      ADD.W           R5, R5, #0x24C0
-      BLX             SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61
-      CMP             R4, R6
-      BNE             loc_C68AF6
-      */
+      while(true)
+      {
+         int r7 = r5->ctx_data.array_idx; //[R5,#-0x24]
+         int r4 = r4 + 1;
+
+         char* r3 = ((char*)&var_00C81260) + 0x40;
+         PLD(r3) ; //PLD.W [R3] //preload, caching
+
+         SceIntrmgrForDriver_180435ec(INTR_CODE_SceSdif0 + r7); //calculate intr code
+
+         SceIntrmgrForDriver_d6009b98(INTR_CODE_SceSdif0 + r7); //calculate intr code
+
+         SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(r5->ctx_data.evid_40); // R0, [R5,#-4]
+
+         SceThreadmgrForDriver_11fe84a1(&r5->ctx_data.unk_44);
+
+         SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(r5->ctx_data.uid_10000); //[R5,#0x40]
+
+         SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(r5->ctx_data.uid_1000); //[R5,#-8]
+
+         r5 = r5 + 1; //R5, R5, #0x24C0
+
+         if(r4 == r6)
+            break;
+      }
 
       return exit_loc_C68B38(r8, cookie_2C);
    }

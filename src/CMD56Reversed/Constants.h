@@ -13,6 +13,8 @@
 
 #define DSB(option)
 
+#define PLD(adr)
+
 typedef int SceUID;
 typedef unsigned int SceSize;
 typedef unsigned int SceUInt;

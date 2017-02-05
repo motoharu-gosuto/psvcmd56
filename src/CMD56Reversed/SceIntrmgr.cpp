@@ -9,3 +9,13 @@ int SceIntrmgrForDriver_register_interrupt_5c1feb29(int code, const char *name, 
 {
    return 0;
 }
+
+int SceIntrmgrForDriver_180435ec(int code)
+{
+   return 0;
+}
+
+int SceIntrmgrForDriver_d6009b98(int code)
+{
+   return 0;
+}

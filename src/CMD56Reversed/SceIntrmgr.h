@@ -17,6 +17,10 @@
 
 int SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
 
+#define INTR_CODE_SceSdif0 220
+#define INTR_CODE_SceSdif1 221
+#define INTR_CODE_SceSdif2 222
+#define INTR_CODE_SceSdif3 223
 
 typedef int(intr_callback)(int code, int unk);
 
@@ -46,3 +50,7 @@ typedef struct reg_intr_opt
 typedef int (intr_callback_func)(int unk, void* userCtx);
 
 int SceIntrmgrForDriver_register_interrupt_5c1feb29(int code, const char *name, int interrupt_type, intr_callback_func* func, void* userCtx, int priority, int targetcpu, reg_intr_opt* opt);
+
+int SceIntrmgrForDriver_180435ec(int code);
+
+int SceIntrmgrForDriver_d6009b98(int code);

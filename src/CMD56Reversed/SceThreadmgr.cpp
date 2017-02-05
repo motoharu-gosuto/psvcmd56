@@ -4,6 +4,11 @@
 
 //------------------------------------
 
+int SceThreadmgrForDriver_11fe84a1(uint32_t* unk)
+{
+   return 0;
+}
+
 int SceThreadmgrForDriver_70627f3a(int unk0)
 {
    return 0;
