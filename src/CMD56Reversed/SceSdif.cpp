@@ -8,7 +8,8 @@
 #include "Constants.h"
 
 #include "SceSdif.h"
-#include "SceSdifGlobals.h"
+#include "SceSdifGlobalVariables.h"
+#include "SceSdifGlobalConstants.h"
 
 #include "SceSdifResponsePackets.h"
 
@@ -88,4 +89,15 @@ int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part* ctx, char* buff
    }
 
    return STACK_CHECK_FAIL;
+}
+
+int SceSdifForDriver_init_0eb0ef86()
+{
+   return 0;
+}
+
+int SceSdif_module_start_935cd196()
+{
+   int res = SceSdifForDriver_init_0eb0ef86();
+   return (res >> 0x1F); //31
 }

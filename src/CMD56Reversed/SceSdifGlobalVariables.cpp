@@ -1,3 +1,3 @@
-#include "SceSdifGlobals.h"
+#include "SceSdifGlobalVariables.h"
 
 sd_context_global _C78040_CTX_ARRAY[3];
