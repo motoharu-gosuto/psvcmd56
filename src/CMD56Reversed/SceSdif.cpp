@@ -145,6 +145,29 @@ void init_constants()
    var_00C72CA0[3] = aScesdif3_00C72F9C;
 }
 
+void proc_set_zero_pair_C6AED8(uint32_t* data)
+{
+   data[0] = 0;
+   data[1] = 0;
+}
+
+void sub_C6AEE0(int unk0, int unk1)
+{
+   int r3 = r0[4];
+   int r2 = 0;
+   r1[0x60] = r2;
+   if(r3 == 0)
+   {
+      r0[0] = r1;
+      r0[0 + 4] = r1;
+   }
+   else
+   {
+      r3[0x60] = r1;
+      r0[4] = r1;
+   }
+}
+
 //------------------------
 
 int exit_loc_C68B38(int r8, int cookie_2C)
@@ -247,6 +270,12 @@ int exit_loc_C68BAE(int r3, int r6, uint32_t* r11, int cookie_2C, sd_context_glo
    return exit_loc_C68ABE(r11, r6, r3, cookie_2C, ctx_B0);
 }
 
+int exit_loc_C68AB4(int r0, int r6, uint32_t* r11, int cookie_2C, sd_context_global* ctx_B0, int code_A8)
+{
+   SceIntrmgrForDriver_d6009b98(code_A8);
+   return exit_loc_C68ABE(r11, r6, r0, cookie_2C, ctx_B0);
+}
+
 int SceSdifForDriver_init_0eb0ef86()
 {
    init_intr_opts();
@@ -258,6 +287,8 @@ int SceSdifForDriver_init_0eb0ef86()
    int* var_A0;
    uint32_t* var_9C;
    void* base_98;
+   int result_90;
+   int result_88;
 
    SceKernelAllocMemBlockKernelOpt opt_ptr_84;
    
@@ -341,8 +372,66 @@ int SceSdifForDriver_init_0eb0ef86()
    if(res1 < 0)
       return exit_loc_C68BAE(res1, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0);
 
-   //init core
-   //5 more code chunks
+   sd_context_data* r8 = &curr_gc->ctx_data;
+   
+   curr_gc->ctx_data.cmd_ptr = 0;
+   curr_gc->ctx_data.cmd_ptr_next = 0;
+   curr_gc->ctx_data.unk_8 = 0;
+   curr_gc->ctx_data.unk_C = 0;
+
+   int r7 = 0;
+   sd_context_global* r9 = ctx_B0;
+
+   //initialize commands
+
+   //loc_C68A9C:
+   while(true)
+   {
+      int r2 = 0;
+      int r0 = r9 + 0x1C0;
+      int r1 = &result_90;
+      r9[0x64] = r2;
+      r9[0x64 + 4] = r7;
+
+      PLD(r9 + 0x724);
+
+      int res2 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
+      if(res2 < 0)
+         return exit_loc_C68AB4(res2, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0, code_A8);
+
+      int r0 = r9 + 0x200;
+      int r1 = &result_88;
+
+      int res3 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
+      if(res3 < 0)
+         return exit_loc_C68AB4(res3, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0, code_A8);
+
+      int r2 = result_90;
+      int r3 = result_88;
+
+      r9[0x1A8] = r2;
+      r9[0x1A8 + 4] = r3;
+
+      int r0 = r9 + 0x80;
+      int r1 = r9 + 0x184;
+
+      int res4 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
+      if(res4 < 0)
+         return exit_loc_C68AB4(res4, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0, code_A8);
+
+      int r1 = r9;
+      r7 = r7 + 1;
+      int r0 = r8;
+      r9 = r9 + 0x240; //size of cmd input
+
+      sub_C6AEE0();
+
+      if(r7 == 0x10)
+         break;
+   }
+
+   //some more code here
+
 
    return 0;
 }
