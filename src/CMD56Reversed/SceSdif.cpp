@@ -151,20 +151,19 @@ void proc_set_zero_pair_C6AED8(uint32_t* data)
    data[1] = 0;
 }
 
-void sub_C6AEE0(int unk0, int unk1)
+void sub_C6AEE0(sd_context_data* r0, cmd_input* r1)
 {
-   int r3 = r0[4];
-   int r2 = 0;
-   r1[0x60] = r2;
+   cmd_input* r3 = r0->cmd_ptr_next;
+   r1->next_cmd = 0;
    if(r3 == 0)
    {
-      r0[0] = r1;
-      r0[0 + 4] = r1;
+      r0->cmd_ptr = r1;
+      r0->cmd_ptr_next = r1;
    }
    else
    {
-      r3[0x60] = r1;
-      r0[4] = r1;
+      r3->next_cmd = r1;
+      r0->cmd_ptr_next = r1;
    }
 }
 
@@ -287,8 +286,8 @@ int SceSdifForDriver_init_0eb0ef86()
    int* var_A0;
    uint32_t* var_9C;
    void* base_98;
-   int result_90;
-   int result_88;
+   void* result_90;
+   void* result_88;
 
    SceKernelAllocMemBlockKernelOpt opt_ptr_84;
    
@@ -317,7 +316,7 @@ int SceSdifForDriver_init_0eb0ef86()
 
    //loc_C68942: - beginning of cycle
 
-   char* r8 = (*r10)++; //this is a bit different in original code (preincrement and not post increment)
+   char* currName = (*r10)++; //this is a bit different in original code (preincrement and not post increment)
    ctx_B0 = curr_gc; // store current context global
 
    curr_gc->ctx_data.array_idx = r6; // r4[-0x74] ; store current index
@@ -326,13 +325,13 @@ int SceSdifForDriver_init_0eb0ef86()
 
    memset(&opt_ptr_84, 0, sizeof(SceKernelAllocMemBlockKernelOpt));
 
-   int r2 = (r6 <= 3) ? 0x1000 : 0;
-   void** r7 = (r6 <= 3) ? var_AC : 0; //pointer to array of physical addresses
+   int alloc_size = (r6 <= 3) ? 0x1000 : 0;
+   void** paddr_ptr = (r6 <= 3) ? var_AC : 0; //pointer to array of physical addresses
    
    opt_ptr_84.size = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
-   opt_ptr_84.paddr = (r6 <= 3) ? (SceUInt32)r7[r6] : (SceUInt32)0; //get current paddr and set it
+   opt_ptr_84.paddr = (r6 <= 3) ? (SceUInt32)paddr_ptr[r6] : (SceUInt32)0; //get current paddr and set it
    opt_ptr_84.attr = 2; //set attr
-   SceUID uid1 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r8, 0x201000806, r2, &opt_ptr_84);
+   SceUID uid1 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(currName, 0x201000806, alloc_size, &opt_ptr_84);
    if(uid1 < 0)
       return exit_loc_C68B4A(uid1, r6, var_2C);
 
@@ -347,7 +346,7 @@ int SceSdifForDriver_init_0eb0ef86()
    opt_ptr_84.size = sizeof(SceKernelAllocMemBlockKernelOpt); //0x58
    opt_ptr_84.attr = 0x200000;
 
-   SceUID uid2 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(r8, SCE_KERNEL_MEMBLOCK_TYPE_KERNEL_RW, 0x10000, &opt_ptr_84);
+   SceUID uid2 = SceSysmemForDriver_ksceKernelAllocMemBlock_c94850c9(currName, SCE_KERNEL_MEMBLOCK_TYPE_KERNEL_RW, 0x10000, &opt_ptr_84);
    if(uid2 < 0)
       return exit_loc_C68B4E(uid2, r6, var_2C, ctx_B0);
 
@@ -355,12 +354,12 @@ int SceSdifForDriver_init_0eb0ef86()
    
    SceSysmemForDriver_ksceKernelGetMemBlockBase_a841edda(uid2, &curr_gc->ctx_data.membase_10000);
 
-   int res0 = SceThreadmgrForDriver_af8e1266(&curr_gc->ctx_data.unk_44, r8, 2, 0);
+   int res0 = SceThreadmgrForDriver_af8e1266(&curr_gc->ctx_data.unk_44, currName, 2, 0);
 
    if(res0 < 0)
       return exit_loc_C68B52(res0, r6, var_2C, ctx_B0);
 
-   int evid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(r8, 0, 0, 0);
+   int evid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(currName, 0, 0, 0);
    curr_gc->ctx_data.evid_40 = evid; // [R4,#-0x54]
    
    if(evid < 0)
@@ -368,7 +367,7 @@ int SceSdifForDriver_init_0eb0ef86()
 
    code_A8 = curr_gc->ctx_data.array_idx + INTR_CODE_SceSdif0; //[R4,#-0x74]
    
-   int res1 = SceIntrmgrForDriver_register_interrupt_5c1feb29(code_A8, r8, 0, callback_interrupt_handler_DC_DD_DE_C68FF8, ctx_B0, 0x80, 0xF, var_A4);
+   int res1 = SceIntrmgrForDriver_register_interrupt_5c1feb29(code_A8, currName, 0, callback_interrupt_handler_DC_DD_DE_C68FF8, ctx_B0, 0x80, 0xF, var_A4);
    if(res1 < 0)
       return exit_loc_C68BAE(res1, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0);
 
@@ -380,51 +379,36 @@ int SceSdifForDriver_init_0eb0ef86()
    curr_gc->ctx_data.unk_C = 0;
 
    int r7 = 0;
-   sd_context_global* r9 = ctx_B0;
+   cmd_input* r9 = ctx_B0->commands;
 
    //initialize commands
 
    //loc_C68A9C:
    while(true)
    {
-      int r2 = 0;
-      int r0 = r9 + 0x1C0;
-      int r1 = &result_90;
-      r9[0x64] = r2;
-      r9[0x64 + 4] = r7;
+      r9->unk_64 = 0;
+      r9->array_index = r7;
 
-      PLD(r9 + 0x724);
+      PLD(r9 + 0x724); // (0x240 * 3) + 0x64
 
-      int res2 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
+      //TODO: I do not quite get where from do the virtual addresses come, should not they be zeroes ?
+
+      int res2 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r9->vaddr_1C0, &r9->paddr_1A8);
       if(res2 < 0)
          return exit_loc_C68AB4(res2, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0, code_A8);
 
-      int r0 = r9 + 0x200;
-      int r1 = &result_88;
-
-      int res3 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
+      int res3 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r9->vaddr_200, &r9->paddr_1AC);
       if(res3 < 0)
          return exit_loc_C68AB4(res3, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0, code_A8);
 
-      int r2 = result_90;
-      int r3 = result_88;
-
-      r9[0x1A8] = r2;
-      r9[0x1A8 + 4] = r3;
-
-      int r0 = r9 + 0x80;
-      int r1 = r9 + 0x184;
-
-      int res4 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r0, r1);
+      int res4 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r9->vaddr_80, &r9->paddr_184);
       if(res4 < 0)
          return exit_loc_C68AB4(res4, r6, &curr_gc->ctx_data.unk_44, var_2C, ctx_B0, code_A8);
 
-      int r1 = r9;
       r7 = r7 + 1;
-      int r0 = r8;
-      r9 = r9 + 0x240; //size of cmd input
+      r9 = r9 + sizeof(cmd_input); // size of cmd input
 
-      sub_C6AEE0();
+      sub_C6AEE0(r8, r9);
 
       if(r7 == 0x10)
          break;

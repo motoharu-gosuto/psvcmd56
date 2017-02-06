@@ -39,7 +39,7 @@ typedef struct cmd_input // size is 0x240
    
    struct cmd_input* next_cmd;
    uint32_t unk_64;
-   uint32_t unk_68;
+   uint32_t array_index;
    uint32_t unk_6C;
    
    uint32_t unk_70;
@@ -47,7 +47,47 @@ typedef struct cmd_input // size is 0x240
    struct sd_context_global* gctx_ptr;
    uint32_t unk_7C;
    
-   uint8_t data1[0x1C0];
+   void* vaddr_80; //3
+   uint32_t unk_84;
+   uint32_t unk_88;
+   uint32_t unk_8C;
+
+   uint8_t data1[0xF0];
+
+   uint32_t unk_180;
+   void* paddr_184; //3
+   uint32_t unk_188;
+   uint32_t unk_18C;
+
+   uint32_t unk_190;
+   uint32_t unk_194;
+   uint32_t unk_198;
+   uint32_t unk_19C;
+
+   uint32_t unk_1A0;
+   uint32_t unk_1A4;
+   void* paddr_1A8; //1
+   void* paddr_1AC; //2
+
+   uint32_t unk_1B0;
+   uint32_t unk_1B4;
+   uint32_t unk_1B8;
+   uint32_t unk_1BC;
+
+   void* vaddr_1C0; //1
+   uint32_t unk_1C4;
+   uint32_t unk_1C8;
+   uint32_t unk_1CC;
+
+   uint8_t data2[0x30];
+
+   void* vaddr_200; //2
+   uint32_t unk_204;
+   uint32_t unk_208;
+   uint32_t unk_20C;
+
+   uint8_t data3[0x30];
+
 } cmd_input;
 
 typedef struct sd_context_data // size is 0xC0
