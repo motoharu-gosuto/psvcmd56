@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdint.h>
+
+#include "Constants.h"
+
 //maybe this api is smth like lock / unlock mutexes / semas ?
 
 //-------------------------------------------------------------------------------
@@ -32,3 +36,17 @@ int SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(in
 
 //this function also checks 008BF3F8 before deciding to call _exp_atomic_dec_2a71b03c
 int SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(int arg_0);
+
+typedef struct suspend_args_t
+{
+    uint32_t size; // 24
+    uint32_t unk1;
+    uint32_t unk2;
+    uint32_t unk3;
+    uint32_t unk4;
+    uint32_t unk5;
+} suspend_args_t;
+
+typedef int (suspend_callback_t)(int resume, int eventid, suspend_args_t *args, void *opt);
+
+SceUID suspend_register_callback_04c05d10(const char *name, suspend_callback_t *callback_func, void *opt);

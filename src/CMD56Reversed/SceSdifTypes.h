@@ -7,7 +7,7 @@
 
 typedef struct sdif_context_general //size is 0x40
 {
-    uint32_t suspend_callback_id;
+    SceUID suspend_callback_id;
     uint32_t max_array_index; //typically 3
     uint32_t unk_8;
     uint32_t unk_C; 

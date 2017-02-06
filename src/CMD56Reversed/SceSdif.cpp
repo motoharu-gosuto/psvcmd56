@@ -17,6 +17,7 @@
 #include "SceSysmem.h"
 #include "SceCpu.h"
 #include "SceThreadmgr.h"
+#include "SceKernelSuspend.h"
 
 //get context from array
 sd_context_part* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index)
@@ -111,6 +112,11 @@ int callback_interrupt_handler_DC_DD_DE_C68FF8(int unk, void* userCtx)
    return 0;
 }
 
+int callback_suspend_eMMC_C6875C(int resume, int eventid, suspend_args_t *args, void *opt)
+{
+   return 0;
+}
+
 void init_intr_opts()
 {
    intr_opt_C72FA8.size = 0x14;
@@ -170,7 +176,7 @@ void sub_C6AEE0(sd_context_data* r0, cmd_input* r1)
 
 void sub_C68598(sd_context_global* ctx, int unk1)
 {
-
+   //some important code
 }
 
 //------------------------
@@ -413,9 +419,10 @@ int SceSdifForDriver_init_0eb0ef86()
          break;
    }
 
+   SceUID suid = suspend_register_callback_04c05d10("SceSdif", &callback_suspend_eMMC_C6875C, 0);
+   var_00C78000.suspend_callback_id = suid;
 
-
-   return 0;
+   return exit_loc_C68B38(0, var_2C);
 }
 
 int SceSdif_module_start_935cd196()
