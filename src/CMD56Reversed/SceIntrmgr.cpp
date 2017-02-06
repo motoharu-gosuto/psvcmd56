@@ -19,3 +19,8 @@ int SceIntrmgrForDriver_d6009b98(int code)
 {
    return 0;
 }
+
+int SceIntrmgrForDriver_7117e827(int code)
+{
+   return 0;
+}

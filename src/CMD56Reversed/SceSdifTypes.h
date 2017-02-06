@@ -87,7 +87,6 @@ typedef struct cmd_input // size is 0x240
    uint32_t unk_20C;
 
    uint8_t data3[0x30];
-
 } cmd_input;
 
 typedef struct sd_context_data // size is 0xC0
@@ -140,7 +139,7 @@ typedef struct sd_context_data // size is 0xC0
     uint32_t unk_8C;
 
     uint32_t unk_90;
-    uint32_t lockable_int;
+    int lockable_int;
     uint32_t unk_98;
     uint32_t unk_9C;
 

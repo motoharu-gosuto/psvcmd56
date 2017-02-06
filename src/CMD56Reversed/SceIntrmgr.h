@@ -54,3 +54,5 @@ int SceIntrmgrForDriver_register_interrupt_5c1feb29(int code, const char *name, 
 int SceIntrmgrForDriver_180435ec(int code);
 
 int SceIntrmgrForDriver_d6009b98(int code);
+
+int SceIntrmgrForDriver_7117e827(int code);
