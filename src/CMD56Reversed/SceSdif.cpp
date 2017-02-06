@@ -177,6 +177,245 @@ void sub_C6AEE0(sd_context_data* r0, cmd_input* r1)
 void sub_C68598(sd_context_global* ctx, int unk1)
 {
    //some important code
+
+   sd_context_data* r5 = ctx->ctx_data;
+   int r0 = unk1 << 0x1F; //31
+   int r7 = unk1;
+
+   int r4 = r5->membase_1000;
+
+   if(r0 >= 0)
+   {
+      //goto loc_C685DE
+   }
+   else
+   {
+      int r8 = 0x1FF;
+      int r8 = r8 << 8;
+      SceSdif.ScePervasiveForDriver._imp_714eefb7();
+
+      int r8 = r0 & r8;
+      int r6 = r5->array_idx;
+
+      if(r8 != 0)
+      {
+         if(r8 == 0x100)
+         {
+            SceSdif.SceSysconForDriver._imp_cbd6d8bc();
+
+            int r0 = r0 & 0xFF0000;
+            if(r0 < 0x800000) //BCC
+            {
+               if(r6 == 0)
+               {
+                  int r0 = r6;
+                  int r1 = 4;
+                  SceSdif.ScePervasiveForDriver._imp_043b33f5();
+                  //goto loc_C6865A
+               }
+               else
+               {
+                  int r3 = r6 - 1;
+                  if(r3 > 1)
+                  {
+                     int r0 = r6;
+                     SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                     //goto loc_C6867A
+                  }
+                  else
+                  {
+                     int r0 = r6;
+                     int r1 = 2;
+                     SceSdif.ScePervasiveForDriver._imp_043b33f5();
+                     
+                     int r0 = r6;
+                     SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                     //goto loc_C6867A
+                  }
+               }
+            }
+            else
+            {
+               if(r6 == 0)
+               {
+                  int r0 = r6;
+                  int r1 = 5;
+                  SceSdif.ScePervasiveForDriver._imp_043b33f5();
+                  //goto loc_C6865A
+               }
+               else
+               {
+                  if(r6 == 1)
+                  {
+                     SceSdif.SceSysrootForDriver._imp_7b7f8171();
+                     if(r0 == 0)
+                     {
+                        int r0 = r6;
+                        int r1 = 3;
+                        SceSdif.ScePervasiveForDriver._imp_043b33f5();
+                        
+                        int r0 = r6;
+                        SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                        //goto loc_C6867A
+                     }
+                     else
+                     {
+                        int r0 = r6;
+                        int r1 = 6;
+                        SceSdif.ScePervasiveForDriver._imp_043b33f5();
+                        
+                        int r0 = r6;
+                        SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                        //goto loc_C6867A
+                     }
+                  }
+                  else
+                  {
+                     if(r6 != 2)
+                     {
+                        int r0 = r6;
+                        SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                        //goto loc_C6867A
+                     }
+                     else
+                     {
+                        int r0 = r6;
+                        int r1 = 3;
+                        SceSdif.ScePervasiveForDriver._imp_043b33f5();
+                        
+                        int r0 = r6;
+                        SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                        //goto loc_C6867A
+                     }
+                  }
+               }
+            }
+         }
+         else
+         {
+            if(r6 != 0)
+            {
+               int r0 = r6;
+               SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+               //goto loc_C6867A
+            }
+            else
+            {
+               //goto loc_C6865A
+            }
+         }
+      }
+      else
+      {
+         SceSdif.SceSblAIMgrForDriver._imp_c6e83f34();
+         if(r0 == 0)
+         {
+            if(r6 <= 1)
+            {
+               int r0 = r6;
+               int r1 = 0x200;
+               SceSdif.ScePervasiveForDriver._imp_9f8e589c();
+
+               if(r6 != 0)
+               {
+                  int r0 = r6;
+                  SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+                  //goto loc_C6867A
+               }
+               else
+               {
+                  //goto loc_C6865A
+               }
+            }
+            else
+            {
+               int r0 = r6;
+               SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+               //goto loc_C6867A
+            }
+         }
+         else
+         {
+            if(r6 != 0)
+            {
+               int r1 = r8;
+               int r0 = r6;
+               SceSdif.ScePervasiveForDriver._imp_9f8e589c();
+               
+               int r0 = r6;
+               SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+                     
+               //goto loc_C6867A
+            }
+            else
+            {
+               int r0 = r6;
+               int r1 = 0x200;
+               SceSdif.ScePervasiveForDriver._imp_9f8e589c();
+               
+               //goto loc_C6865A
+            }
+         }
+      }
+   }
+
+   //loc_C6865A:
+   {
+      int r3 = 0xC78008;
+      int r3 = r3[0];
+
+      if(r3 == 1)
+      {
+         int r1 = dword_C72CB0;
+         int r2 = "Skip sdif port[%d] reset\n";
+         int r3 = 0;
+         int r0 = 0xF;
+         SceSdif.SceDebugForDriver._imp_print_02b04343();
+
+         //goto loc_C6867A
+      }
+      else
+      {
+         int r0 = 0;
+         SceSdif.ScePervasiveForDriver._imp_3d8a8712();
+         int r1 = 0;
+         int r0 = 3;
+         int r2 = r1;
+         int r3 = r1;
+         SceSdif.SceSblSmSchedProxyForKernel._imp_7894b6f0();
+         
+         //goto loc_C6867A
+      }
+   }
+
+   //loc_C6867A:
+   {
+      int r0 = r6;
+      SceSdif.ScePervasiveForDriver._imp_d326e15f();
+
+      int r0 = r6;
+      SceSdif.ScePervasiveForDriver._imp_3cf7a012();
+
+      int r3 = 0xE;
+
+      int r5[0x38] = r3;
+
+      if(r6 == 3)
+      {
+      }
+      else
+      {
+      }
+   }
 }
 
 //------------------------
