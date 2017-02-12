@@ -31,3 +31,9 @@ int SceSysrootForKernel_f10ab792(int arg0, elf_info_pair* arg1);
 
 //TODO: remove this function
 void SceSysroot_InitializeContext();
+
+int SceSysrootForDriver_ksceSysrootIsManufacturingMode_55392965();
+
+int SceSysrootForDriver_check_boot_type_indicator_50fe3b4d();
+
+int SceSysrootForDriver_check_sysroot_buffer_84_8aa268d6();

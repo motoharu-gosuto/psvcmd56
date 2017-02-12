@@ -315,3 +315,18 @@ void SceSysroot_InitializeContext()
    _8BF5F8_g2[2].elf_data = 0;
    _8BF5F8_g2[2].elf_size = 0xAAAAAAAA;
 }
+
+int SceSysrootForDriver_ksceSysrootIsManufacturingMode_55392965()
+{
+   return 0;
+}
+
+int SceSysrootForDriver_check_boot_type_indicator_50fe3b4d()
+{
+   return 0;
+}
+
+int SceSysrootForDriver_check_sysroot_buffer_84_8aa268d6()
+{
+   return 0;
+}
