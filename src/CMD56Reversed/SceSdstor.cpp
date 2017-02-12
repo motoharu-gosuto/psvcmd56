@@ -901,7 +901,7 @@ struct mount_data
 #pragma pack(pop)
 
 //block device name is specified without partition (partition:name)
-int proc_get_mount_data_C15B80(char* blockDeviceName, int mntNum, mount_data* mnt)
+int proc_get_mount_data_C15B80(char* blockDeviceName, int nameLength, mount_data* mnt)
 {
    char var_30[4];
 
@@ -1247,7 +1247,7 @@ int exit_loc_C15576()
 }
 
 //this procedure initializes MBR records in sdstor globals
-int proc_C1542C(char blockDeviceName, int mntNum)
+int proc_C1542C(char* blockDeviceName, int nameLength)
 {
    mount_data mntData;
    int ctx_index_ptr_2C;
@@ -1255,7 +1255,7 @@ int proc_C1542C(char blockDeviceName, int mntNum)
    int var_24; //cookie
    
    int r0 = blockDeviceName;
-   int r1 = mntNum;
+   int r1 = nameLength;
 
    int r4 = &var_009EA004;
    int r6 = r1;
@@ -1263,9 +1263,11 @@ int proc_C1542C(char blockDeviceName, int mntNum)
    int r5 = r0;
    var_24 = r3;
 
-   if(r1 == 3)
+   if(r1 == 3) //check name length
    {
       #pragma region
+
+      //check first 3 letters of blockDeviceName ?
 
       char r0 = r0[0];
       int r0 = SceSysclibForDriver_cdf7f155();
