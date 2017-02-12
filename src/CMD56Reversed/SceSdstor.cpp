@@ -879,9 +879,36 @@ int proc_load_MBR_validate_partition_header_string_C14F2C()
 
 }
 
-int proc_get_sd_ctx_index_C15B80()
-{
+char byte_C1A280[7] = {0, 1, 1, 2, 3, 4, 0xFF};
 
+#pragma pack(push,1)
+
+struct mount_data
+{
+   char unk_0;
+   union
+   {
+      short vsh_mount_id;
+      struct
+      {
+         char vmid0;
+         char vmid1;
+      };
+   };
+   char unk_1;
+};
+
+#pragma pack(pop)
+
+//block device name is specified without partition (partition:name)
+int proc_get_mount_data_C15B80(char* blockDeviceName, int mntNum, mount_data* mnt)
+{
+   char var_30[4];
+
+   mnt->unk_0 = byte_C1A280[var_30[0]];
+   mnt->vmid0 = var_30[1]; //vsh mount id part
+   mnt->vmid1 = var_30[3]; //vsh mount id part
+   mnt->unk_1 = var_30[2];
 }
 
 int proc_get_sd_init_context_C15DF4()
@@ -966,14 +993,14 @@ int exit_loc_C15652(int r2)
 
 int exit_loc_C15460()
 {
-   int r0 = &ctx_index;
+   int r0 = &mntData;
    nullsub_2();
-   char r0 = ctx_index;
+   char r0 = mntData;
    int r0 = proc_load_MBR_validate_partition_header_string_C14F2C();
    if(r0 <= 0)
       return exit_loc_C15608(var_24);
       
-   char r3 = ctx_index;
+   char r3 = mntData;
    if(r3 <= 4)
    {
       int r2 = 0x00BDEA40;
@@ -1006,8 +1033,8 @@ int exit_loc_C15460()
       if(r7 != 1)
          return exit_loc_C154A6(r5, var_24);
 
-      char r3 = ctx_index;
-      char r6 = ctx_index[1];
+      char r3 = mntData;
+      char r6 = mntData[1];
       if(r3 <= 4)
       {
          int r2 = 0x00BDEA40;
@@ -1025,7 +1052,7 @@ int exit_loc_C15460()
 
       if(r6 == 1)
       {
-         char r2 = ctx_index[2];
+         char r2 = mntData[2];
          if(r2 != 0x11)
          {
             return exit_loc_C15652(r2);
@@ -1037,7 +1064,7 @@ int exit_loc_C15460()
       }
       else
       {
-         char r2 = ctx_index[2];
+         char r2 = mntData[2];
          if(r2 != 0xF)
          {
             return exit_loc_C154A8(r5,r6,var_24);
@@ -1055,7 +1082,7 @@ int exit_loc_C15460()
    {
       #pragma region
 
-      char r3 = ctx_index;
+      char r3 = mntData;
       if(r3 <= 4)
       {
          int r2 = 0x00BDEA40;
@@ -1063,10 +1090,10 @@ int exit_loc_C15460()
          int r7 = r7 * r3 + r2;
       }
          
-      char r3 = ctx_index[1];
+      char r3 = mntData[1];
       if(r3 == 1)
       {
-         char r3 = ctx_index[2];
+         char r3 = mntData[2];
          if(r3 == 0x11)
             return exit_loc_C1574A(r3);
       }
@@ -1074,7 +1101,7 @@ int exit_loc_C15460()
       {
          if(r3 == 0)
          {
-            char r3 = ctx_index[2];
+            char r3 = mntData[2];
             if(r3 == 0xF)
             {
                int r3 = 0x10;
@@ -1099,8 +1126,8 @@ int exit_loc_C15460()
             {
                int r0 = r9[8];
                proc_check_some_index_C15CD4();
-               char r3 = ctx_index[2];
-               char r2 = ctx_index[3];
+               char r3 = mntData[2];
+               char r2 = mntData[3];
                if(r3 == r0)
                {
                   if(r2 == 2)
@@ -1130,8 +1157,8 @@ int exit_loc_C15460()
 
 int exit_loc_C155AC()
 {
-   char r3 = ctx_index[2];
-   ctx_index = r5;
+   char r3 = mntData[2];
+   mntData = r5;
    if(r3 == 8)
    {
       if(r5 != 4)
@@ -1140,16 +1167,16 @@ int exit_loc_C155AC()
          {
             int r2 = 1;
             int r3 = 0;
-            ctx_index[1] = r2;
-            ctx_index[2] = r3;
+            mntData[1] = r2;
+            mntData[2] = r3;
          }
       }
       else
       {
          int r2 = 1;
          int r3 = 0;
-         ctx_index[1] = r2;
-         ctx_index[2] = r3;
+         mntData[1] = r2;
+         mntData[2] = r3;
       }
    }
 
@@ -1219,15 +1246,16 @@ int exit_loc_C15576()
    return exit_loc_C155AC();
 }
 
-int proc_C1542C(int arg0, int arg1)
+//this procedure initializes MBR records in sdstor globals
+int proc_C1542C(char blockDeviceName, int mntNum)
 {
-   int ctx_index;
+   mount_data mntData;
    int ctx_index_ptr_2C;
    int ctx_index_ptr_28;
    int var_24; //cookie
    
-   int r0 = arg0;
-   int r1 = arg1;
+   int r0 = blockDeviceName;
+   int r1 = mntNum;
 
    int r4 = &var_009EA004;
    int r6 = r1;
@@ -1333,13 +1361,13 @@ int proc_C1542C(int arg0, int arg1)
    //loc_C15446:
    int r0 = r5;
    int r1 = r6;
-   int r2 = &ctx_index;
-   int r0 = proc_get_sd_ctx_index_C15B80(r0,r1,r2);
+   int r2 = &mntData;
+   int r0 = proc_get_mount_data_C15B80(r0, r1, r2);
 
    if(r0 < 0)
       return exit_loc_C15608(var_24);
 
-   char r3 = *ctx_index;
+   char r3 = *mntData;
    if(r3 == 0xFF)
    {
       int check0 = SceSysrootForDriver_ksceSysrootIsManufacturingMode_55392965();
