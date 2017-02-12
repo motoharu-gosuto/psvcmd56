@@ -1,3 +1,7 @@
+#include "SceSysmem.h"
+#include "SceSysmemGlobalVariables.h"
+
+
 char dword_C1A508[] = 
 {
    0xDC, // SceSdif0
@@ -861,4 +865,581 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
     
     int r0 = 0;
     return exit_loc_C192B0(r0, var_2C);
+}
+
+//=============================================
+
+int exit_loc_C154B6(int r0, int var_24)
+{
+   if(var_24 == var_009EA004)
+      return r0;
+   else
+      return STACK_CHECK_FAIL;
+}
+
+int exit_loc_C15608(int var_24)
+{
+   return exit_loc_C154B6(0, var_24);
+}
+
+int exit_loc_C15558(int r6, int r7, int var_24)
+{
+   int r0 = SceSdstor.SceThreadmgrForDriver._imp_db395782(r6);
+   if(r0 < 0)
+      return exit_loc_C15608(var_24);
+   else
+      return exit_loc_C154B6(r7, var_24);
+}
+
+int exit_loc_C154A8(int r5, int r6, int var_24)
+{
+   int r0 = SceSdstor.SceThreadmgrForDriver._imp_db395782(r5);
+   if(r0 < 0)
+      return exit_loc_C15608(var_24);
+   else
+      return exit_loc_C154B6(r6);
+}
+
+int exit_loc_C154A6(int r5, int var_24)
+{
+   return exit_loc_C154A8(r5, 0, var_24);
+}
+
+int exit_loc_C1574A(int r3)
+{
+   int r3 = (r3 << 3) - r3;
+   int r7 = r7 + (r3 << 2);
+   int r3 = r7[0x60];
+   int r6 = r7 + 0x58;
+   if(r3 == 0)
+   {
+      int r6 = 0;
+   }
+      
+   return exit_loc_C154A8(r5, r6, var_24);
+}
+
+int exit_loc_C15652(int r2)
+{
+   int r2 = (r2 << 3) - r2;
+   int r3 = r3 + (r2 << 2);
+   int r6 = r3 + 0x58;
+   int r3 = r3[0x60];
+   if(r3 == 0)
+      int r6 = 0;
+
+   return exit_loc_C154A8(r5, r6, var_24);
+}
+
+int proc_C1542C(int arg0, int arg1)
+{
+   int ctx_index;
+   int ctx_index_ptr_2C;
+   int ctx_index_ptr_28;
+   int var_24; //cookie
+   
+   int r0 = arg0;
+   int r1 = arg1;
+
+   int r4 = &var_009EA004;
+   int r6 = r1;
+   int r3 = *r4;
+   int r5 = r0;
+   var_24 = r3;
+
+   if(r1 == 3)
+   {
+      #pragma region
+
+      char r0 = r0[0];
+      int r0 = SceSdstor.SceSysclibForDriver._imp_cdf7f155();
+      int r1 = r0 << 0x1D;
+
+      if(r1 < 0)
+      {
+         char r0 = r5[1];
+         int r0 = SceSdstor.SceSysclibForDriver._imp_cdf7f155();
+         int r2 = r0 << 0x1D;
+         if(r2 < 0)
+         {
+            char r0 = r5[2];
+            int r0 = SceSdstor.SceSysclibForDriver._imp_cdf7f155();
+            int r3 = r0 << 0x1D;
+            if(r3 < 0)
+            {
+               int r0 = r5;
+               int r1 = 0;
+               int r2 = 0x0A;
+               int r0 = SceSdstor.SceSysclibForDriver._imp_strtol_ab77c5aa(r0, r1, r2);
+               if(r0 < 0)
+                  return exit_loc_C15608(var_24);
+
+               int r3 = 0x51EB851F;
+               int r2 = r0 >> 0x1F;
+               int r6 = ((int64_t)r3 * (int64_t)r0) >> 32; //takes most significant 32 bits
+               int r7 = 0x64;
+               int r6 = (r6 >> 5) - r2;
+               int r7 = r0 - (r7 * r6);
+               //UXTB            R6, R6
+               //UXTB            R3, R7
+
+               if(r6 > 4)
+               {
+                  int r8 = 1;
+                  return exit_loc_C15608(var_24);
+               }
+
+               if(r3 > 0x10)
+               {
+                  int r8 = 1;
+                  return exit_loc_C15608(var_24);
+               }
+
+               int r8 = 0;
+                        
+               int r0 = r6;
+               int r0 = proc_load_MBR_validate_partition_header_string_C14F2C();
+               if(r0 < 0)
+                  return exit_loc_C15608(var_24);
+
+               int r3 = 0x00BDEA40;
+               int r2 = 0x238;
+               int r6 = r2 * r6 + r3;
+               int r0 = r6;
+               int r0 = SceSdstor.SceThreadmgrForDriver._imp_70627f3a();
+               if(r0 < 0)
+                  return exit_loc_C15608(var_24);
+
+               char r3 = r6[0x234];
+               if(r3 != 1)
+               {
+                  int r7 = r8;
+                  return exit_loc_C15558(r6, r7, var_24);
+               }
+
+               int r7 = (r7 << 3) - r7;
+               int r7 = r6 + (r7 << 2);
+               int r7 = r7 + 0x58;
+               int r3 = r7[0x8];
+
+               if(r3 == 0)
+                  return exit_loc_C15558(r6, r7, var_24);
+
+               int r0 = r7 + 0x10;
+               int r1 = r5;
+               int r2 = 3;
+               int r0 = SceSdstor.SceSysclibForDriver._imp_strncmp_12cee649();
+               if(r0 != 0)
+               {
+                  int r7 = 0;
+               }
+
+               return exit_loc_C15558(r6, r7, var_24);
+            }
+         }
+      }
+
+      #pragma endregion
+   }
+
+   //loc_C15446:
+   int r0 = r5;
+   int r1 = r6;
+   int r2 = &ctx_index;
+   int r0 = proc_get_sd_ctx_index_C15B80(r0,r1,r2);
+
+   if(r0 < 0)
+      return exit_loc_C15608(var_24);
+
+   char r3 = *ctx_index;
+   if(r3 == 0xFF)
+   {
+      int r0 = SceSdstor.SceSysrootForDriver._imp_ksceSysrootIsManufacturingMode_55392965();
+      if(r0 == 0)
+      {
+         int r0 = SceSdstor.SceSysrootForDriver._imp_check_boot_type_indicator_50fe3b4d();
+         if(r0 == 0)
+         {
+            //goto loc_C155F4
+         }
+         else
+         {
+            //goto loc_C15576
+         }
+      }
+      else
+      {
+         //goto loc_C155F4
+      }
+
+      //loc_C155F4:
+      {
+         #pragma region loc_C155F4
+
+         int r3 = 0x00BDE001;
+         char r5 = r3[0];
+         if(r5 == 5)
+         {
+            int r3 = &dword_C1A098;
+            int r5 = &ctx_index_ptr_28;
+            int r6 = &ctx_index_ptr_2C;
+            short r1 = r3[0];
+            char r2 = r3[2];
+            short r3 = r3[4];
+            ctx_index_ptr_28 = r1;
+            r5[2] = r2;
+            ctx_index_ptr_2C = r3;
+            int r0 = SceSdstor.SceSysrootForDriver._imp_ksceSysrootIsManufacturingMode_55392965();
+            if(r0 == 0)
+            {
+               int r5 = 2;
+               //goto loc_C155AC
+            }
+            else
+            {
+               int r0 = 0xB;
+               int r0 = SceSdstor.SceSysrootForDriver._imp_check_sysroot_buffer_84_8aa268d6();
+               if(r0 == 0)
+                  int r0 = r6;
+               else
+                  int r0 = r5;
+
+               int r5 = r0[0];
+               if(r5 == 5)
+               {
+                  int r5 = 2;
+                  //goto loc_C155AC
+               }
+               else
+               {
+                  int r6 = r0;
+
+                  //loc_C156AE:
+                  while(true)
+                  {
+                     int r0 = r5;
+                     int r0 = proc_get_sd_init_context_C15DF4();
+                     if(r0 != 0)
+                     {
+                        int r0 = proc_initialize_generic_1_C15E50();
+                        if(r0 >= 0)
+                        {
+                           if(r5 != 0)
+                           {
+                              //goto loc_C155AC
+                           }
+                           else
+                           {
+                              //goto loc_C15576
+                           }
+                        }
+                     }
+
+                     //LDRB.W          R5, [R6,#1]!
+                     if(r5 == 5)
+                     {
+                        int r5 = 2;
+                        //goto loc_C155AC
+                     }
+                  }
+               }
+            }
+         }
+         else
+         {
+            if(r5 != 0)
+            {
+               //goto loc_C155AC
+            }
+            else
+            {
+               //goto loc_C15576
+            }
+         }
+
+         #pragma endregion
+      }
+
+      //loc_C15576:
+      {
+         #pragma region loc_C15576
+
+         int r3 = 0x00BDE000;
+         char r5 = r3[0];
+         if(r5 != 0)
+         {
+            //goto loc_C155AC
+         }
+         else
+         {
+            int r3 = &dword_C1A098;
+            int r5 = &ctx_index_ptr_28;
+            int r6 = &ctx_index_ptr_2C;
+            short r1 = r3[0];
+            char r2 = r3[2];
+            short r3 = r3[4];
+
+            ctx_index_ptr_28 = r1;
+            r5[2] = r2;
+            ctx_index_ptr_2C = r3;
+            int r0 = SceSdstor.SceSysrootForDriver._imp_ksceSysrootIsManufacturingMode_55392965();
+            if(r0 != 0)
+            {
+               int r0 = 0x0B;
+               int r0 = SceSdstor.SceSysrootForDriver._imp_check_sysroot_buffer_84_8aa268d6();
+               if(r0 == 0)
+                  int r0 = r6;
+               else
+                  int r0 = r5;
+
+               char r5 = r0[0];
+               if(r5 == 5)
+               {
+                  int r5 = 2;
+                  //goto loc_C155AC
+               }
+               else
+               {
+                  int r6 = r0;
+
+                  //loc_C15794:
+                  while(true)
+                  {
+                     int r0 = r5;
+                     int r0 = proc_get_sd_init_context_C15DF4();
+                     if(r0 != 0)
+                     {
+                        int r0 = proc_initialize_generic_1_C15E50();
+                        if(r0 >= 0)
+                        {
+                           //goto loc_C155AC
+                        }
+                     }
+
+                     //LDRB.W          R5, [R6,#1]!
+                     if(r5 == 5)
+                     {
+                        int r5 = 2;
+                        //goto loc_C155AC
+                     }
+                  }
+               }
+            }
+            else
+            {
+               int r5 = 2;
+               //goto loc_C155AC
+            }
+         }
+
+         #pragma endregion
+      }
+
+      //loc_C155AC
+      {
+         #pragma region loc_C155AC
+         char r3 = ctx_index[2];
+         ctx_index = r5;
+         if(r3 != 8)
+         {
+            //goto loc_C15460
+         }
+         else
+         {
+            if(r5 != 4)
+            {
+               if(r5 == 1)
+               {
+                  int r2 = 1;
+                  int r3 = 0;
+                  ctx_index[1] = r2;
+                  ctx_index[2] = r3;
+               }
+            }
+            else
+            {
+               int r2 = 1;
+               int r3 = 0;
+               ctx_index[1] = r2;
+               ctx_index[2] = r3;
+            }
+
+            //goto loc_C15460
+         }
+
+         #pragma endregion
+      }
+
+   }
+   else
+   {
+      //goto loc_C15460
+   }
+
+   //goto loc_C15460
+   {
+      #pragma region loc_C15460
+      int r0 = &ctx_index;
+      nullsub_2();
+      char r0 = ctx_index;
+      int r0 = proc_load_MBR_validate_partition_header_string_C14F2C();
+      if(r0 <= 0)
+         return exit_loc_C15608(var_24);
+      
+      char r3 = ctx_index;
+      if(r3 <= 4)
+      {
+         int r2 = 0x00BDEA40;
+         int r5 = 0x238;
+      }
+      else
+      {
+         int r5 = 0;
+      }
+
+      if(r3 <= 4)
+      {
+         int r5 = r5 * r3 + r2;
+      }
+
+      int r0 = r5;
+      int r0 = SceSdstor.SceThreadmgrForDriver._imp_70627f3a();
+      if(r0 < 0)
+         return exit_loc_C15608(var_24);
+
+      char r3 = r5[0x234];
+      if(r3 != 1)
+         return exit_loc_C154A6(r5, var_24);
+
+      char r7 = r5[0x236];
+      if(r7 != 0)
+      {
+         #pragma region
+
+         if(r7 != 1)
+            return exit_loc_C154A6(r5, var_24);
+
+         char r3 = ctx_index;
+         char r6 = ctx_index[1];
+         if(r3 <= 4)
+         {
+            int r2 = 0x00BDEA40;
+            int r1 = 0x238;
+         }
+         else
+         {
+            int r3 = 0;
+         }
+
+         if(r3 <= 4)
+         {
+            int r3 = r1 * r3 + r2;
+         }
+
+         if(r6 == 1)
+         {
+            char r2 = ctx_index[2];
+            if(r2 != 0x11)
+            {
+               return exit_loc_C15652(r2);
+            }
+            else
+            {
+               return exit_loc_C154A6(r5,var_24);
+            }
+         }
+         else
+         {
+            char r2 = ctx_index[2];
+            if(r2 != 0xF)
+            {
+               return exit_loc_C154A8(r5,r6,var_24);
+            }
+            else
+            {
+               int r2 = 0x10;
+               return exit_loc_C15652(r2);
+            }
+         }
+
+         #pragma endregion
+      }
+      else
+      {
+         #pragma region
+
+         char r3 = ctx_index;
+         if(r3 <= 4)
+         {
+            int r2 = 0x00BDEA40;
+            int r7 = 0x238;
+            int r7 = r7 * r3 + r2;
+         }
+         
+         char r3 = ctx_index[1];
+         if(r3 == 1)
+         {
+            char r3 = ctx_index[2];
+            if(r3 == 0x11)
+               return exit_loc_C1574A(r3);
+         }
+         else
+         {
+            if(r3 == 0)
+            {
+               char r3 = ctx_index[2];
+               if(r3 == 0xF)
+               {
+                  int r3 = 0x10;
+                  return exit_loc_C1574A(r3);
+               }
+            }
+         }
+
+         //loc_C156F2:
+         int r7 = r7 + 0x58;
+         int r8 = 0;
+
+         //loc_C1570C:
+         while(true)
+         {
+            int r3 = r7[8];
+            int r6 = r7;
+            if(r3 != 0)
+            {
+               int r9 = r7[0x0C];
+               if(r9 != 0)
+               {
+                  int r0 = r9[8];
+                  proc_check_some_index_C15CD4();
+                  char r3 = ctx_index[2];
+                  char r2 = ctx_index[3];
+                  if(r3 == r0)
+                  {
+                     if(r2 == 2)
+                        return exit_loc_C154A8(r5,r6,var_24);
+
+                     char r3 = r9[0xA];
+                     if(r3 == r2)
+                     {
+                        return exit_loc_C154A8(r5,r6,var_24);
+                     }
+                  }
+               }
+            }
+
+            int r8 = r8 + 1;
+            int r7 = 0x1C;
+            //UXTB.W          R8, R8
+            if(r8 == 0x10)
+            {
+               return exit_loc_C154A6(r5, var_24);
+            }
+         }
+
+         #pragma endregion
+      }
+
+      #pragma endregion
+   }
 }
