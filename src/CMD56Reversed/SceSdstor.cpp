@@ -874,6 +874,103 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
 
 //=============================================
 
+//indirect references to mbr table init
+
+typedef struct pair_C172E0
+{
+   char* blockDeviceName;
+   int nameLength;
+} pair_C172E0;
+
+typedef struct data_C172E0
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   int unk_C;
+   
+   int unk_10;
+   int unk_14;
+   int unk_18;
+   int unk_1C;
+   
+   int unk_20;
+   int unk_24;
+   int unk_28;
+   int unk_2C;
+   
+   int unk_30;
+   int unk_34;
+   int unk_38;
+   int unk_3C;
+   
+   int unk_40;
+   int unk_44;
+   int unk_48;
+   int unk_4C;
+   
+   int unk_50;
+   int unk_54;
+   int unk_58;
+   int unk_5C;
+   
+   int unk_60;
+   int unk_64;
+   int unk_68;
+   SceUID pool_uid;
+}data_C172E0;
+
+typedef struct ctx_C172E0
+{
+   data_C172E0* data;
+   int* result;
+   pair_C172E0* mount;
+}ctx_C172E0;
+
+int sub_C172E0(ctx_C172E0 *ctx)
+{
+   return 0;
+}
+
+
+typedef struct ctx_C17550
+{
+   int unk_0;
+   char* blockDeviceName;
+   int unk_8;
+   int unk_C;
+   
+   char* dest;
+   int len;
+   int unk_18;
+   
+}ctx_C17550;
+
+int sub_C17550(void *ctx)
+{
+   return 0;
+}
+
+typedef struct ctx_C175D0
+{
+   int unk_0;
+   int unk_4;
+   int unk_8;
+   
+   char* blockDeviceName;
+   int nameLength;
+   
+   int unk_14;
+   int unk_18;
+} ctx_C175D0;
+
+int proc_initialization_root_C175D0(ctx_C175D0 *ctx)
+{
+   return 0;
+}
+
+//=============================================
+
 int proc_load_MBR_validate_partition_header_string_C14F2C()
 {
 
