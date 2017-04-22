@@ -1,5 +1,9 @@
 #include "SceIofilemgr.h"
 
+#include "Constants.h"
+#include "SceSysmemGlobalVariables.h"
+
+
 typedef struct vfs_block_dev_info //size is 0x14
 {
   char* vitaMount;
@@ -24,208 +28,161 @@ typedef struct vfs_mount_point_info_base
 
 //==========================
 
-int loc_BE6AB2(int r0, int var_2C, int* r4)
+int loc_BE6AB2(int r0, int var_2C)
 {
-   int r2 = var_2C;
-   int r3 = *r4;
-   if(r2 != r3)
-    return STACK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+   if(var_2C == var_009EA004)
+      return r0;
    else
-    return r0;
+      return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
 }
 
-int loc_BE700E(int var_2C, int* r4)
+int loc_BE700E(int var_2C)
 {
-   int r0 = 0x80010016;
-   return loc_BE6AB2(r0, var_2C, r4);
+   return loc_BE6AB2(0x80010016, var_2C);
 }
 
-int loc_BE6AAA(int r5, int r9, int var_2C, int* r4)
+int loc_BE6AAA(int r5, int r9, int var_2C)
 {
-   int r0 = r5;
-   sub_BEC808(r0)
-   int r0 = r9;
-   return loc_BE6AB2(r0, var_2C, r4);
+   sub_BEC808(r5);
+   return loc_BE6AB2(r9, var_2C);
 }
 
-int loc_BE6D48(int var_2C, int* r4)
+int loc_BE6D48(int var_2C)
 {
-   int r0 = 0;
-   return loc_BE6AB2(r0, var_2C, r4);
+   return loc_BE6AB2(0, var_2C);
 }
 
-int loc_BE6D32(int r9, int r7, int r5, int var_2C, int* r4)
+int loc_BE6D32(int r9, int r7, int r5, int var_2C)
 {
-    int r0 = r7;
-    sub_BECE80(r0);
+   sub_BECE80(r7);
 
-    if(r9 == 0)
-        return loc_BE6D48(var_2C, r4);
-    else
-        return loc_BE6AAA(r5, r9, var_2C, r4);
+   if(r9 == 0)
+      return loc_BE6D48(var_2C);
+   else
+      return loc_BE6AAA(r5, r9, var_2C);
 }
 
-int loc_BE6D2A(int r7, int r5, int var_2C, int* r4)
+int loc_BE6D2A(int r7, int r5, int var_2C)
 {
-    int r9 = 0x80010016;
-    return loc_BE6D32(r9, r7, r5, var_2C, r4);
+   return loc_BE6D32(0x80010016, r7, r5, var_2C);
 }
 
-int loc_BE730E(int r5, int var_2C, int* r4)
+int loc_BE730E(int r5, int var_2C)
 {
-   int r9 = 0x8001000C;
-   return loc_BE6AAA(r5, r9, var_2C, r4)
+   return loc_BE6AAA(r5, 0x8001000C, var_2C);
 }
 
-int loc_BE74AC(int unk3, int r5, int var_2C, int* r4)
+int loc_BE74AC(int unk3, int r5, int var_2C)
 {
-   int r0 = unk3;
-   sub_BECE80(r0);
-   int r9 = 0x8001000C;
-   return loc_BE6AAA(r5, r9, var_2C, r4)
+   sub_BECE80(unk3);
+   return loc_BE6AAA(r5, 0x8001000C, var_2C)
 }
 
-int loc_BE6C96(int r5, int r9, int unk3, int var_D8, int var_2C, int* r4)
+int loc_BE6C96(int r5, int r9, int unk3, int var_D8, int var_2C)
 {
-    int r0 = unk3;
-    sub_BECE80(r0);
+   sub_BECE80(unk3);
     
-    int r0 = var_D8;
-    sub_BECE80(r0)
+   sub_BECE80(var_D8);
     
-    if(r9 == 0)
-        return loc_BE6D48(var_2C, r4);
-    
-    return loc_BE6AAA(r5, r9, var_2C, r4)
+   if(r9 == 0)
+      return loc_BE6D48(var_2C);
+   else
+      return loc_BE6AAA(r5, r9, var_2C);
 }
 
-int loc_BE7256(int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
+int loc_BE7256(int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
 {
-   int r0 = unk2;
-   if(r0 == 0)
-    return loc_BE6C96(r5, r9, unk3, var_D8, var_2C, r4);
+   if(unk2 == 0)
+      return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
     
+   sub_BE5814(unk2);
+   
+   return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+}
+
+int loc_BE7252(int r0, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
+{
    sub_BE5814(r0);
+   return loc_BE7256(r5, r9, unk2, unk3, var_D8, var_2C);
+}
+
+int loc_BE7466(int r0, int r5, int unk2, int unk3, int var_D8, int var_2C)
+{
+   return loc_BE7252(r0, r5, 0x80010010, unk2, unk3, var_D8, var_2C);
+}
+
+int loc_BE7250(int n0, int r9, int r5, int unk2, int unk3, int var_D8, int var_2C)
+{
+   return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+}
+
+int loc_BE74D6(int n0, int r5, int unk2, int unk3, int var_D8, int var_2C)
+{
+   return loc_BE7252(n0, r5, 0x8001001E, unk2, unk3, var_D8, var_2C);
+}
+
+int loc_BE74BE(int n0, int r9, int r5, int unk2, int unk3, int var_D8, int var_2C)
+{
+   if(r9 != 0x800F090D && r9 != 0x8001000D)
+      return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C);
+   else
+      return loc_BE74D6(n0, r5, unk2, unk3, var_D8, var_2C);
+}
+
+int loc_BE77A6(int n0, int r5, int unk2, int unk3, int var_D8, int var_2C)
+{
+   return loc_BE7252(n0, r5, 0x8001000C, unk2, unk3, var_D8, var_2C);
+}
+
+int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
+{
+   SceIofilemgr.SceIofilemgrForDriver._exp_unk_6b3ca9f7(n0[0x4C]); //lock print
+
+   n0[0x4C][0x60] = n0[0x4C][0x60] - 1; //counter ?
    
-   return loc_BE6C96(r5, r9, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE7252(int r0, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-    sub_BE5814(r0);
-    return loc_BE7256(r5, r9, unk2, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE7466(int r0, int r5, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-    int r9 = 0x80010010;
-    return loc_BE7252(r0, r5, r9, unk2, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE7250(int n0, int r9, int r5, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-    int r0 = n0;
-    return loc_BE7252(r0, r5, r9, unk2, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE74D6(int n0, int r5, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-   int R9 = 0x8001001E;
-   int r0 = n0;
-   return loc_BE7252(r0, r5, r9, unk2, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE74BE(int n0, int r9, int r5, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-    int r3 = 0x800F090D;
-    if(r9 != r3)
-    {
-        int r3 = 0x8001000D;
-        if(r9 != r3)
-            return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C, r4);
-    }
-
-	return loc_BE74D6(n0, r5, unk2, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE77A6(int n0, int r5, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-    int r9 = 0x8001000C;
-    int r0 = n0;
-    return loc_BE7252(r0, r5, r9, unk2, unk3, var_D8, var_2C, r4);
-}
-
-int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
-{
-   int r3 = n0;
-   void* r0 = r3[0x4C]; //mutex
-   SceIofilemgr.SceIofilemgrForDriver._exp_unk_6b3ca9f7(r0); //lock print
-
-   int r3 = n0;
-   int r1 = r7;
-   int r3 = r3[0x4C];
-   int r2 = r3[0x60];
-   int r0 = r3;
-   int r2 = r2 - 1; //counter ?
-   r3[0x60] = r2;
+   sub_BEC578(n0[0x4C], r7);
    
-   sub_BEC578(r0, r1);
-   
-   int r3 = n0;
-   void* r0 = r3[0x4C]; //mutex
-   SceIofilemgr.SceIofilemgrForDriver._exp_unk_dc2d8bce(r0); //unlock print
-   
-   int r0 = r7;
-   sub_BEC620(r0);
+   SceIofilemgr.SceIofilemgrForDriver._exp_unk_dc2d8bce(n0[0x4C]); //unlock print
 
-   int r0 = r7;
-   sub_BEC010(r0);
+   sub_BEC620(r7);
+
+   sub_BEC010(r7);
    
-   int r0 = n0;
-   
-   return loc_BE7252(r0, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+   return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
-int loc_BE76C2(int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
+int loc_BE76C2(int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
 {
-    int r0 = vnode;
-    SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(r0);
-    return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+   SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+   return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
-int loc_BE76BE(int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
+int loc_BE76BE(int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
 {
     sub_BEE2D4(); //unlock SceVfsRfsLock
-    return loc_BE76C2(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+    return loc_BE76C2(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
-int loc_BE76B2(int unk0, int unk1, int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
+int loc_BE76B2(int unk0, int unk1, int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
 {
     sub_BEE2C4(); //lock SceVfsRfsLock
-    int r0 = unk0;
-    int r1 = unk1;
-    sub_BEDF5C(r0, r1);
+    
+    sub_BEDF5C(unk0, unk1);
 
-    return loc_BE76BE(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+    return loc_BE76BE(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
-int loc_BE769A(int unk0, int unk1, int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C, int* r4)
+int loc_BE769A(int unk0, int unk1, int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
 {
     sub_BEBC1C(); //lock SceVfsMntlistLock
     
-    int r0 = r7;
-    
-    sub_BEC530(r0);
+    sub_BEC530(r7);
     
     sub_BEBC2C(); //unlock SceVfsMntlistLock
+     
+    sub_BE5A38(vnode[0x70], 0);
     
-    int r3 = vnode;
-    int r1 = 0;
-    int r0 = r3[0x70];
-    
-    sub_BE5A38(r0, r1);
-    
-    return loc_BE76B2(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+    return loc_BE76B2(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
 //==========================
@@ -713,7 +670,7 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
 {
     int r0 = mountInfo;
     
-    int r4 = 0x9EA004
+    int r4 = var_009EA004
     int r3 = *r4;
     var_2C = r3;
 
