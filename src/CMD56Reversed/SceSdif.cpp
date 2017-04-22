@@ -176,6 +176,7 @@ void sub_C6AEE0(sd_context_data* r0, cmd_input* r1)
 
 void sub_C68598(sd_context_global* ctx, int unk1)
 {
+   /*
    //some important code
 
    sd_context_data* r5 = ctx->ctx_data;
@@ -416,6 +417,7 @@ void sub_C68598(sd_context_global* ctx, int unk1)
       {
       }
    }
+   */
 }
 
 //------------------------

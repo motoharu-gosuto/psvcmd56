@@ -27,7 +27,7 @@ char dword_C1A510[] =
 
 int proc_SceSdstor_suspend_callback_handlerC17BE0(int resume, int eventid, suspend_args_t *args, void *opt)
 {
-
+   return 0; //???
 }
 
 int proc_SceSdstorIntr_thread_callback_C18650(SceSize args, void *argp)
@@ -52,6 +52,7 @@ int proc_SceSdstorIntr_thread_callback_C18650(SceSize args, void *argp)
     var_2C=	-0x2C //cookie
     */
 
+    /*
     int r2 = var_009EA004;
     int r1 = r1[0];
     int r3 = 0x00BDFB20; //1B20
@@ -438,13 +439,13 @@ int proc_SceSdstorIntr_thread_callback_C18650(SceSize args, void *argp)
             else
             {
                 //TBB.W		[PC,R3]
-                /*
-                jpt_C1881E 	; jump table for switch	statement
-                DCB 0x28
-                DCB 0x3D
-                DCB 0x1D
-                DCB 2
-                */
+                
+                //jpt_C1881E 	; jump table for switch	statement
+                //DCB 0x28
+                //DCB 0x3D
+                //DCB 0x1D
+                //DCB 2
+                
             }
         }
     }
@@ -464,30 +465,42 @@ int proc_SceSdstorIntr_thread_callback_C18650(SceSize args, void *argp)
     //loc_C1889C:
     {
     }
+
+    */
+
+   return 0;
 }
 
 //I would assume these functions are interrupt handlers
 
 void sub_C17BC8(int r0, void* r1)
 {
+    /*
     int r0 = r1[4];
     int r1 = 1;
     SceSdstor.SceThreadmgrForDriver._imp_d4780c3e();
+    */
 }
 
 void sub_C17BD4(int r0, void* r1)
 {
+    /*
     int r0 = r1[4];
     int r1 = 0x10;
     SceSdstor.SceThreadmgrForDriver._imp_d4780c3e();
+    */
 }
 
 int exit_loc_C192B0(int r0, int var_2C)
 {
+    /*
     if(var_2C == var_9EA004)
         return r0;
     else
         return STACK_CHECK_FAIL;
+    */
+
+   return 0;
 }
 
 int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
@@ -508,6 +521,7 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
     var_2C=	-0x2C //cookie
     */
 
+    /*
     int r11 = &var_9EA004; //cookie
     int r4 = 00BDFBE8; 0x1BE8
     int r0 = "SceSdstor";
@@ -870,6 +884,9 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
     
     int r0 = 0;
     return exit_loc_C192B0(r0, var_2C);
+    */
+
+   return 0;
 }
 
 //=============================================
@@ -973,7 +990,7 @@ int proc_initialization_root_C175D0(ctx_C175D0 *ctx)
 
 int proc_load_MBR_validate_partition_header_string_C14F2C()
 {
-
+   return 0; //???
 }
 
 char byte_C1A280[7] = {0, 1, 1, 2, 3, 4, 0xFF};
@@ -1006,20 +1023,23 @@ int proc_get_mount_data_C15B80(char* blockDeviceName, int nameLength, mount_data
    mnt->vmid0 = var_30[1]; //vsh mount id part
    mnt->vmid1 = var_30[3]; //vsh mount id part
    mnt->unk_1 = var_30[2];
+
+   return 0; //???
 }
 
 int proc_get_sd_init_context_C15DF4()
 {
-
+   return 0; //???
 }
 
 int proc_initialize_generic_1_C15E50()
 {
-
+   return 0; //???
 }
 
 int proc_check_some_index_C15CD4()
 {
+   return 0; //???
 }
 
 //=============================================
@@ -1039,20 +1059,28 @@ int exit_loc_C15608(int var_24)
 
 int exit_loc_C15558(int r6, int r7, int var_24)
 {
+   /*
    int r0 = SceSdstor.SceThreadmgrForDriver._imp_db395782(r6);
    if(r0 < 0)
       return exit_loc_C15608(var_24);
    else
       return exit_loc_C154B6(r7, var_24);
+   */
+
+   return 0;
 }
 
 int exit_loc_C154A8(int r5, int r6, int var_24)
 {
+   /*
    int r0 = SceSdstor.SceThreadmgrForDriver._imp_db395782(r5);
    if(r0 < 0)
       return exit_loc_C15608(var_24);
    else
       return exit_loc_C154B6(r6);
+   */
+
+   return 0;
 }
 
 int exit_loc_C154A6(int r5, int var_24)
@@ -1062,6 +1090,7 @@ int exit_loc_C154A6(int r5, int var_24)
 
 int exit_loc_C1574A(int r3)
 {
+   /*
    int r3 = (r3 << 3) - r3;
    int r7 = r7 + (r3 << 2);
    int r3 = r7[0x60];
@@ -1072,10 +1101,14 @@ int exit_loc_C1574A(int r3)
    }
       
    return exit_loc_C154A8(r5, r6, var_24);
+   */
+
+   return 0;
 }
 
 int exit_loc_C15652(int r2)
 {
+   /*
    int r2 = (r2 << 3) - r2;
    int r3 = r3 + (r2 << 2);
    int r6 = r3 + 0x58;
@@ -1084,12 +1117,16 @@ int exit_loc_C15652(int r2)
       int r6 = 0;
 
    return exit_loc_C154A8(r5, r6, var_24);
+   */
+
+   return 0;
 }
 
 //--------------
 
 int exit_loc_C15460()
 {
+   /*
    int r0 = &mntData;
    nullsub_2();
    char r0 = mntData;
@@ -1250,10 +1287,14 @@ int exit_loc_C15460()
 
       #pragma endregion
    }
+   */
+
+   return 0;
 }
 
 int exit_loc_C155AC()
 {
+   /*
    char r3 = mntData[2];
    mntData = r5;
    if(r3 == 8)
@@ -1278,10 +1319,14 @@ int exit_loc_C155AC()
    }
 
    return exit_loc_C15460();
+   */
+
+   return 0;
 }
 
 int exit_loc_C15576()
 {
+   /*
    int r3 = 0x00BDE000;
    char r5 = r3[0];
    if(r5 == 0)
@@ -1341,11 +1386,15 @@ int exit_loc_C15576()
    }
    
    return exit_loc_C155AC();
+   */
+
+   return 0;
 }
 
 //this procedure initializes MBR records in sdstor globals
 int proc_C1542C(char* blockDeviceName, int nameLength)
 {
+   /*
    mount_data mntData;
    int ctx_index_ptr_2C;
    int ctx_index_ptr_28;
@@ -1553,4 +1602,7 @@ int proc_C1542C(char* blockDeviceName, int nameLength)
    {
       return exit_loc_C15460();
    }
+   */
+
+   return 0;
 }
