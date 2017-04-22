@@ -28,56 +28,6 @@ typedef struct vfs_mount_point_info_base
 
 //==========================
 
-int loc_BE6AB2(int r0, int var_2C)
-{
-   if(var_2C == var_009EA004)
-      return r0;
-   else
-      return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
-}
-
-int loc_BE700E(int var_2C)
-{
-   return loc_BE6AB2(0x80010016, var_2C);
-}
-
-int loc_BE6AAA(int r5, int r9, int var_2C)
-{
-   sub_BEC808(r5);
-   return loc_BE6AB2(r9, var_2C);
-}
-
-int loc_BE6D48(int var_2C)
-{
-   return loc_BE6AB2(0, var_2C);
-}
-
-int loc_BE6D32(int r9, int r7, int r5, int var_2C)
-{
-   sub_BECE80(r7);
-
-   if(r9 == 0)
-      return loc_BE6D48(var_2C);
-   else
-      return loc_BE6AAA(r5, r9, var_2C);
-}
-
-int loc_BE6D2A(int r7, int r5, int var_2C)
-{
-   return loc_BE6D32(0x80010016, r7, r5, var_2C);
-}
-
-int loc_BE730E(int r5, int var_2C)
-{
-   return loc_BE6AAA(r5, 0x8001000C, var_2C);
-}
-
-int loc_BE74AC(int unk3, int r5, int var_2C)
-{
-   sub_BECE80(unk3);
-   return loc_BE6AAA(r5, 0x8001000C, var_2C)
-}
-
 int loc_BE6C96(int r5, int r9, int unk3, int var_D8, int var_2C)
 {
    sub_BECE80(unk3);
@@ -85,53 +35,33 @@ int loc_BE6C96(int r5, int r9, int unk3, int var_D8, int var_2C)
    sub_BECE80(var_D8);
     
    if(r9 == 0)
-      return loc_BE6D48(var_2C);
+   {
+      if(var_2C == var_009EA004)
+         return 0;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+   }
    else
-      return loc_BE6AAA(r5, r9, var_2C);
+   {
+      sub_BEC808(r5);
+   
+      if(var_2C == var_009EA004)
+         return r9;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+   }
 }
 
-int loc_BE7256(int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
+int loc_BE7252(int r0, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
 {
+   sub_BE5814(r0);
+   
    if(unk2 == 0)
       return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
     
    sub_BE5814(unk2);
    
    return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
-}
-
-int loc_BE7252(int r0, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
-{
-   sub_BE5814(r0);
-   return loc_BE7256(r5, r9, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE7466(int r0, int r5, int unk2, int unk3, int var_D8, int var_2C)
-{
-   return loc_BE7252(r0, r5, 0x80010010, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE7250(int n0, int r9, int r5, int unk2, int unk3, int var_D8, int var_2C)
-{
-   return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE74D6(int n0, int r5, int unk2, int unk3, int var_D8, int var_2C)
-{
-   return loc_BE7252(n0, r5, 0x8001001E, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE74BE(int n0, int r9, int r5, int unk2, int unk3, int var_D8, int var_2C)
-{
-   if(r9 != 0x800F090D && r9 != 0x8001000D)
-      return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C);
-   else
-      return loc_BE74D6(n0, r5, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE77A6(int n0, int r5, int unk2, int unk3, int var_D8, int var_2C)
-{
-   return loc_BE7252(n0, r5, 0x8001000C, unk2, unk3, var_D8, var_2C);
 }
 
 int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
@@ -151,46 +81,16 @@ int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, i
    return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
-int loc_BE76C2(int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
-{
-   SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
-   return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE76BE(int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
-{
-    sub_BEE2D4(); //unlock SceVfsRfsLock
-    return loc_BE76C2(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE76B2(int unk0, int unk1, int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
-{
-    sub_BEE2C4(); //lock SceVfsRfsLock
-    
-    sub_BEDF5C(unk0, unk1);
-
-    return loc_BE76BE(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
-}
-
-int loc_BE769A(int unk0, int unk1, int vnode, int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
-{
-    sub_BEBC1C(); //lock SceVfsMntlistLock
-    
-    sub_BEC530(r7);
-    
-    sub_BEBC2C(); //unlock SceVfsMntlistLock
-     
-    sub_BE5A38(vnode[0x70], 0);
-    
-    return loc_BE76B2(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
-}
-
 //==========================
 
-int loc_BE6AA2_default_case(int r5, int var_2C, int* r4)
+int loc_BE6AA2_default_case(int r5, int var_2C)
 {
-   int r9 = 0x80010016;
-   return loc_BE6AAA(r5, r9, var_2C, r4);
+   sub_BEC808(r5);
+   
+   if(var_2C == var_009EA004)
+      return 0x80010016;
+   else
+      return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
 }
 
 //==========================
@@ -206,13 +106,29 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     int unk3 = r0;
     
     if(r0 == 0)
-       return loc_BE730E(r5, var_2C, r4);
+    {
+      sub_BEC808(r5);
+   
+      if(var_2C == var_009EA004)
+         return 0x8001000C;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+    }
     
     void* r0 = sub_BECE0C(); //alloc memory
     int var_D8 = r0;
     
     if(r0 == 0)
-       return loc_BE74AC(unk3, r5, var_2C, r4);
+    {
+      sub_BECE80(unk3);
+   
+      sub_BEC808(r5);
+   
+      if(var_2C == var_009EA004)
+         return 0x8001000C;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+    }
     
     char* r7 = &str1;
     int r1 = 0x01;
@@ -283,7 +199,14 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BE5F10(r0, r1, r2, r3, unk4);
         int r9 = r0;
         if(r9 < 0)
-           return loc_BE7256(r5, r9, unk2, unk3, var_D8, var_2C, r4);
+        {
+           if(unk2 == 0)
+               return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+    
+           sub_BE5814(unk2);
+   
+           return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+        }
     }
     
 //loc_BE71F6:    
@@ -292,7 +215,7 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     char r3 = r3[0x4C];
     
     if(r3 == 3)
-        return loc_BE7466(r0, r5, unk2, unk3, var_D8, var_2C, r4);
+        return loc_BE7252(r0, r5, 0x80010010, unk2, unk3, var_D8, var_2C);
     
     if((R8 & 0x1000) == 0)
     {
@@ -300,7 +223,12 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BEE364(r0);
         int r9 = r0;
         if(r9 < 0)
-            return loc_BE74BE(n0, r9, r5, unk2, unk3, var_D8, var_2C, r4) //exit
+        {
+         if(r9 != 0x800F090D && r9 != 0x8001000D)
+            return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+         else
+            return loc_BE7252(n0, r5, 0x8001001E, unk2, unk3, var_D8, var_2C);
+        }
             
         int r0 = n0;
         int r3 = r0[0x4C];
@@ -317,7 +245,7 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BEE3C8(r0);
         int r9 = r0;
         if(r9 < 0)
-            return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C, r4);
+            return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
     }
         
     //loc_BE7216:
@@ -342,18 +270,18 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     int r0 = sub_BE62E8(r0, r1, r2, r3, unk4);
     int r9 = r0;
     if(r9 < 0)
-        return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C, r4);
+        return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
         
     int r3 = unk1;
     if(r3 == 0)
-        return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C, r4);
+        return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
         
 //loc_BE74F4:        
     void* r0 = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
     
     int r7 = r0;
     if(r0 == 0)
-        return loc_BE77A6(n0, r5, unk2, unk3, var_D8, var_2C, r4);
+        return loc_BE7252(n0, r5, 0x8001000C, unk2, unk3, var_D8, var_2C);
     
     int r2 = 0x99C0D8; //SceIoVfsHeap SceUID*
     
@@ -486,7 +414,10 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BE61C4(r0);
         int r9 = r0;
         if(r9 < 0)
-            return loc_BE76C2(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+        {
+            SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+            return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+        }
             
         int r3 = n0;
         int r1 = 1;
@@ -504,7 +435,12 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BE61C4(r0);
         int r9 = r0;
         if(r9 < 0)
-            return loc_BE76BE(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+        {
+            sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+            SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+            return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+        }
     }
     
 //loc_BE760E:
@@ -519,7 +455,10 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     sub_BEE2D4(); //unlock SceVfsRfsLock
     
     if(r9 < 0)
-        return loc_BE76C2(vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+    {
+        SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+        return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+    }
     
     vfs_node* r0 = vnode;
     SceIofilemgr.SceIofilemgrForDriver._exp_unk_aa45010b(r0);
@@ -533,7 +472,16 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BE59BC(r0, r1);
         int r9 = r0;
         if(r9 < 0)
-            return loc_BE76B2(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+        {
+          sub_BEE2C4(); //lock SceVfsRfsLock
+    
+          sub_BEDF5C(unk0, unk1);
+
+          sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+          SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+          return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+        }
     }
     else
     {
@@ -544,7 +492,16 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
         int r0 = sub_BE5B30(r0, r1, r2, r3, unk4);
         int r9 = r0;
         if(r9 < 0)
-            return loc_BE76B2(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+        {
+             sub_BEE2C4(); //lock SceVfsRfsLock
+    
+             sub_BEDF5C(unk0, unk1);
+
+             sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+             SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+             return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+        }
     }
     
 //loc_BE7646:    
@@ -562,7 +519,24 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     int r0 = sub_BF18CC(r0, r1);
     int r9 = r0;
     if(r9 != 0)
-        return loc_BE769A(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+    {
+       sub_BEBC1C(); //lock SceVfsMntlistLock
+    
+       sub_BEC530(r7);
+    
+       sub_BEBC2C(); //unlock SceVfsMntlistLock
+     
+       sub_BE5A38(vnode[0x70], 0);
+    
+       sub_BEE2C4(); //lock SceVfsRfsLock
+    
+       sub_BEDF5C(unk0, unk1);
+
+       sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+       SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+       return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+    }
     
     int r1 = r0;
     vfs_node* r2 = vnode;
@@ -570,7 +544,24 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     int r0 = vfs_node_func3_BF1AF0(r0, r1, r2);
     int r9 = r0;
     if(r9 < 0)
-        return loc_BE769A(unk0, unk1, vnode, n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+    {
+       sub_BEBC1C(); //lock SceVfsMntlistLock
+    
+       sub_BEC530(r7);
+    
+       sub_BEBC2C(); //unlock SceVfsMntlistLock
+     
+       sub_BE5A38(vnode[0x70], 0);
+    
+       sub_BEE2C4(); //lock SceVfsRfsLock
+    
+       sub_BEDF5C(unk0, unk1);
+
+       sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+       SceIofilemgr.SceIofilemgrForDriver._exp_unk_21d57633(vnode);
+       return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+    }
     
     void* r0 = r7;
     SceIofilemgr.SceIofilemgrForDriver._exp_unk_6b3ca9f7(); //print lock
@@ -593,7 +584,7 @@ int mount_switch_case_1(int r10, int r5, int var_2C, int* r4)
     
     SceIofilemgr.SceIofilemgrForDriver._exp_unk_6048f245(r0);
     
-    return loc_BE7250(n0, r9, r5, unk2, unk3, var_D8, var_2C, r4);
+    return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
 }
 
 //==========================
@@ -631,8 +622,10 @@ int mount_switch_case_4(int r9, int r5, int var_2C, int* r4)
     if(r9 == 0x00)
         return loc_BE6AA2_default_case(r5, var_2C, r4)
 
-    int r0 = 0x00;
-    return loc_BE6AB2(r0, var_2C, r4); //exit
+   if(var_2C == var_009EA004)
+      return 0;
+   else
+      return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
 }
 
 //==========================
@@ -675,7 +668,12 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     var_2C = r3;
 
     if(R0 == 0x00) //compare input pointer to 0
-        return loc_BE700E(var_2C, r4)
+    {
+      if(var_2C == var_009EA004)
+         return 0x80010016;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+    }
         
     int r6 = r0[0x00]; //unixMount
     int r7 = r0[0x18]; //blockDev1
@@ -693,14 +691,24 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     int r11 = r0[0x1C]; //unk_1C
     
     if(r7 == 0x00) //compare unixMount pointer to 0
-        return loc_BE700E(var_2C, r4);
+    {
+      if(var_2C == var_009EA004)
+         return 0x80010016;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+    }
     
     int r0 = r5; //filesystem
     vfs_add_data* r0 = proc_findVfsNodeByFilesystem_BEC7C0(r0);
     int r6 = r0;
     
     if(r0 == 0x00) //compare node pointer to 0
-        return loc_BE700E(var_2C, r4);
+    {
+      if(var_2C == var_009EA004)
+         return 0x80010016;
+      else
+         return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+    }
     
     int r3 = 0x000000FF & r8; //UXTB devMinor
     int r3 = r3 - 1;
