@@ -93,7 +93,7 @@ typedef struct vfs_add_data
 
 //==========================
 
-int sub_BECE80(int a0)
+int sub_BECE80(void* a0)
 {
    return 0;
 }
@@ -138,7 +138,7 @@ void* sub_BECE0C()
    return 0;
 }
 
-int sub_BE62E8(int a0, int a1, int a2, int a3, int a4)
+int sub_BE62E8(uint32_t a0, void* a1, uint32_t* a2, uint32_t* a3, int a4)
 {
    return 0;
 }
@@ -275,40 +275,40 @@ vfs_add_data* proc_findVfsNodeByFilesystem_BEC7C0(char* filesystem)
 
 //==========================
 
-int loc_BE6C96(char* r5, int r9, int unk3, int var_D8, int var_2C)
+int loc_BE6C96(char* filesystem, int errorCode, void* unk3, void* var_D8, int cookie)
 {
    sub_BECE80(unk3);
     
    sub_BECE80(var_D8);
     
-   if(r9 == 0)
+   if(errorCode == 0)
    {
-      if(var_2C == var_009EA004)
+      if(cookie == var_009EA004)
          return 0;
       else
          return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
    }
    else
    {
-      sub_BEC808(r5);
+      sub_BEC808(filesystem);
    
-      if(var_2C == var_009EA004)
-         return r9;
+      if(cookie == var_009EA004)
+         return errorCode;
       else
          return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
    }
 }
 
-int loc_BE7252(int r0, char* r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
+int loc_BE7252(int r0, char* filesystem, int errorCode, int unk2, void* unk3, void* var_D8, int cookie)
 {
    sub_BE5814(r0);
    
    if(unk2 == 0)
-      return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+      return loc_BE6C96(filesystem, errorCode, unk3, var_D8, cookie);
     
    sub_BE5814(unk2);
    
-   return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+   return loc_BE6C96(filesystem, errorCode, unk3, var_D8, cookie);
 }
 
 int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
@@ -350,64 +350,68 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 
 
 //loc_BE6C50 - jumptable 00BE6A86 case 1
-int mount_switch_case_1(uint32_t devMajor, char* filesystem, int cookie)
+int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
 {
-   /*
-    int r3 = 0x000000FF & r10; //devMajor
-    if(r3 != 0x03)
-      return loc_BE6AA2_default_case(r5, var_2C);
-    
-    void* r0 = sub_BECE0C(); //alloc memory
-    int unk3 = r0;
-    
-    if(r0 == 0)
-    {
-      sub_BEC808(r5);
+   uint32_t majorIndex = (0x000000FF & mountInfo->devMajor);
+   if(majorIndex != 0x03)
+   return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
+
+   void* unk3 = sub_BECE0C(); //alloc memory
    
-      if(var_2C == var_009EA004)
+   if(unk3 == 0)
+   {
+      sub_BEC808(mountInfo->filesystem);
+   
+      if(cookie == var_009EA004)
          return 0x8001000C;
       else
          return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
-    }
+   }
+
+   void* var_D8 = sub_BECE0C(); //alloc memory
     
-    void* r0 = sub_BECE0C(); //alloc memory
-    int var_D8 = r0;
-    
-    if(r0 == 0)
-    {
+   if(var_D8 == 0)
+   {
       sub_BECE80(unk3);
    
-      sub_BEC808(r5);
+      sub_BEC808(mountInfo->filesystem);
    
-      if(var_2C == var_009EA004)
+      if(cookie == var_009EA004)
          return 0x8001000C;
       else
          return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
-    }
+   }
+
+   uint32_t* unk0;
+   uint32_t unk1;
+   uint32_t str1;
     
-    char* r7 = &str1;
-    int r1 = 0x01;
-    unk0 = r7;
-    
-    int* r7 = &unk1;
-    int r0 = r9;
-    
-    unk4 = r1;
-    
-    int r2 = unk0;
-    int r3 = R7;
-    int r1 = unk3;
-    
-    int r0 = sub_BE62E8(r0, r1, r2, r3, unk4);
-    
-    int r9 = r0;
-    if(r9 < 0)
-       return loc_BE6C96(r5, r9, unk3, var_D8, var_2C, r4);
-    
-    int r3 = unk1;
-    if(r3 == 0)
-        return loc_BE6C96(r5, r9, unk3, var_D8, var_2C, r4);
-    
+   unk0 = &str1;
+
+   int result0 = sub_BE62E8(mountInfo->unk_4, unk3, unk0, &unk1, 0x01);
+
+   if(result0 < 0)
+      return loc_BE6C96(mountInfo->filesystem, result0, unk3, var_D8, cookie);
+
+   if(unk1 == 0)
+      return loc_BE6C96(mountInfo->filesystem, result0, unk3, var_D8, cookie);
+
+//uint32_t r10 = mountInfo->devMajor;
+//uint32_t r8 = mountInfo->devMinor;
+
+//uint32_t r9 = mountInfo->unk_4;
+//uint32_t var_E8 = mountInfo->unk_14;
+//uint32_t r11 = mountInfo->unk_1C;
+
+//vfs_block_dev_info* var_EC = mountInfo->blockDev1;
+//char* r5 = mountInfo->filesystem;
+//char* var_F4 = mountInfo->unixMount;
+//vfs_add_data* r6 = addData;
+
+/*
+r7 = &unk1
+int r3 = unk1;
+
 //loc_BE71B0:
     int r0 = unk0;
     int lr = r3 + 0xFFFFFFFF;
@@ -848,12 +852,12 @@ int mount_switch_case_1(uint32_t devMajor, char* filesystem, int cookie)
 //==========================
 
 //loc_BE6A96 - jumptable 00BE6A86 case 2
-int mount_switch_case_2(uint32_t devMajor, char* filesystem, int cookie)
+int mount_switch_case_2(vfs_mount_point_info_base *mountInfo, int cookie)
 {
-    int majorIndex = (0x000000FF & devMajor) - 1;
+    uint32_t majorIndex = (0x000000FF & mountInfo->devMajor) - 1;
     
     if(majorIndex > 0x01)
-       return loc_BE6AA2_default_case(filesystem, cookie);
+       return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
 
     return -1; //not implemented
 }
@@ -861,12 +865,12 @@ int mount_switch_case_2(uint32_t devMajor, char* filesystem, int cookie)
 //==========================
 
 //loc_BE6CAA - jumptable 00BE6A86 case 3
-int mount_switch_case_3(vfs_add_data* addData, char* filesystem, int cookie)
+int mount_switch_case_3(vfs_mount_point_info_base *mountInfo, vfs_add_data* addData, int cookie)
 {
     int r3 = addData->unk_10;
 
     if(r3 != 0x10)
-        return loc_BE6AA2_default_case(filesystem, cookie);
+        return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
     
     return -1; //not implemented
 }
@@ -874,10 +878,10 @@ int mount_switch_case_3(vfs_add_data* addData, char* filesystem, int cookie)
 //==========================
 
 //loc_BE6D40 - jumptable 00BE6A86 case 4
-int mount_switch_case_4(uint32_t unk_4, char* filesystem, int cookie)
+int mount_switch_case_4(vfs_mount_point_info_base *mountInfo, int cookie)
 {
-    if(unk_4 == 0x00)
-        return loc_BE6AA2_default_case(filesystem, cookie);
+    if(mountInfo->unk_4 == 0x00)
+        return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
 
    if(cookie == var_009EA004)
       return 0;
@@ -888,15 +892,15 @@ int mount_switch_case_4(uint32_t unk_4, char* filesystem, int cookie)
 //==========================
 
 //loc_BE6D4C - case 5
-int mount_switch_case_5(uint32_t devMajor, uint32_t unk_4, char* filesystem, int cookie)
+int mount_switch_case_5(vfs_mount_point_info_base *mountInfo, int cookie)
 {
-    int majorIndex = (0x000000FF & devMajor) - 1;
+    uint32_t majorIndex = (0x000000FF & mountInfo->devMajor) - 1;
 
     if(majorIndex > 0x01)
-        return loc_BE6AA2_default_case(filesystem, cookie);
+        return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
 
-    if(unk_4 == 0x00)
-        return loc_BE6AA2_default_case(filesystem, cookie);
+    if(mountInfo->unk_4 == 0x00)
+        return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
     
     return -1; //not implemented
 }
@@ -904,11 +908,11 @@ int mount_switch_case_5(uint32_t devMajor, uint32_t unk_4, char* filesystem, int
 //==========================
 
 //loc_BE6AC2 - case 6
-int mount_switch_case_6(uint32_t devMajor, char* filesystem, int cookie)
+int mount_switch_case_6(vfs_mount_point_info_base *mountInfo, int cookie)
 {
-    int majorIndex = (0x000000FF & devMajor);
+    uint32_t majorIndex = (0x000000FF & mountInfo->devMajor);
     if(majorIndex != 0x04)
-        return loc_BE6AA2_default_case(filesystem, cookie);
+        return loc_BE6AA2_default_case(mountInfo->filesystem, cookie);
     
     return -1; //not implemented
 }
@@ -927,18 +931,7 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
          return STACK_CHECK_FAIL; //SceIofilemgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
     }
     
-    uint32_t r10 = mountInfo->devMajor;
-    uint32_t r8 = mountInfo->devMinor;
-
-    uint32_t r9 = mountInfo->unk_4;
-    uint32_t var_E8 = mountInfo->unk_14;
-    uint32_t r11 = mountInfo->unk_1C;
-
-    vfs_block_dev_info* var_EC = mountInfo->blockDev1;
-    char* r5 = mountInfo->filesystem;
-    char* var_F4 = mountInfo->unixMount;
-    
-    if(var_F4 == 0x00) //compare unixMount pointer to 0
+    if(mountInfo->unixMount == 0x00) //compare unixMount pointer to 0
     {
       if(cookie == var_009EA004)
          return 0x80010016;
@@ -947,7 +940,6 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     }
     
     vfs_add_data* addData = proc_findVfsNodeByFilesystem_BEC7C0(mountInfo->filesystem);
-    vfs_add_data* r6 = addData;
     
     if(addData == 0x00) //compare node pointer to 0
     {
@@ -962,17 +954,17 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     switch(minorIndex)
     {
     case 0:
-        return mount_switch_case_1(mountInfo->devMajor, mountInfo->filesystem, cookie);
+        return mount_switch_case_1(mountInfo, cookie);
     case 1:
-        return mount_switch_case_2(mountInfo->devMajor, mountInfo->filesystem, cookie);
+        return mount_switch_case_2(mountInfo, cookie);
     case 2:
-        return mount_switch_case_3(addData, mountInfo->filesystem, cookie);
+        return mount_switch_case_3(mountInfo, addData, cookie);
     case 3:
-        return mount_switch_case_4(mountInfo->unk_4, mountInfo->filesystem, cookie);
+        return mount_switch_case_4(mountInfo, cookie);
     case 4:
-        return mount_switch_case_5(mountInfo->devMajor, mountInfo->unk_4, mountInfo->filesystem, cookie);
+        return mount_switch_case_5(mountInfo, cookie);
     case 5:
-        return mount_switch_case_6(mountInfo->devMajor, mountInfo->filesystem, cookie);
+        return mount_switch_case_6(mountInfo, cookie);
     default:
         return loc_BE6AA2_default_case(mountInfo->filesystem, cookie); //default case
     }
