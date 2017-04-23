@@ -1,3 +1,5 @@
+#include <string>
+
 #include "SceIofilemgr.h"
 
 #include "Constants.h"
@@ -97,24 +99,37 @@ typedef struct vfs_node
    
    node_ops2 *ops;
    uint32_t unk_44;
-   void* dev_info; //allocated on heap with uid from uid field
-                   //this is device specific / node specific data
-                   //for partition node this will be vfs_device_info*
-   vfs_node* node;
+   void* dev_info; // allocated on heap with uid from uid field
+                   // this is device specific / node specific data
+                   // for partition node this will be vfs_device_info*
+                   
+                   // this field can also contain some number like 0x101
 
-   vfs_node* prev_node;
+   vfs_node* node; //0x4C - can also be major version of mount
+
+   vfs_node* prev_node; //0x50 - can also be minor version of mount
    uint32_t unk_54;
    uint32_t unk_58;
    uint32_t unk_5C;
 
-   uint32_t unk_60;
+   uint32_t unk_60; //counter
    uint32_t unk_64;
    uint32_t unk_68;
    SceUID pool_uid;
    
-   uint8_t data2[0x60];
+   uint32_t unk_70;
+   uint32_t unk_74;
+   uint32_t unk_78;
+   vfs_block_dev_info* blockDev;
+
+   char unk_80[0x40];
+
+   uint32_t unk_C0;
+   uint32_t unk_C4; //mountInfo->unk_14
+   uint32_t unk_C8;
+   uint32_t unk_CC;   
    
-   uint32_t unk_D0;
+   uint32_t unk_D0; //is this field present ? most likely it is not (need to find some D0 constants)
 
 } vfs_node;
 
@@ -135,12 +150,12 @@ int sub_BE5814(vfs_node* a0)
    return 0;
 }
 
-int SceIofilemgrForDriver_6b3ca9f7(int a0)
+int SceIofilemgrForDriver_6b3ca9f7(vfs_node* a0)
 {
    return 0;
 }
 
-int SceIofilemgrForDriver_dc2d8bce(int a0)
+int SceIofilemgrForDriver_dc2d8bce(vfs_node* a0)
 {
    return 0;
 }
@@ -190,22 +205,22 @@ int sub_BEE3C8(vfs_node* n0)
    return 0;
 }
 
-void* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
+vfs_node* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 {
    return 0;
 }
 
-int proc_init_SceVfsMnt_BEBB84(int a0, int a1, int a2, int a3)
+int proc_init_SceVfsMnt_BEBB84(void* a0, vfs_node* a1, SceUID a2, vfs_add_data* a3)
 {
    return 0;
 }
 
-int sub_BEC56C(int a0, int a1)
+int sub_BEC56C(vfs_node* a0, vfs_node* a1)
 {
    return 0;
 }
 
-int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(int a0, int a1, int a2, int a3)
+int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node* cur_node, node_ops2 *ops, int unused, vfs_node **node)
 {
    return 0;
 }
@@ -297,6 +312,14 @@ int vfs_node_func3_BF1AF0(int a0, int a1, int a2)
 
 vfs_add_data* proc_findVfsNodeByFilesystem_BEC7C0(char* filesystem)
 {
+   return 0;
+}
+
+//==========================
+
+SceUID get_SceIoVfsHeap_id()
+{
+   //dereference 0x99C0D8
    return 0;
 }
 
@@ -500,77 +523,46 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     if(r3 == 0)
         return loc_BE7252(n0, mountInfo->filesystem, result4, unk2, unk3, var_D8, cookie);
         
-/*
 //loc_BE74F4:        
-    void* r0 = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
-    
-    int r7 = r0;
-    if(r0 == 0)
-        return loc_BE7252(n0, mountInfo->filesystem, 0x8001000C, unk2, unk3, var_D8, var_2C);
-    
-    int r2 = 0x99C0D8; //SceIoVfsHeap SceUID*
+    vfs_node* bnode = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
+    if(bnode == 0)
+        return loc_BE7252(n0, mountInfo->filesystem, 0x8001000C, unk2, unk3, var_D8, cookie);    
 
-    //vfs_add_data* r6 = addData;
+    vfs_add_data* r6 = addData;
+
+    proc_init_SceVfsMnt_BEBB84(bnode, n0, get_SceIoVfsHeap_id(), addData); // important initialization function
+  
+    bnode->blockDev = mountInfo->blockDev1;
     
-    int r3 = r6; //vfs_add_data* ?
-    int r1 = n0;
-    int r2 = *r2;
+    strncpy(bnode->unk_80, (char*)var_D8, 0x40); //it should be string since it is terminated with 0 explicitly
+
+    bnode->unk_80[0x3F] = (char)0; //terminate with 0
+
+    bnode->unk_C4 = mountInfo->unk_14;
+
+    bnode->node = (vfs_node*)mountInfo->devMajor; //0x4C 
+    bnode->prev_node = (vfs_node*)(mountInfo->devMinor & 0xFFFFF); //0x50 - take first 0x14 bits
+
+    bnode->dev_info = (void*)0x101; //0x48    
     
-    proc_init_SceVfsMnt_BEBB84(n0, r1, r2, r3); //!!!!!!!!!!!!!!!!
+    SceIofilemgrForDriver_6b3ca9f7(n0->node); //0x4C mutex lock print
+   
+    n0->node->unk_60++; //counter
     
-    int r0 = mountInfo->blockDev1;
+    sub_BEC56C(n0->node, bnode);
     
-    int r2 = 0x40;
-    int r1 = var_D8;
+    SceIofilemgrForDriver_dc2d8bce(n0->node); //0x4C mutex unlock print
     
-    r7[0x7C] = r0;
-    
-    int r0 = r7 + 0x80;
-    strncpy(r0, r1, r2);
-    
-    int r1 = mountInfo->unk_14;
-    int r3 = 0;
-    
-    R7[0xBF] = (char)r3;
-    
-    int r3 = 0x101
-    
-    R7[0xC4] = r1;
-    
-    int r1 = UBFX( mountInfo->devMinor, 0, 0x14); //!!!!!!!!!!!!!!
-    
+/*
     int r2 = n0;
-    
-    //STRD.W		mountInfo->devMajor, R1, [R7,#0x4C]; //!!!!!!!!!!!!!!!!!!!!!
-    
-    void* r0 = r2[0x4C]; //mutex
-    R7[0x48] = r3;
-    
-    SceIofilemgrForDriver_6b3ca9f7(r0); //lock print
-    
-    int r3 = n0;
-    int r1 = r7;
-    int r3 = r3[0x4C];
-    int r2 = r3[0x60];
-    int r0 = r3;
-    int r2 = r2 + 1; //counter ???
-    r3[0x60] = r2;
-    
-    sub_BEC56C(r0, r1);
-    
-    int r3 = n0;
-    void* r0 = R3[0x4C]; //mutex
-    SceIofilemgrForDriver_dc2d8bce(r0); //unlock print
-    
-    int r2 = n0;
-    int r3 = r7[0x4C];
+    int r3 = bnode[0x4C];
     int r2 = r2[0x4C];
     
     short r2 = r2[0x4E];
     
     r3 = r3 | (r2 << 16)
     
-    r7[0x4C] = r3;
+    bnode[0x4C] = r3;
     
     uint32_t r11 = mountInfo->unk_1C;
     if(r11 == 0)
@@ -580,24 +572,24 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
 
 //loc_BE7576:    
     node_ops2* r1 = r11;
-    vfs_node* r0 = r7;
+    vfs_node* r0 = bnode;
     int r2 = 0;
     vfs_node** r3 = &vnode;
     int r0 = SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(r0, r1, r2, r3);
     int r9 = r0;
     if(r9 < 0)
-        return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C, r4);
+        return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C, r4);
     
-    int r3 = r7[0x50];
+    int r3 = bnode[0x50];
     int r0 = r3 << 0x0E
     if(r0 < 0)
     {
-       short r2 = r7[0x4E];
+       short r2 = bnode[0x4E];
        int r2 = r2 & 0xF00;
        if(r2 != 0x200)
        {
          r3 = r3 & (~0x20000);
-         r7[0x50] = r3;
+         bnode[0x50] = r3;
        }
     }
     
@@ -614,15 +606,15 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
         if(r1 == 0x200)
         {
             int r3 = r3[0xCC];
-            int r0 = r7[0x50];
-            int r6 = r7[0xCC];
+            int r0 = bnode[0x50];
+            int r6 = bnode[0xCC];
             int r1 = r3[0x08];
             int r3 = r3[0x0C];
             int r0 = r0 | 0x20000;
             
             r6[0x08] = r1;
             r6[0x0C] = r3;
-            r7[0x50] = r0;
+            bnode[0x50] = r0;
         }
     }
     
@@ -632,7 +624,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     
     //LDRD.W		R2, R3,	[SP,#0x40] //!!!!!!!!!!!!!!
     
-    r3[0x4C] = r7;
+    r3[0x4C] = bnode;
     r3[0x50] = r2;
     
     r3[0x78] = r1;
@@ -644,7 +636,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
         if(r9 < 0)
         {
             SceIofilemgrForDriver_21d57633(vnode);
-            return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+            return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
             
         int r3 = n0;
@@ -667,7 +659,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
             sub_BEE2D4(); //unlock SceVfsRfsLock
     
             SceIofilemgrForDriver_21d57633(vnode);
-            return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+            return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
     }
     
@@ -685,7 +677,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     if(r9 < 0)
     {
         SceIofilemgrForDriver_21d57633(vnode);
-        return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+        return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
     }
     
     vfs_node* r0 = vnode;
@@ -708,7 +700,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
           sub_BEE2D4(); //unlock SceVfsRfsLock
     
           SceIofilemgrForDriver_21d57633(vnode);
-          return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+          return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
     }
     else
@@ -728,20 +720,20 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
              sub_BEE2D4(); //unlock SceVfsRfsLock
     
              SceIofilemgrForDriver_21d57633(vnode);
-             return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+             return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
     }
     
 //loc_BE7646:    
     sub_BEBC1C(); //lock SceVfsMntlistLock
     
-    int r0 = r7;
+    int r0 = bnode;
     
     sub_BEC51C(r0);
     
     sub_BEBC2C(); //unlock SceVfsMntlistLock
     
-    int r0 = r7;
+    int r0 = bnode;
     int* r1 = &node;
     
     int r0 = sub_BF18CC(r0, r1);
@@ -750,7 +742,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     {
        sub_BEBC1C(); //lock SceVfsMntlistLock
     
-       sub_BEC530(r7);
+       sub_BEC530(bnode);
     
        sub_BEBC2C(); //unlock SceVfsMntlistLock
      
@@ -763,19 +755,19 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
        sub_BEE2D4(); //unlock SceVfsRfsLock
     
        SceIofilemgrForDriver_21d57633(vnode);
-       return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+       return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
     }
     
     int r1 = r0;
     vfs_node* r2 = vnode;
-    vfs_node* r0 = r7;
+    vfs_node* r0 = bnode;
     int r0 = vfs_node_func3_BF1AF0(r0, r1, r2);
     int r9 = r0;
     if(r9 < 0)
     {
        sub_BEBC1C(); //lock SceVfsMntlistLock
     
-       sub_BEC530(r7);
+       sub_BEC530(bnode);
     
        sub_BEBC2C(); //unlock SceVfsMntlistLock
      
@@ -788,19 +780,19 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
        sub_BEE2D4(); //unlock SceVfsRfsLock
     
        SceIofilemgrForDriver_21d57633(vnode);
-       return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+       return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
     }
     
-    void* r0 = r7;
-    SceIofilemgrForDriver_6b3ca9f7(); //print lock
+    void* r0 = bnode;
+    SceIofilemgrForDriver_6b3ca9f7(r0); //print lock
     
-    int r2 = r7[0x48];
-    void* r0 = r7;
-    int r3 = r7[0x60];
+    int r2 = bnode[0x48];
+    void* r0 = bnode;
+    int r3 = bnode[0x60];
     int r2 = r2 & (~0x100);
     int r3 = r3 - 1;
-    r7[0x48] = r2;
-    r7[0x60] = r3;
+    bnode[0x48] = r2;
+    bnode[0x60] = r3;
     
     SceIofilemgrForDriver_dc2d8bce(r0); //print unlock
     
