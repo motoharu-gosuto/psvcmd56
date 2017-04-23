@@ -225,7 +225,7 @@ int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node* cur_node, node_ops
    return 0;
 }
 
-int SceIofilemgrForDriver_21d57633(int a0)
+int SceIofilemgrForDriver_21d57633(vfs_node* a0)
 {
    return 0;
 }
@@ -250,27 +250,27 @@ int sub_BEE2D4()
    return 0;
 }
 
-int sub_BEDEB0(int a0, int a1, int a2, int a3)
+int sub_BEDEB0(uint32_t* a0, int a1, vfs_node* a2, int a3)
 {
    return 0;
 }
 
-int SceIofilemgrForDriver_aa45010b(int a0)
+int SceIofilemgrForDriver_aa45010b(vfs_node* a0)
 {
    return 0;
 }
 
-int sub_BE59BC(int a0, int a1)
+int sub_BE59BC(vfs_node* a0, void* a1)
 {
    return 0;
 }
 
-int sub_BEDF5C(int a0, int a1)
+int sub_BEDF5C(uint32_t* a0, int a1)
 {
    return 0;
 }
 
-int sub_BE5B30(int a0, int a1, int a2, int a3, int a4)
+int sub_BE5B30(vfs_node* a0, vfs_node* a1, void* a2, int a3, int a4)
 {
    return 0;
 }
@@ -280,7 +280,7 @@ int sub_BEBC1C()
    return 0;
 }
     
-int sub_BEC51C(int a0)
+int sub_BEC51C(vfs_node* a0)
 {
    return 0;
 }
@@ -290,22 +290,22 @@ int sub_BEBC2C()
    return 0;
 }
 
-int sub_BF18CC(int a0, int a1)
+int sub_BF18CC(vfs_node* a0, uint32_t* a1)
 {
    return 0;
 }
 
-int sub_BEC530(int a0)
+int sub_BEC530(vfs_node* a0)
 {
    return 0;
 }
 
-int SceIofilemgrForDriver_6048f245(int a0)
+int SceIofilemgrForDriver_6048f245(vfs_node* a0)
 {
    return 0;
 }
 
-int vfs_node_func3_BF1AF0(int a0, int a1, int a2)
+int vfs_node_func3_BF1AF0(vfs_node *cur_node, int unk1, vfs_node *node)
 {
    return 0;
 }
@@ -391,6 +391,11 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 }
 
 //==========================
+
+//TODO:
+//1 - looks like vfs_node is merged with some other type? or it has multi purpose fields ?
+//2 - use counters, field copy routines to identify types that are similar
+//3 - fix function signatures in ida after clarification
 
 //loc_BE6C50 - jumptable 00BE6A86 case 1
 int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addData, int cookie)
@@ -572,8 +577,6 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     
 //loc_BE75A4:    
     
-   int r3 = n0->node; //4C
-
    if((((uint32_t)n0->node->prev_node) << 0x0E) < 0) //4C 50
    {
       if((((short)n0->node[0x4E]) & 0xF00) == 0x200)
@@ -586,128 +589,100 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
       }
    }
     
-/*
-//loc_BE75D4:    
-    int r0 = r2[0x70];
-    int r1 = 0x1002;
+
+//loc_BE75D4:   
     
-    //LDRD.W		R2, R3,	[SP,#0x40] //!!!!!!!!!!!!!!
+   //important assignment of nodes
+   vnode->node = bnode; //4C
+   vnode->prev_node = unk2; //50
     
-    r3[0x4C] = bnode;
-    r3[0x50] = r2;
-    
-    r3[0x78] = r1;
-    
-    if(r0 != 0)
-    {
-        int r0 = sub_BE61C4(r0);
-        int r9 = r0;
-        if(r9 < 0)
-        {
-            SceIofilemgrForDriver_21d57633(vnode);
-            return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
-        }
+   vnode->unk_78 = 0x1002;
+ 
+   if(n0->unk_70 != 0)
+   {
+      int result6 = sub_BE61C4(n0->unk_70);
+      if(result6 < 0)
+      {
+         SceIofilemgrForDriver_21d57633(vnode);
+         return loc_BE76C8(n0, bnode, mountInfo->filesystem, result6, unk2, unk3, var_D8, cookie);
+      }
             
-        int r3 = n0;
-        int r1 = 1;
-        int r0 = r3[0x70];
-        sub_BE5A38(r0, r1);
-    }
-    
+      sub_BE5A38(n0->unk_70, 1);
+   }
+ 
 //loc_BE75FA:    
-    sub_BEE2C4() //lock SceVfsRfsLock
+
+   sub_BEE2C4(); //lock SceVfsRfsLock
     
-    int r3 = n0;
-    int r0 = r3[0x70];
-    if(r0 != 0)
-    {
-        int r0 = sub_BE61C4(r0);
-        int r9 = r0;
-        if(r9 < 0)
-        {
-            sub_BEE2D4(); //unlock SceVfsRfsLock
+   if(n0->unk_70 != 0)
+   {
+      int result7 = sub_BE61C4(n0->unk_70);
+      if(result7 < 0)
+      {
+         sub_BEE2D4(); //unlock SceVfsRfsLock
     
-            SceIofilemgrForDriver_21d57633(vnode);
-            return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
-        }
-    }
-    
+         SceIofilemgrForDriver_21d57633(vnode);
+         return loc_BE76C8(n0, bnode, mountInfo->filesystem, result7, unk2, unk3, var_D8, cookie);
+      }
+   }
+
 //loc_BE760E:
-    int r1 = unk1;
-    int r3 = 0xD8;
-    int r2 = vnode;
-    int r0 = unk0;
-    
-    int r0 = sub_BEDEB0(r0, r1, r2, r3);
-    int r9 = r0;
-    
-    sub_BEE2D4(); //unlock SceVfsRfsLock
-    
-    if(r9 < 0)
-    {
-        SceIofilemgrForDriver_21d57633(vnode);
-        return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
-    }
-    
-    vfs_node* r0 = vnode;
-    SceIofilemgrForDriver_aa45010b(r0);
-    
-    int r0 = unk2;
-    if(r0 == 0)
-    {
-        //loc_BE79F4:
-        int r1 = var_D4;
-        int r0 = vnode;
-        int r0 = sub_BE59BC(r0, r1);
-        int r9 = r0;
-        if(r9 < 0)
-        {
-          sub_BEE2C4(); //lock SceVfsRfsLock
-    
-          sub_BEDF5C(unk0, unk1);
 
-          sub_BEE2D4(); //unlock SceVfsRfsLock
+   int result8 = sub_BEDEB0(unk0, unk1, vnode, 0xD8);
     
-          SceIofilemgrForDriver_21d57633(vnode);
-          return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
-        }
-    }
-    else
-    {
-        int r3 = 1;
-        int r2 = var_D4;
-        unk4 = r3;
-        int r1 = vnode;
-        int r0 = sub_BE5B30(r0, r1, r2, r3, unk4);
-        int r9 = r0;
-        if(r9 < 0)
-        {
-             sub_BEE2C4(); //lock SceVfsRfsLock
+   sub_BEE2D4(); //unlock SceVfsRfsLock
     
-             sub_BEDF5C(unk0, unk1);
+   if(result8 < 0)
+   {
+      SceIofilemgrForDriver_21d57633(vnode);
+      return loc_BE76C8(n0, bnode, mountInfo->filesystem, result8, unk2, unk3, var_D8, cookie);
+   }
 
-             sub_BEE2D4(); //unlock SceVfsRfsLock
+   SceIofilemgrForDriver_aa45010b(vnode);
+     
+   if(unk2 == 0)
+   {
+      //loc_BE79F4:
+      
+      int result9 = sub_BE59BC(vnode, var_D4);
+      if(result9 < 0)
+      {
+         sub_BEE2C4(); //lock SceVfsRfsLock
     
-             SceIofilemgrForDriver_21d57633(vnode);
-             return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
-        }
-    }
+         sub_BEDF5C(unk0, unk1);
+
+         sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+         SceIofilemgrForDriver_21d57633(vnode);
+         return loc_BE76C8(n0, bnode, mountInfo->filesystem, result9, unk2, unk3, var_D8, cookie);
+      }
+   }
+   else
+   {
+      int result9 = sub_BE5B30(unk2, vnode, var_D4, 1, 1);
+      if(result9 < 0)
+      {
+         sub_BEE2C4(); //lock SceVfsRfsLock
+    
+         sub_BEDF5C(unk0, unk1);
+
+         sub_BEE2D4(); //unlock SceVfsRfsLock
+    
+         SceIofilemgrForDriver_21d57633(vnode);
+         return loc_BE76C8(n0, bnode, mountInfo->filesystem, result9, unk2, unk3, var_D8, cookie);
+      }
+   }
     
 //loc_BE7646:    
+
     sub_BEBC1C(); //lock SceVfsMntlistLock
     
-    int r0 = bnode;
-    
-    sub_BEC51C(r0);
+    sub_BEC51C(bnode);
     
     sub_BEBC2C(); //unlock SceVfsMntlistLock
-    
-    int r0 = bnode;
-    int* r1 = &node;
-    
-    int r0 = sub_BF18CC(r0, r1);
-    int r9 = r0;
-    if(r9 != 0)
+       
+    int result10 = sub_BF18CC(bnode, &node);
+    if(result10 != 0)
     {
        sub_BEBC1C(); //lock SceVfsMntlistLock
     
@@ -715,7 +690,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     
        sub_BEBC2C(); //unlock SceVfsMntlistLock
      
-       sub_BE5A38(vnode[0x70], 0);
+       sub_BE5A38(vnode->unk_70, 0);
     
        sub_BEE2C4(); //lock SceVfsRfsLock
     
@@ -724,15 +699,11 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
        sub_BEE2D4(); //unlock SceVfsRfsLock
     
        SceIofilemgrForDriver_21d57633(vnode);
-       return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+       return loc_BE76C8(n0, bnode, mountInfo->filesystem, result10, unk2, unk3, var_D8, cookie);
     }
     
-    int r1 = r0;
-    vfs_node* r2 = vnode;
-    vfs_node* r0 = bnode;
-    int r0 = vfs_node_func3_BF1AF0(r0, r1, r2);
-    int r9 = r0;
-    if(r9 < 0)
+    int result11 = vfs_node_func3_BF1AF0(bnode, 0, vnode);
+    if(result11 < 0)
     {
        sub_BEBC1C(); //lock SceVfsMntlistLock
     
@@ -740,7 +711,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     
        sub_BEBC2C(); //unlock SceVfsMntlistLock
      
-       sub_BE5A38(vnode[0x70], 0);
+       sub_BE5A38(vnode->unk_70, 0);
     
        sub_BEE2C4(); //lock SceVfsRfsLock
     
@@ -749,34 +720,21 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
        sub_BEE2D4(); //unlock SceVfsRfsLock
     
        SceIofilemgrForDriver_21d57633(vnode);
-       return loc_BE76C8(n0, bnode, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+       return loc_BE76C8(n0, bnode, mountInfo->filesystem, result11, unk2, unk3, var_D8, cookie);
     }
     
-    void* r0 = bnode;
-    SceIofilemgrForDriver_6b3ca9f7(r0); //print lock
+    SceIofilemgrForDriver_6b3ca9f7(bnode); //print lock
     
-    int r2 = bnode[0x48];
-    void* r0 = bnode;
-    int r3 = bnode[0x60];
-    int r2 = r2 & (~0x100);
-    int r3 = r3 - 1;
-    bnode[0x48] = r2;
-    bnode[0x60] = r3;
+    bnode->dev_info = (uint32_t)bnode->dev_info & (~0x100); //0x48
+    bnode->unk_60--; //counter - one of fields that can identify type by logic
     
-    SceIofilemgrForDriver_dc2d8bce(r0); //print unlock
+    SceIofilemgrForDriver_dc2d8bce(bnode); //print unlock
     
-    int r3 = vnode;
-    int r2 = r3[0x58];
-    int r0 = r3;
-    int r2 = r2 -1; //counter ?
-    r3[0x58] = r2;
+    vnode->unk_58 = vnode->unk_58 -1; //counter - one of fields that can identify type by logic
     
-    SceIofilemgrForDriver_6048f245(r0);
+    SceIofilemgrForDriver_6048f245(vnode);
    
-    return loc_BE7252(n0, mountInfo->filesystem, r9, unk2, unk3, var_D8, cookie);
-    */
-
-    return -1;
+    return loc_BE7252(n0, mountInfo->filesystem, result11, unk2, unk3, var_D8, cookie);
 }
 
 //==========================
