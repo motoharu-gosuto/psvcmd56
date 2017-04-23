@@ -180,12 +180,12 @@ int sub_BE5F10(vfs_node* a0, void* a1, void* a2, int a3, vfs_node** a4)
    return 0;
 }
 
-int sub_BEE364(int a0)
+int sub_BEE364(vfs_node* a0)
 {
    return 0;
 }
 
-int sub_BEE3C8(int a0)
+int sub_BEE3C8(vfs_node* n0)
 {
    return 0;
 }
@@ -326,9 +326,9 @@ int loc_BE6C96(char* filesystem, int errorCode, void* unk3, void* var_D8, int co
    }
 }
 
-int loc_BE7252(vfs_node* r0, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
+int loc_BE7252(vfs_node* n0, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
 {
-   sub_BE5814(r0);
+   sub_BE5814(n0);
    
    if(unk2 == 0)
       return loc_BE6C96(filesystem, errorCode, unk3, var_D8, cookie);
@@ -371,11 +371,8 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 
 //==========================
 
-//int mount_switch_case_1(int r10, char* r5, int var_2C)
-
-
 //loc_BE6C50 - jumptable 00BE6A86 case 1
-int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
+int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addData, int cookie)
 {
    uint32_t majorIndex = (0x000000FF & mountInfo->devMajor);
    if(majorIndex != 0x03)
@@ -421,20 +418,6 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
    if(unk1 == 0)
       return loc_BE6C96(mountInfo->filesystem, result0, unk3, var_D8, cookie);
 
-//uint32_t r10 = mountInfo->devMajor;
-//uint32_t r8 = mountInfo->devMinor;
-
-//uint32_t r9 = mountInfo->unk_4;
-//uint32_t var_E8 = mountInfo->unk_14;
-//uint32_t r11 = mountInfo->unk_1C;
-
-//vfs_block_dev_info* var_EC = mountInfo->blockDev1;
-//char* r5 = mountInfo->filesystem;
-//char* var_F4 = mountInfo->unixMount;
-//vfs_add_data* r6 = addData;
-
-//r7 = &unk1
-
 //loc_BE71B0:
 
     vfs_node* unk2;
@@ -447,8 +430,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
 
     if(result1 < 0)
     {
-        int r3 = 0x80010002;
-        if(result1 != r3)
+        if(result1 != 0x80010002)
             return loc_BE6C96(mountInfo->filesystem, result1, unk3, var_D8, cookie);
 
         int result2 = proc_find_vfs_node_BE6788(unk0, unk1, &n0, unk3, 0x3000);
@@ -471,46 +453,36 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
         }
     }
 
-/*
-    
 //loc_BE71F6:    
-    int r0 = n0;
-    int r3 = r0[0x4C];
-    char r3 = r3[0x4C];
     
-    if(r3 == 3)
-        return loc_BE7252(r0, r5, 0x80010010, unk2, unk3, var_D8, var_2C);
+   if(((char)n0->node->node) == 3) //vfs_node most likely has several variations depending on leaf level. have already encountered this
+      return loc_BE7252(n0, mountInfo->filesystem, 0x80010010, unk2, unk3, var_D8, cookie);
     
-    if((R8 & 0x1000) == 0)
-    {
-        //loc_BE7446:
-        int r0 = sub_BEE364(r0);
-        int r9 = r0;
-        if(r9 < 0)
-        {
-         if(r9 != 0x800F090D && r9 != 0x8001000D)
-            return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+   if((mountInfo->devMinor & 0x1000) == 0)
+   {
+      //loc_BE7446:
+      int result3 = sub_BEE364(n0);
+      
+      if(result3 < 0)
+      {
+         if(result3 != 0x800F090D && result3 != 0x8001000D)
+            return loc_BE7252(n0, mountInfo->filesystem, result3, unk2, unk3, var_D8, cookie);
          else
-            return loc_BE7252(n0, r5, 0x8001001E, unk2, unk3, var_D8, var_2C);
-        }
-            
-        int r0 = n0;
-        int r3 = r0[0x4C];
-        int r3 = r3[0x50];
-        int r3 = r3 << 0x13;
-        if(r3 < 0)
-        {
-            int r9 = 0x8001001E;
-            return loc_BE7252(r0, r5, r9, unk2, unk3, var_D8, var_2C, r4);
-        }
-    }
-    else
-    {
-        int r0 = sub_BEE3C8(r0);
-        int r9 = r0;
-        if(r9 < 0)
-            return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
-    }
+            return loc_BE7252(n0, mountInfo->filesystem, 0x8001001E, unk2, unk3, var_D8, cookie);
+      }
+
+      if(((uint32_t)n0->node->prev_node << 0x13) < 0) //vfs_node most likely has several variations depending on leaf level. have already encountered this
+         return loc_BE7252(n0, mountInfo->filesystem, 0x8001001E, unk2, unk3, var_D8, cookie);
+   }
+   else
+   {
+      int result3 = sub_BEE3C8(n0);
+      if(result3 < 0)
+         return loc_BE7252(n0, mountInfo->filesystem, result3, unk2, unk3, var_D8, cookie);
+   }
+
+/*
+    r7 = &unk1
         
     //loc_BE7216:
     int r2 = unk1;
@@ -518,7 +490,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     int* r9 = &var_28;
     int r7 = unk3;
     int r1 = 1;
-    int r0 = var_F4;
+    int r0 = mountInfo->unixMount;
     int r2 = r2 - 1;
     unk4 = r1;
     int r2 = r9 + (r2 << 3);
@@ -534,20 +506,22 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     int r0 = sub_BE62E8(r0, r1, r2, r3, unk4);
     int r9 = r0;
     if(r9 < 0)
-        return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+        return loc_BE7252(n0, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         
     int r3 = unk1;
     if(r3 == 0)
-        return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+        return loc_BE7252(n0, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         
 //loc_BE74F4:        
     void* r0 = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
     
     int r7 = r0;
     if(r0 == 0)
-        return loc_BE7252(n0, r5, 0x8001000C, unk2, unk3, var_D8, var_2C);
+        return loc_BE7252(n0, mountInfo->filesystem, 0x8001000C, unk2, unk3, var_D8, var_2C);
     
     int r2 = 0x99C0D8; //SceIoVfsHeap SceUID*
+
+    //vfs_add_data* r6 = addData;
     
     int r3 = r6; //vfs_add_data* ?
     int r1 = n0;
@@ -555,7 +529,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     
     proc_init_SceVfsMnt_BEBB84(n0, r1, r2, r3); //!!!!!!!!!!!!!!!!
     
-    int r0 = var_EC;
+    int r0 = mountInfo->blockDev1;
     
     int r2 = 0x40;
     int r1 = var_D8;
@@ -565,7 +539,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     int r0 = r7 + 0x80;
     strncpy(r0, r1, r2);
     
-    int r1 = var_E8;
+    int r1 = mountInfo->unk_14;
     int r3 = 0;
     
     R7[0xBF] = (char)r3;
@@ -574,11 +548,11 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     
     R7[0xC4] = r1;
     
-    int r1 = UBFX(R8, 0, 0x14); //!!!!!!!!!!!!!!
+    int r1 = UBFX( mountInfo->devMinor, 0, 0x14); //!!!!!!!!!!!!!!
     
     int r2 = n0;
     
-    //STRD.W		R10, R1, [R7,#0x4C]; //!!!!!!!!!!!!!!!!!!!!!
+    //STRD.W		mountInfo->devMajor, R1, [R7,#0x4C]; //!!!!!!!!!!!!!!!!!!!!!
     
     void* r0 = r2[0x4C]; //mutex
     R7[0x48] = r3;
@@ -609,6 +583,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     
     r7[0x4C] = r3;
     
+    uint32_t r11 = mountInfo->unk_1C;
     if(r11 == 0)
     {
         r11 = r6[0x14]; //vfs_add_data* ? node_ops2* ?
@@ -622,7 +597,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     int r0 = SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(r0, r1, r2, r3);
     int r9 = r0;
     if(r9 < 0)
-        return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C, r4);
+        return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C, r4);
     
     int r3 = r7[0x50];
     int r0 = r3 << 0x0E
@@ -680,7 +655,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
         if(r9 < 0)
         {
             SceIofilemgrForDriver_21d57633(vnode);
-            return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+            return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
             
         int r3 = n0;
@@ -703,7 +678,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
             sub_BEE2D4(); //unlock SceVfsRfsLock
     
             SceIofilemgrForDriver_21d57633(vnode);
-            return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+            return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
     }
     
@@ -721,7 +696,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     if(r9 < 0)
     {
         SceIofilemgrForDriver_21d57633(vnode);
-        return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+        return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
     }
     
     vfs_node* r0 = vnode;
@@ -744,7 +719,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
           sub_BEE2D4(); //unlock SceVfsRfsLock
     
           SceIofilemgrForDriver_21d57633(vnode);
-          return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+          return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
     }
     else
@@ -764,7 +739,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
              sub_BEE2D4(); //unlock SceVfsRfsLock
     
              SceIofilemgrForDriver_21d57633(vnode);
-             return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+             return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
         }
     }
     
@@ -799,7 +774,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
        sub_BEE2D4(); //unlock SceVfsRfsLock
     
        SceIofilemgrForDriver_21d57633(vnode);
-       return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+       return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
     }
     
     int r1 = r0;
@@ -824,7 +799,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
        sub_BEE2D4(); //unlock SceVfsRfsLock
     
        SceIofilemgrForDriver_21d57633(vnode);
-       return loc_BE76C8(n0, r7, r5, r9, unk2, unk3, var_D8, var_2C);
+       return loc_BE76C8(n0, r7, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
     }
     
     void* r0 = r7;
@@ -847,11 +822,11 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
     r3[0x58] = r2;
     
     SceIofilemgrForDriver_6048f245(r0);
-    
-    return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+   
+    return loc_BE7252(n0, mountInfo->filesystem, r9, unk2, unk3, var_D8, cookie);
     */
 
-   return -1;
+    return -1;
 }
 
 //==========================
@@ -959,7 +934,7 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     switch(minorIndex)
     {
     case 0:
-        return mount_switch_case_1(mountInfo, cookie);
+        return mount_switch_case_1(mountInfo, addData, cookie);
     case 1:
         return mount_switch_case_2(mountInfo, cookie);
     case 2:
