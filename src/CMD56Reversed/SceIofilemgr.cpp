@@ -16,7 +16,7 @@ typedef struct vfs_block_dev_info //size is 0x14
 typedef struct vfs_mount_point_info_base
 {
   char* unixMount;
-  uint32_t unk_4; //zero
+  char* unk_4; //zero
   uint32_t devMajor;
   uint32_t devMinor;
 
@@ -165,7 +165,7 @@ void* sub_BECE0C()
    return 0;
 }
 
-int sub_BE62E8(uint32_t a0, void* a1, uint32_t* a2, uint32_t* a3, int a4)
+int sub_BE62E8(char* mount, void* a1, uint32_t* a2, uint32_t* a3, int a4)
 {
    return 0;
 }
@@ -480,38 +480,27 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
       if(result3 < 0)
          return loc_BE7252(n0, mountInfo->filesystem, result3, unk2, unk3, var_D8, cookie);
    }
-
-/*
-    r7 = &unk1
-        
+    
     //loc_BE7216:
-    int r2 = unk1;
-    int r3 = r7;
-    int* r9 = &var_28;
-    int r7 = unk3;
-    int r1 = 1;
-    int r0 = mountInfo->unixMount;
-    int r2 = r2 - 1;
-    unk4 = r1;
-    int r2 = r9 + (r2 << 3);
-    var_B4 = r7;
-    int r1 = var_D8;
-    int r7 = r2[-0x84];
-    int r2 = r2[-0x80];
     
-    //STRD.W		R7, R2,	[SP,#0x4C] //!!!!!!!!!!!!!!!!!!!!
+    uint32_t var_28;
+
+    void* r2 = (&var_28) + ((unk1 - 1) << 3);
     
-    int r2 = unk0;
+    uint32_t node = r2[-0x84];   // D0 - 84 = 4C - can be part of vfs_node ?
+    uint32_t var_B8 = r2[-0x80]; // D0 - 80 = 50 - can be part of vfs_node ?
+
+    void* var_B4 = unk3;
     
-    int r0 = sub_BE62E8(r0, r1, r2, r3, unk4);
-    int r9 = r0;
-    if(r9 < 0)
-        return loc_BE7252(n0, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+    int result4 = sub_BE62E8(mountInfo->unixMount, var_D8, unk0, &unk1, 0x01);
+    if(result4 < 0)
+        return loc_BE7252(n0, mountInfo->filesystem, result4, unk2, unk3, var_D8, cookie);
         
     int r3 = unk1;
     if(r3 == 0)
-        return loc_BE7252(n0, mountInfo->filesystem, r9, unk2, unk3, var_D8, var_2C);
+        return loc_BE7252(n0, mountInfo->filesystem, result4, unk2, unk3, var_D8, cookie);
         
+/*
 //loc_BE74F4:        
     void* r0 = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
     
