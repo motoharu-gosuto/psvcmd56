@@ -91,6 +91,33 @@ typedef struct vfs_add_data
     vfs_add_data* next_element; //ptr to next element, confirmed
 } vfs_add_data;
 
+typedef struct vfs_node
+{
+   uint8_t data1[0x40];
+   
+   node_ops2 *ops;
+   uint32_t unk_44;
+   void* dev_info; //allocated on heap with uid from uid field
+                   //this is device specific / node specific data
+                   //for partition node this will be vfs_device_info*
+   vfs_node* node;
+
+   vfs_node* prev_node;
+   uint32_t unk_54;
+   uint32_t unk_58;
+   uint32_t unk_5C;
+
+   uint32_t unk_60;
+   uint32_t unk_64;
+   uint32_t unk_68;
+   SceUID pool_uid;
+   
+   uint8_t data2[0x60];
+   
+   uint32_t unk_D0;
+
+} vfs_node;
+
 //==========================
 
 int sub_BECE80(void* a0)
@@ -103,7 +130,7 @@ int sub_BEC808(char* filesystem)
    return 0;
 }
 
-int sub_BE5814(int a0)
+int sub_BE5814(vfs_node* a0)
 {
    return 0;
 }
@@ -143,12 +170,12 @@ int sub_BE62E8(uint32_t a0, void* a1, uint32_t* a2, uint32_t* a3, int a4)
    return 0;
 }
 
-int proc_find_vfs_node_BE6788(int a0, int a1, int a2, int a3, int a4)
+int proc_find_vfs_node_BE6788(void* unk0, int unk1, vfs_node** vnode, void* unk3, int unk4)
 {
    return 0;
 }
 
-int sub_BE5F10(int a0, int a1, int a2, int a3, int a4)
+int sub_BE5F10(vfs_node* a0, void* a1, void* a2, int a3, vfs_node** a4)
 {
    return 0;
 }
@@ -299,7 +326,7 @@ int loc_BE6C96(char* filesystem, int errorCode, void* unk3, void* var_D8, int co
    }
 }
 
-int loc_BE7252(int r0, char* filesystem, int errorCode, int unk2, void* unk3, void* var_D8, int cookie)
+int loc_BE7252(vfs_node* r0, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
 {
    sub_BE5814(r0);
    
@@ -311,7 +338,7 @@ int loc_BE7252(int r0, char* filesystem, int errorCode, int unk2, void* unk3, vo
    return loc_BE6C96(filesystem, errorCode, unk3, var_D8, cookie);
 }
 
-int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, int var_2C)
+int loc_BE76C8(vfs_node* n0, int r7, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
 {
    /*
    SceIofilemgrForDriver_6b3ca9f7(n0[0x4C]); //lock print
@@ -323,13 +350,11 @@ int loc_BE76C8(int n0, int r7, int r5, int r9, int unk2, int unk3, int var_D8, i
    SceIofilemgrForDriver_dc2d8bce(n0[0x4C]); //unlock print
 
    sub_BEC620(r7);
-
-   sub_BEC010(r7);
    
-   return loc_BE7252(n0, r5, r9, unk2, unk3, var_D8, var_2C);
+   sub_BEC010(r7);
    */
-
-   return -1;
+   
+   return loc_BE7252(n0, filesystem, errorCode, unk2, unk3, var_D8, cookie);
 }
 
 //==========================
@@ -408,65 +433,45 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, int cookie)
 //char* var_F4 = mountInfo->unixMount;
 //vfs_add_data* r6 = addData;
 
-/*
-r7 = &unk1
-int r3 = unk1;
+//r7 = &unk1
 
 //loc_BE71B0:
-    int r0 = unk0;
-    int lr = r3 + 0xFFFFFFFF;
-    int r12 = 0x3000;
-    int r1 = lr;
-    unk4 = r12;
+
+    vfs_node* unk2;
     
-    vfs_node ** r2 = &unk2;
-    int r3 = unk3;
-    int lr = r0 +  (lr << 3);
-    ctx = r12;
-    var_D4 = lr;
-    int r0 = proc_find_vfs_node_BE6788(r0, r1, r2, r3, unk4);
-    int r9 = r0;
-    int r12 = ctx;
-    
-    if(r9 < 0)
+    void* var_D4 = unk0 + ((unk1 - 1) << 3);
+
+    int result1 = proc_find_vfs_node_BE6788(unk0, unk1 - 1, &unk2, unk3, 0x3000);
+
+    vfs_node* n0;
+
+    if(result1 < 0)
     {
         int r3 = 0x80010002;
-        if(r9 != r3)
-            return loc_BE6C96(r5, r9, unk3, var_D8, var_2C, r4);
+        if(result1 != r3)
+            return loc_BE6C96(mountInfo->filesystem, result1, unk3, var_D8, cookie);
 
-        unk4 = r12;
-        vfs_node ** r2 = &n0;
-        int r0 = unk0;
-        int r1 = unk1;
-        int r3 = unk3;
-        int r0 = proc_find_vfs_node_BE6788(r0, r1, r2, r3, unk4);
-        int r9 = r0;		
-        if(r9 < 0)
-            return loc_BE6C96(r5, r9, unk3, var_D8, var_2C, r4);
+        int result2 = proc_find_vfs_node_BE6788(unk0, unk1, &n0, unk3, 0x3000);
+        if(result2 < 0)
+            return loc_BE6C96(mountInfo->filesystem, result2, unk3, var_D8, cookie);
             
-        int r3 = 0;
-        unk2 = r3;
+        unk2 = 0;
     }
     else
-    {
-        int r2 = &n0;
-        vfs_node* r0 = unk2;
-        unk4 = r2;
-        int r3 = r12;
-        int r1 = var_D4;
-        int r2 = unk3;
-        int r0 = sub_BE5F10(r0, r1, r2, r3, unk4);
-        int r9 = r0;
-        if(r9 < 0)
+    {   
+        int result2 = sub_BE5F10(unk2, var_D4, unk3, 0x3000, &n0);
+        if(result2 < 0)
         {
            if(unk2 == 0)
-               return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+               return loc_BE6C96(mountInfo->filesystem, result2, unk3, var_D8, cookie);
     
            sub_BE5814(unk2);
    
-           return loc_BE6C96(r5, r9, unk3, var_D8, var_2C);
+           return loc_BE6C96(mountInfo->filesystem, result2, unk3, var_D8, cookie);
         }
     }
+
+/*
     
 //loc_BE71F6:    
     int r0 = n0;
