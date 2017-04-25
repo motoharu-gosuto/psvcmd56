@@ -520,7 +520,7 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //howeer it can not be of type vfs_root* also because in vfs_root* field unk_4C is pointer, not number
 
 //some important observations that should be made:
-//one of the types definitely must be vfs_ode that contains ops2
+//one of the types definitely must be vfs_node that contains ops2
 //int result11 = vfs_node_func3_BF1AF0(bnode, 0, vnode);
 
 //can this be useful?
@@ -530,6 +530,10 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //int result9 = sub_BE59BC(vnode, var_D4);
 
 //other important observation is to investigate function proc_init_SceVfsMnt_BEBB84
+
+//it could be usefull to revisit and list global variable
+//0x01A8 - array of 96 elements of vfs_node_info 
+//used by proc_find_vfs_node_info_node_BEDA18 <- proc_find_vfs_node_BEDF04 <- proc_find_vfs_node_BE584C <- proc_find_vfs_node_BE6788 - used by mount
 
 //loc_BE6C50 - jumptable 00BE6A86 case 1
 int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addData, int cookie)
