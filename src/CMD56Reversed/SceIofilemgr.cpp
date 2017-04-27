@@ -5,7 +5,6 @@
 #include "Constants.h"
 #include "SceSysmemGlobalVariables.h"
 
-
 typedef struct vfs_block_dev_info //size is 0x14
 {
   char* vitaMount;
@@ -114,7 +113,10 @@ typedef struct vfs_nb_cc
 
 typedef struct vfs_node_base
 {
-   //TODO: THIS STRUCTURE CONTAINS ONLY MAJOR FIELDS WITHOUT GAPS
+   uint8_t data1[0x40];
+
+   uint32_t unk_40;
+   uint32_t unk_44;
 
    uint32_t unk_48; //some number like 0x101
    
@@ -140,22 +142,36 @@ typedef struct vfs_node_base
 
    uint32_t devMinor; //50
 
+   vfs_node* unk_54;
+   uint32_t unk_58; //counter
+   uint32_t unk_5C;
+
    uint32_t unk_60; //counter
+
+   uint32_t unk_64;
+   uint32_t unk_68;
+   uint32_t unk_6C;
 
    vfs_node_base* unk_70; //next ?
    vfs_node_base* unk_74; //prev ?
+
+   uint32_t unk_78;
 
    vfs_block_dev_info* blockDev; //7C
 
    char unk_80[0x40]; //some character data ?
 
+   uint32_t unk_C0;   
+
    uint32_t unk_C4; //mountInfo->unk_14
+
+   uint32_t unk_C8;
 
    vfs_nb_cc* unk_CC;
 
 } vfs_node_base;
 
-typedef struct vfs_node
+typedef struct vfs_node //size is 0x40 + 0x98 = D8
 {
    uint8_t data1[0x40];
    
@@ -165,27 +181,29 @@ typedef struct vfs_node
                    //this is device specific / node specific data
                    //for partition node this will be vfs_device_info*
 
-   vfs_node_base* node;
+   vfs_node_base* node; //4C
 
    vfs_node* prev_node;
 
-   uint32_t unk_54;
+   vfs_node* unk_54; // copied from node base
    uint32_t unk_58; //counter
    uint32_t unk_5C;
 
    uint32_t unk_60;
    uint32_t unk_64;
    uint32_t unk_68;
-   SceUID pool_uid; //6C
+   SceUID pool_uid; //6C - SceIoVfsHeap
 
    vfs_r_70* unk_70;
-   uint32_t unk_74;
+   uint32_t unk_74; // 0x8000
    uint32_t unk_78;
    uint32_t unk_7C;
 
    uint8_t data2[0x50];
    
-   uint32_t unk_D0; //is this field present ? most likely it is not (need to find some D0 constants)
+   uint32_t unk_D0;
+
+   uint32_t unk_D4;
 
 } vfs_node;
 
@@ -280,12 +298,180 @@ void sub_BEC56C(vfs_node_base* r0, vfs_node_base* r1)
    r0->unk_70 = r1;
 }
 
-int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, node_ops2 *ops, int unused, vfs_node **node)
+int loc_BED98E(int r0, int var_2C)
 {
-   //TODO:
-   //need to implement 0x40 op2 assignment that can serve as type constraint
+   if(var_2C == var_009EA004)
+      return r0;
+   else
+      return STACK_CHECK_FAIL;
+}
 
-   return 0;
+int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, node_ops2* ops, int unused, vfs_node** node)
+{
+   int r7 = 0x9EA004;
+   int r6 = r0;
+   int r10 = r1;
+   int r2 = *r7;
+   int r9 = r3;
+   var_2C = r2;
+   int r8 = r0[0x44];   
+   int r3 = 0;
+   result = r3;
+   
+   if(r8 == 0)
+   {
+      int r3 = 0x99C0D8;
+      int r8 = *r3;
+   }
+
+   int r5 = 0x99DA40
+   int r4 = 0x99C024
+   
+   //loc_BED8BA:
+   while(true)
+   {
+      int r2 = *r5;
+      value = r2;
+      cond = r2;
+      int r3 = *r4;
+      int r2 = cond;
+   
+      if(r2 < r3)
+      {
+         //loc_BED900:
+         int r3 = value;
+         int r0 = 0x99DA40;
+         int r3 = r3 + 1;
+         value = r3;
+      
+         int r1 = cond;
+         int r2 = value
+         SceIofilemgr.SceCpuForDriver._imp_atomic_set_xor_cda96e81(r0, r1, r2);
+      
+         int r3 = cond;
+      
+         if(r0 != r3)
+         {
+            continue;
+         }
+         else
+         {
+            int r0 = 0x99D9D4;
+            int r0 = sub_BF33A0(r0);
+            result = r0;
+         }
+      }
+
+      int r3 = result;
+      if(r3 == 0)
+      {
+         int r0 = r6;
+         int r1 = &result;
+         int r0 = proc_findNode_BE9504(r0, r1);
+         if(r0 < 0)
+         {
+            int r0 = *r4;
+            int r0 = sub_BED838(r0);
+            int r11 = r0;
+            if(r0 == 0)
+            {
+               continue;
+            }
+            else
+            {
+               int r1 = &dword_BFD130;
+               char* r2 = "::0x10f::001::%d\n";
+               int r3 = *r5;
+               int r0 = 0xF;
+               SceIofilemgr.SceDebugForDriver._imp_02b04343();
+               int r0 = r11;
+   
+               return loc_BED98E(r0, var_2C);
+            }
+         }
+         else
+         {
+            //loc_BED9AA:
+
+            int r0 = result;
+            sub_BEBD70(r0); //some init
+            int r3 = result;
+         }
+      }
+
+      //loc_BED930:
+      int r2 = r3[0x74];
+      if(r2 != 0)
+      {
+         //loc_BED99C:
+
+         int r0 = r3;
+         int r1 = 1;
+         var_3C = r3;
+         nullsub_3();
+         int r3 = var_3C;
+         
+         break;
+      }
+      else
+      {
+         break;
+      }
+   }
+
+   //loc_BED936:
+   
+   int r0 = r3 + 0x40;
+   int r1 = 0;
+   int r2 = 0x98;
+   var_3C = r3;
+
+   memset(r0, r1, r2);
+
+   int r2 = result;
+   int r4 = 0x8000;
+
+   int r3 = var_3C;
+   
+   int r0 = r6;
+   short r1 = r6[0x4E];
+   r3[0x74] = r4;
+   int r3 = r2[0x58];
+   r2[0xD0] = r1;
+   r2[0x40] = r10;
+   
+   int r3 = r3 + 1;
+   r2[0x4C] = r6;
+   r2[0x58] = r3;
+   r2[0x6C] = r8;
+   
+   SceIofilemgr.SceIofilemgrForDriver._exp_debug_print_lock_6b3ca9f7();
+
+   int r3 = result;
+   int r1 = 0;
+   int r2 = r6[0x54];
+   r3[0x54] = r1;
+
+   if(r2 != 0)
+   {
+      r3[0x54] = r2;
+   }
+
+   r6[0x54] = r3;
+   int r0 = r6;
+   int r3 = r6[0x58];
+   int r3 = r3 + 1;
+   r6[0x58] = r3;
+   
+   SceIofilemgr.SceIofilemgrForDriver._exp_debug_print_unlock_dc2d8bce();
+   
+   int r3 = result;
+
+   int r0 = 0;
+   
+   *r9 = r3;
+   
+   return loc_BED98E(r0, var_2C);
 }
 
 int SceIofilemgrForDriver_21d57633(vfs_node* a0)
