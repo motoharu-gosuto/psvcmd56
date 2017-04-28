@@ -92,12 +92,12 @@ typedef struct vfs_add_data
     vfs_add_data* next_element; //ptr to next element, confirmed
 } vfs_add_data;
 
-typedef struct vfs_r_70
+typedef struct vfs_node_70
 {
    uint32_t unk_0;
    uint32_t unk_4;
    uint32_t unk_8;
-   vfs_r_70* unk_C; //zero or pointer to next element
+   vfs_node_70* unk_C; //zero or pointer to next element
 
    void* unk_10; //pointer to struct of at least size 0x94
    uint32_t unk_14; //number
@@ -213,7 +213,7 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
    uint32_t unk_68;
    SceUID pool_uid;  // 0x6C - SceIoVfsHeap or other pool
 
-   vfs_r_70* unk_70;
+   vfs_node_70* unk_70;
    uint32_t unk_74; // = 0x8000
    uint32_t unk_78; // some flag
    uint32_t unk_7C;
@@ -261,12 +261,12 @@ int sub_BE5814(vfs_node* a0)
    return 0;
 }
 
-int SceIofilemgrForDriver_6b3ca9f7(vfs_node_base* a0)
+int SceIofilemgrForDriver_6b3ca9f7(uint32_t* a0)
 {
    return 0;
 }
 
-int SceIofilemgrForDriver_dc2d8bce(vfs_node_base* a0)
+int SceIofilemgrForDriver_dc2d8bce(uint32_t* a0)
 {
    return 0;
 }
@@ -635,7 +635,7 @@ int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, nod
    result->unk_58++;
    result->pool_uid = node_pool;
    
-   SceIofilemgrForDriver_6b3ca9f7(cur_node);
+   SceIofilemgrForDriver_6b3ca9f7(&cur_node->fast_mutex_SceVfsMnt);
 
    result->unk_54 = 0;
 
@@ -646,7 +646,7 @@ int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, nod
    
    cur_node->unk_58++; //counter
    
-   SceIofilemgrForDriver_dc2d8bce(cur_node);
+   SceIofilemgrForDriver_dc2d8bce(&cur_node->fast_mutex_SceVfsMnt);
    
    *node = result;
    
@@ -662,12 +662,12 @@ int SceIofilemgrForDriver_21d57633(vfs_node* a0)
 }
 
 //searches some tree
-int sub_BE61C4(vfs_r_70* a0)
+int sub_BE61C4(vfs_node_70* a0)
 {
    return 0;
 }
 
-int sub_BE5A38(vfs_r_70* a0, int a1)
+int sub_BE5A38(vfs_node_70* a0, int a1)
 {
    return 0;
 }
@@ -684,6 +684,9 @@ int sub_BEE2D4()
 
 int sub_BEDEB0(uint32_t* a0, int a1, vfs_node* a2, int a3)
 {
+
+   // proc_find_vfs_node_info_node_BEDA18
+
    return 0;
 }
 
@@ -699,11 +702,17 @@ int sub_BE59BC(vfs_node* a0, void* a1)
 
 int sub_BEDF5C(uint32_t* a0, int a1)
 {
+
+   //proc_find_vfs_node_info_node_BEDA18
+
    return 0;
 }
 
 int sub_BE5B30(vfs_node* a0, vfs_node* a1, void* a2, int a3, int a4)
 {
+
+   // SceIofilemgr.SceIofilemgrForDriver._exp_vfs_func13_f7dac0f5
+
    return 0;
 }
 
@@ -790,13 +799,13 @@ int loc_BE7252(vfs_node* n0, char* filesystem, int errorCode, vfs_node* unk2, vo
 
 int loc_BE76C8(vfs_node* n0, vfs_node_base* r7, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
 {
-   SceIofilemgrForDriver_6b3ca9f7(n0->node); //4C mutex lock print
+   SceIofilemgrForDriver_6b3ca9f7(&n0->node->fast_mutex_SceVfsMnt); //4C mutex lock print
 
    n0->node->unk_60--; //counter
    
    sub_BEC578(n0->node, r7);
    
-   SceIofilemgrForDriver_dc2d8bce(n0->node); //4C mutex  unlock print
+   SceIofilemgrForDriver_dc2d8bce(&n0->node->fast_mutex_SceVfsMnt); //4C mutex  unlock print
 
    sub_BEC620(r7);
    
@@ -1058,13 +1067,13 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
 
    bnode->unk_48 = 0x101; //0x48    
     
-   SceIofilemgrForDriver_6b3ca9f7(n0->node); //0x4C mutex lock print
+   SceIofilemgrForDriver_6b3ca9f7(&n0->node->fast_mutex_SceVfsMnt); //0x4C mutex lock print
    
    n0->node->unk_60++; //counter
     
-   sub_BEC56C(n0->node, bnode);
+   sub_BEC56C(n0->node, bnode); //link
     
-   SceIofilemgrForDriver_dc2d8bce(n0->node); //0x4C mutex unlock print
+   SceIofilemgrForDriver_dc2d8bce(&n0->node->fast_mutex_SceVfsMnt); //0x4C mutex unlock print
     
    bnode->devMajor.w.unk_4C = bnode->devMajor.w.unk_4C | (n0->node->devMajor.w.unk_4E << 16);
     
@@ -1170,7 +1179,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
    }
    else
    {
-      int result9 = sub_BE5B30(unk2, vnode, var_D4, 1, 1); //calls  SceIofilemgr.SceIofilemgrForDriver._exp_vfs_func13_f7dac0f5 inside - COULD BE USEFUL TO DERIVE op1 field location
+      int result9 = sub_BE5B30(unk2, vnode, var_D4, 1, 1);
       if(result9 < 0)
       {
          sub_BEE2C4(); //lock SceVfsRfsLock
@@ -1234,12 +1243,12 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
        return loc_BE76C8(n0, bnode, mountInfo->filesystem, result11, unk2, unk3, var_D8, cookie);
     }
     
-    SceIofilemgrForDriver_6b3ca9f7(bnode); //print lock
+    SceIofilemgrForDriver_6b3ca9f7(&bnode->fast_mutex_SceVfsMnt); //print lock
     
     bnode->unk_48 = bnode->unk_48 & (~0x100); //0x48
     bnode->unk_60--; //counter - one of fields that can identify type by logic
     
-    SceIofilemgrForDriver_dc2d8bce(bnode); //print unlock
+    SceIofilemgrForDriver_dc2d8bce(&bnode->fast_mutex_SceVfsMnt); //print unlock
     
     vnode->unk_58 = vnode->unk_58 -1; //counter - one of fields that can identify type by logic
     
