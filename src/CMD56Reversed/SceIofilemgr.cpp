@@ -314,75 +314,52 @@ vfs_node_base* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
    return 0;
 }
 
-int proc_init_SceVfsMnt_BEBB84(vfs_node_base* a0, vfs_node* a1, SceUID a2, vfs_add_data* a3)
+int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1)
 {
-   int r6 = r1;
-   char* r1 = "SceVfsMnt";
-   int r8 = r2;
-   int r7 = r3;
+   return 0;
+}
 
-   int r2 = 2;
-   int r3 = 0;
-   int r4 = r0;
-   int r5 = 0;
+int proc_init_SceVfsMnt_BEBB84(vfs_node_base* arg0, vfs_node* arg1, SceUID arg2, vfs_add_data* arg3)
+{
+   int r0 = SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(arg0, "SceVfsMnt", 2, 0);
 
-   SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelInitializeFastMutex_af8e1266();
+   arg0[0x44] = arg2; 
+   
+   arg0[0x5C] = arg3;
 
-   int r3 = 1;
-   r4[0x44] = r8; 
-   int r1 = r5;
-   r4[0x5C] = r7;
+   arg0[0x60] = 1;
 
-   int r0 = r4 + 0x80;
+   arg0[0x54] = 0;
+   arg0[0x58] = 0;
 
-   int r4[0x60] = r3;
+   arg0[0x64] = 0;
+   arg0[0x68] = 0;
 
-   int r2 = 0x40;
+   arg0[0x6C] = 0;
+   arg0[0x70] = 0;
 
-   r4[0x54] = r5;
-   r4[0x58] = r5;
+   arg0[0x74] = 0;
+   arg0[0x78] = 0;
 
-   r4[0x64] = r5;
-   r4[0x68] = r5;
+   arg0[0x7C] = 0;
 
-   r4[0x6C] = r5;
-   r4[0x70] = r5;
+   memset(arg0 + 0x80, 0, 0x40);
 
-   r4[0x74] = r5;
-   r4[0x78] = r5;
+   arg0[0x40] = arg1;
 
-   r4[0x7C] = r5;
-
-   memset(r0, r1, r2);
-
-   r4[0x40] = r6;
-
-   if(r6 != 0)
+   if(arg1 != 0)
    {
-      int r2 = r6[0x78];
-      int r3 = r6[0x58];
-
-      int r2 = r2 | 0x4000;
-
-      int r3 = r3 + 1;
-
-      r6[0x78] = r2;
-      r6[0x58] = r3;
+      arg1[0x78] = arg1[0x78] | 0x4000;;
+      arg1[0x58] = arg1[0x58] + 1;
    }
 
-   int r3 = r4[0xCC];
-   int r1 = 0x99C034;
-   int r2 = 0x99C01C;
+   arg0[0xCC][0x8] = 0x99C034;
+   arg0[0xCC][0xC] = 0x99C01C;
 
-   int r0 = 0;
+   arg0[0xCC][0x0] = 0;
+   arg0[0xCC][0x4] = 0;
 
-   r3[0x8] = r1;
-   r3[0xC] = r2;
-
-   r3[0x0] = r0;
-   r3[0x4] = r0;
-
-   return r0;
+   return 0;
 }
 
 //links 2 nodes
