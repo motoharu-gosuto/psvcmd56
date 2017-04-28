@@ -113,14 +113,14 @@ typedef struct vfs_nb_cc
 
 struct vfs_node;
 
-typedef struct vfs_node_base
+typedef struct vfs_node_base //size is not known exactly
 {
    uint8_t data1[0x40];
 
    uint32_t unk_40;
-   SceUID pool; // 44
+   SceUID pool;     // 0x44
 
-   uint32_t unk_48; //some number like 0x101
+   uint32_t unk_48; // = 0x101
    
    union _devMajor
    {
@@ -142,30 +142,30 @@ typedef struct vfs_node_base
       } b;
    } devMajor;
 
-   uint32_t devMinor; //50
+   uint32_t devMinor; // 0x50
 
    vfs_node* unk_54;
-   uint32_t unk_58; //counter
-   uint32_t unk_5C;
+   uint32_t unk_58;   // counter
+   node_ops1** unk_5C;
 
-   uint32_t unk_60; //counter
+   uint32_t unk_60;   // counter
 
    uint32_t unk_64;
    uint32_t unk_68;
    uint32_t unk_6C;
 
-   vfs_node_base* unk_70; //next ?
-   vfs_node_base* unk_74; //prev ?
+   vfs_node_base* unk_70; // next ?
+   vfs_node_base* unk_74; // prev ?
 
    uint32_t unk_78;
 
-   vfs_block_dev_info* blockDev; //7C
+   vfs_block_dev_info* blockDev; // 0x7C
 
-   char unk_80[0x40]; //some character data ?
+   char unk_80[0x40]; // some character data ?
 
    uint32_t unk_C0;   
 
-   uint32_t unk_C4; //mountInfo->unk_14
+   uint32_t unk_C4; // = mountInfo->unk_14
 
    uint32_t unk_C8;
 
@@ -176,38 +176,38 @@ typedef struct vfs_node_base
 typedef struct vfs_node //size is 0x40 + 0x98 = D8
 {
    uint32_t unk_0;
-   uint32_t unk_4; //most likely SceUID of current thread
-   uint32_t unk_8; //counter
-   SceUID evid; //C - event flag
+   uint32_t unk_4;  // most likely SceUID of current thread
+   uint32_t unk_8;  // counter
+   SceUID evid;     // 0xC - event flag
 
-   uint32_t evid_bits; //10
+   uint32_t evid_bits; // 0x10
    uint32_t unk_14;
    uint32_t unk_18;
    uint32_t unk_1C;
 
    uint8_t data1[0x20];
    
-   node_ops2 *ops; //40
+   node_ops2 *ops;  // 0x40
    uint32_t unk_44;
-   void* dev_info; //allocated on heap with uid from uid field
-                   //this is device specific / node specific data
-                   //for partition node this will be vfs_device_info*
+   void* dev_info;  //allocated on heap with uid from uid field
+                    //this is device specific / node specific data
+                    //for partition node this will be vfs_device_info*
 
-   vfs_node_base* node; //4C
+   vfs_node_base* node; // 0x4C
 
-   vfs_node* prev_node; //50
+   vfs_node* prev_node; // 0x50
 
    vfs_node* unk_54; // copied from node base
-   uint32_t unk_58; //counter
+   uint32_t unk_58;  // counter
    uint32_t unk_5C;
 
    uint32_t unk_60;
    uint32_t unk_64;
    uint32_t unk_68;
-   SceUID pool_uid; //6C - SceIoVfsHeap or other pool
+   SceUID pool_uid;  // 0x6C - SceIoVfsHeap or other pool
 
    vfs_r_70* unk_70;
-   uint32_t unk_74; // 0x8000
+   uint32_t unk_74; // = 0x8000
    uint32_t unk_78;
    uint32_t unk_7C;
 
@@ -314,9 +314,75 @@ vfs_node_base* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
    return 0;
 }
 
-int proc_init_SceVfsMnt_BEBB84(void* a0, vfs_node* a1, SceUID a2, vfs_add_data* a3)
+int proc_init_SceVfsMnt_BEBB84(vfs_node_base* a0, vfs_node* a1, SceUID a2, vfs_add_data* a3)
 {
-   return 0;
+   int r6 = r1;
+   char* r1 = "SceVfsMnt";
+   int r8 = r2;
+   int r7 = r3;
+
+   int r2 = 2;
+   int r3 = 0;
+   int r4 = r0;
+   int r5 = 0;
+
+   SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelInitializeFastMutex_af8e1266();
+
+   int r3 = 1;
+   r4[0x44] = r8; 
+   int r1 = r5;
+   r4[0x5C] = r7;
+
+   int r0 = r4 + 0x80;
+
+   int r4[0x60] = r3;
+
+   int r2 = 0x40;
+
+   r4[0x54] = r5;
+   r4[0x58] = r5;
+
+   r4[0x64] = r5;
+   r4[0x68] = r5;
+
+   r4[0x6C] = r5;
+   r4[0x70] = r5;
+
+   r4[0x74] = r5;
+   r4[0x78] = r5;
+
+   r4[0x7C] = r5;
+
+   memset(r0, r1, r2);
+
+   r4[0x40] = r6;
+
+   if(r6 != 0)
+   {
+      int r2 = r6[0x78];
+      int r3 = r6[0x58];
+
+      int r2 = r2 | 0x4000;
+
+      int r3 = r3 + 1;
+
+      r6[0x78] = r2;
+      r6[0x58] = r3;
+   }
+
+   int r3 = r4[0xCC];
+   int r1 = 0x99C034;
+   int r2 = 0x99C01C;
+
+   int r0 = 0;
+
+   r3[0x8] = r1;
+   r3[0xC] = r2;
+
+   r3[0x0] = r0;
+   r3[0x4] = r0;
+
+   return r0;
 }
 
 //links 2 nodes
@@ -430,6 +496,7 @@ int sub_BED838(int r0)
    return 0;
 }
 
+//calculates offset
 int proc_findNode_BE9504(vfs_node_base* r0, vfs_node** r1)
 {
    /*
@@ -691,10 +758,8 @@ int SceIofilemgrForDriver_6048f245(vfs_node* a0)
 
 int vfs_node_func3_BF1AF0(vfs_node_base *cur_node, int unk1, vfs_node *node)
 {
-   //LDR R3, [R0,#0x5C] - get pointer to structure with ptr to func table
-   //LDR R3, [R3] - get pointer to table
-   //LDR R3, [R3,#8] - get pointer to function
-   //BLX R3
+   node_ops1* r3 = *cur_node->unk_5C;
+   r3->func3(0);
 
    return 0;
 }
@@ -947,7 +1012,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
 
 //loc_BE71F6:    
     
-   if(n0->node->devMajor.b.unk_4C == 3) //vfs_node most likely has several variations depending on leaf level. have already encountered this
+   if(n0->node->devMajor.b.unk_4C == 3) 
       return loc_BE7252(n0, mountInfo->filesystem, 0x80010010, unk2, unk3, var_D8, cookie);
     
    if((mountInfo->devMinor & 0x1000) == 0)
@@ -963,7 +1028,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
             return loc_BE7252(n0, mountInfo->filesystem, 0x8001001E, unk2, unk3, var_D8, cookie);
       }
 
-      if((n0->node->devMinor << 0x13) < 0) //vfs_node most likely has several variations depending on leaf level. have already encountered this
+      if((n0->node->devMinor << 0x13) < 0)
          return loc_BE7252(n0, mountInfo->filesystem, 0x8001001E, unk2, unk3, var_D8, cookie);
    }
    else
@@ -981,7 +1046,6 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     
    uint32_t node; // = r2[-0x84];   // D0 - 84 = 4C - can be part of vfs_node ?
    uint32_t var_B8; // = r2[-0x80]; // D0 - 80 = 50 - can be part of vfs_node ?
-
 
    void* var_B4 = unk3;
     
