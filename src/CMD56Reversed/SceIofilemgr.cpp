@@ -175,7 +175,17 @@ typedef struct vfs_node_base
 
 typedef struct vfs_node //size is 0x40 + 0x98 = D8
 {
-   uint8_t data1[0x40];
+   uint32_t unk_0;
+   uint32_t unk_4; //most likely SceUID of current thread
+   uint32_t unk_8; //counter
+   SceUID evid; //C - event flag
+
+   uint32_t evid_bits; //10
+   uint32_t unk_14;
+   uint32_t unk_18;
+   uint32_t unk_1C;
+
+   uint8_t data1[0x20];
    
    node_ops2 *ops; //40
    uint32_t unk_44;
@@ -185,7 +195,7 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
 
    vfs_node_base* node; //4C
 
-   vfs_node* prev_node;
+   vfs_node* prev_node; //50
 
    vfs_node* unk_54; // copied from node base
    uint32_t unk_58; //counter
@@ -201,7 +211,17 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
    uint32_t unk_78;
    uint32_t unk_7C;
 
-   uint8_t data2[0x50];
+   uint32_t unk_80;
+   uint32_t unk_84;
+   uint32_t unk_88;
+   uint32_t unk_8C;
+
+   uint32_t unk_90;
+   uint32_t unk_94;
+   uint32_t unk_98;
+   uint32_t unk_9C;
+
+   uint8_t data2[0x30];
    
    uint32_t unk_D0;
 
@@ -315,122 +335,89 @@ int sub_BEBD20(int r0)
    return 0;
 }
 
-int sub_BF2B50(int r0, int r1, int r2, int r3)
+int sub_BF2B50(int r0, int r1, vfs_node* r2, int r3)
 {
    return 0;
 }
 
-int sub_BEBD70(vfs_node* r0)
+//this most likely returns current thread SceUID
+int SceThreadmgrForDriver_59d06540()
 {
-   int r10 = r0;
-   int r0 = r0[0x7C];
-   if(r0 != 0)
+   return 0;
+}
+
+int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits)
+{
+   return 0;
+}
+
+int sub_BEBD70(vfs_node* input_node)
+{
+   vfs_node* r10 = input_node;
+   
+   if(input_node->unk_7C != 0)
    {
-      sub_BEBD20(r0);
+      sub_BEBD20(input_node->unk_7C);
    }
 
-   int r0 = r10[0x5C];
-
-   if(r0 != 0)
+   if(input_node->unk_5C != 0)
    {
-      int r3 = r10[0x4C];
-      int r3 = r3[0x48];
-      
-      if(r3 == 0x10)
+      if(input_node->node->unk_48 == 0x10)
       {
-         int r1 = 0;
-         int r2 = r10;
-         int r3 = r10[0x90];
-         sub_BF2B50(r0, r1, r2, r3);
+         sub_BF2B50(input_node->unk_5C, 0, input_node, input_node->unk_90);
       }
    }
 
-   int r1 = 0;
-   int r2 = 0x98;
-   int r0 = r10 + 0x40;
-   memset(r0, r1, r2);
+   memset((char*)&input_node->ops, 0, 0x98); //set 0x98 bytes from offset 0x40
 
-   SceIofilemgr.SceThreadmgrForDriver._imp_59d06540();
+   int id0 = SceThreadmgrForDriver_59d06540();
 
-   int r3 = r10[4];
-   if(r0 != r3)
-      return r0;
+   if(id0 != r10->unk_4)
+      return id0;
    
-   int r3 = 0;
-   r10[8] = r3;
+   r10->unk_8 = 0;
 
-   SceIofilemgr.SceThreadmgrForDriver._imp_59d06540();
+   int id1 = SceThreadmgrForDriver_59d06540();
 
-   int r3 = r10[4];
+   if(id1 != r10->unk_4)
+      return id1;
 
-   if(r3 != r0)
-      return r0;
-
-   int r3 = r10[8];
-   if(r3 != 0)
+   if(r10->unk_8 != 0)
    {
-      int r3 = r3 - 1;
-      r10[8] = r3;
-      return r0;
+      r10->unk_8--;
+      return id1;
    }
    
-   int r3 = r10[0];
-
-   if(r3 == 0)
+   if(r10->unk_0 == 0)
    {
-      int r2 = r10[4];
-      int r6 = r3;
-      int r7 = r2;
+      int r6 = r10->unk_0;
+      int r7 = r10->unk_4;
       
       //DMB.W SY
 
-      int r8 = 0;
-      int r9 = -1;
-      
-      //loc_BEBDDC:
       while(true)
       {
-         int r4 = r10[0];
-         int r5 = r10[4];
-
-         if(r7 == r5)
-         {
-            if(r6 == r4)
-            {
-               r10[0] = r8;
-               r10[4] = r9;
-               r3 = success;
-
-               if(r3 != 0)
-               {
-                  continue;
-               }
-               else
-               {
-                  return r0;
-               }
-            }
-            else
-            {
-               break;
-            }
-         }
-         else
-         {
+         if(r7 != r10->unk_4)
             break;
-         }
+
+         if(r6 != r10->unk_0)
+            break;
+
+         r10->unk_0 = 0;
+         r10->unk_4 = -1;
+
+         int r3 = 0; //immitation of STREXD.W success
+
+         if(r3 != 0)
+            continue;
+         else
+            return id1;
       }
    }
 
-   int r3 = 0xFFFFFFFD;
-   int r0 = r10[0xC];
-   r10[4] = r3;
+   r10->unk_4 = 0xFFFFFFFD;
 
-   int r1 = r10[0x10];
-
-   SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelSetEventFlag_d4780c3e();
-
-   return r0;
+   return SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(r10->evid, r10->evid_bits);
 }
 
 int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
