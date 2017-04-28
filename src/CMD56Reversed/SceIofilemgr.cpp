@@ -310,9 +310,127 @@ void sub_BEC56C(vfs_node_base* r0, vfs_node_base* r1)
 
 //--------
 
-int sub_BEBD70(vfs_node* r0)
+int sub_BEBD20(int r0)
 {
    return 0;
+}
+
+int sub_BF2B50(int r0, int r1, int r2, int r3)
+{
+   return 0;
+}
+
+int sub_BEBD70(vfs_node* r0)
+{
+   int r10 = r0;
+   int r0 = r0[0x7C];
+   if(r0 != 0)
+   {
+      sub_BEBD20(r0);
+   }
+
+   int r0 = r10[0x5C];
+
+   if(r0 != 0)
+   {
+      int r3 = r10[0x4C];
+      int r3 = r3[0x48];
+      
+      if(r3 == 0x10)
+      {
+         int r1 = 0;
+         int r2 = r10;
+         int r3 = r10[0x90];
+         sub_BF2B50(r0, r1, r2, r3);
+      }
+   }
+
+   int r1 = 0;
+   int r2 = 0x98;
+   int r0 = r10 + 0x40;
+   memset(r0, r1, r2);
+
+   SceIofilemgr.SceThreadmgrForDriver._imp_59d06540();
+
+   int r3 = r10[4];
+   if(r0 != r3)
+      return r0;
+   
+   int r3 = 0;
+   r10[8] = r3;
+
+   SceIofilemgr.SceThreadmgrForDriver._imp_59d06540();
+
+   int r3 = r10[4];
+
+   if(r3 != r0)
+      return r0;
+
+   int r3 = r10[8];
+   if(r3 != 0)
+   {
+      int r3 = r3 - 1;
+      r10[8] = r3;
+      return r0;
+   }
+   
+   int r3 = r10[0];
+
+   if(r3 == 0)
+   {
+      int r2 = r10[4];
+      int r6 = r3;
+      int r7 = r2;
+      
+      //DMB.W SY
+
+      int r8 = 0;
+      int r9 = -1;
+      
+      //loc_BEBDDC:
+      while(true)
+      {
+         int r4 = r10[0];
+         int r5 = r10[4];
+
+         if(r7 == r5)
+         {
+            if(r6 == r4)
+            {
+               r10[0] = r8;
+               r10[4] = r9;
+               r3 = success;
+
+               if(r3 != 0)
+               {
+                  continue;
+               }
+               else
+               {
+                  return r0;
+               }
+            }
+            else
+            {
+               break;
+            }
+         }
+         else
+         {
+            break;
+         }
+      }
+   }
+
+   int r3 = 0xFFFFFFFD;
+   int r0 = r10[0xC];
+   r10[4] = r3;
+
+   int r1 = r10[0x10];
+
+   SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelSetEventFlag_d4780c3e();
+
+   return r0;
 }
 
 int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
@@ -327,6 +445,15 @@ int sub_BED838(int r0)
 
 int proc_findNode_BE9504(vfs_node_base* r0, vfs_node** r1)
 {
+   /*
+   int r7 = *99D96C;
+   int r0 = 99D9D4;
+   int r3 = r0[0x8];
+   int r6 = r0[0xC];
+   int r11 = r6 * r7 + r3;
+   return r11;
+   */
+   
    return 0;
 }
 
@@ -412,14 +539,14 @@ int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, nod
          }
          else
          {
-            result = sub_BF33A0(get_0x99D9D4_ptr()); //does this alloc or smth?
+            result = sub_BF33A0(get_0x99D9D4_ptr());
          }
       }
 
       found_node = result;
       if(found_node == 0)
       {
-         int r0 = proc_findNode_BE9504(cur_node, &result);
+         int r0 = proc_findNode_BE9504(cur_node, &result); //further finds a node
          if(r0 < 0)
          {
             int r11 = sub_BED838(get_99C024());
@@ -440,7 +567,7 @@ int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, nod
          else
          {
             //loc_BED9AA:
-            sub_BEBD70(result); //some init
+            sub_BEBD70(result);
             found_node = result;
          }
       }
