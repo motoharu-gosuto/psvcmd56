@@ -103,22 +103,29 @@ typedef struct vfs_r_70
    uint32_t unk_14; //number
 };
 
-typedef struct vfs_nb_cc
+typedef struct vfs_node_base_cc
 {
    uint32_t unk_0;
    uint32_t unk_4;
-   uint32_t unk_8;
-   uint32_t unk_C;
-} vfs_nb_cc;
+   uint32_t unk_8; // pointer to data section, offset 34
+   uint32_t unk_C; // pointer to data section, offset 1C
+} vfs_node_base_cc;
 
 struct vfs_node;
 
-typedef struct vfs_node_base //size is not known exactly
+typedef struct vfs_node_base //size is not known exactly, at least 0xD0
 {
-   uint8_t data1[0x40];
+   uint32_t fast_mutex_SceVfsMnt;
 
-   uint32_t unk_40;
-   SceUID pool;     // 0x44
+   uint32_t unk_4;
+   uint32_t unk_8;
+   uint32_t unk_C;
+
+   uint8_t data1[0x30];
+
+   vfs_node* unk_40; // child ?
+
+   SceUID pool;     // 0x44 - SceIoVfsHeap
 
    uint32_t unk_48; // = 0x101
    
@@ -146,7 +153,7 @@ typedef struct vfs_node_base //size is not known exactly
 
    vfs_node* unk_54;
    uint32_t unk_58;   // counter
-   node_ops1** unk_5C;
+   vfs_add_data* add_data; // 0x5C
 
    uint32_t unk_60;   // counter
 
@@ -169,7 +176,7 @@ typedef struct vfs_node_base //size is not known exactly
 
    uint32_t unk_C8;
 
-   vfs_nb_cc* unk_CC;
+   vfs_node_base_cc* unk_CC;
 
 } vfs_node_base;
 
@@ -198,7 +205,7 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
    vfs_node* prev_node; // 0x50
 
    vfs_node* unk_54; // copied from node base
-   uint32_t unk_58;  // counter
+   uint32_t unk_58;  // counter - probably counter of nodes
    uint32_t unk_5C;
 
    uint32_t unk_60;
@@ -208,7 +215,7 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
 
    vfs_r_70* unk_70;
    uint32_t unk_74; // = 0x8000
-   uint32_t unk_78;
+   uint32_t unk_78; // some flag
    uint32_t unk_7C;
 
    uint32_t unk_80;
@@ -319,45 +326,42 @@ int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, co
    return 0;
 }
 
-int proc_init_SceVfsMnt_BEBB84(vfs_node_base* arg0, vfs_node* arg1, SceUID arg2, vfs_add_data* arg3)
+int proc_init_SceVfsMnt_BEBB84(vfs_node_base* arg0, vfs_node* arg1, SceUID heapid, vfs_add_data* arg3)
 {
-   int r0 = SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(arg0, "SceVfsMnt", 2, 0);
+   int r0 = SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(&arg0->fast_mutex_SceVfsMnt, "SceVfsMnt", 2, 0);
 
-   arg0[0x44] = arg2; 
+   arg0->pool = heapid; // 44
    
-   arg0[0x5C] = arg3;
+   arg0->add_data = arg3; // 5C
 
-   arg0[0x60] = 1;
+   arg0->unk_60 = 1;
 
-   arg0[0x54] = 0;
-   arg0[0x58] = 0;
+   arg0->unk_54 = 0;
+   arg0->unk_58 = 0;
 
-   arg0[0x64] = 0;
-   arg0[0x68] = 0;
+   arg0->unk_64 = 0;
+   arg0->unk_68 = 0;
+   arg0->unk_6C = 0;
+   arg0->unk_70 = 0;
+   arg0->unk_74 = 0;
+   arg0->unk_78 = 0;
+   arg0->blockDev = 0; // 7C
 
-   arg0[0x6C] = 0;
-   arg0[0x70] = 0;
+   memset(arg0->unk_80, 0, 0x40);
 
-   arg0[0x74] = 0;
-   arg0[0x78] = 0;
-
-   arg0[0x7C] = 0;
-
-   memset(arg0 + 0x80, 0, 0x40);
-
-   arg0[0x40] = arg1;
+   arg0->unk_40 = arg1;
 
    if(arg1 != 0)
    {
-      arg1[0x78] = arg1[0x78] | 0x4000;;
-      arg1[0x58] = arg1[0x58] + 1;
+      arg1->unk_78 = arg1->unk_78 | 0x4000;
+      arg1->unk_58++;
    }
 
-   arg0[0xCC][0x8] = 0x99C034;
-   arg0[0xCC][0xC] = 0x99C01C;
+   arg0->unk_CC->unk_0 = 0;
+   arg0->unk_CC->unk_4 = 0;
 
-   arg0[0xCC][0x0] = 0;
-   arg0[0xCC][0x4] = 0;
+   arg0->unk_CC->unk_8 = 0x99C034;
+   arg0->unk_CC->unk_C = 0x99C01C;
 
    return 0;
 }
@@ -735,7 +739,7 @@ int SceIofilemgrForDriver_6048f245(vfs_node* a0)
 
 int vfs_node_func3_BF1AF0(vfs_node_base *cur_node, int unk1, vfs_node *node)
 {
-   node_ops1* r3 = *cur_node->unk_5C;
+   node_ops1* r3 = cur_node->add_data->funcs1; //5C then 0
    r3->func3(0);
 
    return 0;
