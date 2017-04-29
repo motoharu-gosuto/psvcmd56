@@ -92,28 +92,17 @@ typedef struct vfs_add_data
     vfs_add_data* next_element; //ptr to next element, confirmed
 } vfs_add_data;
 
-typedef struct vfs_node_70
-{
-   uint32_t unk_0;
-   uint32_t unk_4;
-   uint32_t unk_8;
-   vfs_node_70* unk_C; //zero or pointer to next element
-
-   void* unk_10; //pointer to struct of at least size 0x94
-   uint32_t unk_14; //number
-};
-
-typedef struct vfs_node_base_cc
+typedef struct vfs_mount_cc
 {
    uint32_t unk_0;
    uint32_t unk_4;
    uint32_t unk_8; // pointer to data section, offset 34
    uint32_t unk_C; // pointer to data section, offset 1C
-} vfs_node_base_cc;
+} vfs_mount_cc;
 
 struct vfs_node;
 
-typedef struct vfs_node_base //size is not known exactly, at least 0xD0
+typedef struct vfs_mount //size is not known exactly, at least 0xD0
 {
    uint32_t fast_mutex_SceVfsMnt;
 
@@ -161,8 +150,8 @@ typedef struct vfs_node_base //size is not known exactly, at least 0xD0
    uint32_t unk_68;
    uint32_t unk_6C;
 
-   vfs_node_base* unk_70; // next ?
-   vfs_node_base* unk_74; // prev ?
+   vfs_mount* unk_70; // next ?
+   vfs_mount* unk_74; // prev ?
 
    uint32_t unk_78;
 
@@ -176,9 +165,20 @@ typedef struct vfs_node_base //size is not known exactly, at least 0xD0
 
    uint32_t unk_C8;
 
-   vfs_node_base_cc* unk_CC;
+   vfs_mount_cc* unk_CC;
 
-} vfs_node_base;
+} vfs_mount;
+
+typedef struct vfs_node_70
+{
+   uint32_t unk_0;
+   uint32_t unk_4;
+   uint32_t unk_8;
+   vfs_node_70* unk_C; //zero or pointer to next element
+
+   void* unk_10; //pointer to struct of at least size 0x94
+   uint32_t unk_14; //number
+};
 
 typedef struct vfs_node //size is 0x40 + 0x98 = D8
 {
@@ -200,7 +200,7 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
                     //this is device specific / node specific data
                     //for partition node this will be vfs_device_info*
 
-   vfs_node_base* node; // 0x4C
+   vfs_mount* node; // 0x4C
 
    vfs_node* prev_node; // 0x50
 
@@ -271,17 +271,17 @@ int SceIofilemgrForDriver_dc2d8bce(uint32_t* a0)
    return 0;
 }
 
-int sub_BEC578(vfs_node_base* a0, vfs_node_base* a1)
+int sub_BEC578(vfs_mount* a0, vfs_mount* a1)
 {
    return 0;
 }
 
-int sub_BEC620(vfs_node_base* a0)
+int sub_BEC620(vfs_mount* a0)
 {
    return 0;
 }
 
-int sub_BEC010(vfs_node_base* a0)
+int sub_BEC010(vfs_mount* a0)
 {
    return 0;
 }
@@ -316,7 +316,7 @@ int sub_BEE3C8(vfs_node* n0)
    return 0;
 }
 
-vfs_node_base* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
+vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 {
    return 0;
 }
@@ -326,7 +326,7 @@ int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, co
    return 0;
 }
 
-int proc_init_SceVfsMnt_BEBB84(vfs_node_base* arg0, vfs_node* arg1, SceUID heapid, vfs_add_data* arg3)
+int proc_init_SceVfsMnt_BEBB84(vfs_mount* arg0, vfs_node* arg1, SceUID heapid, vfs_add_data* arg3)
 {
    int r0 = SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(&arg0->fast_mutex_SceVfsMnt, "SceVfsMnt", 2, 0);
 
@@ -367,9 +367,9 @@ int proc_init_SceVfsMnt_BEBB84(vfs_node_base* arg0, vfs_node* arg1, SceUID heapi
 }
 
 //links 2 nodes
-void sub_BEC56C(vfs_node_base* r0, vfs_node_base* r1)
+void sub_BEC56C(vfs_mount* r0, vfs_mount* r1)
 {
-   vfs_node_base* temp = r0->unk_70;
+   vfs_mount* temp = r0->unk_70;
    if(temp != 0)
       r1->unk_74 = temp;
    r0->unk_70 = r1;
@@ -478,7 +478,7 @@ int sub_BED838(int r0)
 }
 
 //calculates offset
-int proc_findNode_BE9504(vfs_node_base* r0, vfs_node** r1)
+int proc_findNode_BE9504(vfs_mount* r0, vfs_node** r1)
 {
    /*
    int r7 = *99D96C;
@@ -539,7 +539,7 @@ int nullsub_3(vfs_node* r0, int r1)
 
 //--------
 
-int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_node_base* cur_node, node_ops2* ops, int unused, vfs_node** node)
+int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_mount* cur_node, node_ops2* ops, int unused, vfs_node** node)
 {
    int var_2C = var_009EA004;
 
@@ -721,7 +721,7 @@ int sub_BEBC1C()
    return 0;
 }
     
-int sub_BEC51C(vfs_node_base* a0)
+int sub_BEC51C(vfs_mount* a0)
 {
    return 0;
 }
@@ -731,12 +731,12 @@ int sub_BEBC2C()
    return 0;
 }
 
-int sub_BF18CC(vfs_node_base* a0, uint32_t* a1)
+int sub_BF18CC(vfs_mount* a0, uint32_t* a1)
 {
    return 0;
 }
 
-int sub_BEC530(vfs_node_base* a0)
+int sub_BEC530(vfs_mount* a0)
 {
    return 0;
 }
@@ -746,7 +746,7 @@ int SceIofilemgrForDriver_6048f245(vfs_node* a0)
    return 0;
 }
 
-int vfs_node_func3_BF1AF0(vfs_node_base *cur_node, int unk1, vfs_node *node)
+int vfs_node_func3_BF1AF0(vfs_mount *cur_node, int unk1, vfs_node *node)
 {
    node_ops1* r3 = cur_node->add_data->funcs1; //5C then 0
    r3->func3(0);
@@ -797,7 +797,7 @@ int loc_BE7252(vfs_node* n0, char* filesystem, int errorCode, vfs_node* unk2, vo
    return loc_BE6C96(filesystem, errorCode, unk3, var_D8, cookie);
 }
 
-int loc_BE76C8(vfs_node* n0, vfs_node_base* r7, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
+int loc_BE76C8(vfs_node* n0, vfs_mount* r7, char* filesystem, int errorCode, vfs_node* unk2, void* unk3, void* var_D8, int cookie)
 {
    SceIofilemgrForDriver_6b3ca9f7(&n0->node->fast_mutex_SceVfsMnt); //4C mutex lock print
 
@@ -1048,7 +1048,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
       return loc_BE7252(n0, mountInfo->filesystem, result4, unk2, unk3, var_D8, cookie);
         
 //loc_BE74F4:        
-   vfs_node_base* bnode = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
+   vfs_mount* bnode = proc_get_arg0_for_sceVfsGetNewNode_BEBAC0();
    if(bnode == 0)
       return loc_BE7252(n0, mountInfo->filesystem, 0x8001000C, unk2, unk3, var_D8, cookie);    
 
