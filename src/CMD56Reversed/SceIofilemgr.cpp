@@ -178,7 +178,7 @@ typedef struct vfs_node_70
 
    void* unk_10; //pointer to struct of at least size 0x94
    uint32_t unk_14; //number
-};
+} vfs_node_70;
 
 typedef struct vfs_node //size is 0x40 + 0x98 = D8
 {
@@ -318,6 +318,11 @@ int sub_BEE3C8(vfs_node* n0)
 
 vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 {
+   //SceVfsFdLock
+   //SceVfsFdCond
+
+   //need to reverse this method
+
    return 0;
 }
 
@@ -917,6 +922,28 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 
 //NOT EXACTLY SURE IF vfs_node* prev_node; in vfs_node should be vfs_node or vfs_node_base
 //currently derrivation is based on the fact that unk2 type is same as n0 type (see above)
+
+//--------------
+
+//TODO:
+//check:
+//sub_BE4DE4 - SceIofileFlockWaitQueue event flag, SceIofileFlockLock mutex
+//proc_SceIoSchedulerDispatcher_BF651C - SceIoSchedulerDispatcher mutex and flag
+//sceVfsGetNewNode_BEBAC0 - SceVfsFdLock, SceVfsFdCond
+//sub_BED694 - SceVfsFdLock, SceVfsFdCond
+//proc_SceIoScheduler_BF8728 - SceIoScheduler mutex and cond and flag
+//sub_BECA68 - SceVfsVnode
+
+//reverse:
+//proc_get_arg0_for_sceVfsGetNewNode_BEBAC0
+//sub_BEDEB0
+//sub_BEDF5C
+//sub_BE5B30
+
+//check:
+//vfs functions - that they are passing vfs_node and not vfs_mount
+
+//--------------
 
 //loc_BE6C50 - jumptable 00BE6A86 case 1
 int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addData, int cookie)
