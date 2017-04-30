@@ -162,7 +162,7 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
    vfs_mount* unk_70; // next ?
    vfs_mount* unk_74; // prev ?
 
-   vfs_mount* unk_78;
+   vfs_mount* unk_78; //singly linked list related to pointer 19D0 in data section
 
    vfs_block_dev_info* blockDev; // 0x7C
 
@@ -369,64 +369,53 @@ vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 {
    int prev_state1 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e((int*)0x99DA44);
 
-   vfs_mount** r5 = &g_99D9D0;
-
-   vfs_mount* r4 = *r5;
-
-   if(r4 == 0)
+   if(g_99D9D0 == 0)
    {
       SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
       return 0;
    }
 
-   vfs_fd_lock* r6 = &r4->fd_lock; //D0
+   vfs_mount* mount_node = g_99D9D0;
 
-   *r5 = r4->unk_78;
+   g_99D9D0 = mount_node->unk_78;
 
    SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
 
-   r4->fd_lock_ptr = r6; //C8
+   mount_node->fd_lock_ptr = &mount_node->fd_lock; //C8
    
    SceUID mutex_id = SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e("SceVfsFdLock", 0, 0, 0);
 
    if(mutex_id >= 0)
    {
-      r4->fd_lock.mutex_SceVfsFdLock = mutex_id; // D0
+      mount_node->fd_lock.mutex_SceVfsFdLock = mutex_id; // D0
 
       SceUID cond_id = SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a("SceVfsFdCond", 0, mutex_id, 0);
 
       if(cond_id >= 0)
       {
-         vfs_mount_cc* r2 = &r4->unk_E0;
-         
-         r6->cond_SceVfsFdCond = cond_id; // 4
-         r6->unk_8 = 0;
-         r6->unk_C = 0;
+         mount_node->fd_lock.cond_SceVfsFdCond = cond_id; // 4
+         mount_node->fd_lock.unk_8 = 0;
+         mount_node->fd_lock.unk_C = 0;
 
-         r4->unk_CC = r2;
+         mount_node->unk_CC = &mount_node->unk_E0;
 
-         return r4;
+         return mount_node;
       }
       else
       {
-         SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(r6->mutex_SceVfsFdLock);
-
-         r6->mutex_SceVfsFdLock = -1;
+         SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(mount_node->fd_lock.mutex_SceVfsFdLock);
+         mount_node->fd_lock.mutex_SceVfsFdLock = -1;
       }
    }
 
    int prev_state2 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e((int*)0x99DA44);
 
-   vfs_mount* r2 = *r5;
-   
-   if(r2 != 0)
+   if(g_99D9D0 != 0)
    {
-      r4->unk_78 = r2;
+      mount_node->unk_78 = g_99D9D0;
    }
 
-   vfs_mount** r3 = &g_99D9D0;
-
-   *r3 = r4;
+   g_99D9D0 = mount_node;
    
    SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state2);
 
@@ -1042,15 +1031,12 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //sub_BECA68 - SceVfsVnode
 
 //reverse:
-//proc_get_arg0_for_sceVfsGetNewNode_BEBAC0
 //sub_BEDEB0
 //sub_BEDF5C
 //sub_BE5B30
 
 //check:
 //vfs functions - that they are passing vfs_node and not vfs_mount
-
-//fix mutex - lock int in globals  - it is not mutex but intr state
 
 //--------------
 
