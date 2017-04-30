@@ -259,6 +259,63 @@ SceUID get_SceIoVfsHeap_id()
 
 //==========================
 
+int sub_BF3350(void *buffer, int unk1, int unk2, int unk3, int arg_0)
+{
+   if(unk3 == 0)
+      return -1;
+
+   buffer[0x0] = 0;
+   buffer[0x4] = 0;
+   buffer[0x8] = unk2;
+   buffer[0xC] = unk3;
+   buffer[0x10] = unk1;
+
+   int r5 = unk1 - 1;
+
+   if(r5 < 0)
+      return 0;
+
+   int r6 = r5 * unk3 + unk2;
+
+   int r4 = arg_0 + (unk1 << 3);   
+
+   while(true)
+   {
+      int r1 = r4;
+
+      R1[-8 + 4] = r6;
+
+      while(true)
+      {
+         int r2 = buffer[0];
+         r4[-4] = r2;
+
+         //DMB.W           SY
+
+         r0[0] = r1;
+
+         r2 = success;
+
+         if(r2 == 0)
+            break;
+      }
+
+      r5 = r5 - 1;
+
+      int r6 = r6 - r3;
+
+      int r4 = r1;
+
+      if(r5< 0)
+         break;
+   }
+
+   return 0;
+}
+
+
+//-------------------------------
+
 int sub_BECE80(void* a0)
 {
    return 0;
@@ -299,6 +356,7 @@ int sub_BEC010(vfs_mount* a0)
    return 0;
 }
 
+//alloc
 void* sub_BECE0C()
 {
    return 0;
@@ -785,7 +843,6 @@ int sub_BEE2D4()
 
 int sub_BEDEB0(uint32_t* a0, int a1, vfs_node* a2, int a3)
 {
-
    // proc_find_vfs_node_info_node_BEDA18
 
    return 0;
@@ -811,8 +868,7 @@ int sub_BEDF5C(uint32_t* a0, int a1)
 
 int sub_BE5B30(vfs_node* a0, vfs_node* a1, void* a2, int a3, int a4)
 {
-
-   // SceIofilemgr.SceIofilemgrForDriver._exp_vfs_func13_f7dac0f5
+   a0->node->add_data->funcs1->func13(0); // call func 13   
 
    return 0;
 }
@@ -847,7 +903,7 @@ int SceIofilemgrForDriver_6048f245(vfs_node* a0)
    return 0;
 }
 
-int vfs_node_func3_BF1AF0(vfs_mount *cur_node, int unk1, vfs_node *node)
+int vfs_func3_BF1AF0(vfs_mount *cur_node, int unk1, vfs_node *node)
 {
    node_ops1* r3 = cur_node->add_data->funcs1; //5C then 0
    r3->func3(0);
@@ -930,37 +986,10 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //==========================
 
 //TODO:
-//1 - looks like vfs_node is merged with some other type? or it has multi purpose fields ?
-//2 - use counters, field copy routines to identify types that are similar
 //3 - fix function signatures in ida after clarification
 //4 - fix locals, especially 'node' which is located on stack - arrange fields properly
 
 //----------
-
-//explanation to type derivation 1
-//it looks like vfs_node variables are messed up and there is actually one more type here that is involved
-//by looking through the code it can be derived that bnode->node, bnode->prev_node, bnode->dev_info fields should be numbers
-//bnode->node = (vfs_node*)mountInfo->devMajor; //0x4C 
-//bnode->prev_node = (vfs_node*)(mountInfo->devMinor & 0xFFFFF); //0x50 - take first 0x14 bits
-//bnode->dev_info = (void*)0x101; //0x48   
-//bnode->dev_info = (uint32_t)bnode->dev_info & (~0x100); //0x48
-//bnode->prev_node = (uint32_t)bnode->prev_node & (~0x20000); //50
-//bnode->prev_node = bnode->prev_node | 0x20000; //50
-
-//bnode and n0->node share many traits:
-//n0->node->unk_60++;
-//n0->node->unk_60--;
-//bnode->unk_60--;
-
-//bnode->unk_CC[0x08] = n0->node->unk_CC[0x08];
-//bnode->unk_CC[0x0C] = n0->node->unk_CC[0x0C];
-
-//if(((short)bnode[0x4E] & 0xF00) != 0x200)
-//bnode->unk_4C.w.unk_4C = bnode->unk_4C.w.unk_4C | (n0->node->unk_4C.w.unk_4E << 16);
-
-//if((bnode->unk_50 << 0x0E) < 0)
-//if((((uint32_t)n0->node->prev_node) << 0x0E) < 0) //4C 50
-
 //also procedure BEC56C is used to link two items of same type together
 
 //this means that bnode and n0->node are of same type which is different from vfs_node
@@ -980,41 +1009,9 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //vnode->unk_4C = bnode; 
 //vnode->unk_50 = unk2;
 
-//so here what we have:
-//n0 == unk2 = vfs_root*
-//n0 == vnode = vfs_root*
-//however we see that vnode->unk_50 must also be of type vfs_root* because of the assignment
-//it would be logically correct if vnode->unk_4C was also vfs_root* because these fields are near
-//however bnode is of type vfs_node_base*
-//we know that it should not be of type vfs_node* because it has different layout
-//howeer it can not be of type vfs_root* also because in vfs_root* field unk_4C is pointer, not number
-
-//some important observations that should be made:
-//one of the types definitely must be vfs_node that contains ops2
-//int result11 = vfs_node_func3_BF1AF0(bnode, 0, vnode);
-
-//HOWEVER THIS IS NOT VFS_NODE_FUNC3 because it has function table at different offset. 0x00 from structure at offset 0x5C, and not 0x40
-//it is VFS_FUNC3 because it takes pointer to structure with function table from offset 0x5C of some ctx. same happens in vfs_func13, vfs_func12
-
-//it looks like ctx with 0x5C is found by procedure proc_find_vfs_node_BE6788
-//can be usefull to check it
-
-//and can check SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63 as well - this one assigns op2 at offset 0x40 and has also asignment done at 0xD0 !
-//this suggests that sceVfsGetNewNode argument 3 should be vfs_node and not vfs_root (meaning that types are actully same thing)
-
-//can this be useful?
-//int result10 = sub_BF18CC(bnode, &node);
-
-//can this be useful?
-//int result9 = sub_BE59BC(vnode, var_D4);
-
-//other important observation is to investigate function proc_init_SceVfsMnt_BEBB84
-
 //it could be usefull to revisit and list global variable
 //0x01A8 - array of 96 elements of vfs_node_info 
 //used by proc_find_vfs_node_info_node_BEDA18 <- proc_find_vfs_node_BEDF04 <- proc_find_vfs_node_BE584C <- proc_find_vfs_node_BE6788 - used by mount
-
-//checking sub_BE5B30 with vfs_func13 can be important
 
 //NOT EXACTLY SURE IF vfs_node* prev_node; in vfs_node should be vfs_node or vfs_node_base
 //currently derrivation is based on the fact that unk2 type is same as n0 type (see above)
@@ -1033,7 +1030,6 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //reverse:
 //sub_BEDEB0
 //sub_BEDF5C
-//sub_BE5B30
 
 //check:
 //vfs functions - that they are passing vfs_node and not vfs_mount
@@ -1344,7 +1340,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
        return loc_BE76C8(n0, bnode, mountInfo->filesystem, result10, unk2, unk3, var_D8, cookie);
     }
     
-    int result11 = vfs_node_func3_BF1AF0(bnode, 0, vnode);
+    int result11 = vfs_func3_BF1AF0(bnode, 0, vnode);
     if(result11 < 0)
     {
        sub_BEBC1C(); //lock SceVfsMntlistLock
