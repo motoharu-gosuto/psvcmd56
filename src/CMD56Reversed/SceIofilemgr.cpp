@@ -102,6 +102,15 @@ typedef struct vfs_mount_cc
 
 struct vfs_node;
 
+typedef struct vfs_fd_lock
+{
+   SceUID mutex_SceVfsFdLock; // 0
+   SceUID cond_SceVfsFdCond; // 4
+   uint32_t unk_8;
+   uint32_t unk_C;
+
+} vfs_fd_lock;
+
 typedef struct vfs_mount //size is not known exactly, at least 0xD0
 {
    uint32_t fast_mutex_SceVfsMnt;
@@ -153,7 +162,7 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
    vfs_mount* unk_70; // next ?
    vfs_mount* unk_74; // prev ?
 
-   uint32_t unk_78;
+   vfs_mount* unk_78;
 
    vfs_block_dev_info* blockDev; // 0x7C
 
@@ -163,9 +172,13 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
 
    uint32_t unk_C4; // = mountInfo->unk_14
 
-   uint32_t unk_C8;
+   vfs_fd_lock* fd_lock_ptr; // C8 - points to area in this structure
 
-   vfs_mount_cc* unk_CC;
+   vfs_mount_cc* unk_CC; // CC - points to area in this structure
+
+   vfs_fd_lock fd_lock; // D0
+
+   vfs_mount_cc unk_E0; //E0;
 
 } vfs_mount;
 
@@ -311,115 +324,113 @@ int sub_BEE364(vfs_node* a0)
    return 0;
 }
 
+int SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(int *addr)
+{
+   return 0;
+}
+
+int SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df(int *addr, int prev_state)
+{
+   return 0;
+}
+
+typedef struct SceKernelMutexOptParam {
+  SceSize size;
+  int ceilingPriority;
+} SceKernelMutexOptParam;
+
+SceUID SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option)
+{
+   return 0;
+}
+
+typedef struct SceKernelCondOptParam {
+	SceSize size;
+} SceKernelCondOptParam;
+
+SceUID SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a(const char *name, SceUInt attr, SceUID mutexId, const SceKernelCondOptParam *option)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(SceUID uid)
+{
+   return 0;
+}
+
 int sub_BEE3C8(vfs_node* n0)
 {
    return 0;
 }
 
+vfs_mount* g_99D9D0;
+
 vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 {
-   int r0 = 0x99DA44;
-   int r5 = 0x99D9D0;
-   
-   int r0 = SceIofilemgr.SceCpuForDriver._imp_lock_int_d32ace9e(r0); //ksceKernelCpuSuspendIntr
+   int prev_state1 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e((int*)0x99DA44);
 
-   int r4 = *r5;
-   int r1 = r0; //prev state
+   vfs_mount** r5 = &g_99D9D0;
+
+   vfs_mount* r4 = *r5;
 
    if(r4 == 0)
    {
-      int r0 = 0x99DA44;
-      SceIofilemgr.SceCpuForDriver._imp_unlock_int_7bb9d5df(r0, r1); //ksceKernelCpuResumeIntr
-      int r0 = r4; //zero optimization ?
-
-      return r0;
+      SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
+      return 0;
    }
 
-   int r3 = r4[0x78];
-   int r0 = 0x99DA44;
-   int r6 = r4 + 0xD0;
+   vfs_fd_lock* r6 = &r4->fd_lock; //D0
 
-   *r5 = r3;
+   *r5 = r4->unk_78;
 
-   SceIofilemgr.SceCpuForDriver._imp_unlock_int_7bb9d5df(r0, r1);
+   SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
 
-   int r1 = 0;
-   int r0 = "SceVfsFdLock";
-   int r2 = r1;
+   r4->fd_lock_ptr = r6; //C8
    
-   r4[0xC8] = r6;
-   
-   int r3 = r1;
+   SceUID mutex_id = SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e("SceVfsFdLock", 0, 0, 0);
 
-   SceUID r0 = SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelCreateMutex_fbaa026e(r0, r1, r2, r3);
-
-   int r2 = r0;
-
-   if(r2 >=0 0)
+   if(mutex_id >= 0)
    {
-      int r1 = 0;
-      int r0 = "SceVfsFdCond";
+      r4->fd_lock.mutex_SceVfsFdLock = mutex_id; // D0
 
-      r4[0xD0] = r2; //store uid
+      SceUID cond_id = SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a("SceVfsFdCond", 0, mutex_id, 0);
 
-      int r3 = r1;
-      
-      SceUID r0 = SceIofilemgr.SceThreadmgrForDriver._imp_sceKernelCreateCondForDriver_db6cd34a(r0, r1, r2, r3);
-
-      if(r0 >= 0)
+      if(cond_id >= 0)
       {
-         int r3 = 0;
+         vfs_mount_cc* r2 = &r4->unk_E0;
          
-         int r2 = r4 + 0xE0;
-         
-         r6[0x4] = r0; //store uid
-         r6[0x8] = r3;
+         r6->cond_SceVfsFdCond = cond_id; // 4
+         r6->unk_8 = 0;
+         r6->unk_C = 0;
 
-         r6[0xC] = r3;
+         r4->unk_CC = r2;
 
-         r4[0xCC] = r2;
-
-         int r0 = r4;
-
-         return r0;
+         return r4;
       }
       else
       {
-         int r0 = *r6;
+         SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(r6->mutex_SceVfsFdLock);
 
-         SceIofilemgr.SceThreadmgrForDriver._imp_sceKernelDeleteMutexForKernel_0a912340();
-
-         int r3 = -1;
-
-         r6* = r3;
+         r6->mutex_SceVfsFdLock = -1;
       }
    }
 
-   int r0 = 0x99DA44;
+   int prev_state2 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e((int*)0x99DA44);
 
-   int r0 = SceIofilemgr.SceCpuForDriver._imp_lock_int_d32ace9e(r0);
-
-   int r2 = *r5;
-   int r3 = 0x99D9D0;
-
-   int r1 = r0; //prev state
+   vfs_mount* r2 = *r5;
    
    if(r2 != 0)
    {
-      r4[0x78] = r2;
+      r4->unk_78 = r2;
    }
 
-   int r0 = 0x99DA44;
+   vfs_mount** r3 = &g_99D9D0;
 
-   r3* = r4;
+   *r3 = r4;
    
-   int r4 = 0;
-   
-   SceIofilemgr.SceCpuForDriver._imp_unlock_int_7bb9d5df(r0, r1);
+   SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state2);
 
-   int r0 = r4;
-
-   return r0;
+   return 0;
 }
 
 int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1)
