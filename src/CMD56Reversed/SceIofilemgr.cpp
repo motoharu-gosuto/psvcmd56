@@ -259,54 +259,64 @@ SceUID get_SceIoVfsHeap_id()
 
 //==========================
 
-int sub_BF3350(void *buffer, int unk1, int unk2, int unk3, int arg_0)
+typedef struct ctx_BF3350
 {
-   if(unk3 == 0)
+   char* unk_0; //
+   uint32_t unk_4;
+   void* unk_8;
+   uint32_t unk_C;
+
+   uint32_t unk_10;
+   uint32_t unk_14;
+   uint32_t unk_18;
+   uint32_t unk_1C;
+}ctx_BF3350;
+
+int sub_BF3350(ctx_BF3350 *buffer, int count, char* offset1, int size, char* offset2)
+{
+   if(size == 0)
       return -1;
 
-   buffer[0x0] = 0;
-   buffer[0x4] = 0;
-   buffer[0x8] = unk2;
-   buffer[0xC] = unk3;
-   buffer[0x10] = unk1;
+   buffer->unk_0 = 0;
+   buffer->unk_4 = 0;
+   buffer->unk_8 = offset1;
+   buffer->unk_C = size;
+   buffer->unk_10 = count;
 
-   int r5 = unk1 - 1;
+   int cur_idx = count - 1;
 
-   if(r5 < 0)
+   if(cur_idx < 0)
       return 0;
 
-   int r6 = r5 * unk3 + unk2;
+   char* array1 = cur_idx * size + offset1;
 
-   int r4 = arg_0 + (unk1 << 3);   
+   char* array2 = offset2 + (count * 8);   
 
    while(true)
    {
-      int r1 = r4;
-
-      R1[-8 + 4] = r6;
+      //array2[-4] = array1;
 
       while(true)
       {
-         int r2 = buffer[0];
-         r4[-4] = r2;
+         //array2[-4] = buffer->unk_0;
 
          //DMB.W           SY
 
-         r0[0] = r1;
+         buffer->unk_0 = array2 + 4;
 
-         r2 = success;
+         int success = 0; //success immitation
 
-         if(r2 == 0)
+         if(success == 0)
             break;
       }
 
-      r5 = r5 - 1;
+      cur_idx = cur_idx - 1;
 
-      int r6 = r6 - r3;
+      array1 = array1 - size;
 
-      int r4 = r1;
+      array2 = array2 + 4;
 
-      if(r5< 0)
+      if(cur_idx < 0)
          break;
    }
 
