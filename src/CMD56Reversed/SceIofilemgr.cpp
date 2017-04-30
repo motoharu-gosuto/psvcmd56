@@ -318,12 +318,108 @@ int sub_BEE3C8(vfs_node* n0)
 
 vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 {
-   //SceVfsFdLock
-   //SceVfsFdCond
+   int r0 = 0x99DA44;
+   int r5 = 0x99D9D0;
+   
+   int r0 = SceIofilemgr.SceCpuForDriver._imp_lock_int_d32ace9e(r0); //ksceKernelCpuSuspendIntr
 
-   //need to reverse this method
+   int r4 = *r5;
+   int r1 = r0; //prev state
 
-   return 0;
+   if(r4 == 0)
+   {
+      int r0 = 0x99DA44;
+      SceIofilemgr.SceCpuForDriver._imp_unlock_int_7bb9d5df(r0, r1); //ksceKernelCpuResumeIntr
+      int r0 = r4; //zero optimization ?
+
+      return r0;
+   }
+
+   int r3 = r4[0x78];
+   int r0 = 0x99DA44;
+   int r6 = r4 + 0xD0;
+
+   *r5 = r3;
+
+   SceIofilemgr.SceCpuForDriver._imp_unlock_int_7bb9d5df(r0, r1);
+
+   int r1 = 0;
+   int r0 = "SceVfsFdLock";
+   int r2 = r1;
+   
+   r4[0xC8] = r6;
+   
+   int r3 = r1;
+
+   SceUID r0 = SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelCreateMutex_fbaa026e(r0, r1, r2, r3);
+
+   int r2 = r0;
+
+   if(r2 >=0 0)
+   {
+      int r1 = 0;
+      int r0 = "SceVfsFdCond";
+
+      r4[0xD0] = r2; //store uid
+
+      int r3 = r1;
+      
+      SceUID r0 = SceIofilemgr.SceThreadmgrForDriver._imp_sceKernelCreateCondForDriver_db6cd34a(r0, r1, r2, r3);
+
+      if(r0 >= 0)
+      {
+         int r3 = 0;
+         
+         int r2 = r4 + 0xE0;
+         
+         r6[0x4] = r0; //store uid
+         r6[0x8] = r3;
+
+         r6[0xC] = r3;
+
+         r4[0xCC] = r2;
+
+         int r0 = r4;
+
+         return r0;
+      }
+      else
+      {
+         int r0 = *r6;
+
+         SceIofilemgr.SceThreadmgrForDriver._imp_sceKernelDeleteMutexForKernel_0a912340();
+
+         int r3 = -1;
+
+         r6* = r3;
+      }
+   }
+
+   int r0 = 0x99DA44;
+
+   int r0 = SceIofilemgr.SceCpuForDriver._imp_lock_int_d32ace9e(r0);
+
+   int r2 = *r5;
+   int r3 = 0x99D9D0;
+
+   int r1 = r0; //prev state
+   
+   if(r2 != 0)
+   {
+      r4[0x78] = r2;
+   }
+
+   int r0 = 0x99DA44;
+
+   r3* = r4;
+   
+   int r4 = 0;
+   
+   SceIofilemgr.SceCpuForDriver._imp_unlock_int_7bb9d5df(r0, r1);
+
+   int r0 = r4;
+
+   return r0;
 }
 
 int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1)
@@ -942,6 +1038,8 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 
 //check:
 //vfs functions - that they are passing vfs_node and not vfs_mount
+
+//fix mutex - lock int in globals  - it is not mutex but intr state
 
 //--------------
 
