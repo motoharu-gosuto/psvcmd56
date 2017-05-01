@@ -198,7 +198,7 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
    uint32_t unk_0;
    uint32_t unk_4;  // most likely SceUID of current thread
    uint32_t unk_8;  // counter
-   SceUID evid;     // 0xC - event flag
+   SceUID event_flag_SceVfsVnode; // 0xC - event flag SceVfsVnode
 
    uint32_t evid_bits; // 0x10
    uint32_t unk_14;
@@ -243,9 +243,9 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
 
    uint8_t data2[0x30];
    
-   uint32_t unk_D0;
+   uint32_t unk_D0; //cur_node->devMajor.w.unk_4E
 
-   uint32_t unk_D4;
+   uint8_t data3[0x2C];
 
 } vfs_node;
 
@@ -259,36 +259,38 @@ SceUID get_SceIoVfsHeap_id()
 
 //==========================
 
-typedef struct ctx_BF3350
+//0x99D9D4
+typedef struct ctx_19D4 //size is 0x1C
 {
-   char* unk_0; //
+   char* unk_0; 
    uint32_t unk_4;
-   void* unk_8;
-   uint32_t unk_C;
+   vfs_node* offset;
+   uint32_t size;
 
-   uint32_t unk_10;
+   uint32_t count;
    uint32_t unk_14;
    uint32_t unk_18;
    uint32_t unk_1C;
-}ctx_BF3350;
+}ctx_19D4;
 
-int sub_BF3350(ctx_BF3350 *buffer, int count, char* offset1, int size, char* offset2)
+//initializes arrays
+int sub_BF3350(ctx_19D4 *buffer, int count, vfs_node* offset1, int size, char* offset2)
 {
    if(size == 0)
       return -1;
 
    buffer->unk_0 = 0;
    buffer->unk_4 = 0;
-   buffer->unk_8 = offset1;
-   buffer->unk_C = size;
-   buffer->unk_10 = count;
+   buffer->offset = offset1;
+   buffer->size = size;
+   buffer->count = count;
 
    int cur_idx = count - 1;
 
    if(cur_idx < 0)
       return 0;
 
-   char* array1 = cur_idx * size + offset1;
+   vfs_node* array1 = cur_idx * size + offset1;
 
    char* array2 = offset2 + (count * 8);   
 
@@ -633,7 +635,7 @@ int sub_BEBD70(vfs_node* input_node)
 
    r10->unk_4 = 0xFFFFFFFD;
 
-   return SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(r10->evid, r10->evid_bits);
+   return SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(r10->event_flag_SceVfsVnode, r10->evid_bits);
 }
 
 int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
@@ -661,7 +663,7 @@ int proc_findNode_BE9504(vfs_mount* r0, vfs_node** r1)
    return 0;
 }
 
-vfs_node* sub_BF33A0(int* r0)
+vfs_node* sub_BF33A0(ctx_19D4* r0)
 {
    return 0;
 }
@@ -689,7 +691,7 @@ int get_99C024()
    return 0;
 }
 
-int* get_0x99D9D4_ptr()
+ctx_19D4* get_0x99D9D4_ptr()
 {
    //0x99D9D4
    return 0;
@@ -1035,7 +1037,6 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //sceVfsGetNewNode_BEBAC0 - SceVfsFdLock, SceVfsFdCond
 //sub_BED694 - SceVfsFdLock, SceVfsFdCond
 //proc_SceIoScheduler_BF8728 - SceIoScheduler mutex and cond and flag
-//sub_BECA68 - SceVfsVnode
 
 //reverse:
 //sub_BEDEB0
