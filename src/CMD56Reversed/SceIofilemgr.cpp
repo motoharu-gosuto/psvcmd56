@@ -166,7 +166,7 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
 
    vfs_block_dev_info* blockDev; // 0x7C
 
-   char unk_80[0x40]; // some character data ?
+   char unixMount[0x40]; // 0x80 /gro/exfat, ux/exfat etc
 
    uint32_t unk_C0;   
 
@@ -1041,6 +1041,9 @@ int loc_BE6AA2_default_case(char* filesystem, int cookie)
 //reverse:
 //sub_BEDEB0
 //sub_BEDF5C
+
+//sub_BEC808 - ?
+//sub_BEC578 - ?
 
 //check:
 //vfs functions - that they are passing vfs_node and not vfs_mount
