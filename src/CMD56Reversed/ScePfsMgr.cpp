@@ -10,28 +10,34 @@ int read_wrapper_2199064(vfs_node **unk0, char *buffer, int size, int unk3, int 
    return 0;
 }
 
-int sub_21A0E3C()
+int sub_21A0E3C(int unk0, int unk1, int unk2)
 {
+   return 0;
 }
 
-int proc_copy_14_bytes_219DE1C()
+int proc_copy_14_bytes_219DE1C(int unk0, int unk1)
 {
+   return 0;
 }
 
-int proc_crypto_stuff_219DE7C()
+int proc_crypto_stuff_219DE7C(int unk0, int unk1, int unk2, int unk3)
 {
+   return 0;
 }
 
-int proc_verify_14_bytes_219DE44()
+int proc_verify_14_bytes_219DE44(int unk0, int unk1)
 {
+   return 0;
 }
 
-int sub_21A0E28()
+int sub_21A0E28(int unk0, int unk1, int unk2, int unk3, int arg_0, int arg_4)
 {
+   return 0;
 }
 
-int sub_21A6A10()
+int sub_21A6A10(int unk0, int unk1, int unk2, int unk3, int arg_0)
 {
+   return 0;
 }
 
 //----------------
@@ -56,11 +62,13 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    int r2 = unk2;
 
    /*
-   var_2A0= -0x2A0         ; args to functions
-   readBytes= -0x298       ; read bytes ptr
-   var_28C= -0x28C         ; read bytes value
-   result= -0x288          ; result pair
-   var_284= -0x284
+   arg_0_4= -0x2A0         ; args to functions : 0x0, 0x04
+   readBytes= -0x298       ; read bytes ptr : 0x8
+   var_294= -0x294         ; 0xC
+   var_290= -0x290         ; 0x10
+   var_28C= -0x28C         ; read bytes value : 0x14
+   result_p1= -0x288       ; result pair : 0x18
+   result_p2= -0x284       ; 0x1C
    unk0= -0x280            ; 0x14 bytes
    destination= -0x26C     ; size is 0x100
    var_16C= -0x16C         ; 0x140 bytes
@@ -74,7 +82,7 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    int r8 = r2;
 
    r6[0x14] = r1;
-   int r1 = &result;
+   int r1 = &result_p1;
 
    var_2C = r3;
 
@@ -83,8 +91,8 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    if(r0 != 0)
       return loc_21A292C(r0, var_2C);
 
-   int r4 = [SP,#0x18]; //where on stack?
-   int r5 = [SP,#0x1C]; //where on stack?
+   int r4 = result_p1;
+   int r5 = result_p2;
 
    int r3 = r4 | r5; //orrs
 
@@ -96,16 +104,16 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    int r11 = r11 & (~0x3F); //why ?
    int r3 = 0;
    int r4 = &var_28C;
-   int r0 = r6[0x14];
+   int r0 = r6[0x14]; //vfs_node
    int r1 = r11;
 
-   [SP + 0] = r2; //where on stack?
-   [SP + 4] = r3; //where on stack?
-   readBytes = r4;
+   arg_0 = r2;
+   arg_4 = r3;
+   readBytes = r4; //arg_8
 
    int r2 = 0x200;
 
-   int r0 = read_wrapper_2199064(r0, r1, r2, r3, ?, ?, ?);
+   int r0 = read_wrapper_2199064(r0, r1, r2, r3, arg_0, arg_4, readBytes);
 
    if(r0 != 0)
       return loc_21A292C(r0, var_2C);
@@ -122,17 +130,16 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    if(r9 != 0)
       return loc_21A292E(0x8014090A, var_2C);
 
-   //VMOV.I32        D16, #0x80
-
    int r1 = r11;
    
    int r0 = r6[0x14];
 
    readBytes = r4;
 
-   //VSTR            D16, [SP,#0x2A0+var_2A0]
+   arg_0 = 0x80; //??
+   arg_4 = 0x00; //??
 
-   int r0 = read_wrapper_2199064(r0, r1, r2, r3, ?, ?, ?);
+   int r0 = read_wrapper_2199064(r0, r1, r2, r3, arg_0, arg_4, readBytes);
 
    if(r0 != 0)
       return loc_21A292C(r0, var_2C);
@@ -163,10 +170,10 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    if(r4 != r2)
       return loc_21A292E(0x8014090A, var_2C);
 
-   short r3 = r8[0x0];
-   short r4 = r8[0x4];
-   short r0 = r8[0x8];
-   short r2 = r8[0xC];
+   int r3 = r8[0x0];
+   int r4 = r8[0x4];
+   int r0 = r8[0x8];
+   int r2 = r8[0xC];
    
    int r1 = r6[0x18];
    
@@ -175,8 +182,8 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    r6[0x8] = r0;
    r6[0xC] = r2;
 
-   short r3 = r8[0x10];
-   short r5 = r6[0x80];
+   int r3 = r8[0x10];
+   int r5 = r6[0x80];
 
    r6[0x10] = r3;
 
@@ -193,24 +200,24 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    int r0 = r4;
    int r8 = r6 + 0xD0;
 
-   [var_2A0 + 4] = r9;
+   arg_4 = r9;
 
    int r3 = r3 - 1;
 
-   if(r3 <= 1) //LS ???
+   if(r3 <= 1)
       r5 = 0x160;
 
-   var_2A0 = r5;
+   arg_0 = r5;
 
    int r5 = r6 + 0xBC;
 
-   sub_21A0E3C(?);
+   sub_21A0E3C(r0, r1, r2);
 
    int r2 = 0x100;
    int r1 = r8;
    int r0 = &destination;
 
-   memcpy(r0, r1, r2,);
+   memcpy(r0, r1, r2);
 
    int r1 = r5;
    int r0 = &unk0;
@@ -252,10 +259,10 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    int r2 = r6[0x90];
    int r3 = r6[0x94];
 
-   [SP + 0] = r10; //where on stack?
-   [SP + 4] = r11; //where on stack?
+   arg_0 = r10;
+   arg_4 = r11;
 
-   sub_21A0E28(?);
+   sub_21A0E28(r0, r1, r2, r3, arg_0, arg_4);
 
    int r2 = r4;
 
@@ -265,9 +272,9 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
    int r0 = r6[0x40];
    int r1 = r6;
 
-   var_2A0 = r4;
+   arg_0 = r4;
 
-   sub_21A6A10(?); //some vfs node functions inside
+   sub_21A6A10(r0, r1, r2, r3, arg_0); //some vfs node functions inside
 
    if(r0 != 0)
       return loc_21A292C(r0, var_2C);
@@ -293,7 +300,7 @@ int proc_SCENGPFS_21A27B8(void *unk0, vfs_node **unk1, void *unk2)
 
    r4 + r4 + 0x10;
 
-   r6[0xBC] = (short)r0;
+   r6[0xBC] = r0;
 
    int r0 = *r4;
 
