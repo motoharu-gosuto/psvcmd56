@@ -98,81 +98,37 @@ typedef struct ctx_21A27B8
 
 int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
 {
-   /*
-   result= -0xCC
-   var_C8= -0xC8
-   var_C4= -0xC4
-   var_C0= -0xC0
-   var_B8= -0xB8
-   dest= -0x5C             ; string of size 0x40
-   var_1C= -0x1C
-   */
-
-   /*
-   int r5 = var_009EA004;
-   int r6 = &dest;
-   int r4 = r0;
-   int r7 = r5[0];
-   int r2 = 0x40;
-   int r3 = &result;
-   int r8 = r1;
-   int r0 = r0[0];
-   int r1 = r6;
-
-   int var_1C = r7; //cookie
-
-   SceIofilemgrForDriver_unk_aa253b68(r0, r1, r2, r3);
-
-   int r1 = 0x3F;
-   int r0 = r6;
-
-   var_C8 = r6;
-
-   strnlen(r0, r1);
-
-   int r3 = 0;
-   var_C4 = r0;
-
-   int r0 = r4[0];
-
-   var_C0 = r3;
-
-   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(r0);
-
-   int r1 = &var_C8;
-   int r2 = &var_B8;
-   int r0 = r4[0];
+   //var_D0
+   int result;
+   vfs_node_func15_arg1 var_C8;
+   vfs_node_func15_arg2 var_B8;
+   char dest_5C[0x40];
+   int var_1C = var_009EA004; //cookie
    
-   int r0 = SceIofilemgrForDriver_vfs_node_func15_50a63acf();
+   SceIofilemgrForDriver_unk_aa253b68(*node, dest_5C, 0x40, &result);
 
-   int r6 = r0;
+   int length = strnlen(dest_5C, 0x3F);
 
-   int r0 = r4[0];
+   var_C8.var_C0 = 0;
+   var_C8.var_C4 = length;
+   var_C8.var_C8 = dest_5C;
 
-   SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(r0);
+   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(*node);
 
-   if(r6 >= 0)
+   int result_15 = SceIofilemgrForDriver_vfs_node_func15_50a63acf(*node, &var_C8, &var_B8);
+
+   SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(*node);
+
+   if(result_15 >= 0)
    {
-      //LDRD.W          R2, R3, [SP,#0x20]
-      //STRD.W          R2, R3, [R8]
-      
+      result_pair->first = var_B8.var_B0;
+      result_pair->second = var_B8.var_AC;
    }
 
-   int r2 = var_1C;
-   int r0 = r6;
-   int r3 = r5[0];
-
-   if(r2 == r3)
-   {
+   if(var_1C == var_009EA004)
       return STACK_CHECK_FAIL;
-   }
    else
-   {
-      return r0;
-   }
-   */
-
-   return 0;
+      return result_15;
 }
 
 //num0, num1 are probably offset

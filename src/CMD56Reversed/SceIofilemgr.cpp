@@ -1214,12 +1214,12 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
 }
 
 //get some string from node field 70
-int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, void *result)
+int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, int* result)
 {
    return 0;
 }
 
-int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, int unk0, int unk1)
+int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1)
 {
    return 0;
 }

@@ -254,6 +254,26 @@ int SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(vfs_node* a0);
 int SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(vfs_node* a0);
 
 //get some string from node field 70
-int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, void *result);
+int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, int* result);
 
-int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, int unk0, int unk1);
+typedef struct vfs_node_func15_arg1 //size is 0x10
+{
+   char* var_C8;
+   int var_C4;
+   int var_C0;
+   int var_BC;
+
+}vfs_node_func15_arg1;
+
+typedef struct vfs_node_func15_arg2 //size is 0x5C
+{
+   int var_B8;
+   int var_B4;
+   int var_B0; //res1
+   int var_AC; //res2
+
+   char data[0x4C];
+
+}vfs_node_func15_arg2;
+
+int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1);
