@@ -261,19 +261,19 @@ int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int length, i
 
 typedef struct vfs_node_func15_arg1 //size is 0x10
 {
-   char* var_C8;
-   int var_C4;
-   int var_C0;
-   int var_BC;
+   char* data;
+   int len;
+   int unk_8;
+   int unk_C;
 
 }vfs_node_func15_arg1;
 
 typedef struct vfs_node_func15_arg2 //size is 0x5C
 {
-   int var_B8;
-   int var_B4;
-   int var_B0; //res1
-   int var_AC; //res2
+   int unk_0;
+   int unk_4;
+   int unk_8; //res1
+   int unk_C; //res2
 
    char data[0x4C];
 

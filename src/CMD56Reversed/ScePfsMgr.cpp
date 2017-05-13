@@ -99,30 +99,30 @@ typedef struct ctx_21A27B8
 int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
 {
    //var_D0
-   int result;
-   vfs_node_func15_arg1 var_C8;
-   vfs_node_func15_arg2 var_B8;
-   char dest_5C[0x40];
+   int result_length;
+   vfs_node_func15_arg1 arg1;
+   vfs_node_func15_arg2 arg2;
+   char dest_5C[0x40]; //data from node
    int var_1C = var_009EA004; //cookie
    
-   SceIofilemgrForDriver_unk_aa253b68(*node, dest_5C, 0x40, &result);
+   SceIofilemgrForDriver_unk_aa253b68(*node, dest_5C, 0x40, &result_length);
 
    int length = strnlen(dest_5C, 0x3F);
 
-   var_C8.var_C0 = 0;
-   var_C8.var_C4 = length;
-   var_C8.var_C8 = dest_5C;
+   arg1.data = dest_5C;
+   arg1.len = length;
+   arg1.unk_8 = 0;
 
    SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(*node);
 
-   int result_15 = SceIofilemgrForDriver_vfs_node_func15_50a63acf(*node, &var_C8, &var_B8);
+   int result_15 = SceIofilemgrForDriver_vfs_node_func15_50a63acf(*node, &arg1, &arg2);
 
    SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(*node);
 
    if(result_15 >= 0)
    {
-      result_pair->first = var_B8.var_B0;
-      result_pair->second = var_B8.var_AC;
+      result_pair->first = arg2.unk_8;
+      result_pair->second = arg2.unk_C;
    }
 
    if(var_1C == var_009EA004)
