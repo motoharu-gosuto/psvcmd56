@@ -1265,7 +1265,167 @@ int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int length, i
    return sub_BE5F94(node, dest, length, result_length);
 }
 
+int loc_BF0906()
+{
+   /*
+   LDR             R2, [SP,#0x40+var_24]
+   LDR.W           R3, [R8]
+   CMP             R2, R3
+   BNE             loc_BF0980
+   */
+
+   //return or stack fail
+
+   return 0;
+}
+
+int loc_BF08FC()
+{
+   /*
+   LDR.W           R4, [R9]
+   MOV             R0, R6
+   */
+
+   if(r4 == 0)
+      return loc_BF0906();
+
+   /*
+   LDR.W           LR, [R7,#8]
+   MOVS            R0, #0x27
+   LDR.W           R12, [R7,#0xC]
+   MOV             R2, R10
+   LDR             R5, [R7]
+   MOVS            R1, #6
+   LDR             R7, [R7,#4]
+   MOV             R3, R6
+   STMEA.W         SP, {R5,R7,R12,LR}
+   BLX             R4
+   MOV             R0, R6
+   */
+
+   return loc_BF0906();
+}
+
 int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1)
 {
-   return 0;
+   /*
+   var_38= -0x38
+   var_34= -0x34
+   var_30= -0x30           ; 0x10 ctx
+   var_2C= -0x2C           ; 0x14
+   var_28= -0x28           ; 0x18
+   var_24= -0x24           ; cookie
+   */
+
+   /*
+   MOVW            R8, #0xA004
+   MOVW            R9, #0xC050
+   MOVT.W          R8, #0x9E ; 9EA004
+   MOVT.W          R9, #0x99
+   SUB             SP, SP, #0x20
+   LDR.W           R3, [R8]
+   MOV             R10, R0 ; vfs_node*
+   LDR.W           R4, [R9]
+   MOV             R6, R1  ; arg1
+   MOV             R7, R2  ; arg2
+   LDR             R5, [R0,#0x40] ; R0 = vfs_node*
+   STR             R3, [SP,#0x40+var_24]
+   */
+
+   if(r4 != 0)
+   {
+      /*
+      LDR             R3, [R1,#8]
+      MOVS            R0, #0x26
+      MOVS            R1, #2
+      MOV             R2, R10
+      */
+
+      if(r3 == 0)
+      {
+         /*
+         LDR             R3, [R6]
+         BLX             R4
+         */
+      }
+      else
+      {
+         //BLX             R4
+      }
+   }
+
+   if(r7 == 0)
+   {
+      /*
+      LDR.W           R4, [R9]
+      MOVS            R0, 0x80010016 ; 00BF094A : possible external reference: 80010016
+      */
+
+      if(r4 == 0)
+         return loc_BF0906();
+
+      /*
+      MOVS            R3, #0x16 ; 00BF0954 : possible external reference: 80010016
+      MOVS            R0, #0x27
+      STRD.W          R7, R7, [SP]
+      MOV             R2, R10
+      STR             R7, [SP,#0x40+var_38]
+      MOVT.W          R3, #0x8001 ; 00BF0960 : possible external reference: 80010016
+      STR             R7, [SP,#0x40+var_34]
+      MOVS            R1, #6
+      BLX             R4
+      MOVS            R0, 0x80010016 ; 00BF096A : possible external reference: 80010016
+      */
+
+      return loc_BF0906();
+   }
+   else
+   {
+      //LDR             R3, [R5,#0x38] ; index 14
+      
+      if(r3 == 0)
+      {
+         //MOVS            R6, 0x80010030
+         return loc_BF08FC();
+      }
+
+      /*
+      STRD.W          R6, R7, [SP,#0x14] ; var_2C = arg1, var_28 = arg2
+      ADD             R0, SP, #0x40+var_30 ; ctx
+      STR.W           R10, [SP,#0x40+var_30] ; vfs_node*
+      BLX             R3      ; indirect call
+      MOV             R6, R0
+      LDR.W           R0, [R10,#0x4C]
+      BL              sub_BECFB4
+      */
+
+      if(r6 != 0)
+         return loc_BF08FC();
+
+      /*
+      LDRD.W          R4, R5, [R10,#0x80]
+      LDRD.W          R2, R3, [R7,#8]
+      */
+
+      if((r3 == r5) && (r2 == r4))
+         return loc_BF08FC();
+
+      //LDR.W           R3, [R10,#0x5C]
+               
+      if(r3 == 0)
+         return loc_BF08FC();
+
+      /*
+      LDR.W           R3, [R10,#0x4C]
+      LDR             R3, [R3,#0x50]
+      LSLS            R3, R3, #0xD
+      */
+
+      if(bpl)
+         return loc_BF08FC();
+
+      //STRD.W          R4, R5, [R7,#8]
+
+      return loc_BF08FC();
+   }
 }
