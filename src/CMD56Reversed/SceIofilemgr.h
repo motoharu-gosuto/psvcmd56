@@ -192,8 +192,8 @@ typedef struct vfs_node_70
    void* unk_10; //pointer to struct of at least size 0x94
    uint32_t unk_14; //number
    
-   uint32_t unk_18;
-   uint32_t unk_1C;
+   uint32_t str_len_18;
+   char* str_1C;
 } vfs_node_70;
 
 typedef struct vfs_node //size is 0x40 + 0x98 = D8
@@ -257,7 +257,7 @@ int SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(vfs_node* a0);
 int SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(vfs_node* a0);
 
 //get some string from node field 70
-int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, int* result);
+int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int length, int* result_length);
 
 typedef struct vfs_node_func15_arg1 //size is 0x10
 {
