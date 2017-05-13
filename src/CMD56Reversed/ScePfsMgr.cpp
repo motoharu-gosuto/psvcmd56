@@ -95,6 +95,56 @@ typedef struct ctx_21A27B8
 
 int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
 {
+   /*
+   PUSH.W          {R4-R8,LR}
+   MOV             R5, 0x9EA004
+   SUB             SP, SP, #0xB8
+   ADD             R6, SP, #0xD0+dest
+   MOV             R4, R0
+   LDR             R7, [R5]
+   MOVS            R2, #0x40 ; size
+   ADD             R3, SP, #0xD0+result ; result
+   MOV             R8, R1  ; arg1
+   LDR             R0, [R0] ; node
+   MOV             R1, R6  ; dest
+   STR             R7, [SP,#0xD0+var_1C]
+   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa253b68 ; get some string from node field 70
+   MOVS            R1, #0x3F ; maxlen
+   MOV             R0, R6  ; s
+   STR             R6, [SP,#0xD0+var_C8]
+   BLX             ScePfsMgr.SceSysclibForDriver._imp_strnlen_cd4bd884
+   MOVS            R3, #0
+   STR             R0, [SP,#0xD0+var_C4] ; store len
+   LDR             R0, [R4] ; node
+   STR             R3, [SP,#0xD0+var_C0]
+   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_sceVfsNodeWaitEventFlag_aa45010b
+   ADD             R1, SP, #0xD0+var_C8
+   ADD             R2, SP, #0xD0+var_B8
+   LDR             R0, [R4]
+   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_vfs_node_func15_50a63acf
+   MOV             R6, R0
+   LDR             R0, [R4] ; a0
+   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_sceVfsNodeSetEventFlag_6048f245
+   */
+
+   if(r6 >= 0)
+   {
+      /*
+      LDRD.W          R2, R3, [SP,#0x20]
+      STRD.W          R2, R3, [R8]
+      */
+   }
+
+   /*
+   LDR             R2, [SP,#0xD0+var_1C]
+   MOV             R0, R6
+   LDR             R3, [R5]
+   CMP             R2, R3
+   BNE             loc_21991AC
+   */
+   
+   //stack fail or return
+
    return 0;
 }
 
