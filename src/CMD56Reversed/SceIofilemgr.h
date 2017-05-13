@@ -248,3 +248,12 @@ typedef struct vfs_node //size is 0x40 + 0x98 = D8
    uint8_t data3[0x2C];
 
 } vfs_node;
+
+int SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(vfs_node* a0);
+
+int SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(vfs_node* a0);
+
+//get some string from node field 70
+int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, void *result);
+
+int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, int unk0, int unk1);

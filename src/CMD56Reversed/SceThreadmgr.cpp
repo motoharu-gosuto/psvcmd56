@@ -82,3 +82,34 @@ sce_time SceThreadmgrForDriver_sceKernelGetSystemTimeWideForDriver_f4ee4fa9()
          
    return scetime;
 }
+
+SceUID SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option)
+{
+   return 0;
+}
+
+SceUID SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a(const char *name, SceUInt attr, SceUID mutexId, const SceKernelCondOptParam *option)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(SceUID uid)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits)
+{
+   return 0;
+}
+
+//this most likely returns current thread SceUID
+int SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540()
+{
+   return 0;
+}

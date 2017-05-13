@@ -4,6 +4,13 @@
 
 #include "Constants.h"
 #include "SceSysmemGlobalVariables.h"
+#include "SceCpu.h"
+#include "SceThreadmgr.h"
+
+int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
+{
+   return 0;
+}
 
 //==========================
 
@@ -150,40 +157,6 @@ int sub_BEE364(vfs_node* a0)
    return 0;
 }
 
-int SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(int *addr)
-{
-   return 0;
-}
-
-int SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df(int *addr, int prev_state)
-{
-   return 0;
-}
-
-typedef struct SceKernelMutexOptParam {
-  SceSize size;
-  int ceilingPriority;
-} SceKernelMutexOptParam;
-
-SceUID SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option)
-{
-   return 0;
-}
-
-typedef struct SceKernelCondOptParam {
-	SceSize size;
-} SceKernelCondOptParam;
-
-SceUID SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a(const char *name, SceUInt attr, SceUID mutexId, const SceKernelCondOptParam *option)
-{
-   return 0;
-}
-
-int SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(SceUID uid)
-{
-   return 0;
-}
-
 int sub_BEE3C8(vfs_node* n0)
 {
    return 0;
@@ -197,7 +170,7 @@ vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 
    if(g_99D9D0 == 0)
    {
-      SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
+      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
       return 0;
    }
 
@@ -205,7 +178,7 @@ vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 
    g_99D9D0 = mount_node->unk_78;
 
-   SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
+   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state1);
 
    mount_node->fd_lock_ptr = &mount_node->fd_lock; //C8
    
@@ -243,13 +216,8 @@ vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 
    g_99D9D0 = mount_node;
    
-   SceIofilemgr_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state2);
+   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99DA44, prev_state2);
 
-   return 0;
-}
-
-int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1)
-{
    return 0;
 }
 
@@ -314,17 +282,6 @@ int sub_BF2B50(int r0, int r1, vfs_node* r2, int r3)
    return 0;
 }
 
-//this most likely returns current thread SceUID
-int SceThreadmgrForDriver_59d06540()
-{
-   return 0;
-}
-
-int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits)
-{
-   return 0;
-}
-
 int sub_BEBD70(vfs_node* input_node)
 {
    vfs_node* r10 = input_node;
@@ -344,14 +301,14 @@ int sub_BEBD70(vfs_node* input_node)
 
    memset((char*)&input_node->ops, 0, 0x98); //set 0x98 bytes from offset 0x40
 
-   int id0 = SceThreadmgrForDriver_59d06540();
+   int id0 = SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540();
 
    if(id0 != r10->unk_4)
       return id0;
    
    r10->unk_8 = 0;
 
-   int id1 = SceThreadmgrForDriver_59d06540();
+   int id1 = SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540();
 
    if(id1 != r10->unk_4)
       return id1;
@@ -394,11 +351,6 @@ int sub_BEBD70(vfs_node* input_node)
    return SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(r10->event_flag_SceVfsVnode, r10->evid_bits);
 }
 
-int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
-{
-   return 0;
-}
-
 int sub_BED838(int r0)
 {
    return 0;
@@ -420,11 +372,6 @@ int proc_findNode_BE9504(vfs_mount* r0, vfs_node** r1)
 }
 
 vfs_node* sub_BF33A0(ctx_19D4* r0)
-{
-   return 0;
-}
-
-int SceCpuForDriver_atomic_set_xor_cda96e81(int* r0, int r1, int r2)
 {
    return 0;
 }
@@ -616,7 +563,7 @@ int sub_BEDEB0(uint32_t* a0, int a1, vfs_node* a2, int a3)
    return 0;
 }
 
-int SceIofilemgrForDriver_aa45010b(vfs_node* a0)
+int SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(vfs_node* a0)
 {
    return 0;
 }
@@ -666,7 +613,7 @@ int sub_BEC530(vfs_mount* a0)
    return 0;
 }
 
-int SceIofilemgrForDriver_6048f245(vfs_node* a0)
+int SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(vfs_node* a0)
 {
    return 0;
 }
@@ -1046,7 +993,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
       return loc_BE76C8(n0, bnode, mountInfo->filesystem, result8, unk2, unk3, var_D8, cookie);
    }
 
-   SceIofilemgrForDriver_aa45010b(vnode);
+   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(vnode);
      
    if(unk2 == 0)
    {
@@ -1140,7 +1087,7 @@ int mount_switch_case_1(vfs_mount_point_info_base *mountInfo, vfs_add_data* addD
     
     vnode->unk_58 = vnode->unk_58 -1; //counter - one of fields that can identify type by logic
     
-    SceIofilemgrForDriver_6048f245(vnode);
+    SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(vnode);
    
     return loc_BE7252(n0, mountInfo->filesystem, result11, unk2, unk3, var_D8, cookie);
 }
@@ -1266,3 +1213,13 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     }
 }
 
+//get some string from node field 70
+int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, void *result)
+{
+   return 0;
+}
+
+int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, int unk0, int unk1)
+{
+   return 0;
+}

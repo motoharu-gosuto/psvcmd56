@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 #include "SceIofilemgr.h"
+#include "SceSysclib.h"
 
 typedef struct ctx_21A27B8_70 //size is 0x160
 {
@@ -86,6 +87,8 @@ typedef struct ctx_21A27B8
 
 }ctx_21A27B8;
 
+
+
 //this is an interesting procedure
 //looks like it extracts path to file ? from vfs_node with ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa253b68
 //then gets its length
@@ -96,54 +99,78 @@ typedef struct ctx_21A27B8
 int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
 {
    /*
-   PUSH.W          {R4-R8,LR}
-   MOV             R5, 0x9EA004
-   SUB             SP, SP, #0xB8
-   ADD             R6, SP, #0xD0+dest
-   MOV             R4, R0
-   LDR             R7, [R5]
-   MOVS            R2, #0x40 ; size
-   ADD             R3, SP, #0xD0+result ; result
-   MOV             R8, R1  ; arg1
-   LDR             R0, [R0] ; node
-   MOV             R1, R6  ; dest
-   STR             R7, [SP,#0xD0+var_1C]
-   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa253b68 ; get some string from node field 70
-   MOVS            R1, #0x3F ; maxlen
-   MOV             R0, R6  ; s
-   STR             R6, [SP,#0xD0+var_C8]
-   BLX             ScePfsMgr.SceSysclibForDriver._imp_strnlen_cd4bd884
-   MOVS            R3, #0
-   STR             R0, [SP,#0xD0+var_C4] ; store len
-   LDR             R0, [R4] ; node
-   STR             R3, [SP,#0xD0+var_C0]
-   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_sceVfsNodeWaitEventFlag_aa45010b
-   ADD             R1, SP, #0xD0+var_C8
-   ADD             R2, SP, #0xD0+var_B8
-   LDR             R0, [R4]
-   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_vfs_node_func15_50a63acf
-   MOV             R6, R0
-   LDR             R0, [R4] ; a0
-   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_sceVfsNodeSetEventFlag_6048f245
+   result= -0xCC
+   var_C8= -0xC8
+   var_C4= -0xC4
+   var_C0= -0xC0
+   var_B8= -0xB8
+   dest= -0x5C             ; string of size 0x40
+   var_1C= -0x1C
    */
+
+   /*
+   int r5 = var_009EA004;
+   int r6 = &dest;
+   int r4 = r0;
+   int r7 = r5[0];
+   int r2 = 0x40;
+   int r3 = &result;
+   int r8 = r1;
+   int r0 = r0[0];
+   int r1 = r6;
+
+   int var_1C = r7; //cookie
+
+   SceIofilemgrForDriver_unk_aa253b68(r0, r1, r2, r3);
+
+   int r1 = 0x3F;
+   int r0 = r6;
+
+   var_C8 = r6;
+
+   strnlen(r0, r1);
+
+   int r3 = 0;
+   var_C4 = r0;
+
+   int r0 = r4[0];
+
+   var_C0 = r3;
+
+   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(r0);
+
+   int r1 = &var_C8;
+   int r2 = &var_B8;
+   int r0 = r4[0];
+   
+   int r0 = SceIofilemgrForDriver_vfs_node_func15_50a63acf();
+
+   int r6 = r0;
+
+   int r0 = r4[0];
+
+   SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(r0);
 
    if(r6 >= 0)
    {
-      /*
-      LDRD.W          R2, R3, [SP,#0x20]
-      STRD.W          R2, R3, [R8]
-      */
+      //LDRD.W          R2, R3, [SP,#0x20]
+      //STRD.W          R2, R3, [R8]
+      
    }
 
-   /*
-   LDR             R2, [SP,#0xD0+var_1C]
-   MOV             R0, R6
-   LDR             R3, [R5]
-   CMP             R2, R3
-   BNE             loc_21991AC
+   int r2 = var_1C;
+   int r0 = r6;
+   int r3 = r5[0];
+
+   if(r2 == r3)
+   {
+      return STACK_CHECK_FAIL;
+   }
+   else
+   {
+      return r0;
+   }
    */
-   
-   //stack fail or return
 
    return 0;
 }
@@ -179,13 +206,6 @@ int proc_crypto_stuff_219DE7C(char unk0[0x14], ctx_21A27B8* unk1, ctx_21A27B8_70
 //count leading zeroes
 #define CLZ(x) 0
 
-//analog of memcmp or str cmp or strcoll, smth like that
-//returns -1, 0
-int SceSysclibForDriver_b5a4d745(char* char0, char* char1, int len)
-{
-   return 0;
-}
-
 int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
 {
    //from what I know - b5a4d745 returns only 0, -1 (not sure about 1) based on reversing and tests
@@ -210,7 +230,7 @@ int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
 }
 
 //unk1 is ignored
-int sub_21A0E28(ctx_21A27B8_20* unk0, char unk1[0x14], int unk2, int unk3, int arg_0, int arg_4)
+void sub_21A0E28(ctx_21A27B8_20* unk0, char unk1[0x14], int unk2, int unk3, int arg_0, int arg_4)
 {
    unk0->unk_8 = unk2;
    unk0->unk_C = unk3;

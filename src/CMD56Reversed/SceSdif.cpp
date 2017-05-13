@@ -646,11 +646,11 @@ int SceSdifForDriver_init_0eb0ef86()
 
       main_ctr = main_ctr + 1;
 
-      int prev_state = SceCpuForDriver_lock_int_d32ace9e(&ctx_B0->ctx_data.lockable_int);
+      int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&ctx_B0->ctx_data.lockable_int);
 
       sub_C68598(ctx_B0, 3);
 
-      SceCpuForDriver_unlock_int_7bb9d5df(&ctx_B0->ctx_data.lockable_int, prev_state);
+      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx_B0->ctx_data.lockable_int, prev_state);
 
       SceIntrmgrForDriver_7117e827(intrCode);
 

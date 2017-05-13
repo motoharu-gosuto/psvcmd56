@@ -87,3 +87,24 @@ struct sce_time
 
 //number of args confirmed
 sce_time SceThreadmgrForDriver_sceKernelGetSystemTimeWideForDriver_f4ee4fa9();
+
+typedef struct SceKernelMutexOptParam {
+  SceSize size;
+  int ceilingPriority;
+} SceKernelMutexOptParam;
+
+SceUID SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option);
+
+typedef struct SceKernelCondOptParam {
+	SceSize size;
+} SceKernelCondOptParam;
+
+SceUID SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a(const char *name, SceUInt attr, SceUID mutexId, const SceKernelCondOptParam *option);
+
+int SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(SceUID uid);
+
+int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1);
+
+int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits);
+
+int SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540();
