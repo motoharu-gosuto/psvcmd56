@@ -1213,10 +1213,79 @@ int sceVfsMount(vfs_mount_point_info_base *mountInfo)
     }
 }
 
+int sub_BE5F94(vfs_node *node, char *dest, int size, int* result)
+{
+   /*
+   MOV             R5, R2  ; arg2 - num
+   MOV             R7, R1  ; arg1 - dest
+   MOV             R8, R3  ; arg3 - result
+   MOV             R6, R0  ; arg0 - node
+   */
+
+   if(r2 == 0)
+   {
+      return 0x80010016;
+   }
+
+   /*
+   BL              SceIofilemgr.SceIofilemgrForDriver._exp_sceVfsNodeWaitEventFlag_aa45010b
+   BL              proc_lock_SceVfsNcacheLock_mutex_BEBC58
+   LDR             R4, [R6,#0x70] ; vfs_node_70*
+   CBZ             R4, loc_BE5FF8
+   */
+
+   if(r4 == 0)
+   {
+      /*
+      BL              proc_unlock_SceVfsNcacheLock_mutex_BEBC68
+      MOV             R0, R6  ; a0
+      BL              SceIofilemgr.SceIofilemgrForDriver._exp_sceVfsNodeSetEventFlag_6048f245
+      */
+      return 0x80010016;
+   }
+   
+   //LDR             R2, [R4,#0x18] ; num
+   
+   if(r5 <= r2)
+   {
+      /*
+      MOV             R2, R5
+      LDR             R1, [R4,#0x1C] ; source
+      MOV             R0, R7  ; destination
+      SUBS            R5, #1
+      BLX             SceIofilemgr.SceSysclibForDriver._imp_strncpy_6d286146
+      MOVS            R3, #0
+      STRB            R3, [R7,R5]
+      STR.W           R5, [R8]
+      */
+   }
+   else
+   {
+      /*
+      MOV             R0, R7  ; destination
+      LDR             R1, [R4,#0x1C] ; source
+      BLX             SceIofilemgr.SceSysclibForDriver._imp_strncpy_6d286146
+      LDR             R3, [R4,#0x18]
+      MOVS            R2, #0
+      STRB            R2, [R7,R3]
+      LDR             R3, [R4,#0x18]
+      STR.W           R3, [R8]
+      */
+   }
+
+   /*
+   BL              proc_unlock_SceVfsNcacheLock_mutex_BEBC68
+   MOV             R0, R6  ; a0
+   BL              SceIofilemgr.SceIofilemgrForDriver._exp_sceVfsNodeSetEventFlag_6048f245
+   */
+
+   return 0;
+}
+
 //get some string from node field 70
 int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int size, int* result)
 {
-   return 0;
+   return sub_BE5F94(node, dest, size, result);
 }
 
 int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1)
