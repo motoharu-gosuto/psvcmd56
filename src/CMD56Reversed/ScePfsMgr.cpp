@@ -39,10 +39,16 @@ typedef struct ctx_21A27B8_18 //size is unknown
 
 }ctx_21A27B8_18;
 
+typedef struct node_holder
+{
+   vfs_node * node;
+   uint32_t unk_4;
+};
+
 typedef struct ctx_21A27B8_20 //size is 0x20
 {
    ctx_21A27B8_18* unk_0;
-   vfs_node ** unk_4;
+   node_holder* unk_4;
    uint32_t unk_8;
    uint32_t unk_C;
 
@@ -70,7 +76,7 @@ typedef struct ctx_21A27B8
 {
    char data0[0x14];
 
-   vfs_node ** unk_14;
+   node_holder * unk_14;
    ctx_21A27B8_18* unk_18; //field
    uint32_t unk_1C;
 
@@ -87,16 +93,9 @@ typedef struct ctx_21A27B8
 
 }ctx_21A27B8;
 
+//this function provides only pair as a responce
 
-
-//this is an interesting procedure
-//looks like it extracts path to file ? from vfs_node with ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa253b68
-//then gets its length
-//then locks with ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa45010b
-//then executes ScePfsMgr.SceIofilemgrForDriver._imp_vfs_node_func15_50a63acf - file stat ?
-//then unlocks with ScePfsMgr.SceIofilemgrForDriver._imp_unk_6048f245
-
-int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
+int sub_2199144(node_holder* node, std::pair<uint32_t, uint32_t>* result_pair)
 {
    //var_D0
    int result_length;
@@ -105,7 +104,7 @@ int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
    char dest_5C[0x40]; //data from node
    int var_1C = var_009EA004; //cookie
    
-   SceIofilemgrForDriver_unk_aa253b68(*node, dest_5C, 0x40, &result_length);
+   SceIofilemgrForDriver_unk_aa253b68(node->node, dest_5C, 0x40, &result_length); //get dest_5C from vfs_node
 
    int length = strnlen(dest_5C, 0x3F);
 
@@ -113,11 +112,11 @@ int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
    arg1.len = length;
    arg1.unk_8 = 0;
 
-   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(*node);
+   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(node->node); //wait - standard wrap
 
-   int result_15 = SceIofilemgrForDriver_vfs_node_func15_50a63acf(*node, &arg1, &arg2);
+   int result_15 = SceIofilemgrForDriver_vfs_node_func15_50a63acf(node->node, &arg1, &arg2); //execute node function 15
 
-   SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(*node);
+   SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(node->node); //set - standard wrap
 
    if(result_15 >= 0)
    {
@@ -132,12 +131,55 @@ int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
 }
 
 //num0, num1 are probably offset
-int read_wrapper_2199064(vfs_node **unk0, char *buffer, int size, int unk3, int num0, int num1, uint32_t *readBytes)
+int read_wrapper_2199064(node_holder* unk0, char *buffer, int size, int ignored, int num0, int num1, uint32_t* readBytes)
 {
-   return 0;
+   /*
+   var_3C= -0x3C
+   var_38= -0x38
+   */
+
+   int var_30 = 0;
+   
+   int var_2C = var_009EA004;
+
+   /*
+   var_28= -0x28
+   var_24= -0x24
+   var_20= -0x20
+   var_1C= -0x1C
+   var_18= -0x18
+   var_14= -0x14
+   var_10= -0x10
+   var_C= -0xC
+   var_8= -8 
+   var_4= -4 
+   */
+
+   SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(unk0->node);
+
+   int f_result = SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(unk0->node, unk0->unk_4, buffer, size, num0, num1, &var_30);
+   
+   SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(unk0->node);
+   
+   if(f_result >= 0)
+   {
+      *readBytes = var_30;
+
+      if(var_2C == var_009EA004)
+         return 0;
+      else
+         return STACK_CHECK_FAIL;
+   }
+   else
+   {
+      if(var_2C == var_009EA004)
+         return f_result;
+      else
+         return STACK_CHECK_FAIL;
+   }
 }
 
-void sub_21A0E3C(ctx_21A27B8_20* unk0, ctx_21A27B8_18* unk1, vfs_node ** unk2, int unk3, int arg_0, int arg_4)
+void sub_21A0E3C(ctx_21A27B8_20* unk0, ctx_21A27B8_18* unk1, node_holder* unk2, int unk3, int arg_0, int arg_4)
 {
    unk0->unk_0 = unk1;
    unk0->unk_4 = unk2;
@@ -214,7 +256,7 @@ int loc_21A292C(int r0, int var_2C)
    return loc_21A292E(r0, var_2C);
 }
 
-int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, vfs_node **argument1, char argument2[0x14])
+int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char argument2[0x14])
 {
    //var_294= -0x294         
    //var_290= -0x290
@@ -226,7 +268,7 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, vfs_node **argument1, char arg
 
    argument0->unk_14 = argument1;
 
-   int result0 = sub_2199144(argument1, &result_p); //call vfs_node_func15 (sceIoGetstatForDriver) - get some string from node field 70
+   int result0 = sub_2199144(argument1, &result_p); //call vfs_node_func15 (sceIoGetstatForDriver) - only provides pair responce
 
    if(result0 != 0)
       return loc_21A292C(result0, var_2C);
@@ -250,7 +292,7 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, vfs_node **argument1, char arg
    if(some_value != 0)
       return loc_21A292E(0x8014090A, var_2C);
 
-   int result2 = read_wrapper_2199064(argument0->unk_14, aligned_buffer, 0x200, 0, 0x80, 0x00, &var_28C); //not sure about 0x80 0x00
+   int result2 = read_wrapper_2199064(argument0->unk_14, aligned_buffer, 0x200, 0, 0x80, 0x80, &var_28C);
 
    if(result2 != 0)
       return loc_21A292C(result2, var_2C);

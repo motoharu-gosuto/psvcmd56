@@ -287,3 +287,5 @@ int SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(vfs_node* a0);
 int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int length, int* result_length);
 
 int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1);
+
+int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, char *buffer, int size, int num0, int num1, int* readBytes);

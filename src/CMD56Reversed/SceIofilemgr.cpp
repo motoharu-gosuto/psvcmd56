@@ -1352,3 +1352,8 @@ int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func
 
    return loc_BF08FC(f_result, unk1, node, var_24);
 }
+
+int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, char *buffer, int size, int num0, int num1, int* readBytes)
+{
+   return 0;
+}
