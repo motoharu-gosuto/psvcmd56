@@ -40,8 +40,8 @@ typedef struct ctx_21A27B8_18 //size is unknown
 
 typedef struct ctx_21A27B8_20 //size is 0x20
 {
-   uint32_t unk_0;
-   uint32_t unk_4;
+   ctx_21A27B8_18* unk_0;
+   vfs_node ** unk_4;
    uint32_t unk_8;
    uint32_t unk_C;
 
@@ -86,6 +86,13 @@ typedef struct ctx_21A27B8
 
 }ctx_21A27B8;
 
+//this is an interesting procedure
+//looks like it extracts path to file ? from vfs_node with ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa253b68
+//then gets its length
+//then locks with ScePfsMgr.SceIofilemgrForDriver._imp_unk_aa45010b
+//then executes ScePfsMgr.SceIofilemgrForDriver._imp_vfs_node_func15_50a63acf - file stat ?
+//then unlocks with ScePfsMgr.SceIofilemgrForDriver._imp_unk_6048f245
+
 int sub_2199144(vfs_node **node, std::pair<uint32_t, uint32_t>* result_pair)
 {
    return 0;
@@ -97,32 +104,21 @@ int read_wrapper_2199064(vfs_node **unk0, char *buffer, int size, int unk3, int 
    return 0;
 }
 
-int sub_21A0E3C(ctx_21A27B8_20* unk0, ctx_21A27B8_18* unk1, vfs_node ** unk2, int unk3, int arg_0, int arg_4)
+void sub_21A0E3C(ctx_21A27B8_20* unk0, ctx_21A27B8_18* unk1, vfs_node ** unk2, int unk3, int arg_0, int arg_4)
 {
-   /*
-   var_8= -8
-   var_4= -4
-   arg_0=  0
-   arg_4=  4
-
-   PUSH            {R4,R5}
-   LDRD.W          R4, R5, [SP,#8] ; arg_0, arg_4
-   VMOV.I8         D17, #0xFF
-   VMOV.I32        D16, #0x80
-   STRD.W          R4, R5, [R0,#0x18] ; store arg_0, arg_4
-   STMIA.W         R0, {R1,R2} ; store arg1, arg2
-   VSTR            D17, [R0,#8]
-   VSTR            D16, [R0,#0x10]
-   POP             {R4,R5}
-   BX              LR
-   */
-
-   return 0;
+   unk0->unk_0 = unk1;
+   unk0->unk_4 = unk2;
+   unk0->unk_8 = 0xFFFFFFFF;
+   unk0->unk_C = 0xFFFFFFFF;
+   unk0->unk_10 = 0x80;
+   unk0->unk_14 = 0x80;
+   unk0->unk_18 = arg_0;
+   unk0->unk_1C = arg_4;
 }
 
-int proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
+void proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
 {
-   return 0;
+   memcpy(unk0, unk1, 0x14);
 }
 
 int proc_crypto_stuff_219DE7C(char unk0[0x14], ctx_21A27B8* unk1, ctx_21A27B8_70* unk2, int unk3)
@@ -130,14 +126,46 @@ int proc_crypto_stuff_219DE7C(char unk0[0x14], ctx_21A27B8* unk1, ctx_21A27B8_70
    return 0;
 }
 
-int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
+//count leading zeroes
+#define CLZ(x) 0
+
+//analog of memcmp or str cmp or strcoll, smth like that
+//returns -1, 0
+int SceSysclibForDriver_b5a4d745(char* char0, char* char1, int len)
 {
    return 0;
 }
 
+int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
+{
+   //from what I know - b5a4d745 returns only 0, -1 (not sure about 1) based on reversing and tests
+   //for  0 - CLZ is 32
+   //for  1 - CLZ is 31
+   //for -1 - CLZ is 0
+    
+   //for  0 - >> 5 is 1
+   //for  1 - >> 5 is 0
+   //for -1 - >> 5 is 0
+    
+   //LSRS changes flag to indicate if value is zero or not
+   //zero value is considered as error
+   //which means that original value 1 or -1 is an error and 0 is success
+   //meaning that unk0 and unk1 should be identical for this function to succeed
+   //this is some analog of strcmp or memcmp
+
+   int result = SceSysclibForDriver_b5a4d745(unk0, unk1, 0x14);
+   int leadZeroesCnt = CLZ(result); 
+   int r0 = leadZeroesCnt >> 5;
+   return r0;
+}
+
+//unk1 is ignored
 int sub_21A0E28(ctx_21A27B8_20* unk0, char unk1[0x14], int unk2, int unk3, int arg_0, int arg_4)
 {
-   return 0;
+   unk0->unk_8 = unk2;
+   unk0->unk_C = unk3;
+   unk0->unk_10 = arg_0;
+   unk0->unk_14 = arg_4;
 }
 
 int sub_21A6A10(ctx_21A27B8_40* unk0, ctx_21A27B8* unk1, ctx_21A27B8_20* unk2, int unk3, int arg_0)
