@@ -191,6 +191,9 @@ typedef struct vfs_node_70
 
    void* unk_10; //pointer to struct of at least size 0x94
    uint32_t unk_14; //number
+   
+   uint32_t unk_18;
+   uint32_t unk_1C;
 } vfs_node_70;
 
 typedef struct vfs_node //size is 0x40 + 0x98 = D8
