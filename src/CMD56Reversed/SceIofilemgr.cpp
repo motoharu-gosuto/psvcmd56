@@ -1293,6 +1293,8 @@ int loc_BF08FC(int r6, vfs_node_func15_arg2* r7, vfs_node* r10, int var_24)
       return STACK_CHECK_FAIL;
 }
 
+//most likely sceIoGetstatForDriver
+
 int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1)
 {
    int var_24 = var_009EA004;
@@ -1353,7 +1355,9 @@ int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func
    return loc_BF08FC(f_result, unk1, node, var_24);
 }
 
-int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, char *buffer, int size, int num0, int num1, int* readBytes)
+//this corresponds to sceIoPreadForDriver
+
+int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, char *buffer, SceSize size, int offsetLo, int offsetHi, int* readBytes)
 {
    return 0;
 }
