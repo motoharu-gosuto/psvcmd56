@@ -196,100 +196,135 @@ void proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
    memcpy(unk0, unk1, 0x14);
 }
 
+int SceKernelUtilsForDriver_29a28957(int unk0, int unk1, int unk2, int unk3, int arg_0)
+{
+   return 0;
+}
+
 int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
 {
-   /*
-   MOV             R6, 0x9EA004
-   MOV             LR, R1  ; arg1
-   SUB             SP, SP, #0x124 ; arg_0
-   MOV             R8, R0  ; arg0
-   LDR             R1, [R6]
-   MOV             R9, R3  ; arg3
-   STR             R2, [SP,#0x148+unk0] ; arg2
-   STR             R1, [SP,#0x148+var_2C]
-   */
+   int r6 = &var_009EA004;
+   int lr = r1;
+   int r8 = r0;
+   int r1 = *r6;
+   int r9 = r3;
+
+   unk0 = r2;
+   var_2C = r1; //cookie
 
    if(r3 == 0)
    {
-      /*
-      STR             R0, [SP,#0x148+arg_0]
-      MOVS            R1, #0x14 ; num
-      MOV             R0, LR  ; src
-      BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_29a28957
-      */
+      arg_0 = r0;
+      int r1 = 0x14;
+      int r0 = lr;
 
-      // goto loc_219DEF8
+      SceKernelUtilsForDriver_29a28957(r0, r1, r2, r3, arg_0);
+
+      //optimization here, r3 = 0
+      //however r9 is returned meaning that 0 is returned since r9 is assigned with r3 before 'if' 
+      r9 = 0;
    }
    else
    {
-      /*
-      ADD             R4, SP, #0x148+var_12C
-      LDR.W           R0, [LR]
-      RSB.W           R12, R4, #0
-      LDR.W           R1, [LR,#4]
-      LDR.W           R2, [LR,#8]
-      AND.W           R12, R12, #0x3F
-      LDR.W           R3, [LR,#0xC]
-      ADD             R12, R4
-      MOVS            R5, #0
-      ADD.W           R4, R12, #8
-      MOV             R7, R12
-      ADD.W           R11, SP, #0x148+var_AC
-      STMIA           R4!, {R5}
-      RSB.W           R10, R11, #0
-      STMIA           R4!, {R5}
-      AND.W           R10, R10, #0x3F
-      STMIA           R4!, {R5}
-      ADD             R10, R11
-      STRD.W          R5, R5, [R4],#8
-      STR             R5, [R4]
-      MOVS            R4, #1
-      STMIA           R7!, {R0-R3}
-      MOV             R2, R9  ; unk2
-      LDR.W           R0, [LR,#0x10]
-      MOV             R3, R12 ; unk3
-      MOV             R1, R10 ; unk1
-      STR             R5, [SP,#0x148+arg_0] ; arg_0
-      STR             R5, [SP,#0x148+arg_8] ; arg_8
-      STR             R0, [R7]
-      LDR             R0, [SP,#0x148+unk0] ; unk0
-      STR             R4, [SP,#0x148+arg_4] ; arg_4
-      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_6704d985
-      MOV             R9, R0
-      */
+      int r4 = &var_12C;
+      int r0 = lr[0];
+      int r12 = 0 - r4;
+
+      int r1 = lr[4];
+      int r2 = lr[8];
+
+      int r12 = r12 & 0x3F;
+
+      int r3 = lr[0x0C];
+
+      int r12 = r12 + r4;
+      
+      int r5 = 0;
+      
+      int r4 = r12 + 8;
+      
+      int r7 = r12;
+
+      int r11 = &var_AC;
+      
+      r4[0] = r5;
+      r4 = r4 + 4;
+
+      int r10 = 0 - r11;
+
+      r4[0] = r5;
+      r4 = r4 + 4;
+
+      int r10 = r10 & 0x3F;
+      
+      r4[0] = r5;
+      r4 = r4 + 4;
+
+      int r10 = r10 + r11;
+
+      r4[0] = r5;
+      r4[4] = r5;
+      r4 = r4 + 8;
+
+      r4[0] = r5;
+
+      int r4 = 1;
+
+      r7[0x00] = r0;
+      r7[0x04] = r1;
+      r7[0x08] = r2;
+      r7[0x0C] = r3;
+
+      r7 = r7 + 0x10;
+
+      int r2 = r9;
+      
+      int r0 = lr[0x10];
+      int r3 = r12;
+      int r1 = r10;
+      
+      arg_0 = r5;
+      arg_8 = r5;
+
+      r7[0] = r0;
+
+      int r0 = unk0;
+      arg_4 = r4;
+
+      ScePfsMgr.SceSblSsMgrForDriver._imp_6704d985();
+
+      int r9 = r0;
 
       if(r0 == 0)
       {
-         /*
-         LDMIA.W         R10!, {R0-R3}
-         STR.W           R0, [R8]
-         LDR.W           R0, [R10]
-         STR.W           R1, [R8,#4]
-         STR.W           R2, [R8,#8]
-         STR.W           R0, [R8,#0x10]
-         STR.W           R3, [R8,#0xC]
-         */
+         int r0 = r10[0x00];
+         int r1 = r10[0x04];
+         int r2 = r10[0x08];
+         int r3 = r10[0x0C];
 
-         //goto loc_219DEF8
-      }
-      else
-      {
-         //goto loc_219DEF8
+         r10 = r10 + 0x10;
+
+         r8[0x00] = r0;
+         
+         int r0 = r10[0];
+         
+         r8[0x04] = r1;
+         r8[0x08] = r2;
+         r8[0x10] = r0;
+         r8[0x0C] = r3;
       }
    }
 
    //loc_219DEF8:
 
-   /*
-   LDR             R2, [SP,#0x148+var_2C]
-   MOV             R0, R9
-   LDR             R3, [R6]
-   CMP             R2, R3
-   */
+   int r2 = var_2C;
+   int r0 = r9;
+   int r3 = r6[0];
 
-   //return r0 or stack fail
-
-   return 0;
+   if(r2 == r3)
+      return r0;
+   else
+      return STACK_CHECK_FAIL;
 }
 
 //count leading zeroes
