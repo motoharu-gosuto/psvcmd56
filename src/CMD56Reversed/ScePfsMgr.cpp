@@ -131,7 +131,7 @@ int sub_2199144(node_holder* node, std::pair<uint32_t, uint32_t>* result_pair)
 }
 
 //num0, num1 are probably offset
-int read_wrapper_2199064(node_holder* unk0, char *buffer, int size, int ignored, int num0, int num1, uint32_t* readBytes)
+int read_wrapper_2199064(node_holder* unk0, char *buffer, int size, int ignored, int offsetLo, int offsetHi, uint32_t* readBytes)
 {
    /*
    var_3C= -0x3C
@@ -157,7 +157,7 @@ int read_wrapper_2199064(node_holder* unk0, char *buffer, int size, int ignored,
 
    SceIofilemgrForDriver_sceVfsNodeWaitEventFlag_aa45010b(unk0->node);
 
-   int f_result = SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(unk0->node, unk0->unk_4, buffer, size, num0, num1, &var_30);
+   int f_result = SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(unk0->node, unk0->unk_4, buffer, size, offsetLo, offsetHi, &var_30);
    
    SceIofilemgrForDriver_sceVfsNodeSetEventFlag_6048f245(unk0->node);
    
@@ -196,8 +196,99 @@ void proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
    memcpy(unk0, unk1, 0x14);
 }
 
-int proc_crypto_stuff_219DE7C(char unk0[0x14], ctx_21A27B8* unk1, ctx_21A27B8_70* unk2, int unk3)
+int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
 {
+   /*
+   MOV             R6, 0x9EA004
+   MOV             LR, R1  ; arg1
+   SUB             SP, SP, #0x124 ; arg_0
+   MOV             R8, R0  ; arg0
+   LDR             R1, [R6]
+   MOV             R9, R3  ; arg3
+   STR             R2, [SP,#0x148+unk0] ; arg2
+   STR             R1, [SP,#0x148+var_2C]
+   */
+
+   if(r3 == 0)
+   {
+      /*
+      STR             R0, [SP,#0x148+arg_0]
+      MOVS            R1, #0x14 ; num
+      MOV             R0, LR  ; src
+      BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_29a28957
+      */
+
+      // goto loc_219DEF8
+   }
+   else
+   {
+      /*
+      ADD             R4, SP, #0x148+var_12C
+      LDR.W           R0, [LR]
+      RSB.W           R12, R4, #0
+      LDR.W           R1, [LR,#4]
+      LDR.W           R2, [LR,#8]
+      AND.W           R12, R12, #0x3F
+      LDR.W           R3, [LR,#0xC]
+      ADD             R12, R4
+      MOVS            R5, #0
+      ADD.W           R4, R12, #8
+      MOV             R7, R12
+      ADD.W           R11, SP, #0x148+var_AC
+      STMIA           R4!, {R5}
+      RSB.W           R10, R11, #0
+      STMIA           R4!, {R5}
+      AND.W           R10, R10, #0x3F
+      STMIA           R4!, {R5}
+      ADD             R10, R11
+      STRD.W          R5, R5, [R4],#8
+      STR             R5, [R4]
+      MOVS            R4, #1
+      STMIA           R7!, {R0-R3}
+      MOV             R2, R9  ; unk2
+      LDR.W           R0, [LR,#0x10]
+      MOV             R3, R12 ; unk3
+      MOV             R1, R10 ; unk1
+      STR             R5, [SP,#0x148+arg_0] ; arg_0
+      STR             R5, [SP,#0x148+arg_8] ; arg_8
+      STR             R0, [R7]
+      LDR             R0, [SP,#0x148+unk0] ; unk0
+      STR             R4, [SP,#0x148+arg_4] ; arg_4
+      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_6704d985
+      MOV             R9, R0
+      */
+
+      if(r0 == 0)
+      {
+         /*
+         LDMIA.W         R10!, {R0-R3}
+         STR.W           R0, [R8]
+         LDR.W           R0, [R10]
+         STR.W           R1, [R8,#4]
+         STR.W           R2, [R8,#8]
+         STR.W           R0, [R8,#0x10]
+         STR.W           R3, [R8,#0xC]
+         */
+
+         //goto loc_219DEF8
+      }
+      else
+      {
+         //goto loc_219DEF8
+      }
+   }
+
+   //loc_219DEF8:
+
+   /*
+   LDR             R2, [SP,#0x148+var_2C]
+   MOV             R0, R9
+   LDR             R3, [R6]
+   CMP             R2, R3
+   */
+
+   //return r0 or stack fail
+
    return 0;
 }
 
@@ -278,7 +369,7 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
 
    char* aligned_buffer = (char*)(((uint32_t)destination + 0x3F) & (~0x3F)); //align up to 0x40
    
-   int result1 = read_wrapper_2199064(argument0->unk_14, aligned_buffer, 0x200, 0, 0x200, 0, &var_28C);
+   int result1 = read_wrapper_2199064(argument0->unk_14, aligned_buffer, 0x200, 0, 0x200, 0, &var_28C); // call func5_or_19
 
    if(result1 != 0)
       return loc_21A292C(result1, var_2C);
@@ -286,13 +377,14 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
    if(var_28C != 0x200)
       return loc_21A292E(0x8014090A, var_2C);
     
-   int some_value = aligned_buffer[0x60];
+   int some_value = aligned_buffer[0x60]; //save some value from files.db file
    argument0->unk_68 = some_value;
 
    if(some_value != 0)
       return loc_21A292E(0x8014090A, var_2C);
 
-   int result2 = read_wrapper_2199064(argument0->unk_14, aligned_buffer, 0x200, 0, 0x80, 0x80, &var_28C);
+   //not sure about 0x80 80
+   int result2 = read_wrapper_2199064(argument0->unk_14, aligned_buffer, 0x200, 0, 0x80, 0x80, &var_28C); // call func5_or_19
 
    if(result2 != 0)
       return loc_21A292C(result2, var_2C);
@@ -300,34 +392,35 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
    if(var_28C != 0x200)
       return loc_21A292E(0x8014090A, var_2C);
 
-   memcpy(&argument0->unk_70, aligned_buffer, 0x160);
+   memcpy(&argument0->unk_70, aligned_buffer, 0x160); //copy 0x160 bytes of files.db beginning into buffer
 
    //-----------
 
-   if(strncmp("SCENGPFS", argument0->unk_70.unk_70, 8) != 0)
+   if(strncmp("SCENGPFS", argument0->unk_70.unk_70, 8) != 0) //verify header
       return loc_21A292E(0x8014090A, var_2C);
 
-   memcpy(argument0->data0, argument2, 0x14);
+   memcpy(argument0->data0, argument2, 0x14); //copy 0x14 bytes of some input data
 
-   int r5 = argument0->unk_70.unk_80;
+   int r5 = argument0->unk_70.unk_80; //offset 0x10 in file - some kind of size ?
 
    if(r5 != argument0->unk_18->unk_4)
       return loc_21A292E(0x80140909, var_2C);
 
-   int r3 = argument0->unk_70.unk_78 - 1;
+   int r3 = argument0->unk_70.unk_78 - 1; //offset 0x08 in file - some kind of counter ?
 
    if(r3 <= 1)
       r5 = 0x160;
 
+   //assign values to argument0->unk_20
    sub_21A0E3C(&argument0->unk_20, argument0->unk_18, argument0->unk_14, r3, r5, 0);
 
-   memcpy(destination, argument0->unk_70.unk_D0, 0x100);
+   memcpy(destination, argument0->unk_70.unk_D0, 0x100); //offset 0x60 in file - copy 0x100 bytes
 
-   proc_copy_14_bytes_219DE1C(unk0, argument0->unk_70.unk_BC);
+   proc_copy_14_bytes_219DE1C(unk0, argument0->unk_70.unk_BC); //offset 0x4C in real file - copy 0x14 bytes
 
-   memset(argument0->unk_70.unk_BC, 0, 0x14);
+   memset(argument0->unk_70.unk_BC, 0, 0x14); //clear read data
 
-   memset(argument0->unk_70.unk_D0, 0, 0x100);
+   memset(argument0->unk_70.unk_D0, 0, 0x100); //clear read data
 
    proc_crypto_stuff_219DE7C(argument0->unk_70.unk_BC, argument0, &argument0->unk_70, 0x160);
 
