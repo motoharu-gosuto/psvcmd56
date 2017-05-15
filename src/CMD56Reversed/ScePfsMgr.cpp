@@ -201,16 +201,16 @@ int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_7
    return 0;
 }
 
-int SceSblSsMgrForDriver_6704d985(int unk0, int unk1, int unk2, int unk3, int arg_0, int arg_4, int arg_8)
+int SceSblSsMgrForDriver_6704d985(ctx_21A27B8_70* data_base, char* dest, int size, char* src, int arg_0, int arg_4, int arg_8)
 {
    return 0;
 }
 
 int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
 {
-   int unk0;
-   char var_12C[0x80]; //128
-   char var_AC[0x80]; //128
+   char buffer0[0x80]; //128
+   char buffer1[0x80]; //128
+
    int var_2C = var_009EA004; //cookie
 
    if(size == 0)
@@ -224,29 +224,18 @@ int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8
    }
    else
    {
-      char* r4 = var_12C;
-      int r12 = 0 - r4;
-      int r12 = r12 & 0x3F;
-      int r12 = r12 + r4;
-      
-      int r4 = r12 + 8;
+      char* src = ((0 - (int)buffer0) & 0x3F) + buffer0; //align down?
+      char* dst = ((0 - (int)buffer1) & 0x3F) + buffer1; //align down?
 
-      int r7 = r12;
+      memset((src + 8), 0, 0x18);
 
-      int r11 = &var_AC;
-      int r10 = 0 - r11;
-      int r10 = r10 & 0x3F;
-      int r10 = r10 + r11;
+      memcpy(src, base->data0, 0x14);
 
-      memset(r4, 0, 0x18);
-
-      memcpy(r7, base->data0, 0x14);
-
-      int result = SceSblSsMgrForDriver_6704d985(data_base, r10, size, r12, 0, 1, 0);
+      int result = SceSblSsMgrForDriver_6704d985(data_base, dst, size, src, 0, 1, 0);
 
       if(result == 0)
       {
-         memcpy(bytes14, r10, 0x14);
+         memcpy(bytes14, dst, 0x14);
       }
 
       if(var_2C == var_009EA004)
