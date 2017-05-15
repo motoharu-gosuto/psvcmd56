@@ -201,9 +201,32 @@ int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_7
    return 0;
 }
 
+int sub_B99E8C(ctx_21A27B8_70* data_base, char* dest, int size, char* src, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10)
+{
+   //SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893
+
+   //memset - 0x40
+
+   //SceSblSsMgr.SceDmacmgrForDriver_dmac_enter_7cd5088a
+
+   //proc_copy_to_from_B9A578
+
+   //sub_B99C40 -> sub_B99674 - this is generic dmac procedure that is used for example in SceSblSsMgrForDriver_4dd1b2e5 to generate 0x40 random byte sequence
+
+   //proc_copy_from_to_B9A5D8
+
+   //proc_dmac_exit_B99A18 -> SceDmacmgrForDriver_dmac_exit_adff1186
+
+   //SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967
+
+   //sub_B99C40
+
+   return 0;
+}
+
 int SceSblSsMgrForDriver_6704d985(ctx_21A27B8_70* data_base, char* dest, int size, char* src, int arg_0, int arg_4, int arg_8)
 {
-   return 0;
+   return sub_B99E8C(data_base, dest, size, src, 0x100, arg_0, arg_4, 0x23, arg_8);
 }
 
 int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
