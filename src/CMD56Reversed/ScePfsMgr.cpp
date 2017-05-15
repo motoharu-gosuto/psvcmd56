@@ -196,135 +196,64 @@ void proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
    memcpy(unk0, unk1, 0x14);
 }
 
-int SceKernelUtilsForDriver_29a28957(int unk0, int unk1, int unk2, int unk3, int arg_0)
+int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_70* data_base, int size2, char bytes14[0x14])
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_6704d985(int unk0, int unk1, int unk2, int unk3, int arg_0, int arg_4, int arg_8)
 {
    return 0;
 }
 
 int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
 {
-   int r6 = &var_009EA004;
-   int lr = r1;
-   int r8 = r0;
-   int r1 = *r6;
-   int r9 = r3;
+   int unk0;
+   char var_12C[0x80]; //128
+   char var_AC[0x80]; //128
+   int var_2C = var_009EA004; //cookie
 
-   unk0 = r2;
-   var_2C = r1; //cookie
-
-   if(r3 == 0)
+   if(size == 0)
    {
-      arg_0 = r0;
-      int r1 = 0x14;
-      int r0 = lr;
+      SceKernelUtilsForDriver_29a28957(base, 0x14, data_base, size, bytes14);
 
-      SceKernelUtilsForDriver_29a28957(r0, r1, r2, r3, arg_0);
-
-      //optimization here, r3 = 0
-      //however r9 is returned meaning that 0 is returned since r9 is assigned with r3 before 'if' 
-      r9 = 0;
+      if(var_2C == var_009EA004)
+         return 0;
+      else
+         return STACK_CHECK_FAIL;
    }
    else
    {
-      int r4 = &var_12C;
-      int r0 = lr[0];
+      char* r4 = var_12C;
       int r12 = 0 - r4;
-
-      int r1 = lr[4];
-      int r2 = lr[8];
-
       int r12 = r12 & 0x3F;
-
-      int r3 = lr[0x0C];
-
       int r12 = r12 + r4;
       
-      int r5 = 0;
-      
       int r4 = r12 + 8;
-      
+
       int r7 = r12;
 
       int r11 = &var_AC;
-      
-      r4[0] = r5;
-      r4 = r4 + 4;
-
       int r10 = 0 - r11;
-
-      r4[0] = r5;
-      r4 = r4 + 4;
-
       int r10 = r10 & 0x3F;
-      
-      r4[0] = r5;
-      r4 = r4 + 4;
-
       int r10 = r10 + r11;
 
-      r4[0] = r5;
-      r4[4] = r5;
-      r4 = r4 + 8;
+      memset(r4, 0, 0x18);
 
-      r4[0] = r5;
+      memcpy(r7, base->data0, 0x14);
 
-      int r4 = 1;
+      int result = SceSblSsMgrForDriver_6704d985(data_base, r10, size, r12, 0, 1, 0);
 
-      r7[0x00] = r0;
-      r7[0x04] = r1;
-      r7[0x08] = r2;
-      r7[0x0C] = r3;
-
-      r7 = r7 + 0x10;
-
-      int r2 = r9;
-      
-      int r0 = lr[0x10];
-      int r3 = r12;
-      int r1 = r10;
-      
-      arg_0 = r5;
-      arg_8 = r5;
-
-      r7[0] = r0;
-
-      int r0 = unk0;
-      arg_4 = r4;
-
-      ScePfsMgr.SceSblSsMgrForDriver._imp_6704d985();
-
-      int r9 = r0;
-
-      if(r0 == 0)
+      if(result == 0)
       {
-         int r0 = r10[0x00];
-         int r1 = r10[0x04];
-         int r2 = r10[0x08];
-         int r3 = r10[0x0C];
-
-         r10 = r10 + 0x10;
-
-         r8[0x00] = r0;
-         
-         int r0 = r10[0];
-         
-         r8[0x04] = r1;
-         r8[0x08] = r2;
-         r8[0x10] = r0;
-         r8[0x0C] = r3;
+         memcpy(bytes14, r10, 0x14);
       }
+
+      if(var_2C == var_009EA004)
+         return result;
+      else
+         return STACK_CHECK_FAIL;
    }
-
-   //loc_219DEF8:
-
-   int r2 = var_2C;
-   int r0 = r9;
-   int r3 = r6[0];
-
-   if(r2 == r3)
-      return r0;
-   else
-      return STACK_CHECK_FAIL;
 }
 
 //count leading zeroes
