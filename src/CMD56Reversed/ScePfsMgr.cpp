@@ -43,7 +43,7 @@ typedef struct node_holder
 {
    vfs_node * node;
    uint32_t unk_4;
-};
+} node_holder;
 
 typedef struct ctx_21A27B8_20 //size is 0x20
 {
@@ -198,6 +198,15 @@ void proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
 
 int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_70* data_base, int size2, char bytes14[0x14])
 {
+   //this function is powered by table of function pointers that are called indirectly
+
+   //wrapper for sub_9DD908
+
+   //SceSysmem.SceKernelUtilsForDriver._exp_87dc7f2f
+   //SceSysmem.SceKernelUtilsForDriver._exp_e4390ffa
+   //SceSysmem.SceKernelUtilsForDriver._exp_478a6f3c
+   //SceSysmem.SceKernelUtilsForDriver._exp_48f24106
+
    return 0;
 }
 
@@ -229,6 +238,8 @@ int SceSblSsMgrForDriver_6704d985(ctx_21A27B8_70* data_base, char* dest, int siz
    return sub_B99E8C(data_base, dest, size, src, 0x100, arg_0, arg_4, 0x23, arg_8);
 }
 
+//it looks like this procedure takes base->data0 and data_base as input
+//and produces bytes14 as output
 int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
 {
    char buffer0[0x80]; //128
@@ -400,6 +411,19 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
 
    proc_crypto_stuff_219DE7C(argument0->unk_70.unk_BC, argument0, &argument0->unk_70, 0x160);
 
+   //there can be two problems of why proc_verify_14_bytes_219DE44 returns an error
+   //1 - file reading does not work - I do not think this is true since other files are read correctly on sector level in Sdif
+   //2 - argument2 data is invalid - I need to check how this data is obtained.
+   //                                It is obtained from sub_219E1D8 -> sub_219DE54 -> ScePfsMgr.SceKernelUtilsForDriver._imp_87dc7f2f
+   //                                What is interesting here is that 87dc7f2f is one of the functions from function table from SceKernelUtilsForDriver_29a28957 - which is an alternative for SceSblSsMgr call
+   //                                478a6f3c and 48f24106 are also part of table but they also are called from 87dc7f2f
+
+   //argument0->unk_70.unk_BC - is produced as the result by crypto procedure
+      //crypto procedure takes argument0->data0 and argument0->unk_70 as input
+         //argument0->data0 - is copy of argument2 that is passed to this procedure
+         //argument0->unk_70 - it is taken from aligned_buffer - which is read from files.db
+
+   //unk0 is taken from previous value of argument0->unk_70.unk_BC - it is taken from aligned_buffer - which is read from files.db
    int result3 = proc_verify_14_bytes_219DE44(unk0, argument0->unk_70.unk_BC);
 
    if(result3 == 0)
