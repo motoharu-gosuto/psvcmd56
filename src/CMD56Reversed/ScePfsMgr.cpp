@@ -210,6 +210,195 @@ int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_7
    return 0;
 }
 
+/*
+sub_219FE44 - returns ctx_21A27B8*
+
+sub_21A27A8
+PUSH		{R3,LR}
+ADDS		R0, #0x20
+BL		sub_21A0E60
+POP		{R3,PC}
+; End of function sub_21A27A8
+
+;clear - opposite to sub_21A0E3C ?
+sub_21A0E60
+VMOV.I32	D16, #0x80
+MOVS		R3, #0
+VMOV.I8		D17, #0xFF
+STRD.W		R3, R3,	[R0]
+VSTR		D17, [R0,#8]
+VSTR		D16, [R0,#0x10]
+VSTR		D16, [R0,#0x18]
+BX		LR
+; End of function sub_21A0E60
+*/
+
+int sub_B99C40(int unk0, int unk1, char* dst, int unk3, int arg_0, int arg_4)
+{
+    /*
+    stack_unk0= -0x58
+    stack_unk1= -0x54
+    stack_unk2= -0x50
+    stack_unk3= -0x4C
+    var_48=	-0x48
+    var_44=	-0x44
+    var_21=	-0x21
+    id=  4
+    var_s8=	 8
+    var_sC=	 0xC
+    size=  0x14
+    arg_0=	0x40
+    arg_4=	0x44
+    */
+
+    int cookie;
+
+    /*
+    MOVW		R5, #0xA004
+    ADD		R7, SP,	#0x18
+    MOVT.W		R5, #0x9E
+    LDR		R6, [R0,#0x28] ; part of some command
+    MOV		R4, R0
+    LDR.W		R8, [R7,#arg_0]
+    SUB		SP, SP,	#0x40 ;	stack_unk0
+    LDR		R0, [R5]
+    TST.W		R2, #0x1F ; pointer alignment test?
+    ADD.W		R10, SP, #0x58+var_21
+    ORR.W		R6, R6,	#3 ; part of some command
+    MOV		R9, R2
+    MOV		R12, R3
+    ORR.W		R6, R6,	R8 ; part of some command
+    STR		R0, [R7,#size]
+    BIC.W		R10, R10, #0x1F
+    LDR.W		LR, [R7,#arg_4]
+    */
+    		
+    if(true) //BEQ
+    {
+        /*
+        LDR		R0, [R4,#0x38] ; id
+        MOV		R3, R4	; param0
+        LDRD.W		R9, R8,	[R4,#0x2C]
+        LDR		R4, [R4,#0x34]
+        STR.W		R12, [SP,#0x58+stack_unk0] ; stack_unk0
+        STR		R6, [SP,#0x58+stack_unk2] ; stack_unk2
+        STRD.W		R8, R4,	[SP,#0xC]
+        STR.W		LR, [SP,#0x58+var_44]
+        STR.W		R9, [SP,#0x58+stack_unk1] ; stack_unk1
+        BL		sub_B99674 ; dmac_id id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14
+        MOV		R4, R0
+        
+        if(var_009EA004 == cookie)
+            return R4;
+        else
+            return STACK_CHECK_FAIL;
+        */
+    }
+    else
+    {
+        /*
+        LDR		R0, [R4,#0x38]
+        MOV		R3, R4	; param0
+        MOV		R2, R10	; src for later ?
+        STR		R0, [R7,#id]
+        LDR		R0, [R4,#0x2C]
+        STR		R0, [R7,#var_sC]
+        LDR		R0, [R4,#0x34]
+        STR		R0, [R7,#var_s8]
+        LDR		R0, [R4,#0x30]
+        STR.W		R12, [SP,#0x58+stack_unk0] ; stack_unk0
+        STR		R6, [SP,#0x58+stack_unk2] ; stack_unk2
+        ORR.W		R11, R0, #0x3FC00
+        STR.W		LR, [SP,#0x58+var_44]
+        ORR.W		R11, R11, #0x200
+        LDR		R0, [R7,#id] ; id
+        STR.W		R11, [R4,#0x30]
+        LDR		R4, [R7,#var_sC]
+        STR.W		R11, [SP,#0x58+stack_unk3] ; stack_unk3
+        STR		R4, [SP,#0x58+stack_unk1] ; stack_unk1
+        LDR		R4, [R7,#var_s8]
+        STR		R4, [SP,#0x58+var_48]
+        BL		sub_B99674 ; dmac_id id, void* vaddr_0, void* vaddr_1, void* vaddr_2, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10, char* arg_14
+        MOV		R4, R0
+        BICS.W		R0, R8,	#0x800
+        */
+        
+        if(true) //BEQ
+        {
+            /*
+            int R3 = R6 & 0x07
+            int R2 = R6 & 0x38
+            
+            if(R3 != 3)
+            {
+                memcpy(R9, R10, 0x800F1516);
+                
+                if(var_009EA004 == cookie)
+                    return R4;
+                else
+                    return STACK_CHECK_FAIL;
+            }
+            else
+            {
+                if(R2 == 0x38)
+                {
+                    memcpy(R9, R10, 0x10);
+                    
+                    if(var_009EA004 == cookie)
+                        return R4;
+                    else
+                        return STACK_CHECK_FAIL;
+                }
+                else
+                {
+                    if((R6 & 0x18) == 0)
+                    {
+                        memcpy(R9, R10, 0x14);
+                        
+                        if(var_009EA004 == cookie)
+                            return R4;
+                        else
+                            return STACK_CHECK_FAIL;
+                    }
+                    else
+                    {
+                        if(R6 == 0x10)
+                        {
+                            memcpy(R9, R10, 0x20);
+                            
+                            if(var_009EA004 == cookie)
+                                return R4;
+                            else
+                                return STACK_CHECK_FAIL;
+                        }
+                        else
+                        {
+                            memcpy(R9, R10, 0x800F1516);
+                            
+                            if(var_009EA004 == cookie)
+                                return R4;
+                            else
+                                return STACK_CHECK_FAIL;
+                        }
+                    }
+                }
+            }
+            */
+        }
+        else
+        {
+            /*
+            if(var_009EA004 == cookie)
+                return R4;
+            else
+                return STACK_CHECK_FAIL;
+            */
+        }
+    }
+
+    return 0;
+}
+
 int sub_B99E8C(ctx_21A27B8_70* data_base, char* dest, int size, char* src, int arg_0, int arg_4, int arg_8, int arg_C, int arg_10)
 {
    //SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893
