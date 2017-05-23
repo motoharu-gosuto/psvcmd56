@@ -1364,13 +1364,13 @@ int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, 
 
 typedef struct t_sceIoIoctlForDriver_ctx
 {
-   SceUID fd; //var_34
-   int unk_4; //var_30 some code
-   int* unk_8; //var_2C ptr to flag
-   int unk_C; //var_28 number
+   SceUID fd;
+   unsigned int cmd;
+   void *indata;
+   int inlen;
 
-   void* unk_10; //var_24 ctx
-   int unk_14; //var_20 number
+   void *outdata;
+   int outlen;
 } t_sceIoIoctlForDriver_ctx;
 
 int SceIofilemgrForDriver_t_sceIoIoctlForDriver_c1dd4317(t_sceIoIoctlForDriver_ctx* ctx)
@@ -1378,10 +1378,10 @@ int SceIofilemgrForDriver_t_sceIoIoctlForDriver_c1dd4317(t_sceIoIoctlForDriver_c
    return 0;
 }
 
-int proc_BF651C(SceUID fd, void *ctx, int flag)
+int proc_BF651C(SceUID fd, void *outdata, int indataValue)
 {
    //int var_40;
-   int var_3C = flag;
+   int var_3C = indataValue;
    //int var_38;
 
    t_sceIoIoctlForDriver_ctx locals;
@@ -1389,11 +1389,11 @@ int proc_BF651C(SceUID fd, void *ctx, int flag)
    int var_1C = var_009EA004; //cookie
    
    locals.fd = fd;
-   locals.unk_4 = 0x201;
-   locals.unk_8 = &var_3C;
-   locals.unk_C = 0x4;
-   locals.unk_10 = ctx;
-   locals.unk_14 = 0xC;
+   locals.cmd = 0x201;
+   locals.indata = &var_3C;
+   locals.inlen = 0x4;
+   locals.outdata = outdata;
+   locals.outlen = 0xC;
 
    int result = SceIofilemgrForDriver_t_sceIoIoctlForDriver_c1dd4317(&locals);
 
