@@ -1361,3 +1361,44 @@ int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, 
 {
    return 0;
 }
+
+typedef struct t_sceIoIoctlForDriver_ctx
+{
+   SceUID fd; //var_34
+   int unk_4; //var_30 some code
+   int* unk_8; //var_2C ptr to flag
+   int unk_C; //var_28 number
+
+   void* unk_10; //var_24 ctx
+   int unk_14; //var_20 number
+} t_sceIoIoctlForDriver_ctx;
+
+int SceIofilemgrForDriver_t_sceIoIoctlForDriver_c1dd4317(t_sceIoIoctlForDriver_ctx* ctx)
+{
+   return 0;
+}
+
+int proc_BF651C(SceUID fd, void *ctx, int flag)
+{
+   //int var_40;
+   int var_3C = flag;
+   //int var_38;
+
+   t_sceIoIoctlForDriver_ctx locals;
+
+   int var_1C = var_009EA004; //cookie
+   
+   locals.fd = fd;
+   locals.unk_4 = 0x201;
+   locals.unk_8 = &var_3C;
+   locals.unk_C = 0x4;
+   locals.unk_10 = ctx;
+   locals.unk_14 = 0xC;
+
+   int result = SceIofilemgrForDriver_t_sceIoIoctlForDriver_c1dd4317(&locals);
+
+   if(var_1C == var_009EA004)
+      return result;
+   else
+      return STACK_CHECK_FAIL;
+}
