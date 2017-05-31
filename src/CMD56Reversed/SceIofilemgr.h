@@ -74,7 +74,7 @@ typedef struct vfs_mount_point_info_base
   uint32_t devMinor;
 
   char* filesystem;
-  uint32_t unk_14; //zero
+  void* unk_14; //zero
   vfs_block_dev_info* blockDev1;
   node_ops2* unk_1C; //zero
 } vfs_mount_point_info_base;
@@ -170,7 +170,7 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
 
    uint32_t unk_C0;   
 
-   uint32_t unk_C4; // = mountInfo->unk_14
+   void* unk_C4; // = mountInfo->unk_14
 
    vfs_fd_lock* fd_lock_ptr; // C8 - points to area in this structure
 
