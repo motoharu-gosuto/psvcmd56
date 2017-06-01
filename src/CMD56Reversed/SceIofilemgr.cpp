@@ -1402,3 +1402,139 @@ int proc_BF651C(SceUID fd, void *outdata, int indataValue)
    else
       return STACK_CHECK_FAIL;
 }
+
+enum io_device_code
+{
+  Internal = 0x100,
+  Game_Card = 0x201,
+  Removable = 0x202,
+  Host_File_System = 0x300,
+  Default = 0x0
+};
+
+typedef struct io_context //size is 0xB8
+{
+   uint32_t unk_0;
+   uint32_t unk_4;
+   uint32_t unk_8;
+   uint32_t unk_C;
+   
+   uint16_t unk_10;
+   uint16_t unk_12;
+   uint16_t unk_14;
+   uint16_t unk_16;
+   void *data_0; //0x18
+   uint32_t unk_1C;
+   
+   SceSize size_0; //0x20
+   uint32_t io_op_index; // 0x24
+   uint32_t ioctlOutdata0;
+   io_device_code device_code; // 0x2C - ioctlOutdata1
+   
+   char async; //0x30
+   char unk_31;
+   char unk_32;
+   char unk_33;
+   uint32_t pid; //0x34 = ksceKernelGetProcessId
+   uint32_t tid; //0x38 = ksceKernelGetThreadId
+   uint32_t unk_3C; // = SceThreadmgrForDriver_fa54d49a
+   
+   uint32_t unk_40; // = SceThreadmgrForDriver_332e127c
+   uint32_t cpu_mask; // 0x44 = ksceKernelGetThreadCpuAffinityMask
+   uint32_t thread_priority; //0x48 = ksceKernelGetThreadCurrentPriority
+   void* list0; //0x4C pointer to some linked list with elements of size 0x14 
+   
+   uint32_t listSize; //0x50 = number of items in linst
+   void* list1; //0x54 = pointer to some linked list with elements of size 0x14 
+   uint32_t sizeOfList; //0x58 = size of list in bytes
+   uint16_t state; // 0x5C = bit 16 of state where state = (MRC p15, 0, state, c13, c0, 3)
+   uint16_t unk_5E;
+   
+   uint32_t unk_60;
+   SceUID fd; //0x64
+   void *data_1; //0x68
+   uint32_t unk_6C;
+   
+   SceSize size_1; //0x70
+   uint32_t unk_74;
+   uint32_t unk_78; // = -1
+   uint32_t unk_7C; // = -1
+   
+   uint32_t op_result; // 0x80 - result of i/o operation
+   uint32_t unk_84;
+   void* unk_88;
+   uint32_t unk_8C;
+   
+   uint32_t unk_90;
+   uint32_t unk_94;
+   uint32_t unk_98;
+   uint32_t unk_9C;
+   
+   uint32_t unk_A0;
+   uint32_t unk_A4;
+   uint32_t unk_A8;
+   uint32_t unk_AC;
+   
+   SceInt64 unk_B0; // = ksceKernelGetSystemTimeWide
+   
+}io_context;
+
+int sub_BFB2A8(io_context *ioctx, void* unk)
+{
+   /*
+   MOV             R4, 0x9EA004
+   SUB             SP, SP, #0x20
+   LDR             R3, [R4]
+   STR             R3, [SP,#0x30+var_14]
+   LDR             R3, [R0,#0x64]
+   STR             R3, [SP,#0x30+var_30]
+   */
+
+   if(unk == 0)
+   {
+      /*
+      loc_BFB308
+      VMOV.I32        D16, #0x80
+      STRD.W          R1, R1, [SP,#4]
+      VSTR            D16, [SP,#0x30+var_20]
+      */
+   }
+   else
+   {
+      /*
+      LDR             R6, [R1,#8]
+      LDRD.W          R2, R3, [R0,#0x78]
+      LDR             R5, [R1,#4]
+      LDR             R1, [R1,#0xC]
+      ADDS            R2, R2, R6
+      ADC.W           R3, R3, #0
+      STRD.W          R2, R3, [SP,#0x10]
+      STRD.W          R5, R1, [SP,#4]
+      */
+   }
+
+   /*
+   LDR             R3, [R0,#0x2C]
+   MOV             R2, SP  ; args
+   LSLS            R3, R3, #0xF
+   ITETT MI
+   MOVMIW          R1, #0x7B3C
+   MOVPLW          R1, #0x7D2D
+   MOVMI.W         R0, #0x2000
+   MOVTMI.W        R1, #((loc_BE00BE+1) AND 0xFFFF) ; 00BE00BF data reference 4DD10946
+   ITT PL
+   MOVPL.W         R0, #0x2000 ; stack_size
+   MOVTPL.W        R1, #(high16((loc_BE00BE+1))) ; 00BE00BF data reference 4DD10946
+   BLX             SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelRunWithStack_e54fd746
+   */
+
+   /*
+   LDR             R2, [SP,#0x30+var_14]
+   LDR             R3, [R4]
+   CMP             R2, R3
+   */
+
+   //return r0 or stack fail
+
+   return 0;
+}
