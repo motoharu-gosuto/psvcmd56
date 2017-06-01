@@ -1479,62 +1479,75 @@ typedef struct io_context //size is 0xB8
    
 }io_context;
 
-int sub_BFB2A8(io_context *ioctx, void* unk)
+typedef struct param_BFB2A8
 {
-   /*
-   MOV             R4, 0x9EA004
-   SUB             SP, SP, #0x20
-   LDR             R3, [R4]
-   STR             R3, [SP,#0x30+var_14]
-   LDR             R3, [R0,#0x64]
-   STR             R3, [SP,#0x30+var_30]
-   */
+   uint32_t unk_0;
+   const void* data;
+   uint32_t ofst;
+   uint32_t size;
 
-   if(unk == 0)
+}param_BFB2A8;
+
+int SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(int stack, void* func, void* args)
+{
+   return 0;
+}
+
+struct sceIoPwriteForDriver_args
+{
+  SceUID uid;
+  const void *data;
+  int size;
+  int dummy;
+  SceOff offset;
+};
+
+
+int sub_BFB2A8(io_context *ioctx, param_BFB2A8* param)
+{
+   sceIoPwriteForDriver_args args;
+
+   int var_18;
+   int var_14;
+
+   var_14 = var_009EA004;
+
+   args.uid = ioctx->fd; //64;
+   
+   if(param == 0)
    {
-      /*
-      loc_BFB308
-      VMOV.I32        D16, #0x80
-      STRD.W          R1, R1, [SP,#4]
-      VSTR            D16, [SP,#0x30+var_20]
-      */
+      args.data = 0;
+      args.size = 0;
+
+      args.offset = 0x0000008000000080;
    }
    else
    {
-      /*
-      LDR             R6, [R1,#8]
-      LDRD.W          R2, R3, [R0,#0x78]
-      LDR             R5, [R1,#4]
-      LDR             R1, [R1,#0xC]
-      ADDS            R2, R2, R6
-      ADC.W           R3, R3, #0
-      STRD.W          R2, R3, [SP,#0x10]
-      STRD.W          R5, R1, [SP,#4]
-      */
+      int ofst_lo = ioctx->unk_78 + param->ofst;
+      int ofst_hi = ioctx->unk_7C;
+      
+      args.data = param->data;
+      args.size = param->size;
+
+      args.offset = (ofst_hi << 32) | ofst_lo;
    }
 
-   /*
-   LDR             R3, [R0,#0x2C]
-   MOV             R2, SP  ; args
-   LSLS            R3, R3, #0xF
-   ITETT MI
-   MOVMIW          R1, #0x7B3C
-   MOVPLW          R1, #0x7D2D
-   MOVMI.W         R0, #0x2000
-   MOVTMI.W        R1, #((loc_BE00BE+1) AND 0xFFFF) ; 00BE00BF data reference 4DD10946
-   ITT PL
-   MOVPL.W         R0, #0x2000 ; stack_size
-   MOVTPL.W        R1, #(high16((loc_BE00BE+1))) ; 00BE00BF data reference 4DD10946
-   BLX             SceIofilemgr.SceThreadmgrForDriver._imp_ksceKernelRunWithStack_e54fd746
-   */
+   int dev = ioctx->device_code << 0xF;
 
-   /*
-   LDR             R2, [SP,#0x30+var_14]
-   LDR             R3, [R4]
-   CMP             R2, R3
-   */
-
-   //return r0 or stack fail
-
-   return 0;
+   if(dev < 0)
+   {
+      int res = SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, (void*)0xBF7B3C, &args); //  int __cdecl SceIofilemgr.ScePfsFacadeForKernel._imp_4238d2d2(sceIoPreadForDriver_args *args)
+      if(var_14 == var_009EA004)
+         return res;
+      else
+         return STACK_CHECK_FAIL;
+   }
+   else
+   {
+      int res = SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, (void*)0xBE7D2D, &args); // int __cdecl SceIofilemgr.SceIofilemgrForDriver._exp_t_sceIoPreadForDriver_0b54f9e0(sceIoPreadForDriver_args *args)
+      if(var_14 == var_009EA004)
+         return res;
+      else
+         return STACK_CHECK_FAIL;
+   }
 }

@@ -20,3 +20,4 @@ typedef unsigned int SceSize;
 typedef unsigned int SceUInt;
 typedef unsigned int SceUInt32;
 typedef long long SceInt64;
+typedef SceInt64 SceOff;
