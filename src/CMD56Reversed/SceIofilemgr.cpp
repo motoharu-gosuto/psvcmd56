@@ -1482,7 +1482,7 @@ typedef struct io_context //size is 0xB8
 typedef struct param_BFB2A8
 {
    uint32_t unk_0;
-   const void* data;
+   void* data;
    uint32_t ofst;
    uint32_t size;
 
@@ -1493,19 +1493,18 @@ int SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(int stack, void* func,
    return 0;
 }
 
-struct sceIoPwriteForDriver_args
+struct sceIoPreadForDriver_args
 {
   SceUID uid;
-  const void *data;
+  void *data;
   int size;
   int dummy;
   SceOff offset;
 };
 
-
 int sub_BFB2A8(io_context *ioctx, param_BFB2A8* param)
 {
-   sceIoPwriteForDriver_args args;
+   sceIoPreadForDriver_args args;
 
    int var_18;
    int var_14;
