@@ -636,3 +636,768 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
    
    return loc_21A292E(0, var_2C);
 }
+
+int loc_219CB8C()
+{
+   return 0;
+}
+
+int loc_219CBF4()
+{
+   //ADDS            R6, #1
+
+   if(r10 <= r6)
+   {
+      /*
+      ADD             R0, SP, #0x1E8+dst
+      BL              proc_memset_96_219B5C4
+      MOV             R0, R9
+      */
+
+      return loc_219CB8C();
+   }
+   else
+   {
+      /*
+      LDR             R5, [SP,#0x1E8+var_1B8]
+      ADD.W           R0, R6, R6,LSL#1
+      ADD.W           R0, R5, R0,LSL#3 ; unk0
+      BL              wait_ScePfsCryptEngineDone_219BDD4
+      LDR             R5, [SP,#0x1E8+var_1BC]
+      MOVS            R2, #0x58
+      STR             R2, [R4,#0x14]
+      MOVW            R1, #0x4422
+      MOV             R0, R4  ; args
+      STRD.W          R8, R1, [R4]
+      MLA.W           R6, R2, R6, R5
+      MOVS            R2, #0
+      STR             R2, [R4,#8]
+      STRD.W          R2, R6, [R4,#0xC]
+      BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+      MOV             R0, R6  ; unk0
+      BL              crypto_ScePfsCryptBufVC_219BB70
+      */
+
+      /*
+      ADD             R0, SP, #0x1E8+dst
+      BL              proc_memset_96_219B5C4
+      MOV             R0, R9
+      */
+
+      return loc_219CB8C();
+   }
+}
+
+int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispatcherFlag)
+{
+   /*
+   MOVW            R5, #0xA004
+   SUB             SP, SP, #0x1C4 ; arg_0
+   MOVT.W          R5, #0x9E
+   MOV             R8, R0  ; SceUID fd
+   MOVS            R3, #0  ; ignored
+   STR             R2, [SP,#0x1E8+var_1D0] ; store int unk2
+   STR             R5, [SP,#0x1E8+var_1C0]
+   LDR             R2, [R5]
+   LDR             R5, [SP,#0x1E8+dispatcherFlag]
+   STR             R1, [SP,#0x1E8+var_1CC]
+   LDRD.W          R0, R1, [SP,#0x1E8+offset] ; get offset ?
+   STR             R5, [SP,#0x1E8+var_1B4]
+   LDR             R5, [SP,#0x1E8+var_1D0] ; get int unk2
+   STR             R3, [SP,#0x1E8+dst] ; =0
+   STR             R2, [SP,#0x1E8+var_2C]
+   STRD.W          R0, R1, [SP,#0x20]
+   */
+
+   if(r5 == 0)
+   {
+      //LDR.W           R10, [SP,#0x1E8+var_1D0]
+   }
+   else
+   {
+      /*
+      ADD             R5, SP, #0x1E8+unk0 ; void *outdata;
+      ADD             R4, SP, #0x1E8+var_198
+      STR             R5, [SP,#0x1E8+var_1BC] ; store void *outdata;
+      ADD             R5, SP, #0x1E8+var_170
+      MOV             R11, R4 ; void *indata;
+      MOV             R10, R3 ; =0
+      STR             R5, [SP,#0x1E8+var_1B8]
+      MOV             R6, R3  ; =0
+      MOV             R9, R3  ; =0
+      LDR             R7, [SP,#0x1E8+var_1BC] ; get void *outdata;
+      MOV             R4, R8  ; SceUID fd
+      */
+
+      while(true)
+      {
+         /*
+         LDR             R2, [SP,#0x1E8+var_1D0]
+         MOV.W           R8, #0x100
+         LDR             R0, [SP,#0x1E8+var_1CC]
+         STR.W           R4, [R11] ; store SceUID fd
+         SUBS            R1, R2, R6 ; R6 = 0
+         LDRD.W          R2, R3, [SP,#0x20]
+         ADD             R0, R6  ; R6 = 0
+         STRD.W          R9, R9, [R11,#0x18] ; =0
+         STRD.W          R0, R1, [R11,#4]
+         ADDS            R2, R2, R6
+         STR.W           R9, [R11,#0x20]
+         ADC.W           R3, R3, #0
+         STRD.W          R2, R3, [R11,#0x10]
+         MOVS            R3, #4
+         ADD             R2, SP, #0x1E8+dst
+         STR.W           R3, [R11,#0xC]
+         STR.W           R2, [R11,#0x24]
+         BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+         */
+
+         if(r0 != 0)
+         {
+            /*
+            LDR.W           R8, [R0,#0x2C]
+            CMP.W           R8, #0
+            IT GE
+            UXTHGE.W        R8, R8
+            */
+         }
+
+         /*
+         BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+         MOVS            R1, #0xF
+         */
+
+         if(r0 != 0)
+         {
+            //LDR             R1, [R0,#0x28] ; unk1
+         }
+
+         /*
+         ADD             R2, SP, #0x1E8+var_198+0x18
+         ADD             R3, SP, #0x1E8+var_198+0x20
+         STR             R2, [SP,#0x1E8+arg_4] ; arg_4
+         MOVS            R2, #1
+         STR             R3, [SP,#0x1E8+arg_0] ; arg_0
+         MOV             R0, R8  ; unk0
+         ADD             R3, SP, #0x1E8+var_198+0x1C ; unk3
+         STR             R2, [SP,#0x1E8+arg_8] ; arg_8
+         LDR.W           R2, [R11,#0xC] ; unk2
+         BL              crypto_ScePfsCryptBufVC_21A179C
+         MOV             R3, R0
+         */
+
+         if(r0 != 0)
+         {
+            /*
+            MOV             R8, R4
+            MOV             R4, R11
+            MOV             R11, R3
+            */
+
+            //CMP.W           R10, #1
+
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R11
+            */
+
+            return loc_219CB8C();
+         }
+
+         /*
+         MOVW            R1, #0x4420 ; cmd
+         MOVS            R2, #0x28 ; int inlen
+         MOVS            R3, #0x58 ; outlen
+         ADD             R0, SP, #0x1E8+args ; args
+         STR             R4, [SP,#0x1E8+args] ;  SceUID fd;
+         STR.W           R11, [SP,#0x1E8+args.indata] ; void *indata;
+         STR             R7, [SP,#0x1E8+args.outdata] ; void *outdata;
+         STR             R1, [SP,#0x1E8+args.cmd] ; unsigned int cmd;
+         STR             R2, [SP,#0x1E8+args.inlen] ; int inlen;
+         STR             R3, [SP,#0x1E8+args.outlen] ; int outlen;
+         BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+         */
+
+         if(r0 != 0)
+         {
+            /*
+            MOV             R8, R4
+            MOV.W           R5, #0x100
+            MOV             R4, R11
+            MOV             R11, R0
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+            */
+
+            if(r0 != 0)
+            {
+               /*
+               LDR             R5, [R0,#0x2C]
+               CMP             R5, #0
+               IT GE
+               UXTHGE          R5, R5
+               */
+            }
+
+            /*
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+            MOVS            R1, #0xF
+            */
+
+            if(r0 != 0)
+            {
+               //LDR             R1, [R0,#0x28] ; unk1
+            }
+
+            /*
+            LDR             R6, [R4,#0x18]
+            MOV             R0, R5  ; unk0
+            LDRD.W          R3, R5, [R4,#0x1C]
+            LDR             R2, [R4,#0xC] ; unk2
+            STMEA.W         SP, {R5,R6}
+            BL              crypto_ScePfsCryptBufVC_21A19A8
+            */
+
+            //CMP.W           R10, #1
+
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R11
+            */
+
+            return loc_219CB8C();
+         }
+
+         //LDR             R2, [R7,#0x28]
+
+         if(r2 != 0)
+         {
+            /*
+            STR             R0, [SP,#0x1E8+var_1D4]
+            BLX             ScePfsMgr.SceThreadmgrForDriver._imp_sceKernelGetThreadIdForDriver_59d06540
+            LDR             R3, [SP,#0x1E8+var_1D4]
+            STR             R0, [R5,#0x10]
+            MOV             R0, R5  ; unk0
+            STR             R3, [R5,#0x14]
+            STRD.W          R7, R3, [R5,#8]
+            BL              signal_ScePfsCryptEngineTodoMtx_219BD88
+            MOV             R3, R0
+            */
+
+            if(r3 != 0)
+            {
+               /*
+               MOV             R8, R4
+               MOV             R4, R11
+               MOV             R11, R3
+               */
+
+               //CMP.W           R10, #1
+
+               /*
+               ADD             R0, SP, #0x1E8+dst
+               BL              proc_memset_96_219B5C4
+               MOV             R0, R11
+               */
+
+               return loc_219CB8C();
+            }
+
+            /*
+            LDR             R3, [R7,#0x28]
+            ADD             R6, R3
+            */
+
+            if(r10 != 1)
+            {
+               /*
+               LDR             R0, [SP,#0x1E8+var_1D0]
+               ADDS            R7, #0x58
+               ADDS            R5, #0x18
+               */
+
+               if(r0 <= r6)
+               {
+                  /*
+                  MOV             R8, R4
+                  MOV.W           R10, #1
+                  */
+
+                  break;
+               }
+               else
+               {
+                  //MOV.W           R10, #1
+
+                  continue;
+               }
+            }
+            else
+            {
+               /*
+               MOV             R8, R4
+               MOV.W           R10, #2
+               */
+
+               break;
+            }
+         }
+         else
+         {
+            /*
+            MOV             R8, R4
+            MOV.W           R5, #0x100
+            MOV             R4, R11
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+            */
+
+            if(r0 != 0)
+            {
+               /*
+               LDR             R5, [R0,#0x2C]
+               CMP             R5, #0
+               IT GE
+               UXTHGE          R5, R5
+               */
+            }
+
+            /*
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+            MOVS            R1, #0xF
+            */
+         
+            if(r0 != 0)
+            {
+               //LDR             R1, [R0,#0x28] ; unk1
+            }
+
+            /*
+            MOV             R0, R5
+            LDR             R6, [R4,#0x18]
+            LDRD.W          R3, R5, [R4,#0x1C]
+            LDR             R2, [R4,#0xC] ; unk2
+            STMEA.W         SP, {R5,R6}
+            BL              crypto_ScePfsCryptBufVC_21A19A8
+            MOV             R11, R0
+            */
+
+            if(r0 != 0)
+            {
+               //CMP.W           R10, #1
+
+               /*
+               ADD             R0, SP, #0x1E8+dst
+               BL              proc_memset_96_219B5C4
+               MOV             R0, R11
+               */
+
+               return loc_219CB8C();
+            }
+            else
+            {
+               break;
+            }
+         }
+      }
+   }   
+
+   //LDR             R5, [SP,#0x1E8+var_1B4]
+
+   if(r5 != 0)
+   {
+      //BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
+
+      if(r0 == 0)
+      {
+         /*
+         loc_219CD30             ; Internal
+         MOV.W           R0, #0x100
+         */
+      }
+      else
+      {
+         /*
+         LDR             R0, [R0,#0x2C]
+         CMP             R0, #0
+         IT GE
+         UXTHGE          R0, R0
+         */
+      }
+
+      /*
+      BLX             ScePfsMgr.SceIofilemgrForDriver._imp_io_dispatcher_signal_15c17487
+      MOV             R7, R0
+      */
+
+      if(r0 != 0)
+      {
+         /*
+         ADD             R5, SP, #0x1E8+unk0
+         MOVS            R4, #0
+         */
+
+         if(r10 != 0)
+         {
+            while(true)
+            {
+               /*
+               MOV             R0, R5
+               ADDS            R4, #1
+               BL              crypto_ScePfsCryptBufVC_219BB70
+               ADD.W           R5, R5, #0x58
+               */
+
+               if(r4 == r10)
+                  break;
+            }
+         }
+
+         /*
+         ADD             R0, SP, #0x1E8+dst
+         BL              proc_memset_96_219B5C4
+         MOV             R0, R7
+         */
+
+         return loc_219CB8C();
+      }
+   }
+
+   if(r10 == 0)
+   {
+      //MOV             R11, R10
+
+      /*
+      ADD             R0, SP, #0x1E8+dst
+      BL              proc_memset_96_219B5C4
+      MOV             R0, R11
+      */
+
+      return loc_219CB8C();
+   }
+
+   /*
+   ADD             R5, SP, #0x1E8+var_170
+   MOV.W           R11, #0
+   STR             R5, [SP,#0x1E8+var_1B8]
+   ADD             R5, SP, #0x1E8+unk0
+   STR             R5, [SP,#0x1E8+var_1BC]
+   MOV             R6, R11
+   LDRD.W          R7, R5, [SP,#0x2C]
+   ADD             R4, SP, #0x1E8+var_198
+   MOV             R9, R7
+   MOV             R7, R8
+   MOV             R8, R11
+   */
+   
+   while(true)
+   {
+      /*
+      MOV             R0, R5
+      BL              wait_ScePfsCryptEngineDone_219BEA0
+      MOV             R3, R0
+      */
+
+      if(r0 != 0)
+      {
+         /*
+         LDR             R0, [SP,#0x1E8+var_1BC]
+         MOVS            R2, #0x58
+         STR             R2, [R4,#0x14]
+         MOVW            R1, #0x4422
+         MOV             R9, R3
+         STRD.W          R7, R1, [R4]
+         MOV             R8, R7
+         MLA.W           R5, R2, R6, R0
+         MOVS            R2, #0
+         MOV             R0, R4  ; args
+         STR             R2, [R4,#8]
+         STRD.W          R2, R5, [R4,#0xC]
+         BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+         MOV             R0, R5  ; unk0
+         BL              crypto_ScePfsCryptBufVC_219BB70
+         */
+
+         //ADDS            R6, #1
+
+         if(r10 <= r6)
+         {
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+         else
+         {
+            /*
+            LDR             R5, [SP,#0x1E8+var_1B8]
+            ADD.W           R0, R6, R6,LSL#1
+            ADD.W           R0, R5, R0,LSL#3 ; unk0
+            BL              wait_ScePfsCryptEngineDone_219BDD4
+            LDR             R5, [SP,#0x1E8+var_1BC]
+            MOVS            R2, #0x58
+            STR             R2, [R4,#0x14]
+            MOVW            R1, #0x4422
+            MOV             R0, R4  ; args
+            STRD.W          R8, R1, [R4]
+            MLA.W           R6, R2, R6, R5
+            MOVS            R2, #0
+            STR             R2, [R4,#8]
+            STRD.W          R2, R6, [R4,#0xC]
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+            MOV             R0, R6  ; unk0
+            BL              crypto_ScePfsCryptBufVC_219BB70
+            */
+
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+      }
+
+      //LDR             R3, [R5,#0xC]
+
+      if(r3 != 0)
+      {
+         /*
+         LDR             R0, [SP,#0x1E8+var_1BC]
+         MOVS            R2, #0x58
+         STR             R2, [R4,#0x14]
+         MOVW            R1, #0x4422
+         MOV             R9, R3
+         STRD.W          R7, R1, [R4]
+         MOV             R8, R7
+         MLA.W           R5, R2, R6, R0
+         MOVS            R2, #0
+         MOV             R0, R4  ; args
+         STR             R2, [R4,#8]
+         STRD.W          R2, R5, [R4,#0xC]
+         BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+         MOV             R0, R5  ; unk0
+         BL              crypto_ScePfsCryptBufVC_219BB70
+         */
+
+         //ADDS            R6, #1
+
+         if(r10 <= r6)
+         {
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+         else
+         {
+            /*
+            LDR             R5, [SP,#0x1E8+var_1B8]
+            ADD.W           R0, R6, R6,LSL#1
+            ADD.W           R0, R5, R0,LSL#3 ; unk0
+            BL              wait_ScePfsCryptEngineDone_219BDD4
+            LDR             R5, [SP,#0x1E8+var_1BC]
+            MOVS            R2, #0x58
+            STR             R2, [R4,#0x14]
+            MOVW            R1, #0x4422
+            MOV             R0, R4  ; args
+            STRD.W          R8, R1, [R4]
+            MLA.W           R6, R2, R6, R5
+            MOVS            R2, #0
+            STR             R2, [R4,#8]
+            STRD.W          R2, R6, [R4,#0xC]
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+            MOV             R0, R6  ; unk0
+            BL              crypto_ScePfsCryptBufVC_219BB70
+            */
+
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+      }
+
+      /*
+      LDR.W           R0, [R9,#0x10]
+      MOV             R11, R3
+      LDR.W           R1, [R9,#0x28]
+      LDRD.W          R2, R3, [R9,#0x20]
+      STR.W           R11, [SP,#0x1E8+var_198+0xC]
+      STRD.W          R11, R11, [SP,#0x54]
+      STRD.W          R11, R11, [SP,#0x60]
+      STRD.W          R7, R0, [R4]
+      STRD.W          R2, R3, [R4,#0x10]
+      STR             R1, [R4,#8]
+      BL              proc_threadmgr_3a72c6d8_219C9D4
+      STR.W           R9, [R0]
+      MOV             R0, R4  ; args
+      BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoPreadForDriver_0b54f9e0
+      STR             R0, [SP,#0x1E8+var_1D4]
+      BL              proc_threadmgr_3a72c6d8_219C9D4
+      LDR             R3, [SP,#0x1E8+var_1D4]
+      STR.W           R11, [R0]
+      */
+
+      if(r3 < 0)
+      {
+         /*
+         MOV             R8, R7
+         MOVS            R1, #0x58
+         MOV             R7, R9
+         MOVW            R5, #0x4422
+         MOV             R0, R4  ; args
+         STRD.W          R11, R11, [R4,#8]
+         MOV             R9, R3
+         STR.W           R8, [R4]
+         STR             R7, [R4,#0x10]
+         STR             R5, [R4,#4]
+         STR             R1, [R4,#0x14]
+         BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+         MOV             R0, R7  ; unk0
+         BL              crypto_ScePfsCryptBufVC_219BB70
+         */
+
+          //ADDS            R6, #1
+
+         if(r10 <= r6)
+         {
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+         else
+         {
+            /*
+            LDR             R5, [SP,#0x1E8+var_1B8]
+            ADD.W           R0, R6, R6,LSL#1
+            ADD.W           R0, R5, R0,LSL#3 ; unk0
+            BL              wait_ScePfsCryptEngineDone_219BDD4
+            LDR             R5, [SP,#0x1E8+var_1BC]
+            MOVS            R2, #0x58
+            STR             R2, [R4,#0x14]
+            MOVW            R1, #0x4422
+            MOV             R0, R4  ; args
+            STRD.W          R8, R1, [R4]
+            MLA.W           R6, R2, R6, R5
+            MOVS            R2, #0
+            STR             R2, [R4,#8]
+            STRD.W          R2, R6, [R4,#0xC]
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+            MOV             R0, R6  ; unk0
+            BL              crypto_ScePfsCryptBufVC_219BB70
+            */
+
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+      }
+
+      /*
+      MOVW            R1, #0x4422
+      MOVS            R2, #0x58
+      MOV             R0, R4  ; args
+      STRD.W          R1, R11, [R4,#4]
+      STRD.W          R11, R9, [R4,#0xC]
+      ADD             R8, R3
+      STR             R7, [R4]
+      STR             R2, [R4,#0x14]
+      BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+      SUBS            R3, R0, #0
+      */
+
+      if(r3 < 0)
+      {
+         /*
+         MOV             R8, R7
+         MOV             R7, R9
+         MOV             R0, R7  ; unk0
+         MOV             R9, R3
+         BL              crypto_ScePfsCryptBufVC_219BB70
+         */
+
+         //ADDS            R6, #1
+
+         if(r10 <= r6)
+         {
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+         else
+         {
+            /*
+            LDR             R5, [SP,#0x1E8+var_1B8]
+            ADD.W           R0, R6, R6,LSL#1
+            ADD.W           R0, R5, R0,LSL#3 ; unk0
+            BL              wait_ScePfsCryptEngineDone_219BDD4
+            LDR             R5, [SP,#0x1E8+var_1BC]
+            MOVS            R2, #0x58
+            STR             R2, [R4,#0x14]
+            MOVW            R1, #0x4422
+            MOV             R0, R4  ; args
+            STRD.W          R8, R1, [R4]
+            MLA.W           R6, R2, R6, R5
+            MOVS            R2, #0
+            STR             R2, [R4,#8]
+            STRD.W          R2, R6, [R4,#0xC]
+            BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
+            MOV             R0, R6  ; unk0
+            BL              crypto_ScePfsCryptBufVC_219BB70
+            */
+
+            /*
+            ADD             R0, SP, #0x1E8+dst
+            BL              proc_memset_96_219B5C4
+            MOV             R0, R9
+            */
+
+            return loc_219CB8C();
+         }
+      }
+
+      /*
+      MOV             R0, R9  ; unk0
+      ADDS            R6, #1
+      BL              crypto_ScePfsCryptBufVC_219BB70
+      ADD.W           R5, R5, #0x18
+      ADD.W           R9, R9, #0x58
+      */
+
+      if(r6 == r10)
+      {
+         //MOV             R11, R8
+         
+         /*
+         ADD             R0, SP, #0x1E8+dst
+         BL              proc_memset_96_219B5C4
+         MOV             R0, R11
+         */
+
+         return loc_219CB8C();
+      }
+   }
+}
