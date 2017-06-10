@@ -639,53 +639,16 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
 
 int loc_219CB8C()
 {
-   return 0;
-}
+   /*
+   LDR             R5, [SP,#0x1E8+var_1C0]
+   LDR             R2, [SP,#0x1E8+var_2C]
+   LDR             R3, [R5]
+   */
 
-int loc_219CBF4()
-{
-   //ADDS            R6, #1
-
-   if(r10 <= r6)
-   {
-      /*
-      ADD             R0, SP, #0x1E8+dst
-      BL              proc_memset_96_219B5C4
-      MOV             R0, R9
-      */
-
-      return loc_219CB8C();
-   }
+   if(r2 == r3)
+      return r0;
    else
-   {
-      /*
-      LDR             R5, [SP,#0x1E8+var_1B8]
-      ADD.W           R0, R6, R6,LSL#1
-      ADD.W           R0, R5, R0,LSL#3 ; unk0
-      BL              wait_ScePfsCryptEngineDone_219BDD4
-      LDR             R5, [SP,#0x1E8+var_1BC]
-      MOVS            R2, #0x58
-      STR             R2, [R4,#0x14]
-      MOVW            R1, #0x4422
-      MOV             R0, R4  ; args
-      STRD.W          R8, R1, [R4]
-      MLA.W           R6, R2, R6, R5
-      MOVS            R2, #0
-      STR             R2, [R4,#8]
-      STRD.W          R2, R6, [R4,#0xC]
-      BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
-      MOV             R0, R6  ; unk0
-      BL              crypto_ScePfsCryptBufVC_219BB70
-      */
-
-      /*
-      ADD             R0, SP, #0x1E8+dst
-      BL              proc_memset_96_219B5C4
-      MOV             R0, R9
-      */
-
-      return loc_219CB8C();
-   }
+      return STACK_CHECK_FAIL;
 }
 
 int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispatcherFlag)
@@ -1162,7 +1125,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
          }
       }
 
-      //LDR             R3, [R5,#0xC]
+      //LDR             R3, [R5,#0xC] //?????????????????????????
 
       if(r3 != 0)
       {
@@ -1258,7 +1221,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
          MOVW            R5, #0x4422
          MOV             R0, R4  ; args
          STRD.W          R11, R11, [R4,#8]
-         MOV             R9, R3
+         MOV             R9, R3 // result if pread
          STR.W           R8, [R4]
          STR             R7, [R4,#0x10]
          STR             R5, [R4,#4]
