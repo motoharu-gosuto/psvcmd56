@@ -31,19 +31,29 @@ typedef struct sdif_context_general //size is 0x40
 typedef struct cmd_input // size is 0x240
 {
    uint32_t size; // 0x240
-   uint32_t unk_4;
+   uint32_t state_flags; // interrupt handler completion flag
    uint32_t command;
    uint32_t argument;
    
-   uint8_t data0[0x50];   
+   char response[0x10]; //stores normal response without command index and crc-7
+                        //can also store CID or CSD. crr-7 will be cleared
+                        //storage order is reversed
+
+   void* buffer; // cmd data buffer ptr
+   uint16_t b_size; // cmd buffer size
+   uint16_t flags; // unknown
+   uint32_t error_code; //from interrupt handler
+   uint32_t unk_2C;
+
+   uint8_t data0[0x30];   
    
    struct cmd_input* next_cmd;
    uint32_t unk_64;
    uint32_t array_index;
-   uint32_t unk_6C;
+   int(set_event_flag_callback*)(void* ctx);
    
-   uint32_t unk_70;
-   uint32_t unk_74;
+   SceUID evid; // event id SceSdif0, SceSdif1, SceSdif2 (SceSdif3 ?)
+   struct cmd_input* secondary_cmd; // (when multiple commands are sent)
    struct sd_context_global* gctx_ptr;
    uint32_t unk_7C;
    
@@ -97,12 +107,15 @@ typedef struct sd_context_data // size is 0xC0
     uint32_t unk_C;
     
     uint32_t dev_type_idx; // (1,2,3)
-    struct sd_context_part* ctx;
+    void* ctx; //pointer to custom context (sd_context_part_mmc*, sd_context_part_sd*, sd_context_part_wlanbt*)
     uint32_t unk_18;
     uint32_t unk_1C;
 
     uint32_t array_idx; // (0,1,2)
-    uint32_t unk_24;
+    uint8_t unk_24;
+    uint8_t unk_25;
+    uint8_t unk_26;
+    uint8_t unk_27;
     uint32_t unk_28;
     uint32_t unk_2C;
 
@@ -111,8 +124,8 @@ typedef struct sd_context_data // size is 0xC0
     uint32_t unk_38;
     SceUID uid_1000; // UID of SceSdif (0,1,2) memblock of size 0x1000
 
-    SceUID evid_40; // SceKernelThreadMgr related, probably UID for SceSdif (0,1,2)
-    uint32_t unk_44;
+    SceUID evid; // event id SceSdif0, SceSdif1, SceSdif2 (SceSdif3 ?)
+    uint32_t sdif_fast_mutex; // SceSdif0, SceSdif1, SceSdif2 (SceSdif3 ?)
     uint32_t unk_48;
     uint32_t unk_4C;
 
@@ -154,15 +167,43 @@ typedef struct sd_context_data // size is 0xC0
     uint32_t unk_BC;
 } sd_context_data;
 
-typedef struct sd_context_part // size is 0x398
+typedef struct sd_context_part_base
 {
    struct sd_context_global* gctx_ptr;
+   uint32_t unk_4;
+   uint32_t size; //cmd buffer size
+   uint32_t unk_C; //0 for mmc however 0x200 for sd, can be size
+
+   uint8_t unk_10; //can be padding
+   uint8_t CID[15]; //this is CID data but in reverse
+
+   uint8_t unk_20; //can be padding
+   uint8_t CSD[15]; //this is CSD data but in reverse
+}sd_context_part_base;
+
+typedef struct sd_context_part_mmc // size is 0x398
+{
+   sd_context_part_base ctxb;
    
-   uint8_t data[0x38C];
+   uint8_t data[0x360];
    
    void* unk_390;
    uint32_t unk_394;
-} sd_context_part;
+} sd_context_part_mmc;
+
+typedef struct sd_context_part_sd // size is 0xC0
+{
+   sd_context_part_base ctxb;
+
+   uint8_t data[0x90];
+} sd_context_part_sd;
+
+typedef struct sd_context_part_wlanbt // size is 0x398
+{
+   struct sd_context_global* gctx_ptr;
+   
+   uint8_t data[0x394];
+} sd_context_part_wlanbt;
 
 typedef struct sd_context_global // size is 0x24C0
 {

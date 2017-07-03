@@ -174,6 +174,7 @@ void sub_C6AEE0(sd_context_data* r0, cmd_input* r1)
    }
 }
 
+//init related
 void sub_C68598(sd_context_global* ctx, int unk1)
 {
    /*
@@ -670,4 +671,244 @@ int SceSdif_module_start_935cd196()
 {
    int res = SceSdifForDriver_init_0eb0ef86();
    return (res >> 0x1F); //31
+}
+
+//--------------------------------------------------
+
+int loc_loc_C698A6()
+{
+   /*
+   LDRB.W          R2, [R8,#0x25]
+   */
+
+   if(r2 == 0)
+   {
+      /*
+      LDR             R2, [SP,#0x48+ctx_glob]
+      STR             R3, [SP,#0x48+result_44] ; store result
+      ADD.W           R0, R2, #0x2440
+      ADDS            R0, #4  ; data
+      BLX             SceSdif.SceThreadmgrForDriver._imp_sceKernelUnlockFastMutexForDriver_db395782
+      LDR             R3, [SP,#0x48+result_44] ; get result
+      */
+   }
+
+   if(r5 != 0)
+   {
+      /*
+      LDR             R2, [R5,#4]
+      LSLS            R1, R2, #0x15
+      */
+
+      if(r1 < 0)
+      {
+         /*
+         MOV             R0, R5
+         STR             R3, [SP,#0x48+result_44] ; store result
+         BL              proc_invalidate_and_copy_C7246C
+         LDR             R3, [SP,#0x48+result_44] ; get result
+         */
+      }
+   }
+
+   /*
+   LDR             R2, [R4,#4]
+   LSLS            R2, R2, #0x15
+   */
+
+   if(r2 < 0)
+   {
+      /*
+      MOV             R0, R4  ; cmd_input *cmd_data1
+      STR             R3, [SP,#0x48+result_44] ; store result
+      BL              proc_invalidate_and_copy_C7246C
+      LDR             R3, [SP,#0x48+result_44] ; get result
+      MOV             R0, R3  ; return result
+      */
+   }
+   else
+   {
+      //MOV             R0, R3  ; return result
+   }
+
+   return 0;
+}
+
+int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int num)
+{
+   /*
+   result_44= -0x44
+   result_buffer1_40= -0x40
+   cmd1_unk4_3C= -0x3C
+   gctx_2408= -0x38
+   result_buffer2_34= -0x34
+   cmd2_unk4_30= -0x30
+   ctx_glob= -0x2C         ; arg0
+   num=  0
+   */
+
+   /*
+   MOV             R6, R3  ; nIter
+   LDR             R3, [R1,#0x20] ; get void* buffer
+   SUB             SP, SP, #0x24
+   MOV             R4, R1  ; cmd_input *cmd_data1
+   MOV             R5, R2  ; cmd_input *cmd_data2
+   STR             R0, [SP,#0x48+ctx_glob] ; store sd_context_global *
+   STR             R3, [SP,#0x48+result_buffer1_40] ; store buffer
+   LDR             R3, [R1,#4]
+   STR             R3, [SP,#0x48+cmd1_unk4_3C]
+   */
+
+   if(r2 == 0)
+   {
+      /*
+      STRD.W          R2, R2, [SP,#0x48+result_buffer2_34]
+      */
+   }
+   else
+   {
+      /*
+      LDR             R3, [R2,#0x20] ; get buffer
+      STR             R3, [SP,#0x48+result_buffer2_34]
+      LDR             R3, [R2,#4]
+      STR             R3, [SP,#0x48+cmd2_unk4_30]
+      */
+   }
+
+   /*
+   LDR             R2, [SP,#0x48+ctx_glob]
+   MOV             R10, 0x8032001A ; SCE_UNKNOWN_ERROR_8032001a (8032001A)
+   ADD.W           R8, R2, #0x2400 ; get pointer to sd_context_data*
+   ADD.W           R7, R2, #0x2480
+   ADD.W           R3, R8, #8
+   ADDS            R7, #0x14
+   STR             R3, [SP,#0x48+gctx_2408]
+   ADD.W           R9, R8, #0x30 ; get pointer to pointer to DMA mapped
+   */
+
+   //loc_C6987E
+   while(true)
+   {
+      /*
+      BLX             SceSdif.SceCpuForDriver._imp_ksceKernelCpuSuspendIntr_d32ace9e(R7)
+      LDR.W           R3, [R9] ; get ptr to DMA mapped
+      MOV             R11, R0
+      LDRB.W          R3, [R3,#0x29] ; DMA mapped
+      LSLS            R0, R3, #0x1F
+      */
+
+      if(r0 < 0)
+      {
+         //LDR             R3, [SP,#0x48+num]
+
+         if(r3 != 0)
+         {
+            //LDR.W           R3, [R8,#0x10]
+            
+            if(r3 == 0)
+            {
+               /*
+               BLX             SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df(R7, R11)
+               MOVS            R3, 0x8032001A ; SCE_UNKNOWN_ERROR_8032001a (8032001A)
+               */
+               return loc_C698A6();
+            }  
+         }
+      }
+      else
+      {
+         //LDR             R3, [SP,#0x48+num]
+
+         if(r3 != 0)
+         {
+            /*
+            BLX             SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df(R7, R11)
+            MOVS            R3, 0x8032001A ; SCE_UNKNOWN_ERROR_8032001a (8032001A)
+            */
+            return loc_C698A6();
+         }
+      }
+
+      //loc_C69838
+      /*
+      LDR.W           R2, [R8,#0x28]
+      */
+
+      if(r2 == 0)
+      {
+         /*
+         MOV             R1, R4
+         LDR             R0, [SP,#0x48+ctx_glob] ; unk0 - arg0
+         BL              sub_C6812C
+         MOV             R1, R11 ; prev_state
+         MOV             R3, R0
+         MOV             R0, R7  ; addr
+         STR             R3, [SP,#0x48+result_44]
+         BLX             SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df
+         LDR             R3, [SP,#0x48+result_44]
+         */
+
+         if(r3 != 0)
+            return loc_C698A6();
+      }
+      else
+      {
+         /*
+         LDR             R0, [SP,#0x48+gctx_2408] ; unk0 - arg0
+         MOV             R1, R4  ; cmd_input *cmd_data1
+         BL              cycle_command_buffer_C6AEE0
+         MOVS            R2, #1
+         MOV             R1, R11 ; prev_state
+         STR             R2, [R4,#0x64]
+         MOV             R0, R7  ; addr
+         BLX             SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df
+         */
+      }
+
+      //loc_C69854
+
+      //LDR             R0, [R4,#0x74] ; get secondary cmd_input*
+      if(r0 == 0)
+      {
+         //MOV             R0, R4
+      }
+
+      /*
+      BL              sub_C696B8 ; is this a basic execution ?
+      CMP             R0, #0
+      MOV             R3, R0
+      */
+
+      if(r3 >= 0)
+         return loc_C698A6();
+
+      if(r0 == r10)
+         return loc_C698A6();
+
+      /*
+      LDR             R2, [SP,#0x48+result_buffer1_40] ; get result buffer pointer
+      STR             R2, [R4,#0x20] ; store pointer to buffer to cmd_input *cmd_data1
+      LDR             R2, [SP,#0x48+cmd1_unk4_3C]
+      STR             R2, [R4,#4]
+      */
+         
+      if(r5 != 0)
+      {
+         /*
+         LDR             R2, [SP,#0x48+result_buffer2_34]
+         STR             R2, [R5,#0x20]
+         LDR             R2, [SP,#0x48+cmd2_unk4_30]
+         STR             R2, [R5,#4]
+         */
+      }
+      
+      /*
+      SUBS            R6, #1
+      */
+
+      if(r6 <= 0)
+         return loc_C698A6();
+   }
+
+
 }
