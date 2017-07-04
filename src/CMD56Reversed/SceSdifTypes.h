@@ -39,7 +39,7 @@ typedef struct cmd_input // size is 0x240
                         //can also store CID or CSD. crr-7 will be cleared
                         //storage order is reversed
 
-   void* buffer; // cmd data buffer ptr
+   void* buffer; // cmd data buffer ptr - dest for vaddr_1C0
    uint16_t b_size; // cmd buffer size
    uint16_t flags; // unknown
    uint32_t error_code; //from interrupt handler
@@ -57,46 +57,33 @@ typedef struct cmd_input // size is 0x240
    struct sd_context_global* gctx_ptr;
    uint32_t unk_7C;
    
-   void* vaddr_80; //3
-   uint32_t unk_84;
-   uint32_t unk_88;
-   uint32_t unk_8C;
+   char vaddr_80[0x80]; //3 - mapped to paddr_184 (invalidate 0x80)
 
-   uint8_t data1[0xF0];
+   void* vaddr_100;
+   uint8_t data_104[0x7C];
 
    uint32_t unk_180;
-   void* paddr_184; //3
+   void* paddr_184; //3 - phys address of vaddr_80
    uint32_t unk_188;
    uint32_t unk_18C;
 
    uint32_t unk_190;
    uint32_t unk_194;
-   uint32_t unk_198;
-   uint32_t unk_19C;
+   void* base_198; //dest base for vaddr_200 (also ptr for invalidate)
+   uint32_t offset_19C; //dest offset for vaddr_200 (also size for invalidate)
 
-   uint32_t unk_1A0;
-   uint32_t unk_1A4;
-   void* paddr_1A8; //1
-   void* paddr_1AC; //2
+   uint32_t size_1A0; //size of vaddr_1C0
+   uint32_t size_1A4; //size of vaddr_200
+   void* paddr_1A8; //1 - phys address of vaddr_1C0
+   void* paddr_1AC; //2 - phys address of vaddr_200
 
-   uint32_t unk_1B0;
-   uint32_t unk_1B4;
+   SceInt64 wide_time; // 0x1B0
    uint32_t unk_1B8;
    uint32_t unk_1BC;
 
-   void* vaddr_1C0; //1
-   uint32_t unk_1C4;
-   uint32_t unk_1C8;
-   uint32_t unk_1CC;
+   char vaddr_1C0[0x40]; //1 - mapped to paddr_1A8 (invalidate 0x40)
 
-   uint8_t data2[0x30];
-
-   void* vaddr_200; //2
-   uint32_t unk_204;
-   uint32_t unk_208;
-   uint32_t unk_20C;
-
-   uint8_t data3[0x30];
+   char vaddr_200[0x40]; //2 - mapped to paddr_1AC (invalidate 0x40)
 } cmd_input;
 
 typedef struct sd_context_data // size is 0xC0
@@ -116,8 +103,8 @@ typedef struct sd_context_data // size is 0xC0
     uint8_t unk_25;
     uint8_t unk_26;
     uint8_t unk_27;
-    uint32_t unk_28;
-    uint32_t unk_2C;
+    cmd_input* cmd_28;
+    cmd_input* cmd_2C;
 
     void* membase_1000; // membase of SceSdif (0,1,2) memblock of size 0x1000
     uint32_t unk_34;
