@@ -675,7 +675,7 @@ int SceSdif_module_start_935cd196()
 
 //--------------------------------------------------
 
-int sub_C6812C(sd_context_global* ctx, cmd_input* cmd_data1)
+int physical_send_command_C6812C(sd_context_global* ctx, cmd_input* cmd_data1)
 {
    return 0;
 }
@@ -692,7 +692,118 @@ int sub_C696B8(cmd_input* cmd)
 
 int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
 {
-   return 0;
+   /*
+   MOV             R4, R0
+   LDR             R3, [R0,#4]
+   LSLS            R2, R3, #0x15
+   */
+
+   if( < 0)
+   {
+      /*
+      LDR.W           R2, [R0,#0x100]
+      ADD.W           R1, R0, #0x80
+      */
+
+      if(r2 != r1)
+      {
+         //LSLS            R3, R3, #0xB
+         if( < 0)
+         {
+            //LDR.W           R0, [R0,#0x188]
+            //BLX             SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61
+         }
+      }
+   }
+
+   //LDR             R3, [R4,#0x64]
+
+   if(r3 != 3)
+   {
+      int r0 = 0;
+      return r0;
+   }
+   
+   /*
+   MOVW            R3, #0x801
+   LDR             R2, [R4,#4]
+   LSLS            R3, R3, #9
+   ANDS            R3, R2
+   */
+
+   if(r3 != 0)
+   {
+      int r0 = 0;
+      return r0;
+   }
+
+   //LDR.W           R3, [R4,#0x1A0] ; get size field
+   if(r3 != 0)
+   {
+      /*
+      ADD.W           R5, R4, #0x1C0
+      MOVS            R1, #0x40 ; num
+      MOV             R0, R5  ; ptr
+      BLX             SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361
+      MOV             R1, R5  ; source - invalidated region
+      LDR             R0, [R4,#0x20] ; result buffer from cmd
+      LDR.W           R2, [R4,#0x1A0] ; num
+      BLX             SceSdif.SceSysclibForDriver._imp_memcpy_40c88316
+      */
+   }
+
+   //LDR.W           R3, [R4,#0x1A4]
+   if(r3 != 0)
+   {
+      /*
+      ADD.W           R5, R4, #0x200
+      MOVS            R1, #0x40 ; num
+      MOV             R0, R5  ; ptr
+      BLX             SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361
+      LDR.W           R0, [R4,#0x19C]
+      MOV             R1, R5  ; source - invalidated region
+      LDR.W           R3, [R4,#0x198]
+      LDR.W           R2, [R4,#0x1A4] ; num
+      ADD             R0, R3  ; destination
+      BLX             SceSdif.SceSysclibForDriver._imp_memcpy_40c88316
+      */
+   }
+
+   /*
+   LDR             R3, [R4,#0x64]
+   */
+
+   if(r3 != 3)
+   {
+      int r0 = 0;
+      return r0;
+   }
+
+   /*
+   MOVW            R3, #0x801
+   LDR             R2, [R4,#4]
+   LSLS            R3, R3, #9
+   ANDS            R3, R2
+   */
+
+   if(r3 != 0)
+   {
+      int r0 = 0;
+      return r0;
+   }
+
+   //LDR.W           R1, [R4,#0x19C] ; num
+   if(r1 == 0)
+   {
+      int r0 = 0;
+      return r0;
+   }
+
+   //LDR.W           R0, [R4,#0x198] ; ptr
+   //BLX             SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361
+
+   int r0 = 0;
+   return r0;
 }
 
 int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int numArg)
@@ -740,7 +851,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
 
       if(ctx_glob->ctx_data.unk_28 == 0) //0x28
       {
-         cycle_result = sub_C6812C(ctx_glob, cmd_data1);
+         cycle_result = physical_send_command_C6812C(ctx_glob, cmd_data1);
          
          SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
 
