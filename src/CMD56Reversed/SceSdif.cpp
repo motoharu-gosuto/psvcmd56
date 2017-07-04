@@ -697,48 +697,23 @@ int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
 
 int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int numArg)
 {
+   void* buffer1 = cmd_data1->buffer; //0x20
+   int cmd1_state_flags = cmd_data1->state_flags; //0x4
+
+   void* buffer2 = (cmd_data2 == 0) ? 0 : cmd_data2->buffer; //0x20
+   int cmd2_state_flags = (cmd_data2 == 0) ? 0 : cmd_data2->state_flags; // 0x4
+
    int retry = nIter;
 
-   int result_44;
-
-   void* result_buffer1_40;
-   int cmd1_unk4_3C;
-
-   void* gctx_2408;
-
-   void* result_buffer2_34;
-   int cmd2_unk4_30;
-
-   
-   sd_context_global* ctx_glob;
+   sd_context_global* ctx_glob = ctx;
 
    //---
-
-   ctx_glob = ctx;
-
-   result_buffer1_40 = cmd_data1->buffer; //0x20
-   
-   cmd1_unk4_3C = cmd_data1->state_flags; //0x4
-
-   if(cmd_data2 == 0)
-   {
-      result_buffer2_34 = 0;
-      cmd2_unk4_30 = 0;
-   }
-   else
-   {
-      result_buffer2_34 = cmd_data2->buffer; //0x20
-      cmd2_unk4_30 = cmd_data2->state_flags; // 0x4
-   }
-
-   gctx_2408 = (void*)(&ctx_glob->ctx_data + 8);
 
    int cycle_result; //r3
 
    while(true)
    {
       int r11 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&(ctx_glob->ctx_data.lockable_int));
-
       int flag_shift = (((char*)ctx_glob->ctx_data.membase_1000)[0x29]) << 0x1F;
 
       if(flag_shift < 0)
@@ -765,17 +740,16 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
 
       if(ctx_glob->ctx_data.unk_28 == 0) //0x28
       {
-         result_44 = sub_C6812C(ctx_glob, cmd_data1);
+         cycle_result = sub_C6812C(ctx_glob, cmd_data1);
          
          SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
-
-         cycle_result = result_44;
 
          if(cycle_result != 0)
             break;
       }
       else
       {
+         void* gctx_2408 = (void*)(&ctx_glob->ctx_data + 8);
          cycle_command_buffer_C6AEE0(gctx_2408, cmd_data1);
 
          cmd_data1->unk_64 = 1; //0x64
@@ -795,15 +769,13 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
       if(cycle_result == 0x8032001A)
          break;
 
-      cmd_data1->buffer = result_buffer1_40; // 0x20
-
-      cmd_data1->state_flags = cmd1_unk4_3C; // 0x4
+      cmd_data1->buffer = buffer1; // 0x20
+      cmd_data1->state_flags = cmd1_state_flags; // 0x4
          
       if(cmd_data2 != 0)
       {
-         cmd_data2->buffer = result_buffer2_34; // 0x20
-
-         cmd_data2->state_flags = cmd2_unk4_30; //0x4
+         cmd_data2->buffer = buffer2; // 0x20
+         cmd_data2->state_flags = cmd2_state_flags; //0x4
       }
       
       retry = retry - 1;
@@ -815,41 +787,18 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
    //--
 
    if(ctx_glob->ctx_data.unk_25 == 0) //0x25
-   {  
-      result_44 = cycle_result;
-
       SceThreadmgrForDriver_db395782(&ctx_glob->ctx_data.sdif_fast_mutex); //sceKernelUnlockFastMutexForDriver
-
-      cycle_result = result_44;
-   }
 
    if(cmd_data2 != 0)
    {
       int flag_shift2 = (cmd_data2->state_flags << 0x15);
-
       if(flag_shift2 < 0)
-      {
-         result_44 = cycle_result;
          proc_invalidate_and_copy_C7246C(cmd_data2);
-         cycle_result = result_44;
-      }
    }
 
    int flag_shift3 = (cmd_data1->state_flags) << 0x15;
-
    if(flag_shift3 < 0)
-   {
-      result_44 = cycle_result;
       proc_invalidate_and_copy_C7246C(cmd_data1);
-      int cycle_result = result_44;
-      int r0 = cycle_result;
-      return r0;
-   }
-   else
-   {
-      int r0 = cycle_result;
-      return r0;
-   }
 
-   return 0;
+   return cycle_result;
 }
