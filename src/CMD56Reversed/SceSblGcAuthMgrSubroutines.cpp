@@ -118,7 +118,7 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
 //also used for packet 11 and packet 12
 //originally it had only 2 arguments 
 //however I decided to move globals to arguments to make sure I see all the dependencies
-char sub_CA8D30(sd_context_part* ctx, std::pair<char,char>* result_ptr, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, int packetIndex)
+char sub_CA8D30(sd_context_part_mmc* ctx, std::pair<char,char>* result_ptr, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, int packetIndex)
 {
    a_00BDCDF8_WB20[0x00] = 0xC2;
    a_00BDCDF8_WB20[0x01] = 0x00;
@@ -166,7 +166,7 @@ int exit_loc_CA9058(int r3, int var24)
 //this procedure is used to initialize and send packets 17 and 19 and get corresponding responses 18 and 20
 //originally it had only 2 arguments 
 //however I decided to move globals to arguments to make sure I see all the dependencies
-int sub_CA8EA0(sd_context_part* sd_context, int packet6_de, const char* a_00BDCFF8, const char* a_00BDCBC4, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, char* a_00BDD24C_RESPBUF2, char* a_00BDD018)
+int sub_CA8EA0(sd_context_part_mmc* sd_context, int packet6_de, const char* a_00BDCFF8, const char* a_00BDCBC4, char* a_00BDCDF8_WB20, char* a_00BDCBF4_REQBUF, char* a_00BDD04C_RESPBUF1, char* a_00BDD24C_RESPBUF2, char* a_00BDD018)
 {
    int var24 = var_009EA004; //stack cookie
 

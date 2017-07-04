@@ -50,7 +50,7 @@ typedef struct cmd_input // size is 0x240
    struct cmd_input* next_cmd;
    uint32_t unk_64;
    uint32_t array_index;
-   int(set_event_flag_callback*)(void* ctx);
+   int(*set_event_flag_callback)(void* ctx);
    
    SceUID evid; // event id SceSdif0, SceSdif1, SceSdif2 (SceSdif3 ?)
    struct cmd_input* secondary_cmd; // (when multiple commands are sent)

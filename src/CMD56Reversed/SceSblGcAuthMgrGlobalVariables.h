@@ -75,7 +75,7 @@ Globals map
 
 extern int _00BD84D8_SEMA_ID;
 
-extern sd_context_part* _00BDCBC0_SD_CTX_ELM;
+extern sd_context_part_mmc* _00BDCBC0_SD_CTX_ELM;
 extern char  _00BDCBC4[0x30];
 extern char  _00BDCBF4_REQBUF[0x200];
 extern int  _00BDCDF4_PACKET6_DE;

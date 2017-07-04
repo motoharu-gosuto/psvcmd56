@@ -645,9 +645,9 @@ int loc_219CB8C()
    LDR             R3, [R5]
    */
 
-   if(r2 == r3)
-      return r0;
-   else
+//   if(r2 == r3)
+//      return r0;
+//   else
       return STACK_CHECK_FAIL;
 }
 
@@ -672,11 +672,11 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
    STRD.W          R0, R1, [SP,#0x20]
    */
 
-   if(r5 == 0)
+//   if(r5 == 0)
    {
       //LDR.W           R10, [SP,#0x1E8+var_1D0]
    }
-   else
+//   else
    {
       /*
       ADD             R5, SP, #0x1E8+unk0 ; void *outdata;
@@ -715,7 +715,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
          BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
          */
 
-         if(r0 != 0)
+//         if(r0 != 0)
          {
             /*
             LDR.W           R8, [R0,#0x2C]
@@ -730,7 +730,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
          MOVS            R1, #0xF
          */
 
-         if(r0 != 0)
+ //        if(r0 != 0)
          {
             //LDR             R1, [R0,#0x28] ; unk1
          }
@@ -749,7 +749,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
          MOV             R3, R0
          */
 
-         if(r0 != 0)
+//         if(r0 != 0)
          {
             /*
             MOV             R8, R4
@@ -782,7 +782,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
          BLX             ScePfsMgr.SceIofilemgrForDriver._imp_t_sceIoIoctlForDriver_c1dd4317
          */
 
-         if(r0 != 0)
+//         if(r0 != 0)
          {
             /*
             MOV             R8, R4
@@ -792,7 +792,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
             */
 
-            if(r0 != 0)
+//            if(r0 != 0)
             {
                /*
                LDR             R5, [R0,#0x2C]
@@ -807,7 +807,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             MOVS            R1, #0xF
             */
 
-            if(r0 != 0)
+//            if(r0 != 0)
             {
                //LDR             R1, [R0,#0x28] ; unk1
             }
@@ -834,7 +834,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
          //LDR             R2, [R7,#0x28]
 
-         if(r2 != 0)
+//         if(r2 != 0)
          {
             /*
             STR             R0, [SP,#0x1E8+var_1D4]
@@ -848,7 +848,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             MOV             R3, R0
             */
 
-            if(r3 != 0)
+  //          if(r3 != 0)
             {
                /*
                MOV             R8, R4
@@ -872,7 +872,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             ADD             R6, R3
             */
 
-            if(r10 != 1)
+//            if(r10 != 1)
             {
                /*
                LDR             R0, [SP,#0x1E8+var_1D0]
@@ -880,7 +880,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
                ADDS            R5, #0x18
                */
 
-               if(r0 <= r6)
+//               if(r0 <= r6)
                {
                   /*
                   MOV             R8, R4
@@ -889,14 +889,14 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
                   break;
                }
-               else
+//               else
                {
                   //MOV.W           R10, #1
 
                   continue;
                }
             }
-            else
+ //           else
             {
                /*
                MOV             R8, R4
@@ -906,7 +906,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
                break;
             }
          }
-         else
+//         else
          {
             /*
             MOV             R8, R4
@@ -915,7 +915,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
             */
 
-            if(r0 != 0)
+//            if(r0 != 0)
             {
                /*
                LDR             R5, [R0,#0x2C]
@@ -930,7 +930,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             MOVS            R1, #0xF
             */
          
-            if(r0 != 0)
+//            if(r0 != 0)
             {
                //LDR             R1, [R0,#0x28] ; unk1
             }
@@ -945,7 +945,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
             MOV             R11, R0
             */
 
-            if(r0 != 0)
+//            if(r0 != 0)
             {
                //CMP.W           R10, #1
 
@@ -957,7 +957,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
                return loc_219CB8C();
             }
-            else
+  //          else
             {
                break;
             }
@@ -967,18 +967,18 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
    //LDR             R5, [SP,#0x1E8+var_1B4]
 
-   if(r5 != 0)
+//   if(r5 != 0)
    {
       //BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
 
-      if(r0 == 0)
+//      if(r0 == 0)
       {
          /*
          loc_219CD30             ; Internal
          MOV.W           R0, #0x100
          */
       }
-      else
+//      else
       {
          /*
          LDR             R0, [R0,#0x2C]
@@ -993,14 +993,14 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       MOV             R7, R0
       */
 
-      if(r0 != 0)
+ //     if(r0 != 0)
       {
          /*
          ADD             R5, SP, #0x1E8+unk0
          MOVS            R4, #0
          */
 
-         if(r10 != 0)
+ //        if(r10 != 0)
          {
             while(true)
             {
@@ -1011,7 +1011,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
                ADD.W           R5, R5, #0x58
                */
 
-               if(r4 == r10)
+ //              if(r4 == r10)
                   break;
             }
          }
@@ -1026,7 +1026,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       }
    }
 
-   if(r10 == 0)
+ //  if(r10 == 0)
    {
       //MOV             R11, R10
 
@@ -1061,7 +1061,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       MOV             R3, R0
       */
 
-      if(r0 != 0)
+ //     if(r0 != 0)
       {
          /*
          LDR             R0, [SP,#0x1E8+var_1BC]
@@ -1083,7 +1083,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
          //ADDS            R6, #1
 
-         if(r10 <= r6)
+  //       if(r10 <= r6)
          {
             /*
             ADD             R0, SP, #0x1E8+dst
@@ -1093,7 +1093,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
             return loc_219CB8C();
          }
-         else
+//         else
          {
             /*
             LDR             R5, [SP,#0x1E8+var_1B8]
@@ -1127,7 +1127,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
       //LDR             R3, [R5,#0xC] //?????????????????????????
 
-      if(r3 != 0)
+  //    if(r3 != 0)
       {
          /*
          LDR             R0, [SP,#0x1E8+var_1BC]
@@ -1149,7 +1149,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
          //ADDS            R6, #1
 
-         if(r10 <= r6)
+   //      if(r10 <= r6)
          {
             /*
             ADD             R0, SP, #0x1E8+dst
@@ -1159,7 +1159,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
             return loc_219CB8C();
          }
-         else
+  //       else
          {
             /*
             LDR             R5, [SP,#0x1E8+var_1B8]
@@ -1212,7 +1212,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       STR.W           R11, [R0]
       */
 
-      if(r3 < 0)
+   //   if(r3 < 0)
       {
          /*
          MOV             R8, R7
@@ -1233,7 +1233,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
           //ADDS            R6, #1
 
-         if(r10 <= r6)
+    //     if(r10 <= r6)
          {
             /*
             ADD             R0, SP, #0x1E8+dst
@@ -1243,7 +1243,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
             return loc_219CB8C();
          }
-         else
+//         else
          {
             /*
             LDR             R5, [SP,#0x1E8+var_1B8]
@@ -1288,7 +1288,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       SUBS            R3, R0, #0
       */
 
-      if(r3 < 0)
+  //    if(r3 < 0)
       {
          /*
          MOV             R8, R7
@@ -1300,7 +1300,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
          //ADDS            R6, #1
 
-         if(r10 <= r6)
+//         if(r10 <= r6)
          {
             /*
             ADD             R0, SP, #0x1E8+dst
@@ -1310,7 +1310,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
 
             return loc_219CB8C();
          }
-         else
+ //        else
          {
             /*
             LDR             R5, [SP,#0x1E8+var_1B8]
@@ -1350,7 +1350,7 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       ADD.W           R9, R9, #0x58
       */
 
-      if(r6 == r10)
+//      if(r6 == r10)
       {
          //MOV             R11, R8
          

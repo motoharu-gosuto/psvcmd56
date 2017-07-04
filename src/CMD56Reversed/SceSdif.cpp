@@ -20,19 +20,19 @@
 #include "SceKernelSuspend.h"
 
 //get context from array
-sd_context_part* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index)
+sd_context_part_mmc* SceSdifForDriver_get_sd_context_part_validate_mmc_6a71987f(int sd_ctx_index)
 {
-   return var_00C78040[sd_ctx_index].ctx_data.ctx;
+   return (sd_context_part_mmc*)var_00C78040[sd_ctx_index].ctx_data.ctx;
 }
 
 //initialize sd card
-int SceSdifForDriver_initialize_mmc_device_22c82e79(int sd_ctx_index, sd_context_part** result)
+int SceSdifForDriver_initialize_mmc_device_22c82e79(int sd_ctx_index, sd_context_part_mmc** result)
 {
    return 0;
 }
 
 //CMD56_REQUEST
-int SceSdifForDriver_gc_cmd56_request_b0996641(sd_context_part* ctx, char* buffer, int length)
+int SceSdifForDriver_gc_cmd56_request_b0996641(sd_context_part_mmc* ctx, char* buffer, int length)
 {
    //TODO:
    //here will just print to console - this would be useful for observation
@@ -56,7 +56,7 @@ int SceSdifForDriver_gc_cmd56_request_b0996641(sd_context_part* ctx, char* buffe
 //originally this method had 3 arguments
 //I added one more called index to emulate returning of different packets
 //CMD56_RESPONSE
-int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part* ctx, char* buffer, int length, int index)
+int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part_mmc* ctx, char* buffer, int length, int index)
 {
    memset(buffer, 0, length);
 
@@ -455,9 +455,9 @@ int exit_loc_C68AEA(int r6, int r8, int cookie_2C)
 
          SceIntrmgrForDriver_d6009b98(INTR_CODE_SceSdif0 + r7); //calculate intr code
 
-         SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(r5->ctx_data.evid_40); // R0, [R5,#-4]
+         SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(r5->ctx_data.evid); // R0, [R5,#-4]
 
-         SceThreadmgrForDriver_11fe84a1(&r5->ctx_data.unk_44);
+         SceThreadmgrForDriver_11fe84a1(&r5->ctx_data.sdif_fast_mutex);
 
          SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(r5->ctx_data.uid_10000); //[R5,#0x40]
 
@@ -514,7 +514,7 @@ int exit_loc_C68BA8(int r0, int r6, uint32_t* r11, int cookie_2C, sd_context_glo
 
 int exit_loc_C68ABE(uint32_t* r4, int r6, int r11, int cookie_2C, sd_context_global* ctx_B0)
 {
-   SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(ctx_B0->ctx_data.evid_40);
+   SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(ctx_B0->ctx_data.evid);
    return exit_loc_C68ACA(r4, r6, r11, cookie_2C, ctx_B0);
 }
 
@@ -585,22 +585,22 @@ int SceSdifForDriver_init_0eb0ef86()
    
       SceSysmemForDriver_ksceKernelGetMemBlockBase_a841edda(uid2, &ctx_B0->ctx_data.membase_10000);
 
-      int res0 = SceThreadmgrForDriver_af8e1266(&ctx_B0->ctx_data.unk_44, currName, 2, 0);
+      int res0 = SceThreadmgrForDriver_af8e1266(&ctx_B0->ctx_data.sdif_fast_mutex, currName, 2, 0);
 
       if(res0 < 0)
          return exit_loc_C68B52(res0, main_ctr, var_2C, ctx_B0);
 
       int evid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(currName, 0, 0, 0);
-      ctx_B0->ctx_data.evid_40 = evid; // [R4,#-0x54]
+      ctx_B0->ctx_data.evid = evid; // [R4,#-0x54]
    
       if(evid < 0)
-         return exit_loc_C68BA8(evid, main_ctr, &ctx_B0->ctx_data.unk_44, var_2C, ctx_B0);
+         return exit_loc_C68BA8(evid, main_ctr, &ctx_B0->ctx_data.sdif_fast_mutex, var_2C, ctx_B0);
 
       int intrCode = ctx_B0->ctx_data.array_idx + INTR_CODE_SceSdif0; //[R4,#-0x74]
    
       int res1 = SceIntrmgrForDriver_register_interrupt_5c1feb29(intrCode, currName, 0, callback_interrupt_handler_DC_DD_DE_C68FF8, ctx_B0, 0x80, 0xF, &intr_opt_C72FA8);
       if(res1 < 0)
-         return exit_loc_C68BAE(res1, main_ctr, &ctx_B0->ctx_data.unk_44, var_2C, ctx_B0);
+         return exit_loc_C68BAE(res1, main_ctr, &ctx_B0->ctx_data.sdif_fast_mutex, var_2C, ctx_B0);
 
       sd_context_data* r8 = &ctx_B0->ctx_data;
    
@@ -626,15 +626,15 @@ int SceSdifForDriver_init_0eb0ef86()
 
          int res2 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r9->vaddr_1C0, &r9->paddr_1A8);
          if(res2 < 0)
-            return exit_loc_C68AB4(res2, main_ctr, &ctx_B0->ctx_data.unk_44, var_2C, ctx_B0, intrCode);
+            return exit_loc_C68AB4(res2, main_ctr, &ctx_B0->ctx_data.sdif_fast_mutex, var_2C, ctx_B0, intrCode);
 
          int res3 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r9->vaddr_200, &r9->paddr_1AC);
          if(res3 < 0)
-            return exit_loc_C68AB4(res3, main_ctr, &ctx_B0->ctx_data.unk_44, var_2C, ctx_B0, intrCode);
+            return exit_loc_C68AB4(res3, main_ctr, &ctx_B0->ctx_data.sdif_fast_mutex, var_2C, ctx_B0, intrCode);
 
          int res4 = SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(r9->vaddr_80, &r9->paddr_184);
          if(res4 < 0)
-            return exit_loc_C68AB4(res4, main_ctr, &ctx_B0->ctx_data.unk_44, var_2C, ctx_B0, intrCode);
+            return exit_loc_C68AB4(res4, main_ctr, &ctx_B0->ctx_data.sdif_fast_mutex, var_2C, ctx_B0, intrCode);
 
          cmd_ctr = cmd_ctr + 1;
          r9 = r9 + sizeof(cmd_input); // size of cmd input
@@ -675,210 +675,181 @@ int SceSdif_module_start_935cd196()
 
 //--------------------------------------------------
 
-int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int num)
+int sub_C6812C(sd_context_global* ctx, cmd_input* cmd_data1)
 {
-   /*
-   result_44= -0x44
-   result_buffer1_40= -0x40
-   cmd1_unk4_3C= -0x3C
-   gctx_2408= -0x38
-   result_buffer2_34= -0x34
-   cmd2_unk4_30= -0x30
-   ctx_glob= -0x2C         ; arg0
-   num=  0
-   */
+   return 0;
+}
 
-   int r6 = nIter;
-   int r4 = cmd_data1;
-   int r5 = cmd_data2;
+int cycle_command_buffer_C6AEE0(void* gctx_2408, cmd_input* cmd_data1)
+{
+   return 0;
+}
 
-   [SP,#0x48+ctx_glob] = ctx;
+int sub_C696B8(cmd_input* cmd)
+{
+   return 0;
+}
 
-   int r3 = [cmd_data1,#0x20];
-   [SP,#0x48+result_buffer1_40] = r3;
-   int r3 = [cmd_data1,#4];
-   [SP,#0x48+cmd1_unk4_3C] = r3;
+int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
+{
+   return 0;
+}
+
+int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int numArg)
+{
+   int retry = nIter;
+
+   int result_44;
+
+   void* result_buffer1_40;
+   int cmd1_unk4_3C;
+
+   void* gctx_2408;
+
+   void* result_buffer2_34;
+   int cmd2_unk4_30;
+
+   
+   sd_context_global* ctx_glob;
+
+   //---
+
+   ctx_glob = ctx;
+
+   result_buffer1_40 = cmd_data1->buffer; //0x20
+   
+   cmd1_unk4_3C = cmd_data1->state_flags; //0x4
 
    if(cmd_data2 == 0)
    {
-      [SP,#0x48+result_buffer2_34] = 0;
-      [SP,#0x48+cmd2_unk4_30] = 0;
+      result_buffer2_34 = 0;
+      cmd2_unk4_30 = 0;
    }
    else
    {
-      int r3 = [cmd_data2,#0x20];
-      [SP,#0x48+result_buffer2_34] = r3;
-      int r3 = [cmd_data2,#4];
-      [SP,#0x48+cmd2_unk4_30] = r3;
+      result_buffer2_34 = cmd_data2->buffer; //0x20
+      cmd2_unk4_30 = cmd_data2->state_flags; // 0x4
    }
 
-   int r2 = [SP,#0x48+ctx_glob];
-   int r10 = 0x8032001A;
-   int r8 = r2 + 0x2400;
-   int r7 = r2 + 0x2480;
-   int r3 = r8 + 8;
-   int r7 = r7 + 0x14;
+   gctx_2408 = (void*)(&ctx_glob->ctx_data + 8);
 
-   [SP,#0x48+gctx_2408] = r3;
-
-   int r9 = r8 + 0x30;
+   int cycle_result; //r3
 
    while(true)
    {
-      int r0 = SceSdif.SceCpuForDriver._imp_ksceKernelCpuSuspendIntr_d32ace9e(r7);
-      int r3 = r9[0];
-      int r11 = r0;
+      int r11 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&(ctx_glob->ctx_data.lockable_int));
 
-      int r3 = r3[0x29];
-      //LSLS            R0, R3, #0x1F
+      int flag_shift = (((char*)ctx_glob->ctx_data.membase_1000)[0x29]) << 0x1F;
 
-      if(r0 < 0)
+      if(flag_shift < 0)
       {
-         int r3 = [SP,#0x48+num];
-
-         if(r3 != 0)
+         if(numArg != 0)
          {
-            int r3 = r8[0x10];
-            
-            if(r3 == 0)
+            if(ctx_glob->ctx_data.dev_type_idx == 0) //0x10
             {
-               SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df(r7, r11)
-               int r3 = 0x8032001A;
+               SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
+               cycle_result = 0x8032001A;
                break;
             }  
          }
       }
       else
       {
-         int r3 = [SP,#0x48+num];
-
-         if(r3 != 0)
+         if(numArg != 0)
          {
-            SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df(r7, r11)
-            int r3 = 0x8032001A;
+            SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
+            cycle_result = 0x8032001A;
             break;
          }
       }
 
-      int r2 = r8[0x28];
-
-      if(r2 == 0)
+      if(ctx_glob->ctx_data.unk_28 == 0) //0x28
       {
-         int r1 = r4;
-         int r0 = [SP,#0x48+ctx_glob];
+         result_44 = sub_C6812C(ctx_glob, cmd_data1);
+         
+         SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
 
-         int r0 = sub_C6812C();
+         cycle_result = result_44;
 
-         int r1 = r11;
-         int r3 = r0;
-         int r0 = r7;
-         [SP,#0x48+result_44] = r3;
-
-         SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1);
-
-         int r3 = [SP,#0x48+result_44];
-
-         if(r3 != 0)
+         if(cycle_result != 0)
             break;
       }
       else
       {
-         int r0 = [SP,#0x48+gctx_2408];
-         int r1 = r4;
-         cycle_command_buffer_C6AEE0(r0, r1);
+         cycle_command_buffer_C6AEE0(gctx_2408, cmd_data1);
 
-         int r2 = 1;
-         int r1 = r11;
+         cmd_data1->unk_64 = 1; //0x64
 
-         [r4,#0x64] = r2;
-
-         int r0 = r7;
-         SceSdif.SceCpuForDriver._imp_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1)
+         SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
       }
 
-      int r0 = [R4,#0x74];
+      cmd_input* cmd_arg = cmd_data1->secondary_cmd; // 0x74
+      if(cmd_arg == 0)
+         cmd_arg = cmd_data1;
 
-      if(r0 == 0)
-      {
-         int r0 = r4;
-      }
+      cycle_result = sub_C696B8(cmd_arg);
 
-      int r0 = sub_C696B8(r0)
-      int r3 = r0;
-
-      if(r0 >= 0)
+      if(cycle_result >= 0)
          break;
 
-      if(r0 == r10)
+      if(cycle_result == 0x8032001A)
          break;
 
-      int r2 = [SP,#0x48+result_buffer1_40];
-      [R4,#0x20] = r2;
+      cmd_data1->buffer = result_buffer1_40; // 0x20
 
-      int r2 = [SP,#0x48+cmd1_unk4_3C];
-      [R4,#4] = r2;
+      cmd_data1->state_flags = cmd1_unk4_3C; // 0x4
          
-      if(r5 != 0)
+      if(cmd_data2 != 0)
       {
-         int r2 = [SP,#0x48+result_buffer2_34];
-         [R5,#0x20] = r2;
+         cmd_data2->buffer = result_buffer2_34; // 0x20
 
-         int r2 = [SP,#0x48+cmd2_unk4_30];
-         [R5,#4] = r2;
+         cmd_data2->state_flags = cmd2_unk4_30; //0x4
       }
       
-      r6 = r6 - 1
+      retry = retry - 1;
 
-      if(r6 <= 0)
+      if(retry <= 0)
          break;
    }
 
    //--
 
-   int r2 = [R8,#0x25];
+   if(ctx_glob->ctx_data.unk_25 == 0) //0x25
+   {  
+      result_44 = cycle_result;
 
-   if(r2 == 0)
-   {
-      int r2 = [SP,#0x48+ctx_glob];
-      [SP,#0x48+result_44] = r3;
+      SceThreadmgrForDriver_db395782(&ctx_glob->ctx_data.sdif_fast_mutex); //sceKernelUnlockFastMutexForDriver
 
-      int r0 = r2 + 0x2440;
-      int r0 = r0 + 4;
-
-      SceSdif.SceThreadmgrForDriver._imp_sceKernelUnlockFastMutexForDriver_db395782(r0);
-
-      int r3 = [SP,#0x48+result_44];
+      cycle_result = result_44;
    }
 
-   if(r5 != 0)
+   if(cmd_data2 != 0)
    {
-      int r2 = [R5,#4];
-      //LSLS            R1, R2, #0x15
+      int flag_shift2 = (cmd_data2->state_flags << 0x15);
 
-      if(r1 < 0)
+      if(flag_shift2 < 0)
       {
-         int r0 = r5;
-         [SP,#0x48+result_44] = r3;
-         proc_invalidate_and_copy_C7246C(r0);
-         int r3 = [SP,#0x48+result_44];
+         result_44 = cycle_result;
+         proc_invalidate_and_copy_C7246C(cmd_data2);
+         cycle_result = result_44;
       }
    }
 
-   int r2 = [R4,#4];
-   //LSLS            R2, R2, #0x15
+   int flag_shift3 = (cmd_data1->state_flags) << 0x15;
 
-   if(r2 < 0)
+   if(flag_shift3 < 0)
    {
-      int r0 = r4;
-      [SP,#0x48+result_44] = r3;
-      proc_invalidate_and_copy_C7246C(r0);
-      int r3 = [SP,#0x48+result_44];
-      int r0 = r3;
+      result_44 = cycle_result;
+      proc_invalidate_and_copy_C7246C(cmd_data1);
+      int cycle_result = result_44;
+      int r0 = cycle_result;
       return r0;
    }
    else
    {
-      int r0 = r3;
+      int r0 = cycle_result;
       return r0;
    }
+
+   return 0;
 }

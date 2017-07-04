@@ -9,7 +9,7 @@
 //by call to SceSblGcAuthMgr_SceThreadmgrForDriver_imp_30e93c31
 SceUID _00BD84D8_SEMA_ID; //This is confirmed to be thread id since it is used by ksceKernelSignalSema function
 
-sd_context_part* _00BDCBC0_SD_CTX_ELM; //size 4
+sd_context_part_mmc* _00BDCBC0_SD_CTX_ELM; //size 4
 char  _00BDCBC4[0x30]; // temp buffer for storing parts of packets
                        // size is proved by SceSblGcAuthMgrDrmBBForDriver_bb451e83
 char  _00BDCBF4_REQBUF[0x200]; //request buffer
