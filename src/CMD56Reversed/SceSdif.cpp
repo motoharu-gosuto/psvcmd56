@@ -692,31 +692,28 @@ int sub_C696B8(cmd_input* cmd)
 
 int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
 {
-   /*
-   MOV             R4, R0
-   LDR             R3, [R0,#4]
-   LSLS            R2, R3, #0x15
-   */
+   int r4 = r0;
+   int r3 = r0[4];
+   int r2 = r3 << 0x15;
 
-   if( < 0)
+   if(r2 < 0)
    {
-      /*
-      LDR.W           R2, [R0,#0x100]
-      ADD.W           R1, R0, #0x80
-      */
+      int r2 = r0[0x100];
+      int r1 = r0 + 0x80;
 
       if(r2 != r1)
       {
-         //LSLS            R3, R3, #0xB
-         if( < 0)
+         int r3 = r3 << 0xB
+
+         if(r3 < 0)
          {
-            //LDR.W           R0, [R0,#0x188]
-            //BLX             SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61
+            int r0 = r0[0x188]
+            SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61(r0);
          }
       }
    }
 
-   //LDR             R3, [R4,#0x64]
+   int r3 = r4[0x64];
 
    if(r3 != 3)
    {
@@ -724,12 +721,10 @@ int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
       return r0;
    }
    
-   /*
-   MOVW            R3, #0x801
-   LDR             R2, [R4,#4]
-   LSLS            R3, R3, #9
-   ANDS            R3, R2
-   */
+   int r3 = 0x801;
+   int r2 = r4[0x4];
+   int r3 = r3 << 9;
+   int r3 = r3 & r2;
 
    if(r3 != 0)
    {
@@ -737,41 +732,42 @@ int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
       return r0;
    }
 
-   //LDR.W           R3, [R4,#0x1A0] ; get size field
+   int r3 = r4[0x1A0];
+
    if(r3 != 0)
    {
-      /*
-      ADD.W           R5, R4, #0x1C0
-      MOVS            R1, #0x40 ; num
-      MOV             R0, R5  ; ptr
-      BLX             SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361
-      MOV             R1, R5  ; source - invalidated region
-      LDR             R0, [R4,#0x20] ; result buffer from cmd
-      LDR.W           R2, [R4,#0x1A0] ; num
-      BLX             SceSdif.SceSysclibForDriver._imp_memcpy_40c88316
-      */
+      int r5 = r4 + 0x1C0;
+      int r1 = 0x40;
+      int r0 = r5;
+
+      SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361(r0, r1);
+
+      int r1 = r5;
+      int r0 = r4[0x20];
+      int r2 = r4[0x1A0];
+      SceSdif.SceSysclibForDriver._imp_memcpy_40c88316(r0, r1, r2);
    }
 
-   //LDR.W           R3, [R4,#0x1A4]
+   int r3 = r4[0x1A4];
+
    if(r3 != 0)
    {
-      /*
-      ADD.W           R5, R4, #0x200
-      MOVS            R1, #0x40 ; num
-      MOV             R0, R5  ; ptr
-      BLX             SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361
-      LDR.W           R0, [R4,#0x19C]
-      MOV             R1, R5  ; source - invalidated region
-      LDR.W           R3, [R4,#0x198]
-      LDR.W           R2, [R4,#0x1A4] ; num
-      ADD             R0, R3  ; destination
-      BLX             SceSdif.SceSysclibForDriver._imp_memcpy_40c88316
-      */
+      int r5 = r4 + 0x200;
+      int r1 = 0x40;
+      int r0 = r5;
+
+      SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361(r0, r1);
+
+      int r0 = r4[0x19C];
+      int r1 = r5;
+      int r3 = r4[0x198];
+      int r2 = r4[0x1A4];
+      int r0 = r3;
+      
+      SceSdif.SceSysclibForDriver._imp_memcpy_40c88316(r0, r1, r2);
    }
 
-   /*
-   LDR             R3, [R4,#0x64]
-   */
+   int r3 = r4[0x64]
 
    if(r3 != 3)
    {
@@ -779,12 +775,11 @@ int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
       return r0;
    }
 
-   /*
-   MOVW            R3, #0x801
-   LDR             R2, [R4,#4]
-   LSLS            R3, R3, #9
-   ANDS            R3, R2
-   */
+   int r3 = 0x801;
+   int r2 = r4[0x4];
+   int r3 = r3 << 9;
+   int r3 = r3 & r2;
+
 
    if(r3 != 0)
    {
@@ -792,15 +787,17 @@ int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
       return r0;
    }
 
-   //LDR.W           R1, [R4,#0x19C] ; num
+   int r1 = r4[0x19C];
+
    if(r1 == 0)
    {
       int r0 = 0;
       return r0;
    }
 
-   //LDR.W           R0, [R4,#0x198] ; ptr
-   //BLX             SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361
+   int r0 = r4[0x198];
+
+   SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361(r0, r1);
 
    int r0 = 0;
    return r0;
