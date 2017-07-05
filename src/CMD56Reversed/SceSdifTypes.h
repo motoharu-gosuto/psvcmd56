@@ -64,7 +64,7 @@ typedef struct cmd_input // size is 0x240
 
    uint32_t unk_180;
    void* paddr_184; //3 - phys address of vaddr_80
-   uint32_t unk_188;
+   SceUID mem_188; //SceSdif memblock
    uint32_t unk_18C;
 
    uint32_t unk_190;

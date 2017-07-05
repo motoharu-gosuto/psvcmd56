@@ -675,6 +675,11 @@ int SceSdif_module_start_935cd196()
 
 //--------------------------------------------------
 
+int SceCpuForDriver_sceKernelCpuDcacheAndDMAInvalidate_02796361(void *ptr, size_t len)
+{
+   return 0;
+}
+
 int physical_send_command_C6812C(sd_context_global* ctx, cmd_input* cmd_data1)
 {
    return 0;
@@ -692,115 +697,47 @@ int sub_C696B8(cmd_input* cmd)
 
 int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
 {
-   int r4 = r0;
-   int r3 = r0[4];
-   int r2 = r3 << 0x15;
-
-   if(r2 < 0)
+   if((cmd->state_flags << 0x15) < 0)
    {
-      int r2 = r0[0x100];
-      int r1 = r0 + 0x80;
-
-      if(r2 != r1)
+      if(cmd->vaddr_100 != cmd->vaddr_80)
       {
-         int r3 = r3 << 0xB
-
-         if(r3 < 0)
+         if((cmd->state_flags << 0xB) < 0)
          {
-            int r0 = r0[0x188]
-            SceSdif.SceSysmemForDriver._imp_sceKernelFreeMemBlockForKernel_009e1c61(r0);
+            SceSysmemForDriver_ksceKernelFreeMemBlock_009e1c61(cmd->mem_188);
          }
       }
    }
 
-   int r3 = r4[0x64];
-
-   if(r3 != 3)
-   {
-      int r0 = 0;
-      return r0;
-   }
+   if(cmd->unk_64 != 3)
+      return 0;
    
-   int r3 = 0x801;
-   int r2 = r4[0x4];
-   int r3 = r3 << 9;
-   int r3 = r3 & r2;
+   if(((0x801 << 9) & cmd->state_flags) != 0)
+      return 0;
 
-   if(r3 != 0)
+   if(cmd->size_1A0 != 0)
    {
-      int r0 = 0;
-      return r0;
+      SceCpuForDriver_sceKernelCpuDcacheAndDMAInvalidate_02796361(cmd->vaddr_1C0, 0x40);
+      memcpy(cmd->buffer, cmd->vaddr_1C0, cmd->size_1A0);
    }
 
-   int r3 = r4[0x1A0];
-
-   if(r3 != 0)
+   if(cmd->size_1A4 != 0)
    {
-      int r5 = r4 + 0x1C0;
-      int r1 = 0x40;
-      int r0 = r5;
-
-      SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361(r0, r1);
-
-      int r1 = r5;
-      int r0 = r4[0x20];
-      int r2 = r4[0x1A0];
-      SceSdif.SceSysclibForDriver._imp_memcpy_40c88316(r0, r1, r2);
+      SceCpuForDriver_sceKernelCpuDcacheAndDMAInvalidate_02796361(cmd->vaddr_200, 0x40);
+      memcpy(((char*)cmd->base_198 + cmd->offset_19C), cmd->vaddr_200, cmd->size_1A4);
    }
 
-   int r3 = r4[0x1A4];
+   if(cmd->unk_64 != 3)
+      return 0;
 
-   if(r3 != 0)
-   {
-      int r5 = r4 + 0x200;
-      int r1 = 0x40;
-      int r0 = r5;
+   if(((0x801 << 9) & cmd->state_flags) != 0)
+      return 0;
 
-      SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361(r0, r1);
+   if(cmd->offset_19C == 0)
+      return 0;
 
-      int r0 = r4[0x19C];
-      int r1 = r5;
-      int r3 = r4[0x198];
-      int r2 = r4[0x1A4];
-      int r0 = r3;
-      
-      SceSdif.SceSysclibForDriver._imp_memcpy_40c88316(r0, r1, r2);
-   }
+   SceCpuForDriver_sceKernelCpuDcacheAndDMAInvalidate_02796361(cmd->base_198, cmd->offset_19C);
 
-   int r3 = r4[0x64]
-
-   if(r3 != 3)
-   {
-      int r0 = 0;
-      return r0;
-   }
-
-   int r3 = 0x801;
-   int r2 = r4[0x4];
-   int r3 = r3 << 9;
-   int r3 = r3 & r2;
-
-
-   if(r3 != 0)
-   {
-      int r0 = 0;
-      return r0;
-   }
-
-   int r1 = r4[0x19C];
-
-   if(r1 == 0)
-   {
-      int r0 = 0;
-      return r0;
-   }
-
-   int r0 = r4[0x198];
-
-   SceSdif.SceCpuForDriver._imp_sceKernelCpuDcacheAndDMAInvalidate_02796361(r0, r1);
-
-   int r0 = 0;
-   return r0;
+   return 0;
 }
 
 int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int numArg)
@@ -846,7 +783,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
          }
       }
 
-      if(ctx_glob->ctx_data.unk_28 == 0) //0x28
+      if(ctx_glob->ctx_data.cmd_28 == 0) //0x28
       {
          cycle_result = physical_send_command_C6812C(ctx_glob, cmd_data1);
          
