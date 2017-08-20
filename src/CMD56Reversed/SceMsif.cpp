@@ -156,44 +156,21 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
    
    //----------------
 
-   int D16[0] = dmac_5_result_2[0];
-   int D16[4] = dmac_5_result_2[4];
-
    char var_B0[8];
    memset(var_B0, 0, 8);
-   
-   char* lr = var_B0;
+   memcpy(var_B0, dmac_5_result_2, 8); //copy dmac5 result 2 to temp
+
+   //
 
    char cmd4A_src[0x20];
-   memset(cmd4A_src, 0, 0x20);
-
-   cmd4A_src[8] = 0;
-
-   int r0 = D16[0];
-   int r1 = D16[4];
-
-   var_B0[0] = r0;
-   var_B0[4] = r1;
-   
-   int r0 = lr[0];
-   int r1 = lr[4];
-
-   cmd4A_src[0xC] = 0;
-   cmd4A_src[0x10] = 0;
-
-   cmd4A_src[0] = r0;
-   cmd4A_src[4] = r1;
-   
-   cmd4A_src[0x14] = 0;
-      
-   cmd4A_src[0x18] = 0;
-   cmd4A_src[0x1C] = 0;
+   memset(cmd4A_src, 0, 0x20); //all bytes should be cleared except for first 8 bytes
+   memcpy(cmd4A_src, var_B0, 8); //copy dmac5 result 2 to request
    
    int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, cmd4A_src, 1000);
    if(res4A < 0)
       return res4A; //returns not exactly this, but we dont care here
    
-
+   //----------------
 
 
 
