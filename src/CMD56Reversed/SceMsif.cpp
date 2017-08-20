@@ -93,7 +93,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
    char cmd49_dest[0x40];
    memset(cmd49_dest, 0, 0x40);
    
-   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, cmd49_dest, 1000);
+   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, cmd49_dest, 1000); //gets 0x40 bytes of response
 
    //----------------
 
@@ -115,7 +115,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
 
    //
 
-   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(d5req1.F00D_cmd2_buffer_98);
+   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(d5req1.F00D_cmd2_buffer_98); //sends first 0x10 bytes of 0x49 resp to f00d
    if(fdres2 < 0)
       return fdres2;
 
@@ -124,8 +124,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
    char dmac5_result_1[0x8];
    memset(dmac5_result_1, 0, 0x8);
 
-   //send dmac5 request with 0x20 bytes of 0x49 response and 8 bytes of random data
-   int dmc5res1 = w_dmac5_command_0x41_C8D2F0(dmac5_result_1, (char*)&d5req1, 0x28);
+   int dmc5res1 = w_dmac5_command_0x41_C8D2F0(dmac5_result_1, (char*)&d5req1, 0x28); //send dmac5 request with 0x20 bytes of 0x49 response and 8 bytes of random data
    if(dmc5res1 != 0)
       return dmc5res1;
 
@@ -157,14 +156,49 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
    
    //----------------
 
+   int D16[0] = dmac_5_result_2[0];
+   int D16[4] = dmac_5_result_2[4];
 
-
-
-
-
+   char var_B0[8];
+   memset(var_B0, 0, 8);
+   
+   char* lr = var_B0;
 
    char cmd4A_src[0x20];
    memset(cmd4A_src, 0, 0x20);
+
+   cmd4A_src[8] = 0;
+
+   int r0 = D16[0];
+   int r1 = D16[4];
+
+   var_B0[0] = r0;
+   var_B0[4] = r1;
+   
+   int r0 = lr[0];
+   int r1 = lr[4];
+
+   cmd4A_src[0xC] = 0;
+   cmd4A_src[0x10] = 0;
+
+   cmd4A_src[0] = r0;
+   cmd4A_src[4] = r1;
+   
+   cmd4A_src[0x14] = 0;
+      
+   cmd4A_src[0x18] = 0;
+   cmd4A_src[0x1C] = 0;
+   
+   int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, cmd4A_src, 1000);
+   if(res4A < 0)
+      return res4A; //returns not exactly this, but we dont care here
+   
+
+
+
+
+
+  
 
 
    return 0;
