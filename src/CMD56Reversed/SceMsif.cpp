@@ -46,6 +46,11 @@ int SceKernelUtilsForDriver_aes_init_f12b6451(aes_ctx* ctx, int blocksize, int k
    return 0;
 }
 
+int SceKernelUtilsForDriver_aes_decrypt_d8678061(aes_ctx* ctx, const char* src, char* dst)
+{
+   return 0;
+}
+
 int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 {
    return 0;
@@ -250,12 +255,11 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
 
    //char** r9 = ptr_table;
    //char** ptr_pair_46C = ptr_pair;
-   //int* var_470 = &g_00B9F9B8;
    //aes_ctx* r6 = &ctx;
    
-   char dec_dst[0x10];
+   char dec_dst[0x10]; //array for holding single aes dec desult
 
-   char* r8 = g_enc_sha224_C903B8;
+   char* r8 = g_enc_sha224_C903B8 + 0x10;
    char* r10 = dec_dst;
                
    char* r11 = g_00B9F8D8 + 0x10; //0xB9F8E8
@@ -263,28 +267,23 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
    //loc_C8D1AE 
    while(true)
    {
-      /*
-      SUB.W           R5, R8, #0x10
-      MOV             R0, R6  ; ctx
-      MOV             R1, R5  ; src
-      MOV             R2, R10 ; dst
-      BLX             SceMsif.SceKernelUtilsForDriver._imp_aes_decrypt_d8678061
-      LDR             R7, [R6,#8] ; get smth from ctx
-      SUB.W           LR, R11, #0x10 ; start will be 0xB9F8D8 (18D8)
-      LSLS            R7, R7, #2
-      */
+      char* r5 = r8 - 0x10;
+      
+      SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, r5, r10);
 
-      if(!beq)
+      char* lr = r11 - 0x10;
+
+      int some_size2 = ctx.unk_8 << 2;
+
+      if(some_size2 != 0)
       {
-         /*
-         LSRS            R2, R7, #4
-         CMP             R2, #0
-         IT NE
-         CMPNE           R7, #0xF
-         MOV.W           R3, R2,LSL#4
-         */
+         int some_size3 = some_size2 >> 4; // devide by 0x10
 
-         if(!bls)
+         int is_not_tail = (some_size3 != 0) && (some_size2 > 0xF);
+
+         int r3 = some_size3 << 4; //mul by 0x10
+
+         if(is_not_tail > 0)
          {
             /*
             CMP             R2, #1
@@ -356,32 +355,22 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
          }
       }
 
-      /*
-      MOVW            R1, #(ctx_130_part_C904A8 AND 0xFFFF)
-      ADD.W           R8, R8, #0x10
-      MOVT.W          R1, #high16(ctx_130_part_C904A8) ; 00C904A8 data reference 00000001 - end pointer
-      ADD.W           R11, R11, #0x10
-      */
-
-      if(r8 == r1)
+      char* table_end = g_enc_sha224_C903B8 + sizeof(g_enc_sha224_C903B8) + 0x10; //pointer to end
+      r8 = r8 + 0x10;
+      r11 = r11 + 0x10;
+      
+      if(r8 == table_end)
          break;
    }
 
-   /*
-   MOVS            R3, #0
-   MOV             R0, R6  ; ptr
-   MOV             R1, R3  ; value
-   MOV.W           R2, #0x3F0 ; num
-   STR             R3, [SP,#0x478+dec_data_464] ; derived key data
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+4]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0xC]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x14]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x1C]
-   BLX             SceMsif.SceSysclibForDriver._imp_memset_0ab9bf5c ; clear all sensitive data
-   LDR.W           R12, [SP,#0x478+var_470] ; get dec flag pointer
-   MOVS            R3, #1
-   STR.W           R3, [R12] ; setup dec flag
-   */
+   //clear sensitive data
+
+   memset(&dec_data_464, 0, 0x24);
+   memset(&ctx, 0, 0x3F0); //size is bigger than 0x3C0 (960) !!!!!!!!!!!!!!!!!!!!!!!!
+
+   //set decryption success flag   
+   
+   g_00B9F9B8 = 1;
 
    return exit_loc_C8D0D4();
 }
