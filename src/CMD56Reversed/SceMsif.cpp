@@ -52,6 +52,14 @@ typedef struct dmac5_41_req2 //size is 0x10
    char data2[0x8];
 }dmac5_41_req2;
 
+typedef struct tpc_cmd49_resp //size is 0x40
+{
+   char f00d_cmd2_buffer[0x10];
+   char var_88[0x10];
+   char signature[0x08];
+   char reserved[0x18];
+}tpc_cmd49_resp;
+
 #pragma pack(pop)
 
 int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char* sha224_digest_source)
@@ -87,23 +95,14 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    // execute tpc command 49
 
-   char cmd49_dest[0x40];
-   memset(cmd49_dest, 0, 0x40);
+   tpc_cmd49_resp cmd49_resp;
+   memset(&cmd49_resp, 0, 0x40);
    
-   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, cmd49_dest, 1000); //gets 0x40 bytes of response
+   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, (char*)&cmd49_resp, 1000); //gets 0x40 bytes of response
 
    // execute f00d command 2
 
-   char f00d_cmd2_buffer[0x10];
-   memcpy(f00d_cmd2_buffer, cmd49_dest, 0x10); //copy first 0x10 bytes of 0x49 resp
-
-   char var_88[0x10];
-   memcpy(var_88, cmd49_dest + 0x10, 0x10); //copy second 0x10 bytes of 0x49 resp   
-
-   char signature[8];
-   memcpy(signature, cmd49_dest + 0x20, 8); //copy last 8 bytes of 0x49 resp
-
-   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(f00d_cmd2_buffer); //sends first 0x10 bytes of 0x49 resp to f00d
+   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(cmd49_resp.f00d_cmd2_buffer); //sends first 0x10 bytes of 0x49 resp to f00d, probably gets response
    if(fdres2 < 0)
       return fdres2;
 
@@ -113,8 +112,8 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    memset(dmac5_result_1, 0, 0x8);
 
    dmac5_41_req1 d5req1;
-   memcpy(d5req1.f00d_cmd2_buffer, f00d_cmd2_buffer, 0x10);
-   memcpy(d5req1.var_88, var_88, 0x10);
+   memcpy(d5req1.f00d_cmd2_buffer, cmd49_resp.f00d_cmd2_buffer, 0x10);
+   memcpy(d5req1.var_88, cmd49_resp.var_88, 0x10); //copy second 0x10 bytes of 0x49 resp  
    memcpy(d5req1.rand_value, rand_value, 0x8);
 
    // execute dmac5 command 41
@@ -125,7 +124,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    // verify hash, signature ?
 
-   if(memcmp(dmac5_result_1, signature, 8) != 0)
+   if(memcmp(dmac5_result_1, cmd49_resp.signature, 8) != 0) //verify against last 8 bytes of 0x49 resp
       return -1; //returns not exactly this, but we dont care here
 
    // prepare dmac5 command 41 request data
@@ -146,8 +145,8 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    // execute tpc command 4A
 
    char cmd4A_src[0x20];
-   memset(cmd4A_src, 0, 0x20); //all bytes should be cleared except for first 8 bytes
    memcpy(cmd4A_src, dmac_5_result_2, 8); //copy dmac5 result 2 to request
+   memset(cmd4A_src + 8, 0, 0x20); //all bytes should be cleared except for first 8 bytes
    
    int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, cmd4A_src, 1000);
    if(res4A < 0)
@@ -160,5 +159,5 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    memcpy(sha224_digest_source, d5req1.f00d_cmd2_buffer, 0x10); //copy result
    
-   return (*(var_88 + 7));
+   return cmd49_resp.var_88[7];
 }
