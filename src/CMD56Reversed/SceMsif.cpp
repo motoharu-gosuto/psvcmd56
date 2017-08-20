@@ -49,10 +49,304 @@ int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx
    return 0;
 }
 
-int decrypt_sha224_table_C8D09C(char** ptr_pair, char** ptr_table)
+//----------------
+
+int exit_loc_C8D10E()
 {
+   /*
+   LDR.W           R12, [SP,#0x478+var_474] ; get cookie ptr
+   LDR.W           R2, [SP,#0x478+var_2C] ; get cookie
+   LDR.W           R3, [R12]
+   CMP             R2, R3
+   */
+
+   //just return r0 or stack fail
+
    return 0;
 }
+
+int exit_loc_C8D0D4()
+{
+   /*
+   LDR.W           R12, [SP,#0x478+ptr_pair_46C] ; void **ptr_pair
+   MOV             R3, 0xB9F8D8 ; 0xB9F8D8 (18D8)
+   MOVS            R0, #0
+   ADD.W           LR, R3, #0x1C ; element 1
+   ADD.W           R7, R3, #0x38 ; element 2
+   ADD.W           R6, R3, #0x54 ; element 3
+   ADD.W           R5, R3, #0x70 ; element 4
+   ADD.W           R4, R3, #0x8C ; element 5
+   ADD.W           R1, R3, #0xA8 ; element 6
+   ADD.W           R2, R3, #0xC4 ; element 7
+   STMIA.W         R12, {R3,LR} ; store ptr pair
+   STRD.W          R7, R6, [R9] ; store void **ptr_table
+   STRD.W          R5, R4, [R9,#8]
+   STRD.W          R1, R2, [R9,#0x10]
+   */
+
+   return exit_loc_C8D10E();
+}
+
+int exit_loc_C8D2AA()
+{
+   /*
+   MOVS            R3, #0
+   MOV             R0, 0xFFFFFF34 ; 00C8D2AC : possible external reference: FFFFFF34
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464] ; derived key data
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+8]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x10]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x18]
+   STR             R3, [SP,#0x478+dec_data_464+0x20]
+   */
+
+   return exit_loc_C8D10E();
+}
+
+int exit_loc_C8D2C4()
+{
+   /*
+   MOVS            R3, #0
+   MOV             R0, R6  ; ptr
+   MOV             R1, R3  ; value
+   MOV.W           R2, #0x3F0 ; num
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464] ; derived key data
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+8]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x10]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x18]
+   STR             R3, [SP,#0x478+dec_data_464+0x20]
+   BLX             SceMsif.SceSysclibForDriver._imp_memset_0ab9bf5c ; clear all sensitive data
+   MOV             R0, 0xFFFFFF34 ; 00C8D2E4 : possible external reference: FFFFFF34
+   */
+
+   return exit_loc_C8D10E();
+}
+
+int decrypt_sha224_table_C8D09C(char** ptr_pair, char** ptr_table)
+{
+   /*
+   MOVW            R12, #0xA004 ; 00C8D09C : external reference: 009EA004
+   PUSH.W          {R4-R11,LR}
+   MOVT.W          R12, #0x9E ; 00C8D0A4 : external reference: 009EA004
+   SUBW            SP, SP, #0x454
+   MOV             R9, R1  ; arg1
+   STR.W           R12, [SP,#0x478+var_474] ; cookie ptr
+   MOV             R12, 0xB9F9B8 ; 0xB9F9B8
+   STRD.W          R12, R0, [SP,#0x478+var_470] ; store 0xB9F9B8, arg0
+   LDR.W           R12, [SP,#0x478+var_474] ; cookie ptr
+   LDR.W           R3, [R12] ; store cookie
+   LDR.W           R12, [SP,#0x478+var_470]
+   STR.W           R3, [SP,#0x478+var_2C] ; store cookie
+   LDR.W           R4, [R12]
+   */
+
+   if(r4 != 0)
+      return exit_loc_C8D0D4();
+
+   /*
+   MOVS            R0, #0x20
+   MOVW            R1, #(zero_array_C90498 AND 0xFFFF) ; 00C90498 data reference 00000000
+   MOVW            R2, #(dec_input_C90370 AND 0xFFFF) ; 00C90370 data reference 00000020
+   STR             R0, [SP,#0x478+dec_data_464] ; = 0x20
+   ADD             R3, SP, #0x478+dec_data_464 ; res
+   MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
+   MOVT.W          R2, #high16(dec_input_C90370) ; 00C90370 data reference 00000020
+   MOVS            R0, #4  ; num
+   STRD.W          R4, R4, [SP,#0x478+dec_data_464+4] ; = 0
+   STRD.W          R4, R4, [SP,#0x478+dec_data_464+0xC] ; = 0
+   STRD.W          R4, R4, [SP,#0x478+dec_data_464+0x14] ; = 0
+   STRD.W          R4, R4, [SP,#0x478+dec_data_464+0x1C] ; = 0
+   BLX             SceMsif.SceSblSsMgrForDriver._imp_dec_aes_key_msif_934db6b5
+   */
+
+   if(r0 != 0)
+      return exit_loc_C8D2AA();
+
+   /*
+   MOVW            R1, #(zero_array_C90498 AND 0xFFFF) ; 00C90498 data reference 00000000
+   ADD             R0, SP, #0x478+dec_data_464+4 ; ptr1
+   MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
+   MOVS            R2, #0x10 ; num
+   BLX             SceMsif.SceSysclibForDriver._imp_memcmp_f939e83d ; compare dec data to zero chunk
+   */
+
+   if(r0 != 0)
+   {
+      /*
+      MOVW            R1, #(zero_array_C90498 AND 0xFFFF)
+      MOVW            R2, #(dec_input_C90394 AND 0xFFFF) ; 00C90394 data reference 00000020
+      MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
+      MOVT.W          R2, #high16(dec_input_C90394) ; 00C90394 data reference 00000020
+      MOVS            R0, #4  ; num
+      ADD             R3, SP, #0x478+dec_data_464 ; res
+      BLX             SceMsif.SceSblSsMgrForDriver._imp_dec_aes_key_msif_934db6b5
+      */
+
+      if(r0 != 0)
+         return exit_loc_C8D2AA();
+   }
+
+   /*
+   MOVS            R1, #0x80
+   ADD             R6, SP, #0x478+ctx
+   MOV             R0, R6  ; ctx
+   MOV             R2, R1  ; keysize
+   ADD             R3, SP, #0x478+dec_data_464+0x14 ; key
+   BLX             SceMsif.SceKernelUtilsForDriver._imp_aes_init_f12b6451 ; initialize aes context
+   */
+
+   if(r0 <= 0)
+      return exit_loc_C8D2C4();
+
+   /*
+   LDR             R3, [R6,#8] ; get smth from ctx
+   LSLS            R2, R3, #2
+   */
+
+   if(!beq)
+   {
+      /*
+      MOVW            R1, #(zero_array_C90498 AND 0xFFFF) ; 00C90498 data reference 00000000
+      ADD.W           R0, SP, #0x478+destination ; destination
+      MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
+      BLX             SceMsif.SceSysclibForDriver._imp_memcpy_40c88316 ; zero mem
+      */
+   }
+   
+   /*
+   MOVW            R8, #((enc_sha224_C903B8+0x10) AND 0xFFFF)
+   MOVW            R11, #0xF8E8
+   MOVT.W          R8, #(high16((enc_sha224_C903B8+0x10))) ; 00C903C8 data reference 8B38DC1C
+   MOVT.W          R11, #0xB9 ; 0xB9F8E8 (18E8)
+   ADD.W           R10, SP, #0x478+dec_dst
+   */
+
+   //loc_C8D1AE 
+   while(true)
+   {
+      /*
+      SUB.W           R5, R8, #0x10
+      MOV             R0, R6  ; ctx
+      MOV             R1, R5  ; src
+      MOV             R2, R10 ; dst
+      BLX             SceMsif.SceKernelUtilsForDriver._imp_aes_decrypt_d8678061
+      LDR             R7, [R6,#8] ; get smth from ctx
+      SUB.W           LR, R11, #0x10 ; start will be 0xB9F8D8 (18D8)
+      LSLS            R7, R7, #2
+      */
+
+      if(!beq)
+      {
+         /*
+         LSRS            R2, R7, #4
+         CMP             R2, #0
+         IT NE
+         CMPNE           R7, #0xF
+         MOV.W           R3, R2,LSL#4
+         */
+
+         if(!bls)
+         {
+            /*
+            CMP             R2, #1
+            VLDR            D20, [R6,#0x3D0]
+            VLDR            D21, [R6,#0x3D8]
+            ADD.W           R12, SP, #0x478+dec_dst
+            VLDR            D18, [R8,#-0x10]
+            VLDR            D19, [R8,#-8]
+            VLD1.64         {D16-D17}, [R12@64]
+            VSTR            D18, [R6,#0x3D0]
+            VSTR            D19, [R6,#0x3D8]
+            VEOR            Q8, Q8, Q10
+            VSTR            D16, [R11,#-0x10]
+            VSTR            D17, [R11,#-8]
+            */
+
+            if(!bls)
+            {
+               /*
+               VLDR            D20, [R6,#0x3E0]
+               VLDR            D21, [R6,#0x3E8]
+               ADD.W           R1, SP, #0x478+var_40
+               VLD1.64         {D18-D19}, [R8@64]
+               VLD1.64         {D16-D17}, [R1@64]
+               VSTR            D18, [R6,#0x3E0]
+               VSTR            D19, [R6,#0x3E8]
+               VEOR            Q8, Q8, Q10
+               VST1.64         {D16-D17}, [R11@64]
+               */
+            }
+            
+            if(r3 == r7)
+            {
+               /*
+               MOVW            R1, #(ctx_130_part_C904A8 AND 0xFFFF)
+               ADD.W           R8, R8, #0x10
+               MOVT.W          R1, #high16(ctx_130_part_C904A8) ; 00C904A8 data reference 00000001 - end pointer
+               ADD.W           R11, R11, #0x10
+               */
+
+               if(r8 == r1)
+                  break;
+            }
+         }
+         else
+         {
+            /*
+            MOVS            R3, #0
+            */            
+         }
+
+         //loc_C8D22C
+         while(true)
+         {
+            /*
+            ADDS            R2, R6, R3
+            LDRB.W          R0, [R10,R3] ; get decrypted byte
+            LDRB.W          R4, [R2,#0x3D0]
+            LDRB            R1, [R5,R3]
+            EORS            R0, R4
+            STRB.W          R0, [LR,R3] ; store decrypted byte
+            ADDS            R3, #1
+            CMP             R3, R7
+            STRB.W          R1, [R2,#0x3D0]
+            */
+
+            if(!bcc)
+               break;
+         }
+      }
+
+      /*
+      MOVW            R1, #(ctx_130_part_C904A8 AND 0xFFFF)
+      ADD.W           R8, R8, #0x10
+      MOVT.W          R1, #high16(ctx_130_part_C904A8) ; 00C904A8 data reference 00000001 - end pointer
+      ADD.W           R11, R11, #0x10
+      */
+
+      if(r8 == r1)
+         break;
+   }
+
+   /*
+   MOVS            R3, #0
+   MOV             R0, R6  ; ptr
+   MOV             R1, R3  ; value
+   MOV.W           R2, #0x3F0 ; num
+   STR             R3, [SP,#0x478+dec_data_464] ; derived key data
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+4]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0xC]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x14]
+   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x1C]
+   BLX             SceMsif.SceSysclibForDriver._imp_memset_0ab9bf5c ; clear all sensitive data
+   LDR.W           R12, [SP,#0x478+var_470] ; get dec flag pointer
+   MOVS            R3, #1
+   STR.W           R3, [R12] ; setup dec flag
+   */
+
+   return exit_loc_C8D0D4();
+}
+
+//----------------
 
 typedef struct verify_hash_ctx
 {
