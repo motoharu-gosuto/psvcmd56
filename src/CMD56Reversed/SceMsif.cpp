@@ -83,76 +83,6 @@ int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx
 
 //----------------
 
-int exit_loc_C8D10E()
-{
-   /*
-   LDR.W           R12, [SP,#0x478+var_474] ; get cookie ptr
-   LDR.W           R2, [SP,#0x478+var_2C] ; get cookie
-   LDR.W           R3, [R12]
-   CMP             R2, R3
-   */
-
-   //just return r0 or stack fail
-
-   return 0;
-}
-
-int exit_loc_C8D0D4()
-{
-   /*
-   LDR.W           R12, [SP,#0x478+ptr_pair_46C] ; void **ptr_pair
-   MOV             R3, 0xB9F8D8 ; 0xB9F8D8 (18D8)
-   MOVS            R0, #0
-   ADD.W           LR, R3, #0x1C ; element 1
-   ADD.W           R7, R3, #0x38 ; element 2
-   ADD.W           R6, R3, #0x54 ; element 3
-   ADD.W           R5, R3, #0x70 ; element 4
-   ADD.W           R4, R3, #0x8C ; element 5
-   ADD.W           R1, R3, #0xA8 ; element 6
-   ADD.W           R2, R3, #0xC4 ; element 7
-   STMIA.W         R12, {R3,LR} ; store ptr pair
-   STRD.W          R7, R6, [R9] ; store void **ptr_table
-   STRD.W          R5, R4, [R9,#8]
-   STRD.W          R1, R2, [R9,#0x10]
-   */
-
-   return exit_loc_C8D10E();
-}
-
-int exit_loc_C8D2AA()
-{
-   /*
-   MOVS            R3, #0
-   MOV             R0, 0xFFFFFF34 ; 00C8D2AC : possible external reference: FFFFFF34
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464] ; derived key data
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+8]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x10]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x18]
-   STR             R3, [SP,#0x478+dec_data_464+0x20]
-   */
-
-   return exit_loc_C8D10E();
-}
-
-int exit_loc_C8D2C4()
-{
-   /*
-   MOVS            R3, #0
-   MOV             R0, R6  ; ptr
-   MOV             R1, R3  ; value
-   MOV.W           R2, #0x3F0 ; num
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464] ; derived key data
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+8]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x10]
-   STRD.W          R3, R3, [SP,#0x478+dec_data_464+0x18]
-   STR             R3, [SP,#0x478+dec_data_464+0x20]
-   BLX             SceMsif.SceSysclibForDriver._imp_memset_0ab9bf5c ; clear all sensitive data
-   MOV             R0, 0xFFFFFF34 ; 00C8D2E4 : possible external reference: FFFFFF34
-   */
-
-   return exit_loc_C8D10E();
-}
-
 // flag that shows that static sha224 table is decrypted 
 int g_00B9F9B8 = 0;
 
@@ -198,13 +128,8 @@ char g_enc_sha224_C903B8[0x1C * 8] =
 //decrypted table of sha224 hashes
 char g_00B9F8D8[0x1C * 8] = {0};
 
-int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
+int decrypt_sha224_table_internal_C8D09C()
 {
-   //check that tables is not already decrypted
-
-   if(g_00B9F9B8 != 0)
-      return exit_loc_C8D0D4();
-
    //try to decrypt aes key 1
 
    dec_aes_key_msif_packet dec_input_C90370;
@@ -220,7 +145,10 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
    int kget_res1 = SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(4, g_zero_array_C90498, &dec_input_C90370, &dec_data_464);   
 
    if(kget_res1 != 0)
-      return exit_loc_C8D2AA();
+   {
+      memset(&dec_data_464, 0, 0x24);
+      return -1; //returns not exactly this, but we dont care here
+   }
 
    int cmp_res = memcmp(dec_data_464.data_1, g_zero_array_C90498, 0x10);
 
@@ -235,7 +163,10 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
       int kget_res2 = SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(4, g_zero_array_C90498, &dec_input_C90394, &dec_data_464);
 
       if(kget_res2 != 0)
-         return exit_loc_C8D2AA();
+      {
+         memset(&dec_data_464, 0, 0x24);
+         return -1; //returns not exactly this, but we dont care here
+      }
    }
 
    aes_ctx ctx;
@@ -243,7 +174,11 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
    int ai_res = SceKernelUtilsForDriver_aes_init_f12b6451(&ctx, 0x80, 0x80, dec_data_464.data_2);
 
    if(ai_res <= 0)
-      return exit_loc_C8D2C4();
+   {
+      memset(&dec_data_464, 0, 0x24);
+      memset(&ctx, 0, 0x3F0); //size is bigger than 0x3C0 (960) !!!!!!!!!!!!!!!!!!!!!!!!
+      return -1; //returns not exactly this, but we dont care here
+   }
 
    char xor_data1[?]; //offset 0x3D0
 
@@ -253,10 +188,6 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
       memcpy(xor_data1, g_zero_array_C90498, some_size);
    }
 
-   //char** r9 = ptr_table;
-   //char** ptr_pair_46C = ptr_pair;
-   //aes_ctx* r6 = &ctx;
-   
    char dec_dst[0x10]; //array for holding single aes dec desult
 
    char* r8 = g_enc_sha224_C903B8 + 0x10;
@@ -414,11 +345,35 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
    memset(&dec_data_464, 0, 0x24);
    memset(&ctx, 0, 0x3F0); //size is bigger than 0x3C0 (960) !!!!!!!!!!!!!!!!!!!!!!!!
 
-   //set decryption success flag   
-   
+   return 0;
+}
+
+int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
+{
+   //check that tables is not already decrypted
+
+   if(g_00B9F9B8 == 0)
+   {
+      int dec_res = decrypt_sha224_table_internal_C8D09C();
+      if(dec_res < 0)
+         return dec_res;
+   }
+
+   //set decryption success flag
    g_00B9F9B8 = 1;
 
-   return exit_loc_C8D0D4();
+   //construct pointer table
+   ptr_pair[0] = g_00B9F8D8;
+   ptr_pair[1] = g_00B9F8D8 + 0x1C;
+
+   ptr_table[0] = g_00B9F8D8 + 0x38;
+   ptr_table[1] = g_00B9F8D8 + 0x54;
+   ptr_table[2] = g_00B9F8D8 + 0x70;
+   ptr_table[3] = g_00B9F8D8 + 0x8C;
+   ptr_table[4] = g_00B9F8D8 + 0xA8;
+   ptr_table[5] = g_00B9F8D8 + 0xC4;
+
+   return 0;
 }
 
 //----------------
