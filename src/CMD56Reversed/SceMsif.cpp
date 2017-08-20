@@ -48,7 +48,7 @@ typedef struct dmac5_41_req1 //size is 0x28
 
 #pragma pack(pop)
 
-int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subctx, char *sha224_digest_source)
+int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char* sha224_digest_source)
 {
    int cmd1_res = 0;
 
@@ -172,11 +172,10 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
    
    //----------------
 
+   if(sha224_digest_source == 0)
+      return -1; //returns not exactly this, but we dont care here
 
-
-
-  
-
-
-   return 0;
+   memcpy(sha224_digest_source, d5req1.F00D_cmd2_buffer_98, 0x10); //copy result
+   
+   return var_DC;
 }
