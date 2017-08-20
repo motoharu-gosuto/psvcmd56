@@ -245,12 +245,12 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
    if(ai_res <= 0)
       return exit_loc_C8D2C4();
 
-   char destination[?];
+   char xor_data1[?]; //offset 0x3D0
 
    int some_size = ctx.unk_8 << 2;
    if(some_size != 0)
    {
-      memcpy(destination, g_zero_array_C90498, some_size);
+      memcpy(xor_data1, g_zero_array_C90498, some_size);
    }
 
    //char** r9 = ptr_table;
@@ -260,18 +260,18 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
    char dec_dst[0x10]; //array for holding single aes dec desult
 
    char* r8 = g_enc_sha224_C903B8 + 0x10;
-   char* r10 = dec_dst;
-               
    char* r11 = g_00B9F8D8 + 0x10; //0xB9F8E8
+
+   char var_40[0x10];
 
    //loc_C8D1AE 
    while(true)
    {
-      char* r5 = r8 - 0x10;
+      char* r5 = r8 - 0x10; //current enc data
       
-      SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, r5, r10);
+      SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, r5, dec_dst);
 
-      char* lr = r11 - 0x10;
+      char* lr = r11 - 0x10; //current result data
 
       int some_size2 = ctx.unk_8 << 2;
 
@@ -283,75 +283,121 @@ int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
 
          int r3 = some_size3 << 4; //mul by 0x10
 
-         if(is_not_tail > 0)
-         {
-            /*
-            CMP             R2, #1
-            VLDR            D20, [R6,#0x3D0]
-            VLDR            D21, [R6,#0x3D8]
-            ADD.W           R12, SP, #0x478+dec_dst
-            VLDR            D18, [R8,#-0x10]
-            VLDR            D19, [R8,#-8]
-            VLD1.64         {D16-D17}, [R12@64]
-            VSTR            D18, [R6,#0x3D0]
-            VSTR            D19, [R6,#0x3D8]
-            VEOR            Q8, Q8, Q10
-            VSTR            D16, [R11,#-0x10]
-            VSTR            D17, [R11,#-8]
-            */
+         if(is_not_tail <= 0)
+         {       
+            r3 = 0;
 
-            if(!bls)
+            #pragma region
+            while(true)
             {
-               /*
-               VLDR            D20, [R6,#0x3E0]
-               VLDR            D21, [R6,#0x3E8]
-               ADD.W           R1, SP, #0x478+var_40
-               VLD1.64         {D18-D19}, [R8@64]
-               VLD1.64         {D16-D17}, [R1@64]
-               VSTR            D18, [R6,#0x3E0]
-               VSTR            D19, [R6,#0x3E8]
-               VEOR            Q8, Q8, Q10
-               VST1.64         {D16-D17}, [R11@64]
-               */
-            }
-            
-            if(r3 == r7)
-            {
-               /*
-               MOVW            R1, #(ctx_130_part_C904A8 AND 0xFFFF)
-               ADD.W           R8, R8, #0x10
-               MOVT.W          R1, #high16(ctx_130_part_C904A8) ; 00C904A8 data reference 00000001 - end pointer
-               ADD.W           R11, R11, #0x10
-               */
+               char dec_byte = dec_dst[r3]; // current dec data
+               char ctx_byte = (&ctx + [0x3D0])[r3];
+               char xor_byte = dec_byte ^ ctx_byte;
+               lr[r3] = xor_byte; //result data
 
-               if(r8 == r1)
+               char enc_byte = r5[r3]; //current enc data
+               (&ctx + [0x3D0])[r3] = enc_byte;
+
+               r3++;
+
+               if(r3 == some_size2)
                   break;
             }
+            #pragma endregion
          }
          else
          {
-            /*
-            MOVS            R3, #0
-            */            
-         }
+            int D20[0] = ctx[0x3D0][0];
+            int D20[4] = ctx[0x3D0][4];
 
-         //loc_C8D22C
-         while(true)
-         {
-            /*
-            ADDS            R2, R6, R3
-            LDRB.W          R0, [R10,R3] ; get decrypted byte
-            LDRB.W          R4, [R2,#0x3D0]
-            LDRB            R1, [R5,R3]
-            EORS            R0, R4
-            STRB.W          R0, [LR,R3] ; store decrypted byte
-            ADDS            R3, #1
-            CMP             R3, R7
-            STRB.W          R1, [R2,#0x3D0]
-            */
+            int D21[0] = ctx[0x3D8][0];
+            int D21[4] = ctx[0x3D8][4];
+            
+            char* r12 = dec_dst;
+            
+            int D18[0] = r8[-0x10];
+            int D18[4] = r8[-0xC];
 
-            if(!bcc)
-               break;
+            int D19[0] = r8[-0x8];
+            int D19[4] = r8[-0x4];
+            
+            int D16[0] = r12[0];
+            int D16[4] = r12[4];
+
+            int D17[0] = r12[8];
+            int D17[4] = r12[C];
+
+            ctx[0x3D0][0] = D18[0];
+            ctx[0x3D0][4] = D18[4];
+
+            ctx[0x3D8][0] = D19[0];
+            ctx[0x3D8][4] = D19[4];
+
+            //VEOR            Q8, Q8, Q10
+
+            r11[-0x10] = D16[0];
+            r11[-0xC] = D16[4];
+
+            r11[-0x8] = D17[0];
+            r11[-0x4] = D17[4];
+ 
+            if(some_size3 > 1)
+            {
+               int D20[0] = ctx[0x3E0][0];
+               int D20[4] = ctx[0x3E0][4];
+
+               int D21[0] = ctx[0x3E8][0];
+               int D21[4] = ctx[0x3E8][4];
+
+               char* r1 = var_40;
+
+               D18[0] = r8[0];
+               D18[4] = r8[4];
+
+               D19[0] = r8[8];
+               D19[4] = r8[C];
+
+               D16[0] = r1[0];
+               D16[4] = r1[4];
+
+               D17[0] = r1[8];
+               D17[4] = r1[C];
+
+               ctx[0x3E0] = D18[0];
+               ctx[0x3E0] = D18[4];
+
+               ctx[0x3E8] = D19[0];
+               ctx[0x3E8] = D19[4];
+
+               //VEOR            Q8, Q8, Q10
+
+               D16[0] = r11[0];
+               D16[4] = r11[4];
+
+               D17[0] = r11[8];
+               D17[4] = r11[C];
+            }
+            
+            if(r3 != some_size2)
+            {
+               #pragma region
+               while(true)
+               {
+                  char dec_byte = dec_dst[r3]; // current dec data
+                  char ctx_byte = (&ctx + [0x3D0])[r3];
+                  char xor_byte = dec_byte ^ ctx_byte;
+                  lr[r3] = xor_byte; //result data
+
+                  char enc_byte = r5[r3]; //current enc data
+                  (&ctx + [0x3D0])[r3] = enc_byte;
+
+                  r3++;
+
+                  if(r3 == some_size2)
+                     break;
+               }
+               #pragma endregion
+            }
          }
       }
 
