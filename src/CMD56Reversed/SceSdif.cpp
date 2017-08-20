@@ -680,21 +680,26 @@ int SceCpuForDriver_sceKernelCpuDcacheAndDMAInvalidate_02796361(void *ptr, size_
    return 0;
 }
 
+//looks like this function sends command to sd card
 int physical_send_command_C6812C(sd_context_global* ctx, cmd_input* cmd_data1)
 {
    return 0;
 }
 
+//this function just cycles buffer of commands
 int cycle_command_buffer_C6AEE0(void* gctx_2408, cmd_input* cmd_data1)
 {
    return 0;
 }
 
+//looks like this function emulates interrupt?
+//calls interrupt handling routine + waiting some flags
 int sub_C696B8(cmd_input* cmd)
 {
    return 0;
 }
 
+//looks like this function copies result from sd card to result buffer
 int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
 {
    if((cmd->state_flags << 0x15) < 0)
@@ -740,6 +745,7 @@ int proc_invalidate_and_copy_C7246C(cmd_input* cmd)
    return 0;
 }
 
+//this is main routine for executing sd commands
 int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cmd_input* cmd_data2, int nIter, int numArg)
 {
    void* buffer1 = cmd_data1->buffer; //0x20
