@@ -19,6 +19,33 @@ int SceKernelUtilsForDriver_ksceSha224Digest_9ea9d4dc(char* source, int size, ch
    return 0;
 }
 
+typedef struct dec_aes_key_msif_packet //size is 0x24
+{
+  uint32_t size;
+  uint8_t data_1[0x10];
+  uint8_t data_2[0x10];
+} dec_aes_key_msif_packet;
+
+int SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(int num, char* arg1, dec_aes_key_msif_packet* in, dec_aes_key_msif_packet* out)
+{
+   return 0;
+}
+
+typedef struct aes_ctx
+{
+   uint32_t unk_0;
+   uint32_t unk_4;
+   uint32_t unk_8;
+   uint32_t unk_C;
+
+   char data[950]; //not sure about size
+}aes_ctx;
+
+int SceKernelUtilsForDriver_aes_init_f12b6451(aes_ctx* ctx, int blocksize, int keysize, const uint8_t* key)
+{
+   return 0;
+}
+
 int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 {
    return 0;
@@ -121,104 +148,117 @@ int exit_loc_C8D2C4()
    return exit_loc_C8D10E();
 }
 
-int decrypt_sha224_table_C8D09C(char** ptr_pair, char** ptr_table)
-{
-   /*
-   MOVW            R12, #0xA004 ; 00C8D09C : external reference: 009EA004
-   PUSH.W          {R4-R11,LR}
-   MOVT.W          R12, #0x9E ; 00C8D0A4 : external reference: 009EA004
-   SUBW            SP, SP, #0x454
-   MOV             R9, R1  ; arg1
-   STR.W           R12, [SP,#0x478+var_474] ; cookie ptr
-   MOV             R12, 0xB9F9B8 ; 0xB9F9B8
-   STRD.W          R12, R0, [SP,#0x478+var_470] ; store 0xB9F9B8, arg0
-   LDR.W           R12, [SP,#0x478+var_474] ; cookie ptr
-   LDR.W           R3, [R12] ; store cookie
-   LDR.W           R12, [SP,#0x478+var_470]
-   STR.W           R3, [SP,#0x478+var_2C] ; store cookie
-   LDR.W           R4, [R12]
-   */
+// flag that shows that static sha224 table is decrypted 
+int g_00B9F9B8 = 0;
 
-   if(r4 != 0)
+char g_zero_array_C90498[0x10] = 
+{
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+
+//encrypted key data 1
+
+char g_dec_input_C90370[0x20] =
+{
+   0xB0, 0x6C, 0xA2, 0x7E, 0xAF, 0xBE, 0x0C, 0x17, 
+   0x3D, 0x8F, 0xA7, 0x8F, 0xD4, 0xE1, 0xE6, 0xB6, 
+   0xF0, 0xC8, 0x91, 0x93, 0x6B, 0xB1, 0x95, 0x6E, 
+   0x54, 0x7C, 0xFC, 0xC8, 0x32, 0x5C, 0xC1, 0xE2
+};
+
+//encrypted key data 2
+
+char g_dec_input_C90394[0x20] =
+{
+   0x34, 0xCB, 0x9E, 0xF9, 0x3F, 0xDA, 0x96, 0x15, 
+   0x7A, 0xB2, 0x0C, 0x2A, 0xB4, 0x87, 0x36, 0x24,
+   0x21, 0xB4, 0x07, 0xF2, 0x4F, 0x61, 0x35, 0x85,
+   0x5F, 0x8E, 0xF7, 0x72, 0xB3, 0x9A, 0x08, 0x53
+};
+
+//encrypted table of sha224 hashes
+
+char g_enc_sha224_C903B8[0x1C * 8] = 
+{
+   0xF0, 0x8C, 0xF8, 0x29, 0xD7, 0x6E, 0x1B, 0x03, 0xFA, 0xC5, 0x62, 0xF3, 0x38, 0xDF, 0xB2, 0x2A, 0x1C, 0xDC, 0x38, 0x8B, 0x2C, 0x1B, 0xDA, 0x5D, 0x6F, 0x13, 0x8C, 0x0F,
+   0x1E, 0x5F, 0xD8, 0xB3, 0x26, 0x9D, 0x0E, 0xA4, 0xE6, 0x94, 0x97, 0xA5, 0x1E, 0x9A, 0x5D, 0x83, 0x56, 0x2D, 0xB9, 0x30, 0xCD, 0xE8, 0x9A, 0xE6, 0xBF, 0x52, 0x0F, 0x91,
+   0x60, 0x04, 0xA5, 0x74, 0x44, 0x17, 0x61, 0x03, 0xBD, 0x46, 0x30, 0x13, 0xFB, 0x86, 0x96, 0x2E, 0xC4, 0x3B, 0x09, 0x36, 0x72, 0x55, 0x44, 0x30, 0x6B, 0x57, 0x54, 0x09, 
+   0x41, 0xF6, 0xC2, 0xFF, 0x98, 0xF1, 0x16, 0xC8, 0x04, 0x15, 0x84, 0x3B, 0x83, 0xBC, 0xCE, 0xB0, 0xB2, 0x37, 0x2A, 0xE3, 0x65, 0xD5, 0xB1, 0xD8, 0x3C, 0xF7, 0x43, 0xD6, 
+   0x13, 0x9F, 0x11, 0xE7, 0x80, 0x75, 0x5A, 0xEC, 0x95, 0x66, 0x1C, 0xE7, 0xC4, 0x35, 0xD6, 0x57, 0x7F, 0xD6, 0xCB, 0x78, 0x52, 0x0A, 0x03, 0x70, 0xEA, 0x11, 0x7B, 0xA2, 
+   0xD2, 0x4E, 0x59, 0x87, 0x9B, 0xA0, 0xBB, 0xF1, 0x49, 0x86, 0x2C, 0x2D, 0xF9, 0x20, 0x77, 0x4C, 0xA9, 0x93, 0xAC, 0xD5, 0x5B, 0xB2, 0x9D, 0x93, 0x7E, 0xDB, 0xF7, 0xBF, 
+   0xB3, 0x90, 0xE9, 0x6A, 0x44, 0xA9, 0xD8, 0xDC, 0x04, 0x46, 0x19, 0x40, 0xD6, 0x60, 0x9D, 0x8D, 0x2B, 0xE7, 0xD8, 0x4E, 0x4E, 0xCF, 0x44, 0x32, 0x2B, 0x80, 0x0B, 0x00, 
+   0x5B, 0xC2, 0xA6, 0x67, 0xE7, 0x48, 0xBF, 0xAA, 0x05, 0x58, 0xE4, 0xDF, 0x7E, 0x91, 0xDF, 0x24, 0xBC, 0x2D, 0xE8, 0x99, 0xF4, 0x5F, 0x5C, 0x94, 0x58, 0x06, 0xFE, 0x30,
+};
+
+//decrypted table of sha224 hashes
+char g_00B9F8D8[0x1C * 8] = {0};
+
+int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
+{
+   //check that tables is not already decrypted
+
+   if(g_00B9F9B8 != 0)
       return exit_loc_C8D0D4();
 
-   /*
-   MOVS            R0, #0x20
-   MOVW            R1, #(zero_array_C90498 AND 0xFFFF) ; 00C90498 data reference 00000000
-   MOVW            R2, #(dec_input_C90370 AND 0xFFFF) ; 00C90370 data reference 00000020
-   STR             R0, [SP,#0x478+dec_data_464] ; = 0x20
-   ADD             R3, SP, #0x478+dec_data_464 ; res
-   MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
-   MOVT.W          R2, #high16(dec_input_C90370) ; 00C90370 data reference 00000020
-   MOVS            R0, #4  ; num
-   STRD.W          R4, R4, [SP,#0x478+dec_data_464+4] ; = 0
-   STRD.W          R4, R4, [SP,#0x478+dec_data_464+0xC] ; = 0
-   STRD.W          R4, R4, [SP,#0x478+dec_data_464+0x14] ; = 0
-   STRD.W          R4, R4, [SP,#0x478+dec_data_464+0x1C] ; = 0
-   BLX             SceMsif.SceSblSsMgrForDriver._imp_dec_aes_key_msif_934db6b5
-   */
+   //try to decrypt aes key 1
 
-   if(r0 != 0)
+   dec_aes_key_msif_packet dec_input_C90370;
+   dec_input_C90370.size = 0x20;
+   memcpy(dec_input_C90370.data_1, g_dec_input_C90370, 0x10);
+   memcpy(dec_input_C90370.data_2, g_dec_input_C90370 + 0x10, 0x10);
+
+   dec_aes_key_msif_packet dec_data_464;
+   dec_data_464.size = 0x20;
+   memset(dec_data_464.data_1, 0, 0x10);
+   memset(dec_data_464.data_2, 0, 0x10);
+
+   int kget_res1 = SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(4, g_zero_array_C90498, &dec_input_C90370, &dec_data_464);   
+
+   if(kget_res1 != 0)
       return exit_loc_C8D2AA();
 
-   /*
-   MOVW            R1, #(zero_array_C90498 AND 0xFFFF) ; 00C90498 data reference 00000000
-   ADD             R0, SP, #0x478+dec_data_464+4 ; ptr1
-   MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
-   MOVS            R2, #0x10 ; num
-   BLX             SceMsif.SceSysclibForDriver._imp_memcmp_f939e83d ; compare dec data to zero chunk
-   */
+   int cmp_res = memcmp(dec_data_464.data_1, g_zero_array_C90498, 0x10);
 
-   if(r0 != 0)
+   //try to decrypt aes key 2
+
+   if(cmp_res != 0)
    {
-      /*
-      MOVW            R1, #(zero_array_C90498 AND 0xFFFF)
-      MOVW            R2, #(dec_input_C90394 AND 0xFFFF) ; 00C90394 data reference 00000020
-      MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
-      MOVT.W          R2, #high16(dec_input_C90394) ; 00C90394 data reference 00000020
-      MOVS            R0, #4  ; num
-      ADD             R3, SP, #0x478+dec_data_464 ; res
-      BLX             SceMsif.SceSblSsMgrForDriver._imp_dec_aes_key_msif_934db6b5
-      */
+      dec_aes_key_msif_packet dec_input_C90394;
+      memcpy(dec_input_C90394.data_1, g_dec_input_C90394, 0x10);
+      memcpy(dec_input_C90394.data_2, g_dec_input_C90394 + 0x10, 0x10);      
 
-      if(r0 != 0)
+      int kget_res2 = SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(4, g_zero_array_C90498, &dec_input_C90394, &dec_data_464);
+
+      if(kget_res2 != 0)
          return exit_loc_C8D2AA();
    }
 
-   /*
-   MOVS            R1, #0x80
-   ADD             R6, SP, #0x478+ctx
-   MOV             R0, R6  ; ctx
-   MOV             R2, R1  ; keysize
-   ADD             R3, SP, #0x478+dec_data_464+0x14 ; key
-   BLX             SceMsif.SceKernelUtilsForDriver._imp_aes_init_f12b6451 ; initialize aes context
-   */
+   aes_ctx ctx;
 
-   if(r0 <= 0)
+   int ai_res = SceKernelUtilsForDriver_aes_init_f12b6451(&ctx, 0x80, 0x80, dec_data_464.data_2);
+
+   if(ai_res <= 0)
       return exit_loc_C8D2C4();
 
-   /*
-   LDR             R3, [R6,#8] ; get smth from ctx
-   LSLS            R2, R3, #2
-   */
+   char destination[?];
 
-   if(!beq)
+   int some_size = ctx.unk_8 << 2;
+   if(some_size != 0)
    {
-      /*
-      MOVW            R1, #(zero_array_C90498 AND 0xFFFF) ; 00C90498 data reference 00000000
-      ADD.W           R0, SP, #0x478+destination ; destination
-      MOVT.W          R1, #high16(zero_array_C90498) ; 00C90498 data reference 00000000
-      BLX             SceMsif.SceSysclibForDriver._imp_memcpy_40c88316 ; zero mem
-      */
+      memcpy(destination, g_zero_array_C90498, some_size);
    }
+
+   //char** r9 = ptr_table;
+   //char** ptr_pair_46C = ptr_pair;
+   //int* var_470 = &g_00B9F9B8;
+   //aes_ctx* r6 = &ctx;
    
-   /*
-   MOVW            R8, #((enc_sha224_C903B8+0x10) AND 0xFFFF)
-   MOVW            R11, #0xF8E8
-   MOVT.W          R8, #(high16((enc_sha224_C903B8+0x10))) ; 00C903C8 data reference 8B38DC1C
-   MOVT.W          R11, #0xB9 ; 0xB9F8E8 (18E8)
-   ADD.W           R10, SP, #0x478+dec_dst
-   */
+   char dec_dst[0x10];
+
+   char* r8 = g_enc_sha224_C903B8;
+   char* r10 = dec_dst;
+               
+   char* r11 = g_00B9F8D8 + 0x10; //0xB9F8E8
 
    //loc_C8D1AE 
    while(true)
