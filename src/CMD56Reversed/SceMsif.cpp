@@ -88,63 +88,35 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx *subc
    char F00D_cmd2_buffer_98[0x10];
    memset(F00D_cmd2_buffer_98, 0, 0x10);
 
-   char* r11 = F00D_cmd2_buffer_98;
-   char* r6 = cmd49_dest;
+   F00D_cmd2_buffer_98[0] = cmd49_dest[0];
+   F00D_cmd2_buffer_98[4] = cmd49_dest[4]; 
+   F00D_cmd2_buffer_98[8] = cmd49_dest[8];
+   F00D_cmd2_buffer_98[C] = cmd49_dest[C];
 
-   int r0 = cmd49_dest[0];
-   int r1 = cmd49_dest[1];
-   int r2 = cmd49_dest[2];
-   int r3 = cmd49_dest[3];
-
-   char* r4 = cmd49_dest + 0x10;
+   //
 
    char var_88[0x10];
    memset(var_88, 0, 0x10);
 
-   char* lr = var_88;
+   var_88[0] = (cmd49_dest + 0x10)[0];
+   var_88[4] = (cmd49_dest + 0x10)[4];
 
-   char* r9 = cmd49_dest + 0x18;
+   (var_88 + 8)[0] = (cmd49_dest + 0x18)[0];
+   (var_88 + 8)[4] = (cmd49_dest + 0x18)[4];
 
-   char* var_E0 = r4;
+   int var_DC = *(var_88 + 7);
 
-   char* r12 = var_88 + 8;
-
-   char* r4 = cmd49_dest + 0x20;
-
-   r11[0] = r0;
-   r11[4] = r1; 
-   r11[8] = r2;
-   r11[C] = r3;
+   //
 
    char var_C8[8];
    memset(var_C8, 0, 8);
 
-   char* r3 = var_C8;
+   var_C8[0] = (cmd49_dest + 0x20)[0];
+   var_C8[4] = (cmd49_dest + 0x20)[4];
 
-   char* r2 = var_E0;
+   //
 
-   int r0 = r2[0];
-   int r1 = r2[4];
-
-   lr[0] = r0;
-   lr[4] = r1;
-
-   int r0 = r9[0];
-   int r1 = r9[4];
-   
-   int r2 = *(var_88 + 7);
-   int var_DC = r2;
-
-   r12[0] = r0;
-   r12[4] = r1;
-   
-   int r0 = r4[0];
-   int r1 = r4[4];
-
-   r3[0] = r0;
-   r3[4] = r1;
-
-   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(r11);
+   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(F00D_cmd2_buffer_98);
    if(fdres2 < 0)
       return fdres2;
 
