@@ -5,12 +5,19 @@
 
 typedef struct SceMsif_subctx
 {
+   char resp_buffer[0x200]; //some buffer of unknown size
+
 }SceMsif_subctx;
 
 #define MS_TPC_48 0x48
 #define MS_TPC_49 0x49
 #define MS_TPC_4A 0x4A
 #define MS_TPC_4B 0x4B
+
+int SceKernelUtilsForDriver_ksceSha224Digest_9ea9d4dc(char* source, int size, char* result)
+{
+   return 0;
+}
 
 int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 {
@@ -33,6 +40,27 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 }
 
 int w_dmac5_command_0x41_C8D2F0(char* result, const char* data, int size)
+{
+   return 0;
+}
+
+int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx *subctx2, int delay)
+{
+   return 0;
+}
+
+int decrypt_sha224_table_C8D09C(char** ptr_pair, char** ptr_table)
+{
+   return 0;
+}
+
+typedef struct verify_hash_ctx
+{
+   char* ptr_4;
+   char* ptr_20;
+}verify_hash_ctx;
+
+int verify_hashes_C8DBC0(verify_hash_ctx* ctx, char sha_224[0x1C], char* dec_ptr_pair[2], char* dec_ptr_table[6])
 {
    return 0;
 }
@@ -62,7 +90,7 @@ typedef struct tpc_cmd49_resp //size is 0x40
 
 #pragma pack(pop)
 
-int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char* sha224_digest_source)
+int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char sha224_digest_source[0x10])
 {
    // execute f00d command 1
 
@@ -160,4 +188,49 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    memcpy(sha224_digest_source, d5req1.f00d_cmd2_buffer, 0x10); //copy result
    
    return cmd49_resp.var_88[7];
+}
+
+int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, char sha224_digest_source[0x10])
+{
+   //get response from card
+
+   int res4B = ms_execute_ex_set_cmd_C8A4E8(subctx, MS_TPC_4B, subctx, 1000);
+   if(res4B != 0)
+      return res4B;
+
+   //check some field
+
+   int data_inv =  (subctx->resp_buffer[0] << 24) | (subctx->resp_buffer[1] << 16) | (subctx->resp_buffer[2] << 8) | (subctx->resp_buffer[3]);
+   if(data_inv != 1)
+      return -1; //returns not exactly this, but we dont care here
+
+   //decrypt static list of what is probably sha 224 hash table
+
+   char* dec_ptr_pair[2];
+   char* dec_ptr_table[6];
+
+   int dec_res = decrypt_sha224_table_C8D09C(dec_ptr_pair, dec_ptr_table);
+   if(dec_res != 0)
+      return -1; //returns not exactly this, but we dont care here
+
+   //calculate sha 224 digest from data that we aquired on first step of initialization
+
+   char sha_224_digest[0x1C];
+   memset(sha_224_digest, 0, 0x1C);
+
+   int sha_res = SceKernelUtilsForDriver_ksceSha224Digest_9ea9d4dc(sha224_digest_source, 0x10, sha_224_digest);
+   if(sha_res != 0)
+      return -1; //returns not exactly this, but we dont care here
+
+   //verify the data
+
+   verify_hash_ctx vfh_ctx;
+   vfh_ctx.ptr_4 = subctx->resp_buffer + 4; 
+   vfh_ctx.ptr_20 = subctx->resp_buffer + 0x20;
+
+   int vf_res = verify_hashes_C8DBC0(&vfh_ctx, sha_224_digest, dec_ptr_pair, dec_ptr_table);
+   if(vf_res != 0)
+      return -1;
+
+   return 0;
 }
