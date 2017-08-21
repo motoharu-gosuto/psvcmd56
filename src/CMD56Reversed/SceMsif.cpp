@@ -177,18 +177,20 @@ int decrypt_sha224_table_internal_C8D09C()
    }
 
    aes_ctx ctx;
+   char xor_data1[0x10]; //offset 0x3D0
+   char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
    int ai_res = SceKernelUtilsForDriver_aes_init_f12b6451(&ctx, 0x80, 0x80, dec_data_464.data_2);
 
    if(ai_res <= 0)
    {
+      //clear sensitive data
       memset(&dec_data_464, 0, 0x24);
-      memset(&ctx, 0, 0x3F0); //size is bigger than 0x3C0 (960) !!!!!!!!!!!!!!!!!!!!!!!!
+      memset(&ctx, 0, 0x3C0);
+      memset(xor_data1, 0, 0x10);
+      memset(xor_data2, 0, 0x10);
       return -1; //returns not exactly this, but we dont care here
    }
-
-   char xor_data1[0x10]; //offset 0x3D0
-   char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
    int some_size = ctx.unk_8 << 2;
    if(some_size != 0)
@@ -203,98 +205,68 @@ int decrypt_sha224_table_internal_C8D09C()
 
    char var_40[0x10]; // how is this initialized ?
 
-   //loc_C8D1AE 
-   while(true)
+   const char* table_end = g_enc_sha224_C903B8 + sizeof(g_enc_sha224_C903B8) + 0x10; //pointer to end
+
+   do
    {
       char* curr_enc_data = next_enc_data - 0x10; //current enc data
       char* curr_dec_data = next_dec_data - 0x10; //current result data
 
       SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, curr_enc_data, dec_dst);
 
+      //just check that there is still smth to copy
       int some_size2 = ctx.unk_8 << 2;
-
       if(some_size2 != 0)
       {
-         int some_size3 = some_size2 >> 4; // devide by 0x10
+         // devide by 0x10 to get number of blocks left
+         int some_size3 = some_size2 >> 4;
 
          int is_not_tail = (some_size3 != 0) && (some_size2 > 0xF);
+         if(is_not_tail > 0)
+         {
+            //xor current block of decrypted data and store to decrypted table
+            //then update xor value with current encrypted block
+            memxor(curr_dec_data, dec_dst, xor_data1, 0x10);
+            memcpy(xor_data1, curr_enc_data, 0x10);
 
-         int r3 = some_size3 << 4; //mul by 0x10
-
-         if(is_not_tail <= 0)
-         {       
-            r3 = 0;
-
-            #pragma region
-            while(true)
+            //check if there is more than one blocks left
+            //this will ignore last block
+            if(some_size3 > 1)
             {
-               char dec_byte = dec_dst[r3]; // current dec data
-               char ctx_byte = xor_data1[r3];
-               char xor_byte = dec_byte ^ ctx_byte;
-               curr_dec_data[r3] = xor_byte; //result data
-
-               char enc_byte = curr_enc_data[r3]; //current enc data
-               xor_data1[r3] = enc_byte;
-
-               r3++;
-
-               if(r3 == some_size2)
-                  break;
+               //xor some data and store as next block to decrypted table
+               //then update xor value with next encrypted block
+               memxor(next_dec_data, var_40, xor_data2, 0x10);
+               memcpy(xor_data2, next_enc_data, 0x10);
             }
-            #pragma endregion
+
+            //get back original size, however it will be aligned to 0x10
+            //if it will not equal to original size - it means that there was tail data
+            int some_size4 = some_size3 << 4;
+            if(some_size4 != some_size2)
+            {
+               //copy tail - in this case we have to add some_size4 as main offset
+               memxor(curr_dec_data + some_size4, dec_dst + some_size4, xor_data1 + some_size4, some_size2);
+               memcpy(xor_data1 + some_size4, curr_enc_data + some_size4, some_size2);
+            }
          }
          else
          {
-            //update dec data
-            memxor(curr_dec_data, dec_dst, xor_data1, 0x10);
-
-            //update xor data
-            memcpy(xor_data1, curr_enc_data, 0x10);
-
-            if(some_size3 > 1)
-            {
-               //update dec data
-               memxor(next_dec_data, var_40, xor_data2, 0x10);
-
-               //update xor data
-               memcpy(xor_data2, next_enc_data, 0x10);
-            }
-            
-            if(r3 != some_size2)
-            {
-               #pragma region
-               while(true)
-               {
-                  char dec_byte = dec_dst[r3]; // current dec data
-                  char ctx_byte = xor_data1[r3];
-                  char xor_byte = dec_byte ^ ctx_byte;
-                  curr_dec_data[r3] = xor_byte; //result data
-
-                  char enc_byte = curr_enc_data[r3]; //current enc data
-                  xor_data1[r3] = enc_byte;
-
-                  r3++;
-
-                  if(r3 == some_size2)
-                     break;
-               }
-               #pragma endregion
-            }
+            //copy tail - some_size2 will hold number of bytes left
+            memxor(curr_dec_data, dec_dst, xor_data1, some_size2);
+            memcpy(xor_data1, curr_enc_data, some_size2);
          }
       }
 
-      char* table_end = g_enc_sha224_C903B8 + sizeof(g_enc_sha224_C903B8) + 0x10; //pointer to end
       next_enc_data = next_enc_data + 0x10;
       next_dec_data = next_dec_data + 0x10;
-      
-      if(next_enc_data == table_end)
-         break;
    }
+   while(next_enc_data != table_end);
 
    //clear sensitive data
-
    memset(&dec_data_464, 0, 0x24);
-   memset(&ctx, 0, 0x3F0); //size is bigger than 0x3C0 (960) !!!!!!!!!!!!!!!!!!!!!!!!
+   memset(&ctx, 0, 0x3C0);
+   memset(xor_data1, 0, 0x10);
+   memset(xor_data2, 0, 0x10);
 
    return 0;
 }
