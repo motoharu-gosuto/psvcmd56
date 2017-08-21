@@ -191,19 +191,18 @@ int decrypt_sha224_table_internal_C8D09C()
 
    char dec_dst[0x10]; //array for holding single aes dec desult
 
-   char* r8 = g_enc_sha224_C903B8 + 0x10;
-   char* r11 = g_00B9F8D8 + 0x10; //0xB9F8E8
+   char* next_enc_data = g_enc_sha224_C903B8 + 0x10;
+   char* next_dec_data = g_00B9F8D8 + 0x10; //0xB9F8E8
 
-   char var_40[0x10];
+   char var_40[0x10]; // how is this initialized ?
 
    //loc_C8D1AE 
    while(true)
    {
-      char* r5 = r8 - 0x10; //current enc data
-      
-      SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, r5, dec_dst);
+      char* curr_enc_act = next_enc_data - 0x10; //current enc data
+      char* curr_dec_act = next_dec_data - 0x10; //current result data
 
-      char* lr = r11 - 0x10; //current result data
+      SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, curr_enc_act, dec_dst);
 
       int some_size2 = ctx.unk_8 << 2;
 
@@ -225,9 +224,9 @@ int decrypt_sha224_table_internal_C8D09C()
                char dec_byte = dec_dst[r3]; // current dec data
                char ctx_byte = xor_data1[r3];
                char xor_byte = dec_byte ^ ctx_byte;
-               lr[r3] = xor_byte; //result data
+               curr_dec_act[r3] = xor_byte; //result data
 
-               char enc_byte = r5[r3]; //current enc data
+               char enc_byte = curr_enc_act[r3]; //current enc data
                xor_data1[r3] = enc_byte;
 
                r3++;
@@ -244,10 +243,10 @@ int decrypt_sha224_table_internal_C8D09C()
             int D21[0] = xor_data1[8];
             int D21[4] = xor_data1[C];
             
-            int D18[0] = r8[-0x10];
-            int D18[4] = r8[-0xC];
-            int D19[0] = r8[-0x8];
-            int D19[4] = r8[-0x4];
+            int D18[0] = curr_enc_act[0];
+            int D18[4] = curr_enc_act[4];
+            int D19[0] = curr_enc_act[8];
+            int D19[4] = curr_enc_act[C];
             
             int D16[0] = dec_dst[0];
             int D16[4] = dec_dst[4];
@@ -259,55 +258,47 @@ int decrypt_sha224_table_internal_C8D09C()
             xor_data1[8] = D19[0];
             xor_data1[C] = D19[4];
 
-            //Q8 = 16 17
-            //Q9 = 18 19
-            //Q10 = 20 21
-            //Q8 = Q8 ^ Q10
+            D16[0] = D16[0] ^ D20[0];
+            D16[4] = D16[4] ^ D20[4];
+            D17[0] = D17[0] ^ D21[0];
+            D17[4] = D17[4] ^ D21[4];
 
-            r11[-0x10] = D16[0];
-            r11[-0xC] = D16[4];
-
-            r11[-0x8] = D17[0];
-            r11[-0x4] = D17[4];
+            curr_dec_act[0] = D16[0];
+            curr_dec_act[4] = D16[4];
+            curr_dec_act[8] = D17[0];
+            curr_dec_act[C] = D17[4];
  
             if(some_size3 > 1)
             {
                int D20[0] = xor_data2[0];
                int D20[4] = xor_data2[4];
-
                int D21[0] = xor_data2[8];
                int D21[4] = xor_data2[C];
 
-               char* r1 = var_40;
+               D18[0] = next_enc_data[0];
+               D18[4] = next_enc_data[4];
+               D19[0] = next_enc_data[8];
+               D19[4] = next_enc_data[C];
 
-               D18[0] = r8[0];
-               D18[4] = r8[4];
-
-               D19[0] = r8[8];
-               D19[4] = r8[C];
-
-               D16[0] = r1[0];
-               D16[4] = r1[4];
-
-               D17[0] = r1[8];
-               D17[4] = r1[C];
+               D16[0] = var_40[0];
+               D16[4] = var_40[4];
+               D17[0] = var_40[8];
+               D17[4] = var_40[C];
 
                xor_data2[0] = D18[0];
                xor_data2[4] = D18[4];
-
                xor_data2[8] = D19[0];
                xor_data2[C] = D19[4];
 
-               //Q8 = 16 17
-               //Q9 = 18 19
-               //Q10 = 20 21
-               //Q8 = Q8 ^ Q10
+               D16[0] = D16[0] ^ D20[0];
+               D16[4] = D16[4] ^ D20[4];
+               D17[0] = D17[0] ^ D21[0];
+               D17[4] = D17[4] ^ D21[4];
 
-               D16[0] = r11[0];
-               D16[4] = r11[4];
-
-               D17[0] = r11[8];
-               D17[4] = r11[C];
+               next_dec_data[0] = D16[0];
+               next_dec_data[4] = D16[4];
+               next_dec_data[8] = D17[0];
+               next_dec_data[C] = D17[4];
             }
             
             if(r3 != some_size2)
@@ -318,9 +309,9 @@ int decrypt_sha224_table_internal_C8D09C()
                   char dec_byte = dec_dst[r3]; // current dec data
                   char ctx_byte = xor_data1[r3];
                   char xor_byte = dec_byte ^ ctx_byte;
-                  lr[r3] = xor_byte; //result data
+                  curr_dec_act[r3] = xor_byte; //result data
 
-                  char enc_byte = r5[r3]; //current enc data
+                  char enc_byte = curr_enc_act[r3]; //current enc data
                   xor_data1[r3] = enc_byte;
 
                   r3++;
@@ -334,10 +325,10 @@ int decrypt_sha224_table_internal_C8D09C()
       }
 
       char* table_end = g_enc_sha224_C903B8 + sizeof(g_enc_sha224_C903B8) + 0x10; //pointer to end
-      r8 = r8 + 0x10;
-      r11 = r11 + 0x10;
+      next_enc_data = next_enc_data + 0x10;
+      next_dec_data = next_dec_data + 0x10;
       
-      if(r8 == table_end)
+      if(next_enc_data == table_end)
          break;
    }
 
