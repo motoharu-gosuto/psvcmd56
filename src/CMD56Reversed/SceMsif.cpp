@@ -81,6 +81,13 @@ int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx
    return 0;
 }
 
+int memxor(char* dest, const char* src1, const char* src2, int size)
+{
+   for(int i = 0; i < size; i++)
+      dest[i] = src1[i] ^ src2[i];
+   return 0;
+}
+
 //----------------
 
 // flag that shows that static sha224 table is decrypted 
@@ -239,34 +246,18 @@ int decrypt_sha224_table_internal_C8D09C()
          else
          {
             //update dec data
-
-            curr_dec_data[0] = dec_dst[0] ^ xor_data1[0];
-            curr_dec_data[4] = dec_dst[4] ^ xor_data1[4];
-            curr_dec_data[8] = dec_dst[8] ^ xor_data1[8];
-            curr_dec_data[C] = dec_dst[C] ^ xor_data1[C];
+            memxor(curr_dec_data, dec_dst, xor_data1, 0x10);
 
             //update xor data
-
-            xor_data1[0] = curr_enc_data[0];
-            xor_data1[4] = curr_enc_data[4];
-            xor_data1[8] = curr_enc_data[8];
-            xor_data1[C] = curr_enc_data[C];
+            memcpy(xor_data1, curr_enc_data, 0x10);
 
             if(some_size3 > 1)
             {
                //update dec data
-
-               next_dec_data[0] = var_40[0] ^ xor_data2[0];
-               next_dec_data[4] = var_40[4] ^ xor_data2[4];
-               next_dec_data[8] = var_40[8] ^ xor_data2[8];
-               next_dec_data[C] = var_40[C] ^ xor_data2[C];
+               memxor(next_dec_data, var_40, xor_data2, 0x10);
 
                //update xor data
-
-               xor_data2[0] = next_enc_data[0];
-               xor_data2[4] = next_enc_data[4];
-               xor_data2[8] = next_enc_data[8];
-               xor_data2[C] = next_enc_data[C];
+               memcpy(xor_data2, next_enc_data, 0x10);
             }
             
             if(r3 != some_size2)
