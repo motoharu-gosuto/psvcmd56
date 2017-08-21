@@ -180,7 +180,8 @@ int decrypt_sha224_table_internal_C8D09C()
       return -1; //returns not exactly this, but we dont care here
    }
 
-   char xor_data1[?]; //offset 0x3D0
+   char xor_data1[0x10]; //offset 0x3D0
+   char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
    int some_size = ctx.unk_8 << 2;
    if(some_size != 0)
@@ -222,12 +223,12 @@ int decrypt_sha224_table_internal_C8D09C()
             while(true)
             {
                char dec_byte = dec_dst[r3]; // current dec data
-               char ctx_byte = (&ctx + [0x3D0])[r3];
+               char ctx_byte = xor_data1[r3];
                char xor_byte = dec_byte ^ ctx_byte;
                lr[r3] = xor_byte; //result data
 
                char enc_byte = r5[r3]; //current enc data
-               (&ctx + [0x3D0])[r3] = enc_byte;
+               xor_data1[r3] = enc_byte;
 
                r3++;
 
@@ -238,33 +239,30 @@ int decrypt_sha224_table_internal_C8D09C()
          }
          else
          {
-            int D20[0] = ctx[0x3D0][0];
-            int D20[4] = ctx[0x3D0][4];
-
-            int D21[0] = ctx[0x3D8][0];
-            int D21[4] = ctx[0x3D8][4];
-            
-            char* r12 = dec_dst;
+            int D20[0] = xor_data1[0];
+            int D20[4] = xor_data1[4];
+            int D21[0] = xor_data1[8];
+            int D21[4] = xor_data1[C];
             
             int D18[0] = r8[-0x10];
             int D18[4] = r8[-0xC];
-
             int D19[0] = r8[-0x8];
             int D19[4] = r8[-0x4];
             
-            int D16[0] = r12[0];
-            int D16[4] = r12[4];
+            int D16[0] = dec_dst[0];
+            int D16[4] = dec_dst[4];
+            int D17[0] = dec_dst[8];
+            int D17[4] = dec_dst[C];
 
-            int D17[0] = r12[8];
-            int D17[4] = r12[C];
+            xor_data1[0] = D18[0];
+            xor_data1[4] = D18[4];
+            xor_data1[8] = D19[0];
+            xor_data1[C] = D19[4];
 
-            ctx[0x3D0][0] = D18[0];
-            ctx[0x3D0][4] = D18[4];
-
-            ctx[0x3D8][0] = D19[0];
-            ctx[0x3D8][4] = D19[4];
-
-            //VEOR            Q8, Q8, Q10
+            //Q8 = 16 17
+            //Q9 = 18 19
+            //Q10 = 20 21
+            //Q8 = Q8 ^ Q10
 
             r11[-0x10] = D16[0];
             r11[-0xC] = D16[4];
@@ -274,11 +272,11 @@ int decrypt_sha224_table_internal_C8D09C()
  
             if(some_size3 > 1)
             {
-               int D20[0] = ctx[0x3E0][0];
-               int D20[4] = ctx[0x3E0][4];
+               int D20[0] = xor_data2[0];
+               int D20[4] = xor_data2[4];
 
-               int D21[0] = ctx[0x3E8][0];
-               int D21[4] = ctx[0x3E8][4];
+               int D21[0] = xor_data2[8];
+               int D21[4] = xor_data2[C];
 
                char* r1 = var_40;
 
@@ -294,13 +292,16 @@ int decrypt_sha224_table_internal_C8D09C()
                D17[0] = r1[8];
                D17[4] = r1[C];
 
-               ctx[0x3E0] = D18[0];
-               ctx[0x3E0] = D18[4];
+               xor_data2[0] = D18[0];
+               xor_data2[4] = D18[4];
 
-               ctx[0x3E8] = D19[0];
-               ctx[0x3E8] = D19[4];
+               xor_data2[8] = D19[0];
+               xor_data2[C] = D19[4];
 
-               //VEOR            Q8, Q8, Q10
+               //Q8 = 16 17
+               //Q9 = 18 19
+               //Q10 = 20 21
+               //Q8 = Q8 ^ Q10
 
                D16[0] = r11[0];
                D16[4] = r11[4];
@@ -315,12 +316,12 @@ int decrypt_sha224_table_internal_C8D09C()
                while(true)
                {
                   char dec_byte = dec_dst[r3]; // current dec data
-                  char ctx_byte = (&ctx + [0x3D0])[r3];
+                  char ctx_byte = xor_data1[r3];
                   char xor_byte = dec_byte ^ ctx_byte;
                   lr[r3] = xor_byte; //result data
 
                   char enc_byte = r5[r3]; //current enc data
-                  (&ctx + [0x3D0])[r3] = enc_byte;
+                  xor_data1[r3] = enc_byte;
 
                   r3++;
 
