@@ -124,36 +124,68 @@ typedef struct CryptEngineWorkCtx //size is 0x18
    
 }CryptEngineWorkCtx;
 
-int calculate_sha1_chain_219E1CC(char *result0, char *result1, char *klicensee, int ignored, int salt)
+int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, char *klicensee, uint32_t unk2, uint16_t flags, uint32_t salt, uint16_t arg_4)
 {
    return 0;
 }
 
-int hmac1_sha1_or_sha1_chain_219E0DC(char *result0, char *result1, char *klicensee, int unk3, int arg_0, int salt)
+int calculate_sha1_chain_219E1CC(char *result0, char *result1, char *klicensee, uint32_t ignored, uint32_t salt)
 {
    return 0;
 }
 
-int hmac_sha1_219E164(char *result0, char *result1, char *klicensee, int unk3, int arg_0, void *data, int data_len)()
+int hmac1_sha1_or_sha1_chain_219E0DC(char *result0, char *result1, char *klicensee, uint32_t unk3, uint16_t arg_0, uint32_t salt, uint16_t unused_arg_8)
 {
    return 0;
 }
 
-int loc_219B544()
+int hmac_sha1_219E164(char *result0, char *result1, char *klicensee, uint16_t unk3, uint16_t arg_0, void *data, uint32_t data_len)
 {
-   int r0 = r4 + 0x4C;
-   short r4 = [R5,#0xA6];
-   short r3 = [R5,#0x94];
-   int r1 = r6;
-   int r2 = [R5,#0xA8];
-   int arg0 = r8;
-   int arg4 = r4;
-   int r0 = combine_klicensee_digest_219E1D8();
-   
-   return r0;
+   return 0;
 }
 
-int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2, int unk3, int arg_0, int arg_4, int arg_8, pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
+typedef struct derive_keys_r7_ctx
+{
+   uint32_t unk_40;
+
+
+   uint32_t unk_58;
+
+}derive_keys_r7_ctx;
+
+int derive_subroutine(int r2, CryptEngineData* r4, pfs_pmi_buffer_list_ctx * r5, char* r6, derive_keys_r7_ctx* r7, uint32_t r8)
+{
+   int some_flag = 0xC0000B03 & (1 << r2);
+
+   if((r2 > 0x1F) || (some_flag == 0))
+   {
+      calculate_sha1_chain_219E1CC(r4->key, r4->iv_xor_key, r6, r5->unk_A8, r8);
+      return combine_klicensee_digest_219E1D8(r4->hmac_key, r6, r5->unk_A8, r5->unk_94, r8, r5->unk_A6);
+   }
+   else
+   {
+      if((r7->unk_40 != 0 && r7->unk_40 != 3) || (r7->unk_58 <= 1))
+      {    
+         hmac1_sha1_or_sha1_chain_219E0DC(r4->key, r4->iv_xor_key, r6, r5->unk_A8, r5->unk_94, r8, r5->unk_A6);
+         return combine_klicensee_digest_219E1D8(r4->hmac_key, r6, r5->unk_A8, r5->unk_94, r8, r5->unk_A6);
+      }
+      else
+      {
+         if(r2 == 0 || r2 == 3)
+         {
+            hmac_sha1_219E164(r4->key, r4->iv_xor_key, r6, r5->unk_94, r5->unk_A6, r7 + 0x84, 0x14);
+            return combine_klicensee_digest_219E1D8(r4->hmac_key, r6, r5->unk_A8, r5->unk_94, r8, r5->unk_A6);
+         }
+         else
+         {
+            hmac_sha1_219E164(r4->key, r4->iv_xor_key, r6, r5->unk_94, r5->unk_A6, 0, 0x14);
+            return combine_klicensee_digest_219E1D8(r4->hmac_key, r6, r5->unk_A8, r5->unk_94, r8, r5->unk_A6);
+         }
+      }
+   }
+}
+
+int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2, int unk3, int arg_0, int arg_4, derive_keys_r7_ctx* arg_8, pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
 {
    int r0 = data;
    int r1 = salt;
@@ -226,121 +258,5 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2
    int r2 = r2 - 2;
    //UXTH            R2, R2
 
-   if(r2 > 0x1F)
-   {
-      int r3 = r5[0xA8];
-      int r0 = r4 + 0x2C;
-      int salt = r8;
-      int r1 = r4 + 0x3C;
-      int r2 = r6;
-      int r0 = calculate_sha1_chain_219E1CC();
-
-      return loc_219B544();
-   }
-   else
-   {
-      int r1 = 1;
-      int r3 = 0xC0000B03
-      int r2 = r1 << r2;
-      int r3 = r3 & r2;
-
-      if(r3 == 0)
-      {
-         int r3 = r5[0xA8];
-         int r0 = r4 + 0x2C;
-         int salt = r8;
-         int r1 = r4 + 0x3C;
-         int r2 = r6;
-         int r0 = calculate_sha1_chain_219E1CC();
-
-         return loc_219B544();
-      }
-      else
-      {
-         int r2 = r7[0x40];
-
-         if(r2 != 0 && r2 != 3)
-         {
-            short lr = r5[0x94];
-            int r0 = r4 + 0x2C;
-            short r7 = r5[0xA6];
-            int r1 = r4 + 0x3C;
-            int r3 = r5[0xA8];
-            int r2 = r6;
-            int arg0 = lr;
-            int arg4 = r8;
-            int data_len = r7;
-            int r0 = hmac1_sha1_or_sha1_chain_219E0DC();
-
-            return loc_219B544();
-         }
-         else
-         {
-            int r3 = r7[0x58];
-
-            if(r3 <= 1)
-            {
-               short lr = r5[0x94];
-               int r0 = r4 + 0x2C;
-               short r7 = r5[0xA6];
-               int r1 = r4 + 0x3C;
-               int r3 = r5[0xA8];
-               int r2 = r6;
-               int arg0 = lr;
-               int arg4 = r8;
-               int data_len = r7;
-               int r0 = hmac1_sha1_or_sha1_chain_219E0DC();
-
-               return loc_219B544();
-            }
-            else
-            {
-               int r0 = r4 + 0x2C;
-               int r1 = r4 + 0x3C;
-               short r3 = r5[0x94];
-               short lr = r5[0xA6];
-
-               if(r2 == 0)
-               {
-                  int r7 = 0x84;
-                  int r2 = 0x14;
-                  int arg0 = lr;
-                  int arg4 = r7;
-                  int data_len = r2;
-                  int r2 = r6;
-                  int r0 = hmac_sha1_219E164();
-
-                  return loc_219B544();
-               }
-               else
-               {
-                  if(r2 == 3)
-                  {
-                     int r7 = 0x84;
-                     int r2 = 0x14;
-                     int arg0 = lr;
-                     int arg4 = r7;
-                     int data_len = r2;
-                     int r2 = r6;
-                     int r0 = hmac_sha1_219E164();
-
-                     return loc_219B544();
-                  }
-                  else
-                  {
-                     int r7 = 0;
-                     int r2 = 0x14;
-                     int arg0 = lr;
-                     int arg4 = r7;
-                     int data_len = r2;
-                     int r2 = r6;
-                     int r0 = hmac_sha1_219E164();
-
-                     return loc_219B544();
-                  }
-               }
-            }
-         }
-      }
-   }
+   return derive_subroutine(r2, r4, r5, r6, r8);
 }
