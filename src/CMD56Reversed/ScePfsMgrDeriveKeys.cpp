@@ -124,22 +124,123 @@ typedef struct CryptEngineWorkCtx //size is 0x18
    
 }CryptEngineWorkCtx;
 
-int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t unk2, uint16_t flag, uint32_t salt, uint16_t key_id)
+//----------------------
+
+int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(char *source, int size, char *result)
 {
+   return 0;
+}
+
+int sha1Digest_219DE54(char *result, char *source, int size)
+{
+   return SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(source, size, result);
+}
+
+int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(char* key, int key_len, char* data, int data_len, char* digest)
+{
+   return 0;
+}
+
+int hmacSha1Digest_219DE68(char* digest, char* key, char* data, int data_len)
+{
+   return SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(key, 0x14, data, data_len, digest);
+}
+
+//----------------------
+
+int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt)
+{
+   /*
+   SUB             SP, SP, #0x70
+   MOV             R8, R1
+   MOV             R10, R0
+   LDR.W           R5, [R9]
+   MOV             R1, R2  ; source
+   ADD             R0, SP, #0x90+result ; result
+   MOVS            R2, #0x10 ; size
+   MOV             R4, R3
+   MOV             R6, R0
+   STR             R5, [SP,#0x90+var_24]
+   BL              sha1Digest_219DE54
+   MOVS            R3, #1  ; unk3
+   ADD             R0, SP, #0x90+var_60 ; result
+   MOV             R1, SP  ; source
+   MOVS            R2, #8  ; size
+   STR             R4, [SP,#0x90+var_90]
+   MOV             R5, R0
+   STR             R3, [SP,#0x90+var_90+4]
+   ADD             R4, SP, #0x90+source
+   BL              sha1Digest_219DE54
+   LDMIA           R6!, {R0-R3}
+   ADD.W           LR, SP, #0x90+source+0x14
+   STMIA           R4!, {R0-R3}
+   LDR             R7, [R6]
+   LDMIA           R5!, {R0-R3}
+   STR             R7, [R4]
+   ADD             R7, SP, #0x90+var_88
+   STMIA.W         LR!, {R0-R3}
+   ADD             R1, SP, #0x90+source ; source
+   LDR             R3, [R5] ; unk3
+   MOVS            R2, #0x28 ; size
+   ADD             R0, SP, #0x90+var_88 ; result
+   STR.W           R3, [LR]
+   BL              sha1Digest_219DE54
+   LDMIA           R7!, {R0-R3} ; get pointer to last result, load data
+   MOV.W           LR, #2
+   ADD             R7, SP, #0x90+result
+   STR.W           LR, [SP,#0x90+var_90+4] ; = 2
+   STR.W           R0, [R10] ; store result
+   ADD             R0, SP, #0x90+var_60 ; result
+   STR.W           R1, [R10,#4] ; store result
+   MOV             R1, SP  ; source - stack beginning
+   STR.W           R2, [R10,#8] ; store result
+   MOVS            R2, #8  ; size
+   STR.W           R3, [R10,#0xC] ; store result
+   BL              sha1Digest_219DE54
+   LDMIA           R7!, {R0-R3}
+   ADD.W           LR, SP, #0x90+var_60
+   ADD.W           R12, SP, #0x90+source
+   ADD             R7, SP, #0x90+source+0x14
+   LDR             R5, [R5]
+   LDR             R6, [R6]
+   STMIA.W         R12!, {R0-R3}
+   LDMIA.W         LR!, {R0-R3}
+   STR             R6, [R4]
+   ADD             R4, SP, #0x90+var_88
+   STMIA           R7!, {R0-R3}
+   ADD             R1, SP, #0x90+source ; source
+   MOVS            R2, #0x28 ; size
+   STR             R5, [R7]
+   ADD             R0, SP, #0x90+var_88 ; result
+   BL              sha1Digest_219DE54
+   LDMIA           R4!, {R0-R3} ; get pointer to last result, load data
+   LDR             R5, [SP,#0x90+var_24]
+   STR.W           R0, [R8] ; store result
+   LDR.W           R0, [R9] ; cookie
+   STR.W           R1, [R8,#4] ; store result
+   STR.W           R2, [R8,#8] ; store result
+   CMP             R5, R0
+   STR.W           R3, [R8,#0xC] ; store result
+   */
    return 0;
 }
 
 int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicensee, uint32_t ignored, uint32_t salt)
 {
-   return 0;
+   return calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt);
 }
 
-int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t unused_key_id)
+int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t ignored_key_id)
 {
    return 0;
 }
 
 int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t flag, uint16_t key_id, const char* data, uint32_t data_len)
+{
+   return 0;
+}
+
+int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t unk2, uint16_t flag, uint32_t salt, uint16_t key_id)
 {
    return 0;
 }
