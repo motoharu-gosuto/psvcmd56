@@ -124,213 +124,218 @@ typedef struct CryptEngineWorkCtx //size is 0x18
    
 }CryptEngineWorkCtx;
 
+int calculate_sha1_chain_219E1CC(char *result0, char *result1, char *klicensee, int ignored, int salt)
+{
+   return 0;
+}
+
+int hmac1_sha1_or_sha1_chain_219E0DC(char *result0, char *result1, char *klicensee, int unk3, int arg_0, int salt)
+{
+   return 0;
+}
+
+int hmac_sha1_219E164(char *result0, char *result1, char *klicensee, int unk3, int arg_0, void *data, int data_len)()
+{
+   return 0;
+}
+
 int loc_219B544()
 {
-   /*
-   ADD.W           R0, R4, #0x4C ; hmac_key in data
-   LDRH.W          R4, [R5,#0xA6]
-   LDRH.W          R3, [R5,#0x94] ; flags
-   MOV             R1, R6  ; klicensee
-   LDR.W           R2, [R5,#0xA8] ; unk2
-   STRD.W          R8, R4, [SP] ; int salt, ?
-   BL              combine_klicensee_digest_219E1D8
-   ADD             SP, SP, #0x14
-   VPOP            {D8}
-   */
-   return 0;
+   int r0 = r4 + 0x4C;
+   short r4 = [R5,#0xA6];
+   short r3 = [R5,#0x94];
+   int r1 = r6;
+   int r2 = [R5,#0xA8];
+   int arg0 = r8;
+   int arg4 = r4;
+   int r0 = combine_klicensee_digest_219E1D8();
+   
+   return r0;
 }
 
 int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2, int unk3, int arg_0, int arg_4, int arg_8, pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
 {
-   /*
-   MOV             R4, R0
-   VPUSH           {D8}
-   SUB             SP, SP, #0x14 ; salt
-   MOV             R8, R1  ;  int salt
-   VMOV            D8, R2, R3
-   LDRH.W          R10, [SP,#0x38+arg_0]
-   LDRD.W          R7, R5, [SP,#0x38+arg_8] ; R7 = pfs_pmi_buffer_list_ctx *pfs_pmi_bcl
-   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
-   MOV.W           R3, #0x100
-   */
+   int r0 = data;
+   int r1 = salt;
+   int r2 = unk2;
+   int r3 = unk3;
+
+   int r4 = r0;
+   int r8 = r1;
+
+   //VMOV            D8, R2, R3
+   
+   short r10 = arg_0;
+   int r7 = arg_8;
+   int r5 = pfs_pmi_bcl;
+   
+   int r0 = ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e();
+   int r3 = 0x100;
+   
+   if(r0 != 0)
+   {
+      int r3 = r0[0x2C];
+      if(r3 >= 0)
+      {
+         //UXTH          R3, R3
+      }
+   }
+
+   r4[0x18] = r3;
+
+   int r0 = ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e();
+   
+   int r3 = 0xF;
 
    if(r0 != 0)
    {
-      /*
-      LDR             R3, [R0,#0x2C]
-      CMP             R3, #0
-      IT GE
-      UXTHGE          R3, R3
-      */
+      int r3 = r0[0x28];
    }
 
-   /*
-   STR             R3, [R4,#0x18]
-   BLX             ScePfsMgr.SceIofilemgrForDriver._imp_thread_related_12f8d58e
-   MOVS            R3, #0xF
-   */
+   short r12 = r5[0x92] ;
+   int r6 = r5 + 0x96;
+   short lr = r5[0x94];
+   int r0 = r7;
+   short r1 = r5[0xA6];
+   int r2 = r5[0xA8];
 
-   if(r0 != 0)
-   {
-      /*
-      LDR             R3, [R0,#0x28]
-      */
-   }
+   r4[0x14] = r3;
 
-   /*
-   LDRH.W          R12, [R5,#0x92] ; type
-   ADD.W           R6, R5, #0x96 ; offset to klicensee
-   LDRH.W          LR, [R5,#0x94]
-   MOV             R0, R7
-   LDRH.W          R1, [R5,#0xA6]
-   LDR.W           R2, [R5,#0xA8]
-   STR             R3, [R4,#0x14]
-   LDR             R3, [SP,#0x38+arg_4]
-   STRD.W          R2, R8, [R4,#4] ; R8 =  int salt
-   STR             R3, [R4,#0x1C]
-   STRH.W          R12, [R4,#0xC]
-   STRH.W          LR, [R4,#0xE]
-   STRH.W          R10, [R4,#0x12]
-   STRH            R1, [R4,#0x10]
-   VSTR            D8, [R4,#0x20]
-   STR             R6, [R4] ; char* klicensee
-   LDR             R3, [R7,#0x14]
-   BLX             R3
-   LDRH            R2, [R4,#0xE]
-   STR             R0, [R4,#0x28]
-   SUBS            R2, #2
-   UXTH            R2, R2
-   */
+   int r3 = arg_4;
+
+   r4[4] = r2;
+   r4[8] = r8;
+   r4[0x1C] = r3;
+
+   r4[0xC] = (short) r12;
+   r4[0xE] = (short)lr;
+   r4[0x12] = (short) r10;
+   r4[0x10] = (short) r1;
+   
+   //VSTR            D8, [R4,#0x20]
+
+   r4[0x00] = r6;
+
+   int r3 = r7[0x14]
+
+   int r0 = r3(); //call callback
+   
+   short r2 = r4[0xE];
+   r4[0x28] = r0;
+   
+   int r2 = r2 - 2;
+   //UXTH            R2, R2
 
    if(r2 > 0x1F)
    {
-      /*
-      LDR.W           R3, [R5,#0xA8] ; ignored
-      ADD.W           R0, R4, #0x2C ; result0 - key in data
-      STR.W           R8, [SP,#0x38+salt] ; salt
-      ADD.W           R1, R4, #0x3C ; result1 - iv_xor_key in data
-      MOV             R2, R6  ; klicensee
-      BL              calculate_sha1_chain_219E1CC
-      */
+      int r3 = r5[0xA8];
+      int r0 = r4 + 0x2C;
+      int salt = r8;
+      int r1 = r4 + 0x3C;
+      int r2 = r6;
+      int r0 = calculate_sha1_chain_219E1CC();
 
       return loc_219B544();
    }
    else
    {
-      /*
-      MOVS            R1, #1
-      MOVW            R3, #0xB03
-      LSL.W           R2, R1, R2
-      MOVT.W          R3, #0xC000
-      ANDS            R3, R2
-      */
+      int r1 = 1;
+      int r3 = 0xC0000B03
+      int r2 = r1 << r2;
+      int r3 = r3 & r2;
 
       if(r3 == 0)
       {
-         /*
-         LDR.W           R3, [R5,#0xA8] ; ignored
-         ADD.W           R0, R4, #0x2C ; result0 - key in data
-         STR.W           R8, [SP,#0x38+salt] ; salt
-         ADD.W           R1, R4, #0x3C ; result1 - iv_xor_key in data
-         MOV             R2, R6  ; klicensee
-         BL              calculate_sha1_chain_219E1CC
-         */
+         int r3 = r5[0xA8];
+         int r0 = r4 + 0x2C;
+         int salt = r8;
+         int r1 = r4 + 0x3C;
+         int r2 = r6;
+         int r0 = calculate_sha1_chain_219E1CC();
 
          return loc_219B544();
       }
       else
       {
-         /*
-         LDR             R2, [R7,#0x40]
-         */
+         int r2 = r7[0x40];
 
          if(r2 != 0 && r2 != 3)
          {
-            /*
-            LDRH.W          LR, [R5,#0x94]
-            ADD.W           R0, R4, #0x2C ; result0 - key in data
-            LDRH.W          R7, [R5,#0xA6]
-            ADD.W           R1, R4, #0x3C ; result1 - iv_xor_key in data
-            LDR.W           R3, [R5,#0xA8] ; unk3
-            MOV             R2, R6  ; klicensee
-            STRD.W          LR, R8, [SP] ; ?,  int salt
-            STR             R7, [SP,#0x38+data_len]
-            BL              hmac1_sha1_or_sha1_chain_219E0DC
-            */
+            short lr = r5[0x94];
+            int r0 = r4 + 0x2C;
+            short r7 = r5[0xA6];
+            int r1 = r4 + 0x3C;
+            int r3 = r5[0xA8];
+            int r2 = r6;
+            int arg0 = lr;
+            int arg4 = r8;
+            int data_len = r7;
+            int r0 = hmac1_sha1_or_sha1_chain_219E0DC();
+
             return loc_219B544();
          }
          else
          {
-            /*
-            LDR             R3, [R7,#0x58]
-            */
+            int r3 = r7[0x58];
 
             if(r3 <= 1)
             {
-               /*
-               LDRH.W          LR, [R5,#0x94]
-               ADD.W           R0, R4, #0x2C ; result0 - key in data
-               LDRH.W          R7, [R5,#0xA6]
-               ADD.W           R1, R4, #0x3C ; result1 - iv_xor_key in data
-               LDR.W           R3, [R5,#0xA8] ; unk3
-               MOV             R2, R6  ; klicensee
-               STRD.W          LR, R8, [SP] ; ?,  int salt
-               STR             R7, [SP,#0x38+data_len]
-               BL              hmac1_sha1_or_sha1_chain_219E0DC
-               */
+               short lr = r5[0x94];
+               int r0 = r4 + 0x2C;
+               short r7 = r5[0xA6];
+               int r1 = r4 + 0x3C;
+               int r3 = r5[0xA8];
+               int r2 = r6;
+               int arg0 = lr;
+               int arg4 = r8;
+               int data_len = r7;
+               int r0 = hmac1_sha1_or_sha1_chain_219E0DC();
+
                return loc_219B544();
             }
             else
             {
-               /*
-               ADD.W           R0, R4, #0x2C ; result0 - key in data
-               ADD.W           R1, R4, #0x3C ; result1 - iv_xor_key in data
-               LDRH.W          R3, [R5,#0x94] ; unk3
-               LDRH.W          LR, [R5,#0xA6]
-               */
+               int r0 = r4 + 0x2C;
+               int r1 = r4 + 0x3C;
+               short r3 = r5[0x94];
+               short lr = r5[0xA6];
 
                if(r2 == 0)
                {
-                  /*
-                  ADDS            R7, #0x84
-                  */
-                  /*
-                  MOVS            R2, #0x14
-                  STRD.W          LR, R7, [SP]
-                  STR             R2, [SP,#0x38+data_len] ; data_len
-                  MOV             R2, R6  ; klicensee
-                  BL              hmac_sha1_219E164
-                  */
+                  int r7 = 0x84;
+                  int r2 = 0x14;
+                  int arg0 = lr;
+                  int arg4 = r7;
+                  int data_len = r2;
+                  int r2 = r6;
+                  int r0 = hmac_sha1_219E164();
+
                   return loc_219B544();
                }
                else
                {
                   if(r2 == 3)
                   {
-                     /*
-                     ADDS            R7, #0x84
-                     */
-                     /*
-                     MOVS            R2, #0x14
-                     STRD.W          LR, R7, [SP]
-                     STR             R2, [SP,#0x38+data_len] ; data_len
-                     MOV             R2, R6  ; klicensee
-                     BL              hmac_sha1_219E164
-                     */
+                     int r7 = 0x84;
+                     int r2 = 0x14;
+                     int arg0 = lr;
+                     int arg4 = r7;
+                     int data_len = r2;
+                     int r2 = r6;
+                     int r0 = hmac_sha1_219E164();
+
                      return loc_219B544();
                   }
                   else
                   {
-                     /*
-                     MOVNE           R7, #0
-                     */
-                     /*
-                     MOVS            R2, #0x14
-                     STRD.W          LR, R7, [SP]
-                     STR             R2, [SP,#0x38+data_len] ; data_len
-                     MOV             R2, R6  ; klicensee
-                     BL              hmac_sha1_219E164
-                     */
+                     int r7 = 0;
+                     int r2 = 0x14;
+                     int arg0 = lr;
+                     int arg4 = r7;
+                     int data_len = r2;
+                     int r2 = r6;
+                     int r0 = hmac_sha1_219E164();
+
                      return loc_219B544();
                   }
                }
