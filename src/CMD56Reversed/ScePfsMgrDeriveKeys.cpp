@@ -124,22 +124,22 @@ typedef struct CryptEngineWorkCtx //size is 0x18
    
 }CryptEngineWorkCtx;
 
-int combine_klicensee_digest_219E1D8(char* sha1_combined_digest, const char* klicensee, uint32_t unk2, uint16_t flags, uint32_t salt, uint16_t arg_4)
+int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t unk2, uint16_t flag, uint32_t salt, uint16_t key_id)
 {
    return 0;
 }
 
-int calculate_sha1_chain_219E1CC(char* result0, char* result1, const char* klicensee, uint32_t ignored, uint32_t salt)
+int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicensee, uint32_t ignored, uint32_t salt)
 {
    return 0;
 }
 
-int hmac1_sha1_or_sha1_chain_219E0DC(char* result0, char* result1, const char* klicensee, uint32_t unk3, uint16_t arg_0, uint32_t salt, uint16_t unused_arg_8)
+int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t unused_key_id)
 {
    return 0;
 }
 
-int hmac_sha1_219E164(char* result0, char* result1, const char* klicensee, uint16_t unk3, uint16_t arg_0, const char* data, uint32_t data_len)
+int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t flag, uint16_t key_id, const char* data, uint32_t data_len)
 {
    return 0;
 }
