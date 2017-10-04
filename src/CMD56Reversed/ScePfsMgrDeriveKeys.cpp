@@ -131,12 +131,12 @@ int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(char *source, int size, char 
    return 0;
 }
 
-int sha1Digest_219DE54(char *result, char *source, int size)
+int sha1Digest_219DE54(char *result, const char *source, int size)
 {
    return SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(source, size, result);
 }
 
-int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(char* key, int key_len, char* data, int data_len, char* digest)
+int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key, int key_len, const char* data, int data_len, char* digest)
 {
    return 0;
 }
@@ -150,149 +150,60 @@ int hmacSha1Digest_219DE68(char* digest, char* key, char* data, int data_len)
 
 int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt)
 {
-   char var_90[0x08] = {0};
+   int var_90[2] = {0};
    char var_88[0x14] = {0};
    char result[0x14] = {0};
    char var_60[0x14] = {0};
    char source[0x28] = {0};
 
-   int r8 = r1;
-   int r10 = r0;
+   sha1Digest_219DE54(result, klicensee, 0x10);
 
-   int r1 = r2;
-   int r0 = result;
-   int r2 = 0x10;
-   int r4 = r3;
-   int r6 = r0;
+   var_90[0] = salt;
+   var_90[1] = 1;
    
-   sha1Digest_219DE54(r0, r1, r2);
+   sha1Digest_219DE54(var_60, (char*)var_90, 8);
 
-   int r3 = 1;
-   int r0 = var_60;
-   int r1 = var_90;
-   int r2 = 8;
+   source[0x0] = result[0x00];
+   source[0x4] = result[0x04];
+   source[0x8] = result[0x08];
+   source[0xC] = result[0x0C];
+   source[0x10] = result[0x10];
+
+   (source + 0x14)[0x00] = var_60[0x0];
+   (source + 0x14)[0x04] = var_60[0x4];
+   (source + 0x14)[0x08] = var_60[0x8];
+   (source + 0x14)[0x0C] = var_60[0xC];
+   (source + 0x14)[0x010] = var_60[0x10];
+
+   sha1Digest_219DE54(var_88, source, 0x28);
+
+   key[0x00] = var_88[0x0];
+   key[0x04] = var_88[0x4];
+   key[0x08] = var_88[0x8];
+   key[0x0C] = var_88[0xC];
    
-   var_90 = r4;
-   int r5 = r0;
-   [var_90+4] = r3;
+   var_90[1] = 2;
+
+   sha1Digest_219DE54(var_60, (char*)var_90, 8);
+
+   source[0x00] = result[0x00];
+   source[0x04] = result[0x04];
+   source[0x08] = result[0x08];
+   source[0x0C] = result[0x0C]; 
+   source[0x10] = result[0x10];
+
+   (source + 0x14)[0x00] = var_60[0x00];
+   (source + 0x14)[0x04] = var_60[0x04];
+   (source + 0x14)[0x08] = var_60[0x08];
+   (source + 0x14)[0x0C] = var_60[0x0C];
+   (source + 0x14)[0x10] = var_60[0x10];
    
-   int r4 = source;
+   sha1Digest_219DE54(var_88, source, 0x28);
 
-   sha1Digest_219DE54(r0, r1, r2);
-   
-   int r0 = r6[0x00];
-   int r1 = r6[0x04];
-   int r2 = r6[0x08];
-   int r3 = r6[0x0C];
-   
-   int lr = source+0x14;
-   r4[0x0] = r0;
-   r4[0x4] = r1;
-   r4[0x8] = r2;
-   r4[0xC] = r3;
-   
-   int r7 = r6[0x10];
-
-   int r0 = r5[0x0];
-   int r1 = r5[0x4];
-   int r2 = r5[0x8];
-   int r3 = r5[0xC];
-
-   r4[0x10] = r7;
-   
-   int r7 = var_88;
-
-   lr[0x00] = r0;
-   lr[0x04] = r1;
-   lr[0x08] = r2;
-   lr[0x0C] = r3;
-
-   int r1 = source;
-   int r3 = r5[0x10]
-   
-   int r2 = 0x28;
-   int r0 = var_88;
-
-   lr[0x010] = r3;
-
-   sha1Digest_219DE54(r0, r1, r2);
-
-   int r0 = r7[0x0];
-   int r1 = r7[0x4];
-   int r2 = r7[0x8];
-   int r3 = r7[0xC];
-
-   int lr = 2;
-
-   int r7 = result;
-   
-   [var_90+4] = lr;
-   
-   r10[0x00] = r0;
-   
-   int r0 = var_60;
-
-   r10[0x04] = r1;
-   
-   int r1 = var_90;
-   
-   r10[0x08] = r2;
-
-   int r2 = 8;
-
-   r10[0x0C] = r3;
-
-   sha1Digest_219DE54(r0, r1, r2);
-
-   int r0 = r7[0x00];
-   int r1 = r7[0x04];
-   int r2 = r7[0x08];
-   int r3 = r7[0x0C];
-
-   int lr = var_60;
-   int r12 = source;
-   int r7 = source + 0x14;
-
-   int r5 = r5[0x10];
-   int r6 = r6[0x10];
-   
-   r12[0x00] = r0;
-   r12[0x04] = r1;
-   r12[0x08] = r2;
-   r12[0x0C] = r3;
-
-   int r0 = lr[0x00];
-   int r1 = lr[0x04];
-   int r2 = lr[0x08];
-   int r3 = lr[0x0C];
-
-   r4[0x10] = r6;
-
-   int r4 = var_88;
-
-   r7[0x00] = r0;
-   r7[0x04] = r1;
-   r7[0x08] = r2;
-   r7[0x0C] = r3;
-
-   int r1 = source;
-   int r2 = 0x28;
-   
-   r7[0x10] = r5; // r5 ?????
-   
-   int r0 = var_88;
-
-   sha1Digest_219DE54(r0, r1, r2);
-
-   int r0 = r4[0x00];
-   int r1 = r4[0x04];
-   int r2 = r4[0x08];
-   int r3 = r4[0x0C];
-
-   r8[0x00] = r0;
-   r8[0x04] = r1;
-   r8[0x08] = r2;
-   r8[0x0C] = r3;
+   iv_xor_key[0x00] = var_88[0x00];
+   iv_xor_key[0x04] = var_88[0x04];
+   iv_xor_key[0x08] = var_88[0x08];
+   iv_xor_key[0x0C] = var_88[0x0C];
 
    return 0;
 }
