@@ -197,69 +197,61 @@ int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicen
 
 int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t ignored_key_id)
 {
-   /*
-   LDRH.W          R12, [SP,#0x40+arg_0]
-   MOV             R4, 0x9EA004
-   MOV             R8, R3
-   LDR             R3, [R4]
-   MOV             R5, R0
-   MOV             R6, R1  ; result
-   MOV             R7, R2
-   TST.W           R12, #2
-   LDR.W           LR, [SP,#0x40+salt] ; salt
-   STR             R3, [SP,#0x40+var_1C]
-   */
-   if(?)
+   uint16_t r12 = arg_0;
+   int r8 = r3;
+   int r5 = r0;
+   int r6 = r1;
+   int r7 = r2;
+
+   int lr = salt;
+   
+   if((r12 & 2) == 0)
    {
-      /*
-      LDR             R0, [R2]
-      LDR             R1, [R2,#4]
-      LDR             R3, [R7,#0xC]
-      LDR             R2, [R2,#8]
-      STR             R0, [R5]
-      STR             R1, [R5,#4]
-      MOVW            R1, #(hmac_key_21A93C8 AND 0xFFFF) ; 021A93C8 data reference 8B2562E4
-      STR             R2, [R5,#8]
-      MOVT.W          R1, #high16(hmac_key_21A93C8) ; 021A93C8 data reference 8B2562E4
-      STR             R3, [R5,#0xC]
-      ADD             R5, SP, #0x40+digest
-      STR.W           LR, [SP,#0x40+data_3C]
-      MOV             R0, R5  ; digest
-      */
+      int r3 = lr;
+      calculate_sha1_chain_219E008(r0, r1, r2, r3);
+      return 0;
+   }
 
-      if(r8 == 0)
-      {
-         /*
-         ADD             R2, SP, #0x40+data_3C
-         MOVS            R3, #4  ; data_len
-         BL              hmacSha1Digest_219DE68
-         */
-      }
-      else
-      {
-         /*
-         ADD             R2, SP, #0x40+data ; data
-         MOVS            R3, #8  ; data_len
-         STRD.W          R8, LR, [SP,#0x40+data]
-         BL              hmacSha1Digest_219DE68
-         */
-      }
+   int r0 = r2[0x0];
+   int r1 = r2[0x4];
+   int r3 = r7[0xC];
+   int r2 = r2[0x8];
 
-      /*
-      LDMIA           R5!, {R0-R3}
-      STR             R0, [R6] ; store result
-      STR             R1, [R6,#4] ; store result
-      STR             R2, [R6,#8] ; store result
-      STR             R3, [R6,#0xC] ; store result
-      */
+   r5[0x0] = r0;
+   r5[0x4] = r1;
+   int r1 = &hmac_key_21A93C8;
+   r5[0x8] = r2;
+   r5[0xC] = r3;
+   
+   int r5 = digest;
+   data_3C = lr;
+   int r0 = r5;
+   
+   if(r8 == 0)
+   {
+      int r2 = data_3C;
+      int r3 = 4;
+      hmacSha1Digest_219DE68(r0, r1, r2, r3);
    }
    else
    {
-      /*
-      MOV             R3, LR  ; salt
-      BL              calculate_sha1_chain_219E008
-      */
+      int r2 = data;
+      int r3 = 8;
+      data[0] = r8
+      data[4] = lr;
+
+      hmacSha1Digest_219DE68(r0, r1, r2, r3);
    }
+
+   int r0 = r5[0x00];
+   int r1 = r5[0x04];
+   int r2 = r5[0x08];
+   int r3 = r5[0x0C];
+
+   r6[0x00] = r0;
+   r6[0x04] = r1;
+   r6[0x08] = r2;
+   r6[0x0C] = r3;
 
    return 0;
 }
