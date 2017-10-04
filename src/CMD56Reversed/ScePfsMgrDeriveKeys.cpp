@@ -197,41 +197,33 @@ int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicen
 
 char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
 
-int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t ignored_key_id)
+int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t ignored_key_id)
 {
-   char data_3C[0x4] = {0};
-   char data[0x8] = {0};
-   char digest[0x14] = {0};
-
    if((flag & 2) == 0)
    {
-      calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt);
+      calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt1);
       return 0;
    }
 
-   key[0x0] = klicensee[0x0];
-   key[0x4] = klicensee[0x4];
-   key[0x8] = klicensee[0x8];
-   key[0xC] = klicensee[0xC];
+   int saltin0[1] = {0};
+   int saltin1[2] = {0};
+   char drvkey[0x14] = {0};
 
-   if(unk3 == 0)
+   memcpy(key, klicensee, 0x10);
+
+   if(salt0 == 0)
    {
-      data_3C[0x00] = salt;
-
-      hmacSha1Digest_219DE68(digest, hmac_key_21A93C8, data_3C, 4);
+      saltin0[0x00] = salt1;
+      hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (char*)saltin0, 4); // derive key with one salt
    }
    else
    {
-      data[0x00] = unk3;
-      data[0x04] = salt;
-
-      hmacSha1Digest_219DE68(digest, hmac_key_21A93C8, data, 8);
+      saltin1[0] = salt0;
+      saltin1[1] = salt1;
+      hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (char*)saltin1, 8); // derive key with two salts
    }
 
-   iv_xor_key[0x00] = digest[0x00];
-   iv_xor_key[0x04] = digest[0x04];
-   iv_xor_key[0x08] = digest[0x08];
-   iv_xor_key[0x0C] = digest[0x0C];
+   memcpy(iv_xor_key, drvkey, 0x10); //copy result
 
    return 0;
 }
