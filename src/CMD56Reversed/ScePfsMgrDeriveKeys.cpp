@@ -262,20 +262,20 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const c
    char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
    char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
 
-   char saltin0[4] = {0};
-   char saltin1[8] = {0};
+   int saltin0[1] = {0};
+   int saltin1[2] = {0};
    char base[0x14] = {0};
 
    if(salt0 == 0)
    {
-      saltin0[0x00] = salt1;
-      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, saltin0, 4); // derive base with one salt
+      saltin0[0] = salt1;
+      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, (char*)saltin0, 4); // derive base with one salt
    }
    else
    {
-      saltin1[0x0] = salt0;
-      saltin1[0x4] = salt1;
-      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, saltin1, 8); // derive base with two salts
+      saltin1[0] = salt0;
+      saltin1[1] = salt1;
+      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, (char*)saltin1, 8); // derive base with two salts
    }
 
    memcpy(combo_aligned, base, 0x14); // calculated digest will be src data
