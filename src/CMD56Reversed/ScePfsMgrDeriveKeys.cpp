@@ -241,7 +241,7 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_digest, char *klicensee, int salt0, int salt1, int key_id)
+int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_digest, const char *klicensee, int salt0, int salt1, int key_id)
 {
    return 0;
 }
@@ -249,7 +249,7 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_dig
 //int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
 
 //temp header
-int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, char *klicensee, int unk2, int flags, int salt, int arg_4)
+int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, const char *klicensee, int unk2, int flags, int salt, int arg_4)
 {
    if((flags << 0x1F) < 0) // check bit 0
    {
@@ -263,40 +263,25 @@ int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, char *klicensee
       return 0;
    }
 
-   char data_for_sha1[8] = {0};
-   char total_sha1_digest_80[0x14] = {0};
-   char klicensee_sha1_digest[0x14] = {0};
-   char sha_digest_58[0x14] = {0};
+   int saltin[2] = {0};
+   char base0[0x14] = {0};
+   char base1[0x14] = {0};
+   char combo[0x28] = {0};
+   char drvkey[0x14] = {0};
 
-   char klicensee_sha1_digest_copy[0x14] = {0};
-   char sha_digest_58_copy[0x14] = {0};
+   sha1Digest_219DE54(base0, klicensee, 0x10); // calculate digest of klicensee
 
-   sha1Digest_219DE54(klicensee_sha1_digest, klicensee, 0x10);
+   saltin[0] = 0xA;
+   saltin[1] = salt;
 
-   data_for_sha1[0] = 0xA;
-   data_for_sha1[4] = salt;
+   sha1Digest_219DE54(base1, (char*)saltin, 8); // calculate digest of salt
 
-   sha1Digest_219DE54(sha_digest_58, data_for_sha1, 8);
-
-   klicensee_sha1_digest_copy[0x00] = klicensee_sha1_digest[0x00];
-   klicensee_sha1_digest_copy[0x04] = klicensee_sha1_digest[0x04];
-   klicensee_sha1_digest_copy[0x08] = klicensee_sha1_digest[0x08];
-   klicensee_sha1_digest_copy[0x0C] = klicensee_sha1_digest[0x0C];
-   klicensee_sha1_digest_copy[0x10] = klicensee_sha1_digest[0x10];
-
-   sha_digest_58_copy[0x00] = sha_digest_58[0x00];
-   sha_digest_58_copy[0x04] = sha_digest_58[0x04];
-   sha_digest_58_copy[0x08] = sha_digest_58[0x08];
-   sha_digest_58_copy[0x0C] = sha_digest_58[0x0C];
-   sha_digest_58_copy[0x10] = sha_digest_58[0x10];
+   memcpy(combo, base0, 0x14);
+   memcpy(combo + 0x14, base1, 0x14);
          
-   sha1Digest_219DE54(total_sha1_digest_80, klicensee_sha1_digest_copy, 0x28);
+   sha1Digest_219DE54(drvkey, combo, 0x28); // calculate digest of combination of klicensee and salt digests
                
-   sha1_combined_digest[0x00] = total_sha1_digest_80[0x00];
-   sha1_combined_digest[0x04] = total_sha1_digest_80[0x04];
-   sha1_combined_digest[0x08] = total_sha1_digest_80[0x08];
-   sha1_combined_digest[0x0C] = total_sha1_digest_80[0x0C];
-   sha1_combined_digest[0x10] = total_sha1_digest_80[0x10];
+   memcpy(sha1_combined_digest, drvkey, 0x14); // copy derived key
 
    return 0;
 }
