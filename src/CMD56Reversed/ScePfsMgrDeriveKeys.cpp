@@ -172,7 +172,7 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
    
    sha1Digest_219DE54(drvkey, combo, 0x28); //calculate hash from combination of salt 0 hash and klicensee hash
 
-   memcpy(key, drvkey, 0x10); // copy result
+   memcpy(key, drvkey, 0x10);  //copy derived key
 
    // derive key 1
    
@@ -185,7 +185,7 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
 
    sha1Digest_219DE54(drvkey, combo, 0x28); //calculate hash from combination of salt 1 hash and klicensee hash
 
-   memcpy(iv_xor_key, drvkey, 0x10); // copy result
+   memcpy(iv_xor_key, drvkey, 0x10); //copy derived key
 
    return 0;
 }
@@ -223,26 +223,20 @@ int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* kl
       hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (char*)saltin1, 8); // derive key with two salts
    }
 
-   memcpy(iv_xor_key, drvkey, 0x10); //copy result
+   memcpy(iv_xor_key, drvkey, 0x10); //copy derived key
 
    return 0;
 }
 
-int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t ignored_flag, uint16_t ignored_key_id, const char* data, uint32_t data_len)
+int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t ignored_flag, uint16_t ignored_key_id, const char* base_key, uint32_t base_key_len)
 {
    char drvkey[0x14] = {0};
 
-   hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, data, data_len);
+   hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, base_key, base_key_len);
 
-   key[0x0] = klicensee[0x0];
-   key[0x4] = klicensee[0x4];
-   key[0x8] = klicensee[0x8];
-   key[0xC] = klicensee[0xC];
+   memcpy(key, klicensee, 0x10);
 
-   iv_xor_key[0x0] = drvkey[0x0];
-   iv_xor_key[0x4] = drvkey[0x4];
-   iv_xor_key[0x8] = drvkey[0x8];
-   iv_xor_key[0xC] = drvkey[0xC];
+   memcpy(iv_xor_key, drvkey, 0x10);
 
    return 0;
 }
@@ -266,7 +260,7 @@ typedef struct derive_keys_ctx
    uint32_t unk_58;
    uint32_t unk_68;
 
-   char unk_84[];
+   char base_key[0x14]; // 0x84
 
 }derive_keys_ctx;
 
@@ -334,7 +328,7 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
       {
          if(drv_ctx->unk_40 == 0 || drv_ctx->unk_40 == 3)
          {
-            hmac_sha1_219E164(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, drv_ctx->unk_84, 0x14);
+            hmac_sha1_219E164(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, drv_ctx->base_key, 0x14);
             return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
          }
          else
