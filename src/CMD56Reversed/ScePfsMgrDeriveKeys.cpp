@@ -75,7 +75,7 @@ typedef struct CryptEngineData //size is 0x60
    
    char iv_xor_key[0x10]; //0x3C
    
-   char hmac_key[0x10]; //0x4C
+   char hmac_key[0x14]; //0x4C
 
    uint32_t unk_5C;
 
@@ -251,112 +251,54 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_dig
 //temp header
 int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, char *klicensee, int unk2, int flags, int salt, int arg_4)
 {
-   int r8 = r0;
-   int r6 = salt;
-   short r7 = arg_4;
-
-   if((r3 << 0x1F) < 0) // check bit 0
+   if((flags << 0x1F) < 0) // check bit 0
    {
-      int r0 = r0;
-      int r1 = 0;
-      int r2 = 0x14;
-      memset(r0, r1, r2);
+      memset(sha1_combined_digest, 0, 0x14);
       return 0;
    }
-   else
+
+   if((flags << 0x1E) < 0) // check bit 1
    {
-      if((r3 << 0x1E) < 0) // check bit 1
-      {
-         key_id = r7;
-         int r3 = r6;
-         
-         calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(r0, r1, r2, r3, a0);
-
-         return 0;
-      }
-      else
-      {
-         char data_for_sha1[8] = {0};
-         char total_sha1_digest_80[0x14] = {0};
-         char klicensee_sha1_digest[0x14] = {0};
-         char sha_digest_58[0x14] = {0};
-         char klicensee_sha1_digest_copy[0x14] = {0};
-         char sha_digest_58_copy[0x14] = {0};
-
-
-         int r2 = 0x10;
-         int r0 = klicensee_sha1_digest;
-
-         sha1Digest_219DE54(r0,r1,r2);
-
-         int r7 = klicensee_sha1_digest;
-         int r3 = 0xA;
-         int r1 = data_for_sha1;
-         int r2 = 8;
-         int r0 = sha_digest_58;
-
-         data_for_sha1[0] = r3;
-         data_for_sha1[4] = r6;
-
-         sha1Digest_219DE54(r0, r1, r2);
-
-         int r0 = r7[0x00];
-         int r1 = r7[0x04];
-         int r2 = r7[0x08];
-         int r3 = r7[0x0C];
-
-         int r6 = sha_digest_58;
-         int lr = klicensee_sha1_digest_copy;
-         int r5 = sha_digest_58_copy;
-
-         lr[0x00] = r0;
-         lr[0x04] = r1;
-         lr[0x08] = r2;
-         lr[0x0C] = r3;
-
-         int r7 = r7[0x10];
-
-         int r0 = r6[0x00];
-         int r1 = r6[0x04];
-         int r2 = r6[0x08];
-         int r3 = r6[0x0C];
-
-         lr[0x10] = r7;
-
-         int r6 = r6[0x10] 
-
-         r5[0x00] = r0;
-         r5[0x04] = r1;
-         r5[0x08] = r2;
-         r5[0x0C] = r3;
-
-         int r1 = klicensee_sha1_digest_copy;
-         int r2 = 0x28;
-         int r0 = total_sha1_digest_80;
-
-         r5[0x10] = r6;
-         
-         int r5 = total_sha1_digest_80;
-
-         sha1Digest_219DE54(r0, r1, r2);
-         
-         int r0 = r5[0x00];
-         int r1 = r5[0x04];
-         int r2 = r5[0x08];
-         int r3 = r5[0x0C];
-         
-         r8[0x00] = r0;
-
-         int r0 = r5[0x10];
-
-         r8[0x4] = r1;
-         r8[0x8] = r2;
-         r8[0x10] = r0;
-         r8[0xC] = r3;
-
-         return 0;
-      }
+      calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(sha1_combined_digest, klicensee, unk2, salt, arg_4);
+      return 0;
    }
+
+   char data_for_sha1[8] = {0};
+   char total_sha1_digest_80[0x14] = {0};
+   char klicensee_sha1_digest[0x14] = {0};
+   char sha_digest_58[0x14] = {0};
+
+   char klicensee_sha1_digest_copy[0x14] = {0};
+   char sha_digest_58_copy[0x14] = {0};
+
+   sha1Digest_219DE54(klicensee_sha1_digest, klicensee, 0x10);
+
+   data_for_sha1[0] = 0xA;
+   data_for_sha1[4] = salt;
+
+   sha1Digest_219DE54(sha_digest_58, data_for_sha1, 8);
+
+   klicensee_sha1_digest_copy[0x00] = klicensee_sha1_digest[0x00];
+   klicensee_sha1_digest_copy[0x04] = klicensee_sha1_digest[0x04];
+   klicensee_sha1_digest_copy[0x08] = klicensee_sha1_digest[0x08];
+   klicensee_sha1_digest_copy[0x0C] = klicensee_sha1_digest[0x0C];
+   klicensee_sha1_digest_copy[0x10] = klicensee_sha1_digest[0x10];
+
+   sha_digest_58_copy[0x00] = sha_digest_58[0x00];
+   sha_digest_58_copy[0x04] = sha_digest_58[0x04];
+   sha_digest_58_copy[0x08] = sha_digest_58[0x08];
+   sha_digest_58_copy[0x0C] = sha_digest_58[0x0C];
+   sha_digest_58_copy[0x10] = sha_digest_58[0x10];
+         
+   sha1Digest_219DE54(total_sha1_digest_80, klicensee_sha1_digest_copy, 0x28);
+               
+   sha1_combined_digest[0x00] = total_sha1_digest_80[0x00];
+   sha1_combined_digest[0x04] = total_sha1_digest_80[0x04];
+   sha1_combined_digest[0x08] = total_sha1_digest_80[0x08];
+   sha1_combined_digest[0x0C] = total_sha1_digest_80[0x0C];
+   sha1_combined_digest[0x10] = total_sha1_digest_80[0x10];
+
+   return 0;
 }
 
 struct derive_keys_ctx;
