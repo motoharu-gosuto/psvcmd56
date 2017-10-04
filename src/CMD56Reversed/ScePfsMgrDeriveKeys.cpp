@@ -149,6 +149,12 @@ int hmacSha1Digest_219DE68(char* digest, const char* key, const char* data, int 
 
 //----------------------
 
+char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
+
+char hmac_key_21A93DC[0x14] = {0xAF, 0xE6, 0x56, 0xBB, 0x3C, 0x17, 0x25, 0x6A, 0x3C, 0x80, 0x9F, 0x6E, 0x9B, 0xF1, 0x9F, 0xDD, 0x5A, 0x38, 0x85, 0x43};
+
+char iv_21A93F0[0x10] = {0x74, 0xD2, 0x0C, 0xC3, 0x98, 0x81, 0xC2, 0x13, 0xEE, 0x77, 0x0B, 0x10, 0x10, 0xE4, 0xBE, 0xA7};
+
 int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt1)
 {
    int saltin[2] = {0};
@@ -195,8 +201,6 @@ int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicen
    return calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt1);
 }
 
-char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
-
 int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t ignored_key_id)
 {
    if((flag & 2) == 0)
@@ -241,82 +245,115 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
+int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(char *key_klicensee, char *iv, int size, char *src, char *dst, int key_id)
+{
+   return 0;
+}
+
 int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
 {
-   /*
-   ADD             R5, SP, #0x1E0+dst_AC ; ptr
-   ADD.W           R10, SP, #0x1E0+iv_1AC ; ptr
-   ADD.W           R12, SP, #0x1E0+src_12C ; ptr
-   NEGS            R4, R5  ; inv ptr
-   RSB.W           R6, R10, #0 ; 0 - ptr
-   RSB.W           R9, R12, #0 ; 0 - ptr
-   AND.W           R4, R4, #0x3F ; align ?
-   MOV             LR, R3  ; int salt1
-   ADD             R4, R5  ; ptr
-   MOV             R3, R2  ; salt0
-   AND.W           R9, R9, #0x3F ; align ?
-   AND.W           R2, R6, #0x3F ; align ?
-   MOV             R11, R1
-   MOV             R6, R0
-   ADD.W           R7, R2, R10 ; iv
-   ADD             R9, R12 ; char *src
-   STR             R4, [SP,#0x1E0+var_1D4] ; char *dst
-   ADD             R5, SP, #0x1E0+digest
-   STR.W           LR, [SP,#0x1E0+data_buffer1] ; = int salt1
-   MOVW            R1, #(hmac_key_21A93DC AND 0xFFFF) ; 021A93DC data reference BB56E6AF
-   LDRH.W          R10, [SP,#0x1E0+key_id] ;  key_id
-   */
+   int r5 = dst_AC;
+   int r10 = iv_1AC;
+   int r12 = src_12C;
+   int r4 = !r5;
+   int r6 = 0 - r10;
+   int r9 = 0 - r12;
+   
+   int r4 = r4 & 0x3F;
 
+   int lr = r3;
+   int r4 = r4 + r5;
+   int r3 = r2;
+   
+   int r9 = r9 & 0x3F;
+   int r2 = r6 & 0x3F;
+   
+   int r11 = r1;
+   int r6 = r0;
+   int r7 = r2 + r10;
+   int r9 = r9 + r12;
+   
+   var_1D4 = r4;
+
+   r5 = digest;
+   saltin0[0x00] = lr;
+
+   short r10 = key_id;
+   
    if(r3 == 0)
    {
-      /*
-      ADD             R2, SP, #0x1E0+data_buffer1
-      MOV             R0, R5  ; digest
-      MOVT.W          R1, #0x21A
-      MOVS            R3, #4  ; data_len
-      BL              hmacSha1Digest_219DE68
-      */
+      int r2 = saltin0;
+      int r0 = r5;
+      int r1 = hmac_key_21A93DC;
+      int r3 = 4;
+      hmacSha1Digest_219DE68(r0, r1, r2, r3);
    }
    else
    {
-      /*
-      STR             R3, [SP,#0x1E0+data_buffer0] ; = salt0
-      ADD             R2, SP, #0x1E0+data_buffer0 ; data
-      MOVT.W          R1, #high16(hmac_key_21A93DC) ; 021A93DC data reference BB56E6AF
-      MOV             R0, R5  ; digest
-      MOVS            R3, #8  ; data_len
-      STR.W           LR, [SP,#0x1E0+var_1C4]
-      BL              hmacSha1Digest_219DE68
-      */
+      saltin1[0x0] = r3;
+      int r2 = saltin1;
+      int r1 = hmac_key_21A93DC;
+      int r0 = r5;
+      int r3 = 8;
+      saltin1[0x4] = lr;
+      hmacSha1Digest_219DE68(r0, r1, r2, r3);
    }
 
-   /*
-   MOV             R12, R5
-   LDR             R4, [SP,#0x1E0+var_1D4] ; char *dst
-   LDMIA.W         R12!, {R0-R3}
-   MOV             LR, dword_21A93F0 ; 021A93F0 data reference C30CD274
-   MOV             R5, R9  ; char *src
-   STMEA.W         SP, {R4,R10} ; store char *dst, int key_id
-   STMIA           R5!, {R0-R3}
-   LDR.W           R4, [R12]
-   LDMIA.W         LR, {R0-R3}
-   STR             R4, [R5]
-   STMIA.W         R7, {R0-R3} ; initialize iv
-   MOV             R1, R7  ; iv
-   MOV             R3, R9  ; char *src
-   MOVS            R2, #0x14 ; size
-   MOV             R0, R11 ; key_klicensee
-   BL              encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4
-   LDR             R4, [SP,#0x1E0+var_1D4] ; char *dst
-   LDMIA           R4!, {R0-R3} ; load calculated encrypted hash
-   STR             R0, [R6] ; store result - 14 bytes total
-   LDR             R0, [R4]
-   STR             R1, [R6,#4] ; store result
-   STR             R0, [R6,#0x10] ; store result
-   STR             R2, [R6,#8] ; store result
-   STR             R3, [R6,#0xC] ; store result
-   */
+   int r12 = r5;
+   int r4 = var_1D4;
+   
+   int r0 = r12[0x0];
+   int r1 = r12[0x4];
+   int r2 = r12[0x8];
+   int r3 = r12[0xC];
+   
+   int lr = iv_21A93F0;
+   int r5 = r9;
+   
+   sp[0] = r4;
+   sp[4] = r10;
+   
+   r5[0x0] = r0;
+   r5[0x4] = r1;
+   r5[0x8] = r2;
+   r5[0xC] = r3;
 
+   r4 = r12[0x10];
+
+   int r0 = lr[0x0];
+   int r1 = lr[0x4];
+   int r2 = lr[0x8];
+   int r3 = lr[0xC];
+
+   r5[0x10] = r4;
+
+   r7[0x0] = r0;
+   r7[0x4] = r1;
+   r7[0x8] = r2;
+   r7[0xC] = r3;
+
+   int r1 = r7;
+   int r3 = r9;
+   int r2 = 0x14;
+   int r0 = r11;
+   
+   encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(r0, r1, r2, r3, a0, a4);
+
+   int r4 = var_1D4;
+
+   int r0 = r4[0x00];
+   int r1 = r4[0x04];
+   int r2 = r4[0x08];
+   int r3 = r4[0x0C];
+
+   r6[0x0] = r0;
+   int r0 = r4[0x10];
+
+   r6[0x04] = r1;
+   r6[0x10] = r0;
+   r6[0x08] = r2;
+   r6[0x0C] = r3;
+   
    return 0;
 }
 
