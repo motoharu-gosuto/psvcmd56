@@ -33,7 +33,7 @@ typedef struct pfs_pmi_buffer_list_ctx
     char klicensee[0x10]; //0x96
     
     uint16_t key_id; // = 0
-    uint32_t unk_A8; // = 0
+    uint32_t salt0; // 0xA8 = 0
     uint32_t unk_AC; // = 0
     
     SceUID ScePfsFilesDb_mutex_id; // 0xB0
@@ -56,8 +56,8 @@ typedef struct pfs_pmi_buffer_list_ctx
 typedef struct CryptEngineData //size is 0x60
 {
    const char* klicensee;
-   uint32_t unk_4;
-   uint32_t salt;
+   uint32_t salt0;
+   uint32_t salt1;
    uint16_t type;
    uint16_t flag; // 0xE - flag that selects decryption type ?
    
@@ -149,7 +149,7 @@ int hmacSha1Digest_219DE68(char* digest, const char* key, const char* data, int 
 
 //----------------------
 
-int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt)
+int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt1)
 {
    int saltin[2] = {0};
    char base0[0x14] = {0};
@@ -157,7 +157,7 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
    char combo[0x28] = {0};
    char drvkey[0x14] = {0};
 
-   saltin[0] = salt;
+   saltin[0] = salt1;
 
    sha1Digest_219DE54(base0, klicensee, 0x10); //calculate hash of klicensee
 
@@ -190,9 +190,9 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
    return 0;
 }
 
-int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicensee, uint32_t ignored, uint32_t salt)
+int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicensee, uint32_t ignored_salt0, uint32_t salt1)
 {
-   return calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt);
+   return calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt1);
 }
 
 char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
@@ -233,7 +233,7 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t unk2, uint16_t flag, uint32_t salt, uint16_t key_id)
+int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
 {
    return 0;
 }
@@ -273,7 +273,7 @@ ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
    return 0;
 }
 
-int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2, int unk3, uint16_t seed1_base, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
+int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, int unk2, int unk3, uint16_t seed1_base, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
 {
    ctx_12f8d58e* ctx0 = SceIofilemgrForDriver_thread_related_12f8d58e();
    data->unk_18 = 0x100;
@@ -285,8 +285,8 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2
    if(ctx1 != 0)
       data->unk_14 = ctx1->unk_28;
 
-   data->unk_4 = pfs_pmi_bcl->unk_A8;
-   data->salt = salt;
+   data->salt0 = pfs_pmi_bcl->salt0;
+   data->salt1 = salt1;
    data->unk_1C = arg_4;
 
    data->type = pfs_pmi_bcl->type;
@@ -306,27 +306,27 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, int salt, int unk2
 
    if((some_flag_base > 0x1F) || (some_flag == 0))
    {
-      calculate_sha1_chain_219E1CC(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->unk_A8, salt);
-      return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->unk_A8, pfs_pmi_bcl->flag, salt, pfs_pmi_bcl->key_id);
+      calculate_sha1_chain_219E1CC(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, salt1);
+      return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
    }
    else
    {
       if((drv_ctx->unk_40 != 0 && drv_ctx->unk_40 != 3) || (drv_ctx->unk_58 <= 1))
       {    
-         hmac1_sha1_or_sha1_chain_219E0DC(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->unk_A8, pfs_pmi_bcl->flag, salt, pfs_pmi_bcl->key_id);
-         return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->unk_A8, pfs_pmi_bcl->flag, salt, pfs_pmi_bcl->key_id);
+         hmac1_sha1_or_sha1_chain_219E0DC(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
+         return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
       }
       else
       {
          if(drv_ctx->unk_40 == 0 || drv_ctx->unk_40 == 3)
          {
             hmac_sha1_219E164(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, drv_ctx->unk_84, 0x14);
-            return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->unk_A8, pfs_pmi_bcl->flag, salt, pfs_pmi_bcl->key_id);
+            return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
          }
          else
          {
             hmac_sha1_219E164(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, 0, 0x14);
-            return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->unk_A8, pfs_pmi_bcl->flag, salt, pfs_pmi_bcl->key_id);
+            return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
          }
       }
    }
