@@ -230,6 +230,35 @@ int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* kl
 
 int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t flag, uint16_t key_id, const char* data, uint32_t data_len)
 {
+   /*
+   MOV             R5, R1  ; char*
+   MOVW            R1, #(hmac_key_21A93C8 AND 0xFFFF) ; 021A93C8 data reference 8B2562E4
+   
+   MOV             R7, R0
+   MOV             R8, R2  ; char*
+   LDRD.W          R2, R3, [SP,#0x38+data] ; void *data, int data_len
+   MOVT.W          R1, #high16(hmac_key_21A93C8) ; 021A93C8 data reference 8B2562E4
+   
+   MOV             R0, SP  ; digest
+   MOV             R4, SP
+   BL              hmacSha1Digest_219DE68
+   LDMIA           R4!, {R0-R3} ; get digest data
+   LDR.W           R10, [R8]
+   LDR.W           R9, [R8,#4]
+   LDR.W           R12, [R8,#8]
+   LDR.W           LR, [R8,#0xC]
+   
+   STR.W           R10, [R7] ; store result
+   STR.W           R9, [R7,#4] ; store result
+   STR.W           R12, [R7,#8] ; store result
+   STR.W           LR, [R7,#0xC] ; store result
+   STR             R0, [R5] ; store result
+   
+   STR             R1, [R5,#4] ; store result
+   STR             R2, [R5,#8] ; store result
+   
+   STR             R3, [R5,#0xC] ; store result
+   */
    return 0;
 }
 
