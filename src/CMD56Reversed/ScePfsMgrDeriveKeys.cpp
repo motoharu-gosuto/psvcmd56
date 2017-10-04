@@ -245,55 +245,46 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* klicensee, const char* iv, int size, char* src, char* dst, uint16_t key_id)
+int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* klicensee, const char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
 {
    return 0;
 }
 
 int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
 {
-   char dst_AC[0x14] = {0};
-   char iv_1AC[0x10] = {0};
-   char src_12C[0x14] = {0};
+   char drvkey[0x14] = {0};
+   char iv[0x10] = {0};
+   char combo[0x14] = {0};
 
-   char* dst_AC_aligned = dst_AC + ((0 - (int)dst_AC) & 0x3F);
-   char* iv_1AC_aligned = iv_1AC + ((0 - (int)iv_1AC) & 0x3F);
-   char* src_12C_aligned = src_12C + ((0 - (int)src_12C) & 0x3F);
+   //align buffers
+
+   char* drvkey_aligned = drvkey + ((0 - (int)drvkey) & 0x3F);
+   char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
+   char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
 
    char saltin0[4] = {0};
    char saltin1[8] = {0};
-   char digest[0x14] = {0};
+   char base[0x14] = {0};
 
    if(salt0 == 0)
    {
       saltin0[0x00] = salt1;
-      hmacSha1Digest_219DE68(digest, hmac_key_21A93DC, saltin0, 4);
+      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, saltin0, 4); // derive base with one salt
    }
    else
    {
       saltin1[0x0] = salt0;
       saltin1[0x4] = salt1;
-      hmacSha1Digest_219DE68(digest, hmac_key_21A93DC, saltin1, 8);
+      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, saltin1, 8); // derive base with two salts
    }
 
-   src_12C_aligned[0x0] = digest[0x0];
-   src_12C_aligned[0x4] = digest[0x4];
-   src_12C_aligned[0x8] = digest[0x8];
-   src_12C_aligned[0xC] = digest[0xC];
-   src_12C_aligned[0x10] = digest[0x10];
+   memcpy(combo_aligned, base, 0x14); // calculated digest will be src data
 
-   iv_1AC_aligned[0x0] = iv_21A93F0[0x0];
-   iv_1AC_aligned[0x4] = iv_21A93F0[0x4];
-   iv_1AC_aligned[0x8] = iv_21A93F0[0x8];
-   iv_1AC_aligned[0xC] = iv_21A93F0[0xC];
+   memcpy(iv_aligned, iv_21A93F0, 0x10); //initialize iv
 
-   encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(klicensee, iv_1AC_aligned, 0x14, src_12C_aligned, dst_AC_aligned, key_id);
+   encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(klicensee, iv_aligned, 0x14, combo_aligned, drvkey_aligned, key_id);
 
-   hmac_key[0x00] = dst_AC_aligned[0x00];
-   hmac_key[0x04] = dst_AC_aligned[0x04];
-   hmac_key[0x08] = dst_AC_aligned[0x08];
-   hmac_key[0x0C] = dst_AC_aligned[0x0C];
-   hmac_key[0x10] = dst_AC_aligned[0x10];
+   memcpy(hmac_key, drvkey_aligned, 0x14); // copy derived key
    
    return 0;
 }
