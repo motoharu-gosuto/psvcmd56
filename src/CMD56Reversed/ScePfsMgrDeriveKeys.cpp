@@ -241,25 +241,22 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_digest, const char *klicensee, int salt0, int salt1, int key_id)
+int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
 {
    return 0;
 }
 
-//int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
-
-//temp header
-int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, const char *klicensee, int unk2, int flags, int salt, int arg_4)
+int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
 {
-   if((flags << 0x1F) < 0) // check bit 0
+   if((flag << 0x1F) < 0) // check bit 0
    {
-      memset(sha1_combined_digest, 0, 0x14);
+      memset(hmac_key, 0, 0x14);
       return 0;
    }
 
-   if((flags << 0x1E) < 0) // check bit 1
+   if((flag << 0x1E) < 0) // check bit 1
    {
-      calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(sha1_combined_digest, klicensee, unk2, salt, arg_4);
+      calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(hmac_key, klicensee, salt0, salt1, key_id);
       return 0;
    }
 
@@ -272,7 +269,7 @@ int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, const char *kli
    sha1Digest_219DE54(base0, klicensee, 0x10); // calculate digest of klicensee
 
    saltin[0] = 0xA;
-   saltin[1] = salt;
+   saltin[1] = salt1;
 
    sha1Digest_219DE54(base1, (char*)saltin, 8); // calculate digest of salt
 
@@ -281,7 +278,7 @@ int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, const char *kli
          
    sha1Digest_219DE54(drvkey, combo, 0x28); // calculate digest of combination of klicensee and salt digests
                
-   memcpy(sha1_combined_digest, drvkey, 0x14); // copy derived key
+   memcpy(hmac_key, drvkey, 0x14); // copy derived key
 
    return 0;
 }
