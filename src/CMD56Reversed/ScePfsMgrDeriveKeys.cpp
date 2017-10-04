@@ -150,78 +150,150 @@ int hmacSha1Digest_219DE68(char* digest, char* key, char* data, int data_len)
 
 int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt)
 {
-   /*
-   SUB             SP, SP, #0x70
-   MOV             R8, R1
-   MOV             R10, R0
-   LDR.W           R5, [R9]
-   MOV             R1, R2  ; source
-   ADD             R0, SP, #0x90+result ; result
-   MOVS            R2, #0x10 ; size
-   MOV             R4, R3
-   MOV             R6, R0
-   STR             R5, [SP,#0x90+var_24]
-   BL              sha1Digest_219DE54
-   MOVS            R3, #1  ; unk3
-   ADD             R0, SP, #0x90+var_60 ; result
-   MOV             R1, SP  ; source
-   MOVS            R2, #8  ; size
-   STR             R4, [SP,#0x90+var_90]
-   MOV             R5, R0
-   STR             R3, [SP,#0x90+var_90+4]
-   ADD             R4, SP, #0x90+source
-   BL              sha1Digest_219DE54
-   LDMIA           R6!, {R0-R3}
-   ADD.W           LR, SP, #0x90+source+0x14
-   STMIA           R4!, {R0-R3}
-   LDR             R7, [R6]
-   LDMIA           R5!, {R0-R3}
-   STR             R7, [R4]
-   ADD             R7, SP, #0x90+var_88
-   STMIA.W         LR!, {R0-R3}
-   ADD             R1, SP, #0x90+source ; source
-   LDR             R3, [R5] ; unk3
-   MOVS            R2, #0x28 ; size
-   ADD             R0, SP, #0x90+var_88 ; result
-   STR.W           R3, [LR]
-   BL              sha1Digest_219DE54
-   LDMIA           R7!, {R0-R3} ; get pointer to last result, load data
-   MOV.W           LR, #2
-   ADD             R7, SP, #0x90+result
-   STR.W           LR, [SP,#0x90+var_90+4] ; = 2
-   STR.W           R0, [R10] ; store result
-   ADD             R0, SP, #0x90+var_60 ; result
-   STR.W           R1, [R10,#4] ; store result
-   MOV             R1, SP  ; source - stack beginning
-   STR.W           R2, [R10,#8] ; store result
-   MOVS            R2, #8  ; size
-   STR.W           R3, [R10,#0xC] ; store result
-   BL              sha1Digest_219DE54
-   LDMIA           R7!, {R0-R3}
-   ADD.W           LR, SP, #0x90+var_60
-   ADD.W           R12, SP, #0x90+source
-   ADD             R7, SP, #0x90+source+0x14
-   LDR             R5, [R5]
-   LDR             R6, [R6]
-   STMIA.W         R12!, {R0-R3}
-   LDMIA.W         LR!, {R0-R3}
-   STR             R6, [R4]
-   ADD             R4, SP, #0x90+var_88
-   STMIA           R7!, {R0-R3}
-   ADD             R1, SP, #0x90+source ; source
-   MOVS            R2, #0x28 ; size
-   STR             R5, [R7]
-   ADD             R0, SP, #0x90+var_88 ; result
-   BL              sha1Digest_219DE54
-   LDMIA           R4!, {R0-R3} ; get pointer to last result, load data
-   LDR             R5, [SP,#0x90+var_24]
-   STR.W           R0, [R8] ; store result
-   LDR.W           R0, [R9] ; cookie
-   STR.W           R1, [R8,#4] ; store result
-   STR.W           R2, [R8,#8] ; store result
-   CMP             R5, R0
-   STR.W           R3, [R8,#0xC] ; store result
-   */
+   char var_90[0x08] = {0};
+   char var_88[0x14] = {0};
+   char result[0x14] = {0};
+   char var_60[0x14] = {0};
+   char source[0x28] = {0};
+
+   int r8 = r1;
+   int r10 = r0;
+
+   int r1 = r2;
+   int r0 = result;
+   int r2 = 0x10;
+   int r4 = r3;
+   int r6 = r0;
+   
+   sha1Digest_219DE54(r0, r1, r2);
+
+   int r3 = 1;
+   int r0 = var_60;
+   int r1 = var_90;
+   int r2 = 8;
+   
+   var_90 = r4;
+   int r5 = r0;
+   [var_90+4] = r3;
+   
+   int r4 = source;
+
+   sha1Digest_219DE54(r0, r1, r2);
+   
+   int r0 = r6[0x00];
+   int r1 = r6[0x04];
+   int r2 = r6[0x08];
+   int r3 = r6[0x0C];
+   
+   int lr = source+0x14;
+   r4[0x0] = r0;
+   r4[0x4] = r1;
+   r4[0x8] = r2;
+   r4[0xC] = r3;
+   
+   int r7 = r6[0x10];
+
+   int r0 = r5[0x0];
+   int r1 = r5[0x4];
+   int r2 = r5[0x8];
+   int r3 = r5[0xC];
+
+   r4[0x10] = r7;
+   
+   int r7 = var_88;
+
+   lr[0x00] = r0;
+   lr[0x04] = r1;
+   lr[0x08] = r2;
+   lr[0x0C] = r3;
+
+   int r1 = source;
+   int r3 = r5[0x10]
+   
+   int r2 = 0x28;
+   int r0 = var_88;
+
+   lr[0x010] = r3;
+
+   sha1Digest_219DE54(r0, r1, r2);
+
+   int r0 = r7[0x0];
+   int r1 = r7[0x4];
+   int r2 = r7[0x8];
+   int r3 = r7[0xC];
+
+   int lr = 2;
+
+   int r7 = result;
+   
+   [var_90+4] = lr;
+   
+   r10[0x00] = r0;
+   
+   int r0 = var_60;
+
+   r10[0x04] = r1;
+   
+   int r1 = var_90;
+   
+   r10[0x08] = r2;
+
+   int r2 = 8;
+
+   r10[0x0C] = r3;
+
+   sha1Digest_219DE54(r0, r1, r2);
+
+   int r0 = r7[0x00];
+   int r1 = r7[0x04];
+   int r2 = r7[0x08];
+   int r3 = r7[0x0C];
+
+   int lr = var_60;
+   int r12 = source;
+   int r7 = source + 0x14;
+
+   int r5 = r5[0x10];
+   int r6 = r6[0x10];
+   
+   r12[0x00] = r0;
+   r12[0x04] = r1;
+   r12[0x08] = r2;
+   r12[0x0C] = r3;
+
+   int r0 = lr[0x00];
+   int r1 = lr[0x04];
+   int r2 = lr[0x08];
+   int r3 = lr[0x0C];
+
+   r4[0x10] = r6;
+
+   int r4 = var_88;
+
+   r7[0x00] = r0;
+   r7[0x04] = r1;
+   r7[0x08] = r2;
+   r7[0x0C] = r3;
+
+   int r1 = source;
+   int r2 = 0x28;
+   
+   r7[0x10] = r5; // r5 ?????
+   
+   int r0 = var_88;
+
+   sha1Digest_219DE54(r0, r1, r2);
+
+   int r0 = r4[0x00];
+   int r1 = r4[0x04];
+   int r2 = r4[0x08];
+   int r3 = r4[0x0C];
+
+   r8[0x00] = r0;
+   r8[0x04] = r1;
+   r8[0x08] = r2;
+   r8[0x0C] = r3;
+
    return 0;
 }
 
