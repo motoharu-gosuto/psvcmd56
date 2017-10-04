@@ -243,6 +243,80 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
 
 int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
 {
+   /*
+   ADD             R5, SP, #0x1E0+dst_AC ; ptr
+   ADD.W           R10, SP, #0x1E0+iv_1AC ; ptr
+   ADD.W           R12, SP, #0x1E0+src_12C ; ptr
+   NEGS            R4, R5  ; inv ptr
+   RSB.W           R6, R10, #0 ; 0 - ptr
+   RSB.W           R9, R12, #0 ; 0 - ptr
+   AND.W           R4, R4, #0x3F ; align ?
+   MOV             LR, R3  ; int salt1
+   ADD             R4, R5  ; ptr
+   MOV             R3, R2  ; salt0
+   AND.W           R9, R9, #0x3F ; align ?
+   AND.W           R2, R6, #0x3F ; align ?
+   MOV             R11, R1
+   MOV             R6, R0
+   ADD.W           R7, R2, R10 ; iv
+   ADD             R9, R12 ; char *src
+   STR             R4, [SP,#0x1E0+var_1D4] ; char *dst
+   ADD             R5, SP, #0x1E0+digest
+   STR.W           LR, [SP,#0x1E0+data_buffer1] ; = int salt1
+   MOVW            R1, #(hmac_key_21A93DC AND 0xFFFF) ; 021A93DC data reference BB56E6AF
+   LDRH.W          R10, [SP,#0x1E0+key_id] ;  key_id
+   */
+
+   if(r3 == 0)
+   {
+      /*
+      ADD             R2, SP, #0x1E0+data_buffer1
+      MOV             R0, R5  ; digest
+      MOVT.W          R1, #0x21A
+      MOVS            R3, #4  ; data_len
+      BL              hmacSha1Digest_219DE68
+      */
+   }
+   else
+   {
+      /*
+      STR             R3, [SP,#0x1E0+data_buffer0] ; = salt0
+      ADD             R2, SP, #0x1E0+data_buffer0 ; data
+      MOVT.W          R1, #high16(hmac_key_21A93DC) ; 021A93DC data reference BB56E6AF
+      MOV             R0, R5  ; digest
+      MOVS            R3, #8  ; data_len
+      STR.W           LR, [SP,#0x1E0+var_1C4]
+      BL              hmacSha1Digest_219DE68
+      */
+   }
+
+   /*
+   MOV             R12, R5
+   LDR             R4, [SP,#0x1E0+var_1D4] ; char *dst
+   LDMIA.W         R12!, {R0-R3}
+   MOV             LR, dword_21A93F0 ; 021A93F0 data reference C30CD274
+   MOV             R5, R9  ; char *src
+   STMEA.W         SP, {R4,R10} ; store char *dst, int key_id
+   STMIA           R5!, {R0-R3}
+   LDR.W           R4, [R12]
+   LDMIA.W         LR, {R0-R3}
+   STR             R4, [R5]
+   STMIA.W         R7, {R0-R3} ; initialize iv
+   MOV             R1, R7  ; iv
+   MOV             R3, R9  ; char *src
+   MOVS            R2, #0x14 ; size
+   MOV             R0, R11 ; key_klicensee
+   BL              encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4
+   LDR             R4, [SP,#0x1E0+var_1D4] ; char *dst
+   LDMIA           R4!, {R0-R3} ; load calculated encrypted hash
+   STR             R0, [R6] ; store result - 14 bytes total
+   LDR             R0, [R4]
+   STR             R1, [R6,#4] ; store result
+   STR             R0, [R6,#0x10] ; store result
+   STR             R2, [R6,#8] ; store result
+   STR             R3, [R6,#0xC] ; store result
+   */
+
    return 0;
 }
 
