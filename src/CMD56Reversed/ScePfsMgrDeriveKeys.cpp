@@ -197,6 +197,70 @@ int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicen
 
 int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t ignored_key_id)
 {
+   /*
+   LDRH.W          R12, [SP,#0x40+arg_0]
+   MOV             R4, 0x9EA004
+   MOV             R8, R3
+   LDR             R3, [R4]
+   MOV             R5, R0
+   MOV             R6, R1  ; result
+   MOV             R7, R2
+   TST.W           R12, #2
+   LDR.W           LR, [SP,#0x40+salt] ; salt
+   STR             R3, [SP,#0x40+var_1C]
+   */
+   if(?)
+   {
+      /*
+      LDR             R0, [R2]
+      LDR             R1, [R2,#4]
+      LDR             R3, [R7,#0xC]
+      LDR             R2, [R2,#8]
+      STR             R0, [R5]
+      STR             R1, [R5,#4]
+      MOVW            R1, #(hmac_key_21A93C8 AND 0xFFFF) ; 021A93C8 data reference 8B2562E4
+      STR             R2, [R5,#8]
+      MOVT.W          R1, #high16(hmac_key_21A93C8) ; 021A93C8 data reference 8B2562E4
+      STR             R3, [R5,#0xC]
+      ADD             R5, SP, #0x40+digest
+      STR.W           LR, [SP,#0x40+data_3C]
+      MOV             R0, R5  ; digest
+      */
+
+      if(r8 == 0)
+      {
+         /*
+         ADD             R2, SP, #0x40+data_3C
+         MOVS            R3, #4  ; data_len
+         BL              hmacSha1Digest_219DE68
+         */
+      }
+      else
+      {
+         /*
+         ADD             R2, SP, #0x40+data ; data
+         MOVS            R3, #8  ; data_len
+         STRD.W          R8, LR, [SP,#0x40+data]
+         BL              hmacSha1Digest_219DE68
+         */
+      }
+
+      /*
+      LDMIA           R5!, {R0-R3}
+      STR             R0, [R6] ; store result
+      STR             R1, [R6,#4] ; store result
+      STR             R2, [R6,#8] ; store result
+      STR             R3, [R6,#0xC] ; store result
+      */
+   }
+   else
+   {
+      /*
+      MOV             R3, LR  ; salt
+      BL              calculate_sha1_chain_219E008
+      */
+   }
+
    return 0;
 }
 
