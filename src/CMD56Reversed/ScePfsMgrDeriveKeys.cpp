@@ -245,114 +245,55 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(char *key_klicensee, char *iv, int size, char *src, char *dst, int key_id)
+int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* klicensee, const char* iv, int size, char* src, char* dst, uint16_t key_id)
 {
    return 0;
 }
 
 int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
 {
-   int r5 = dst_AC;
-   int r10 = iv_1AC;
-   int r12 = src_12C;
-   int r4 = !r5;
-   int r6 = 0 - r10;
-   int r9 = 0 - r12;
-   
-   int r4 = r4 & 0x3F;
+   char dst_AC[0x14] = {0};
+   char iv_1AC[0x10] = {0};
+   char src_12C[0x14] = {0};
 
-   int lr = r3;
-   int r4 = r4 + r5;
-   int r3 = r2;
-   
-   int r9 = r9 & 0x3F;
-   int r2 = r6 & 0x3F;
-   
-   int r11 = r1;
-   int r6 = r0;
-   int r7 = r2 + r10;
-   int r9 = r9 + r12;
-   
-   var_1D4 = r4;
+   char* dst_AC_aligned = dst_AC + ((0 - (int)dst_AC) & 0x3F);
+   char* iv_1AC_aligned = iv_1AC + ((0 - (int)iv_1AC) & 0x3F);
+   char* src_12C_aligned = src_12C + ((0 - (int)src_12C) & 0x3F);
 
-   r5 = digest;
-   saltin0[0x00] = lr;
+   char saltin0[4] = {0};
+   char saltin1[8] = {0};
+   char digest[0x14] = {0};
 
-   short r10 = key_id;
-   
-   if(r3 == 0)
+   if(salt0 == 0)
    {
-      int r2 = saltin0;
-      int r0 = r5;
-      int r1 = hmac_key_21A93DC;
-      int r3 = 4;
-      hmacSha1Digest_219DE68(r0, r1, r2, r3);
+      saltin0[0x00] = salt1;
+      hmacSha1Digest_219DE68(digest, hmac_key_21A93DC, saltin0, 4);
    }
    else
    {
-      saltin1[0x0] = r3;
-      int r2 = saltin1;
-      int r1 = hmac_key_21A93DC;
-      int r0 = r5;
-      int r3 = 8;
-      saltin1[0x4] = lr;
-      hmacSha1Digest_219DE68(r0, r1, r2, r3);
+      saltin1[0x0] = salt0;
+      saltin1[0x4] = salt1;
+      hmacSha1Digest_219DE68(digest, hmac_key_21A93DC, saltin1, 8);
    }
 
-   int r12 = r5;
-   int r4 = var_1D4;
-   
-   int r0 = r12[0x0];
-   int r1 = r12[0x4];
-   int r2 = r12[0x8];
-   int r3 = r12[0xC];
-   
-   int lr = iv_21A93F0;
-   int r5 = r9;
-   
-   sp[0] = r4;
-   sp[4] = r10;
-   
-   r5[0x0] = r0;
-   r5[0x4] = r1;
-   r5[0x8] = r2;
-   r5[0xC] = r3;
+   src_12C_aligned[0x0] = digest[0x0];
+   src_12C_aligned[0x4] = digest[0x4];
+   src_12C_aligned[0x8] = digest[0x8];
+   src_12C_aligned[0xC] = digest[0xC];
+   src_12C_aligned[0x10] = digest[0x10];
 
-   r4 = r12[0x10];
+   iv_1AC_aligned[0x0] = iv_21A93F0[0x0];
+   iv_1AC_aligned[0x4] = iv_21A93F0[0x4];
+   iv_1AC_aligned[0x8] = iv_21A93F0[0x8];
+   iv_1AC_aligned[0xC] = iv_21A93F0[0xC];
 
-   int r0 = lr[0x0];
-   int r1 = lr[0x4];
-   int r2 = lr[0x8];
-   int r3 = lr[0xC];
+   encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(klicensee, iv_1AC_aligned, 0x14, src_12C_aligned, dst_AC_aligned, key_id);
 
-   r5[0x10] = r4;
-
-   r7[0x0] = r0;
-   r7[0x4] = r1;
-   r7[0x8] = r2;
-   r7[0xC] = r3;
-
-   int r1 = r7;
-   int r3 = r9;
-   int r2 = 0x14;
-   int r0 = r11;
-   
-   encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(r0, r1, r2, r3, a0, a4);
-
-   int r4 = var_1D4;
-
-   int r0 = r4[0x00];
-   int r1 = r4[0x04];
-   int r2 = r4[0x08];
-   int r3 = r4[0x0C];
-
-   r6[0x0] = r0;
-   int r0 = r4[0x10];
-
-   r6[0x04] = r1;
-   r6[0x10] = r0;
-   r6[0x08] = r2;
-   r6[0x0C] = r3;
+   hmac_key[0x00] = dst_AC_aligned[0x00];
+   hmac_key[0x04] = dst_AC_aligned[0x04];
+   hmac_key[0x08] = dst_AC_aligned[0x08];
+   hmac_key[0x0C] = dst_AC_aligned[0x0C];
+   hmac_key[0x10] = dst_AC_aligned[0x10];
    
    return 0;
 }
