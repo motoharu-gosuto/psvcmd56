@@ -228,40 +228,21 @@ int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* kl
    return 0;
 }
 
-int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t flag, uint16_t ignored_key_id, const char* data, uint32_t data_len)
+int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t ignored_flag, uint16_t ignored_key_id, const char* data, uint32_t data_len)
 {
-   int r5 = r1;
-   int r1 = &hmac_key_21A93C8;
-   int r7 = r0;
-   int r8 = r2;
-   
-   int r2 = data;
-   int r3 = data_len;
+   char drvkey[0x14] = {0};
 
-   int r0 = sp;
-   int r4 = sp;
+   hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, data, data_len);
 
-   hmacSha1Digest_219DE68(r0, r1, r2, r3);
+   key[0x0] = klicensee[0x0];
+   key[0x4] = klicensee[0x4];
+   key[0x8] = klicensee[0x8];
+   key[0xC] = klicensee[0xC];
 
-   r4[0x0] = r0;
-   r4[0x4] = r1;
-   r4[0x8] = r2;
-   r4[0xC] = r3;
-
-   int r10 = r8[0x0];
-   int r9 =  r8[0x4];
-   int r12 = r8[0x8];
-   int lr =  r8[0xC];
-   
-   r7[0x0] = r10;
-   r7[0x4] = r9;
-   r7[0x8] = r12;
-   r7[0xC] = lr;
-   
-   r5[0x0] = r0;
-   r5[0x4] = r1;
-   r5[0x8] = r2;
-   r5[0xC] = r3;
+   iv_xor_key[0x0] = drvkey[0x0];
+   iv_xor_key[0x4] = drvkey[0x4];
+   iv_xor_key[0x8] = drvkey[0x8];
+   iv_xor_key[0xC] = drvkey[0xC];
 
    return 0;
 }
