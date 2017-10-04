@@ -195,63 +195,43 @@ int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicen
    return calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt);
 }
 
+char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
+
 int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t unk3, uint16_t flag, uint32_t salt, uint16_t ignored_key_id)
 {
-   uint16_t r12 = arg_0;
-   int r8 = r3;
-   int r5 = r0;
-   int r6 = r1;
-   int r7 = r2;
+   char data_3C[0x4] = {0};
+   char data[0x8] = {0};
+   char digest[0x14] = {0};
 
-   int lr = salt;
-   
-   if((r12 & 2) == 0)
+   if((flag & 2) == 0)
    {
-      int r3 = lr;
-      calculate_sha1_chain_219E008(r0, r1, r2, r3);
+      calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt);
       return 0;
    }
 
-   int r0 = r2[0x0];
-   int r1 = r2[0x4];
-   int r3 = r7[0xC];
-   int r2 = r2[0x8];
+   key[0x0] = klicensee[0x0];
+   key[0x4] = klicensee[0x4];
+   key[0x8] = klicensee[0x8];
+   key[0xC] = klicensee[0xC];
 
-   r5[0x0] = r0;
-   r5[0x4] = r1;
-   int r1 = &hmac_key_21A93C8;
-   r5[0x8] = r2;
-   r5[0xC] = r3;
-   
-   int r5 = digest;
-   data_3C = lr;
-   int r0 = r5;
-   
-   if(r8 == 0)
+   if(unk3 == 0)
    {
-      int r2 = data_3C;
-      int r3 = 4;
-      hmacSha1Digest_219DE68(r0, r1, r2, r3);
+      data_3C[0x00] = salt;
+
+      hmacSha1Digest_219DE68(digest, hmac_key_21A93C8, data_3C, 4);
    }
    else
    {
-      int r2 = data;
-      int r3 = 8;
-      data[0] = r8
-      data[4] = lr;
+      data[0x00] = unk3;
+      data[0x04] = salt;
 
-      hmacSha1Digest_219DE68(r0, r1, r2, r3);
+      hmacSha1Digest_219DE68(digest, hmac_key_21A93C8, data, 8);
    }
 
-   int r0 = r5[0x00];
-   int r1 = r5[0x04];
-   int r2 = r5[0x08];
-   int r3 = r5[0x0C];
-
-   r6[0x00] = r0;
-   r6[0x04] = r1;
-   r6[0x08] = r2;
-   r6[0x0C] = r3;
+   iv_xor_key[0x00] = digest[0x00];
+   iv_xor_key[0x04] = digest[0x04];
+   iv_xor_key[0x08] = digest[0x08];
+   iv_xor_key[0x0C] = digest[0x0C];
 
    return 0;
 }
