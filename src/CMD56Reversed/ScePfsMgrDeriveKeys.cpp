@@ -246,81 +246,113 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_dig
    return 0;
 }
 
-int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
-{
-   /*
-   MOV             R4, 0x9EA004
-   SUB             SP, SP, #0x78
-   MOV             R8, R0  ; char*
-   LDR             R5, [R4]
-   LDR             R6, [SP,#0x90+salt]
-   LDRH.W          R7, [SP,#0x90+arg_4]
-   STR             R5, [SP,#0x90+var_1C]
-   LSLS            R5, R3, #0x1F ; check bit 0
-   */
+//int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
 
-   if(BMI)
+//temp header
+int combine_klicensee_digest_219E1D8(char *sha1_combined_digest, char *klicensee, int unk2, int flags, int salt, int arg_4)
+{
+   int r8 = r0;
+   int r6 = salt;
+   short r7 = arg_4;
+
+   if((r3 << 0x1F) < 0) // check bit 0
    {
-      /*
-      MOVS            R1, #0
-      MOVS            R2, #0x14 ; num
-      BLX             ScePfsMgr.SceSysclibForDriver._imp_memset_0ab9bf5c ; set combined digest to 0
-      */
+      int r0 = r0;
+      int r1 = 0;
+      int r2 = 0x14;
+      memset(r0, r1, r2);
       return 0;
    }
    else
    {
-      /*
-      LSLS            R3, R3, #0x1E ; check bit 1
-      */
-
-      if(BMI)
+      if((r3 << 0x1E) < 0) // check bit 1
       {
-         /*
-         STR             R7, [SP,#0x90+key_id]
-         MOV             R3, R6  ; salt1
-         BL              calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38
-         */
+         key_id = r7;
+         int r3 = r6;
+         
+         calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(r0, r1, r2, r3, a0);
 
          return 0;
       }
       else
       {
-         /*
-         MOVS            R2, #0x10 ; size - construct digest with utils functions
-         ADD             R0, SP, #0x90+klicensee_sha1_digest ; result
-         BL              sha1Digest_219DE54 ; calculate digest of *klicensee
-         ADD             R7, SP, #0x90+klicensee_sha1_digest
-         MOVS            R3, #0xA
-         ADD             R1, SP, #0x90+data_for_sha1 ; source
-         MOVS            R2, #8  ; size
-         ADD             R0, SP, #0x90+sha_digest_58 ; result
-         STRD.W          R3, R6, [SP,#0x90+data_for_sha1] ; 0x0A, arg_0
-         BL              sha1Digest_219DE54
-         LDMIA           R7!, {R0-R3} ; klicensee_sha1_digest
-         ADD             R6, SP, #0x90+sha_digest_58
-         ADD.W           LR, SP, #0x90+klicensee_sha1_digest_copy
-         ADD             R5, SP, #0x90+sha_digest_58_copy
-         STMIA.W         LR!, {R0-R3} ; store klicensee digest
-         LDR             R7, [R7] ; load klicensee digest
-         LDMIA           R6!, {R0-R3}
-         STR.W           R7, [LR] ; store klicensee digest
-         LDR             R6, [R6]
-         STMIA           R5!, {R0-R3}
-         ADD             R1, SP, #0x90+klicensee_sha1_digest_copy ; source
-         MOVS            R2, #0x28 ; unk2 - 40 dec - size of two sha1 digests
-         ADD             R0, SP, #0x90+total_sha1_digest_80 ; result holder
-         STR             R6, [R5]
-         ADD             R5, SP, #0x90+total_sha1_digest_80 ; result holder
-         BL              sha1Digest_219DE54 ; calculate total digest
-         LDMIA           R5!, {R0-R3} ; load total digest
-         STR.W           R0, [R8] ; store result
-         LDR             R0, [R5] ; load total digest
-         STR.W           R1, [R8,#4] ; store result
-         STR.W           R2, [R8,#8] ; store result
-         STR.W           R0, [R8,#0x10] ; store result
-         STR.W           R3, [R8,#0xC] ; store result
-         */
+         char data_for_sha1[8] = {0};
+         char total_sha1_digest_80[0x14] = {0};
+         char klicensee_sha1_digest[0x14] = {0};
+         char sha_digest_58[0x14] = {0};
+         char klicensee_sha1_digest_copy[0x14] = {0};
+         char sha_digest_58_copy[0x14] = {0};
+
+
+         int r2 = 0x10;
+         int r0 = klicensee_sha1_digest;
+
+         sha1Digest_219DE54(r0,r1,r2);
+
+         int r7 = klicensee_sha1_digest;
+         int r3 = 0xA;
+         int r1 = data_for_sha1;
+         int r2 = 8;
+         int r0 = sha_digest_58;
+
+         data_for_sha1[0] = r3;
+         data_for_sha1[4] = r6;
+
+         sha1Digest_219DE54(r0, r1, r2);
+
+         int r0 = r7[0x00];
+         int r1 = r7[0x04];
+         int r2 = r7[0x08];
+         int r3 = r7[0x0C];
+
+         int r6 = sha_digest_58;
+         int lr = klicensee_sha1_digest_copy;
+         int r5 = sha_digest_58_copy;
+
+         lr[0x00] = r0;
+         lr[0x04] = r1;
+         lr[0x08] = r2;
+         lr[0x0C] = r3;
+
+         int r7 = r7[0x10];
+
+         int r0 = r6[0x00];
+         int r1 = r6[0x04];
+         int r2 = r6[0x08];
+         int r3 = r6[0x0C];
+
+         lr[0x10] = r7;
+
+         int r6 = r6[0x10] 
+
+         r5[0x00] = r0;
+         r5[0x04] = r1;
+         r5[0x08] = r2;
+         r5[0x0C] = r3;
+
+         int r1 = klicensee_sha1_digest_copy;
+         int r2 = 0x28;
+         int r0 = total_sha1_digest_80;
+
+         r5[0x10] = r6;
+         
+         int r5 = total_sha1_digest_80;
+
+         sha1Digest_219DE54(r0, r1, r2);
+         
+         int r0 = r5[0x00];
+         int r1 = r5[0x04];
+         int r2 = r5[0x08];
+         int r3 = r5[0x0C];
+         
+         r8[0x00] = r0;
+
+         int r0 = r5[0x10];
+
+         r8[0x4] = r1;
+         r8[0x8] = r2;
+         r8[0x10] = r0;
+         r8[0xC] = r3;
 
          return 0;
       }
