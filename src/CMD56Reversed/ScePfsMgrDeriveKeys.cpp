@@ -2,6 +2,7 @@
 #include "SceIofilemgr.h"
 
 #include <stdint.h>
+#include <string>
 
 typedef struct buffer_list
 {
@@ -126,7 +127,7 @@ typedef struct CryptEngineWorkCtx //size is 0x18
 
 //----------------------
 
-int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(char *source, int size, char *result)
+int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const char *source, int size, char *result)
 {
    return 0;
 }
@@ -141,7 +142,7 @@ int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key,
    return 0;
 }
 
-int hmacSha1Digest_219DE68(char* digest, char* key, char* data, int data_len)
+int hmacSha1Digest_219DE68(char* digest, const char* key, const char* data, int data_len)
 {
    return SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(key, 0x14, data, data_len, digest);
 }
@@ -150,60 +151,41 @@ int hmacSha1Digest_219DE68(char* digest, char* key, char* data, int data_len)
 
 int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt)
 {
-   int var_90[2] = {0};
-   char var_88[0x14] = {0};
-   char result[0x14] = {0};
-   char var_60[0x14] = {0};
-   char source[0x28] = {0};
+   int saltin[2] = {0};
+   char base0[0x14] = {0};
+   char base1[0x14] = {0};
+   char combo[0x28] = {0};
+   char drvkey[0x14] = {0};
 
-   sha1Digest_219DE54(result, klicensee, 0x10);
+   saltin[0] = salt;
 
-   var_90[0] = salt;
-   var_90[1] = 1;
+   sha1Digest_219DE54(base0, klicensee, 0x10); //calculate hash of klicensee
+
+   // derive key 0
+
+   saltin[1] = 1;
    
-   sha1Digest_219DE54(var_60, (char*)var_90, 8);
+   sha1Digest_219DE54(base1, (char*)saltin, 8); //calculate hash of salt 0
 
-   source[0x0] = result[0x00];
-   source[0x4] = result[0x04];
-   source[0x8] = result[0x08];
-   source[0xC] = result[0x0C];
-   source[0x10] = result[0x10];
-
-   (source + 0x14)[0x00] = var_60[0x0];
-   (source + 0x14)[0x04] = var_60[0x4];
-   (source + 0x14)[0x08] = var_60[0x8];
-   (source + 0x14)[0x0C] = var_60[0xC];
-   (source + 0x14)[0x010] = var_60[0x10];
-
-   sha1Digest_219DE54(var_88, source, 0x28);
-
-   key[0x00] = var_88[0x0];
-   key[0x04] = var_88[0x4];
-   key[0x08] = var_88[0x8];
-   key[0x0C] = var_88[0xC];
+   memcpy(combo, base0, 0x14);
+   memcpy(combo + 0x14, base1, 0x14);
    
-   var_90[1] = 2;
+   sha1Digest_219DE54(drvkey, combo, 0x28); //calculate hash from combination of salt 0 hash and klicensee hash
 
-   sha1Digest_219DE54(var_60, (char*)var_90, 8);
+   memcpy(key, drvkey, 0x10); // copy result
 
-   source[0x00] = result[0x00];
-   source[0x04] = result[0x04];
-   source[0x08] = result[0x08];
-   source[0x0C] = result[0x0C]; 
-   source[0x10] = result[0x10];
-
-   (source + 0x14)[0x00] = var_60[0x00];
-   (source + 0x14)[0x04] = var_60[0x04];
-   (source + 0x14)[0x08] = var_60[0x08];
-   (source + 0x14)[0x0C] = var_60[0x0C];
-   (source + 0x14)[0x10] = var_60[0x10];
+   // derive key 1
    
-   sha1Digest_219DE54(var_88, source, 0x28);
+   saltin[1] = 2;
 
-   iv_xor_key[0x00] = var_88[0x00];
-   iv_xor_key[0x04] = var_88[0x04];
-   iv_xor_key[0x08] = var_88[0x08];
-   iv_xor_key[0x0C] = var_88[0x0C];
+   sha1Digest_219DE54(base1, (char*)saltin, 8); //calculate hash of salt 1
+
+   memcpy(combo, base0, 0x14);
+   memcpy(combo + 0x14, base1, 0x14);
+
+   sha1Digest_219DE54(drvkey, combo, 0x28); //calculate hash from combination of salt 1 hash and klicensee hash
+
+   memcpy(iv_xor_key, drvkey, 0x10); // copy result
 
    return 0;
 }
