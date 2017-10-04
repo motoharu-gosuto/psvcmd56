@@ -241,9 +241,90 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
+int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char *sha1_combined_digest, char *klicensee, int salt0, int salt1, int key_id)
 {
    return 0;
+}
+
+int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
+{
+   /*
+   MOV             R4, 0x9EA004
+   SUB             SP, SP, #0x78
+   MOV             R8, R0  ; char*
+   LDR             R5, [R4]
+   LDR             R6, [SP,#0x90+salt]
+   LDRH.W          R7, [SP,#0x90+arg_4]
+   STR             R5, [SP,#0x90+var_1C]
+   LSLS            R5, R3, #0x1F ; check bit 0
+   */
+
+   if(BMI)
+   {
+      /*
+      MOVS            R1, #0
+      MOVS            R2, #0x14 ; num
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_memset_0ab9bf5c ; set combined digest to 0
+      */
+      return 0;
+   }
+   else
+   {
+      /*
+      LSLS            R3, R3, #0x1E ; check bit 1
+      */
+
+      if(BMI)
+      {
+         /*
+         STR             R7, [SP,#0x90+key_id]
+         MOV             R3, R6  ; salt1
+         BL              calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38
+         */
+
+         return 0;
+      }
+      else
+      {
+         /*
+         MOVS            R2, #0x10 ; size - construct digest with utils functions
+         ADD             R0, SP, #0x90+klicensee_sha1_digest ; result
+         BL              sha1Digest_219DE54 ; calculate digest of *klicensee
+         ADD             R7, SP, #0x90+klicensee_sha1_digest
+         MOVS            R3, #0xA
+         ADD             R1, SP, #0x90+data_for_sha1 ; source
+         MOVS            R2, #8  ; size
+         ADD             R0, SP, #0x90+sha_digest_58 ; result
+         STRD.W          R3, R6, [SP,#0x90+data_for_sha1] ; 0x0A, arg_0
+         BL              sha1Digest_219DE54
+         LDMIA           R7!, {R0-R3} ; klicensee_sha1_digest
+         ADD             R6, SP, #0x90+sha_digest_58
+         ADD.W           LR, SP, #0x90+klicensee_sha1_digest_copy
+         ADD             R5, SP, #0x90+sha_digest_58_copy
+         STMIA.W         LR!, {R0-R3} ; store klicensee digest
+         LDR             R7, [R7] ; load klicensee digest
+         LDMIA           R6!, {R0-R3}
+         STR.W           R7, [LR] ; store klicensee digest
+         LDR             R6, [R6]
+         STMIA           R5!, {R0-R3}
+         ADD             R1, SP, #0x90+klicensee_sha1_digest_copy ; source
+         MOVS            R2, #0x28 ; unk2 - 40 dec - size of two sha1 digests
+         ADD             R0, SP, #0x90+total_sha1_digest_80 ; result holder
+         STR             R6, [R5]
+         ADD             R5, SP, #0x90+total_sha1_digest_80 ; result holder
+         BL              sha1Digest_219DE54 ; calculate total digest
+         LDMIA           R5!, {R0-R3} ; load total digest
+         STR.W           R0, [R8] ; store result
+         LDR             R0, [R5] ; load total digest
+         STR.W           R1, [R8,#4] ; store result
+         STR.W           R2, [R8,#8] ; store result
+         STR.W           R0, [R8,#0x10] ; store result
+         STR.W           R3, [R8,#0xC] ; store result
+         */
+
+         return 0;
+      }
+   }
 }
 
 struct derive_keys_ctx;
