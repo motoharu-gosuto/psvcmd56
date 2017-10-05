@@ -125,26 +125,46 @@ typedef struct CryptEngineWorkCtx //size is 0x18
    
 }CryptEngineWorkCtx;
 
+struct derive_keys_ctx;
+
+typedef int(derive_keys_sub_219A29C_cb)(const derive_keys_ctx*);
+
+typedef struct derive_keys_ctx
+{
+   derive_keys_sub_219A29C_cb* unk_14; //function pointer
+
+   uint32_t unk_40;
+
+
+   uint32_t unk_58;
+   uint32_t unk_68;
+
+   char base_key[0x14]; // 0x84
+
+}derive_keys_ctx;
+
+typedef struct ctx_12f8d58e
+{
+   uint32_t unk_28;
+   uint32_t unk_2C;
+
+}ctx_12f8d58e;
+
 //----------------------
+
+ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
+{
+   return 0;
+}
 
 int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const char *source, int size, char *result)
 {
    return 0;
 }
 
-int sha1Digest_219DE54(char *result, const char *source, int size)
-{
-   return SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(source, size, result);
-}
-
 int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key, int key_len, const char* data, int data_len, char* digest)
 {
    return 0;
-}
-
-int hmacSha1Digest_219DE68(char* digest, const char* key, const char* data, int data_len)
-{
-   return SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(key, 0x14, data, data_len, digest);
 }
 
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
@@ -159,11 +179,25 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(const char* 
 
 //----------------------
 
+int sha1Digest_219DE54(char *result, const char *source, int size)
+{
+   return SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(source, size, result);
+}
+
+int hmacSha1Digest_219DE68(char* digest, const char* key, const char* data, int data_len)
+{
+   return SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(key, 0x14, data, data_len, digest);
+}
+
+//----------------------
+
 char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
 
 char hmac_key_21A93DC[0x14] = {0xAF, 0xE6, 0x56, 0xBB, 0x3C, 0x17, 0x25, 0x6A, 0x3C, 0x80, 0x9F, 0x6E, 0x9B, 0xF1, 0x9F, 0xDD, 0x5A, 0x38, 0x85, 0x43};
 
 char iv_21A93F0[0x10] = {0x74, 0xD2, 0x0C, 0xC3, 0x98, 0x81, 0xC2, 0x13, 0xEE, 0x77, 0x0B, 0x10, 0x10, 0xE4, 0xBE, 0xA7};
+
+//-------------------------------------
 
 int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt1)
 {
@@ -371,39 +405,11 @@ int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint
    return 0;
 }
 
-struct derive_keys_ctx;
-
-typedef int(derive_keys_sub_219A29C_cb)(const derive_keys_ctx*);
-
-typedef struct derive_keys_ctx
-{
-   derive_keys_sub_219A29C_cb* unk_14; //function pointer
-
-   uint32_t unk_40;
-
-
-   uint32_t unk_58;
-   uint32_t unk_68;
-
-   char base_key[0x14]; // 0x84
-
-}derive_keys_ctx;
+//-------------------------------------
 
 int sub_219A29C(const derive_keys_ctx* ctx)
 {
    return ctx->unk_68;
-}
-
-typedef struct ctx_12f8d58e
-{
-   uint32_t unk_28;
-   uint32_t unk_2C;
-
-}ctx_12f8d58e;
-
-ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
-{
-   return 0;
 }
 
 int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, int unk2, int unk3, uint16_t seed1_base, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
@@ -463,4 +469,63 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
          }
       }
    }
+}
+
+//-------------------------------------
+
+void* proc_get_table_element_2198B1C(int index)
+{
+   return 0;
+}
+
+int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, int arg_0)
+{
+   return 0;
+}
+
+int validate_subctx_zero_pointers_219BB14(CryptEngineSubctx *subctx)
+{
+   return 0;
+}
+
+int subctx_enter_219AC0C(CryptEngineSubctx *subctx, int unk1, int unk2)
+{
+   return 0;
+}
+
+int dispatch_task_to_crypto_engine_219BD88(CryptEngineWorkCtx *work)
+{
+   return 0;
+}
+
+int wait_task_to_crypto_engine_219BEA0(CryptEngineWorkCtx *work)
+{
+   return 0;
+}
+
+int subctx_exit_219AB30(CryptEngineSubctx *subctx, int unk1, int unk2)
+{
+   return 0;
+}
+
+int crypto_ScePfsCryptBufVC_219BB70(void *unk0)
+{
+   return 0;
+}
+
+int clear_crypto_data_219B5C4(CryptEngineData *data)
+{
+   return 0;
+}
+
+//-------------------------------------
+
+int ScePfsCryptEngineThread_219BBB0()
+{
+   return 0;
+}
+
+int ScePfsCryptEngineThread_work_219BF20(CryptEngineWorkCtx *work_ctx)
+{
+   return 0;
 }
