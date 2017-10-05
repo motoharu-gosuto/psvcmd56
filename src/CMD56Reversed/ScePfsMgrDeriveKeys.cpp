@@ -177,6 +177,47 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(const char* 
    return 0;
 }
 
+int sub_9E407C(int unk0, int unk1, int unk2, int unk3, int* arg_0)
+{
+   return 0;
+}
+
+//some kind of this int __cdecl SceSdstor.SceSysclibForDriver._imp_udiv_wrapper_7554ab04(char *data, SceSize size, int sectorSize, int unk3)
+int SceSysclibForDriver_7554ab04(int unk0, int unk1, int unk2, int unk3)
+{
+   if((unk2!= 0) || (unk3 != 0))
+   {
+      int res_array[2] = {0};
+      return sub_9E407C(unk0, unk1, unk2, unk3, res_array);
+      //does it also return r2, r3
+   }
+   else
+   {
+      if(unk1 == 0)
+      {
+         if(unk0 < 0)
+         {
+            int r0 = 0x00000000;
+            int r1 = 0x80000000;
+            int var_4 = 0xFFFFFF45 + 0xFFFFFF45;
+            return r0, r1;
+         }
+         if(unk0 > 0)
+         {
+            int r0 = 0xFFFFFFFF;
+            int r1 = 0x7FFFFFFF;
+            int var_4 = 0xFFFFFF45 + 0xFFFFFF45;
+            return r0, r1;
+         }
+      }
+
+      int r0 = 0xFFFFFF45;
+      int r1 = 0xFFFFFF45;
+      int var_4 = 0xFFFFFF45 + 0xFFFFFF45;
+      return r0, r1;
+   }  
+}
+
 //----------------------
 
 int sha1Digest_219DE54(char *result, const char *source, int size)
@@ -478,162 +519,247 @@ void* proc_get_table_element_2198B1C(int index)
    return 0;
 }
 
-int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, int arg_0)
+int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, void* arg_0)
 {
-   /*
-   MOV             R9, R3
-   LDRD.W          R4, R5, [R1,#0x20]
-   SUB             SP, SP, #0x1C
-   MOV.W           R10, #0
-   MOVS            R3, #4  ; operation code
-   VMOV.I32        D16, #0x80
-   MOV             R11, R1 ; R1 = CryptEngineData*
-   CMP             R4, R2  ; compare
-   STRD.W          R4, R5, [SP]
-   SBCS.W          R5, R5, R9
-   LDR             R6, [R1,#0x28] ; R1 = CryptEngineData*
-   MOV             R7, R0  ; CryptEngineSubctx *subctx
-   MOV             R8, R2
-   STRD.W          R3, R1, [R0,#8] ; = 4, CryptEngineData*
-   VSTR            D16, [R0,#0x20] ; = 0x80, 0x80
-   STRD.W          R10, R10, [R0,#0x10] ; = 0
-   STRD.W          R10, R10, [R0,#0x18] ; = 0
-   STRD.W          R10, R10, [R0,#0x28] ; = 0
-   STRD.W          R10, R10, [R0,#0x30] ; = 0
-   STRD.W          R10, R10, [R0,#0x38] ; = 0
-   STRD.W          R10, R10, [R0,#0x40] ; = 0
-   STRD.W          R10, R10, [R0,#0x48] ; = 0
-   STRD.W          R10, R10, [R0,#0x50] ; = 0
-   */
+   #pragma region
 
-   if(? < ?)
+   int r9 = r3;
+
+   int r4 = [R1,#0x20];
+   int r5 = [R1,#0x24];
+
+   int r10 = 0;
+
+   int r3 = 4;
+   
+   //VMOV.I32        D16, #0x80
+
+   int r11 = r1;
+   
+   unk1[0] = r4;
+   unk1[4] = r5;
+
+   int r5 = r5 - r9;
+   
+   int r6 = [R1,#0x28];
+   int r7 = r0;
+   int r8 = r2;
+   
+   [R0,#8] = r3;
+   [R0,#C] = r1;
+   
+   //VSTR            D16, [R0,#0x20] ; = 0x80, 0x80
+
+   [R0,#0x10] = r10;
+   [R0,#0x14] = r10;
+
+   [R0,#0x18] = r10;
+   [R0,#0x1C] = r10;
+
+   [R0,#0x28] = r10;
+   [R0,#0x2C] = r10;
+   
+   [R0,#0x30] = r10;
+   [R0,#0x34] = r10;
+
+   [R0,#0x38] = r10;
+   [R0,#0x3C] = r10;
+
+   [R0,#0x40] = r10;
+   [R0,#0x44] = r10;
+
+   [R0,#0x48] = r10;
+   [R0,#0x4C] = r10;
+
+   [R0,#0x50] = r10;
+   [R0,#0x54] = r10;
+
+   #pragma endregion
+
+   if(r4 < r2)
    {
-      /*
-      LDRD.W          R1, R0, [R11,#0x14]
-      BL              sub_21A1AA8
-      SUBS            R0, #1
-      LDRD.W          R2, R3, [SP]
-      MUL.W           R0, R6, R0
-      ADDS            R2, R2, R0
-      ADC.W           R3, R3, #0
-      ADDS            R4, R2, #1
-      ADC.W           R5, R3, #0
-      CMP             R4, R8
-      SBCS.W          R0, R5, R9
-      */
+      #pragma region
 
-      if(? < ?)
-      {
-         /*
-         MOV             R3, R10
-         MOV             R0, R4  ; unk0
-         MOV             R1, R5  ; unk1
-         MOV             R2, R6  ; unk2
-         BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-         SUBS.W          R8, R4, R2
-         SBC.W           R9, R5, R3
-         */
-      }
+      int r1 = [R11,#0x14];
+      int r0 = [R11,#0x18];
+      int r0 = sub_21A1AA8();
+      int r0 = r0 - 1;
       
-      /*
-      LDR             R1, [SP,#0x40+unk1]
-      MOV             R2, R6  ; unk2
-      STRD.W          R8, R9, [R7,#0x20]
-      SUB.W           R3, R8, R1
-      LDRD.W          R0, R1, [SP]
-      STR             R3, [R7,#0x28]
-      MOVS            R3, #0  ; unk3
-      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-      MOV             R4, R0
-      ADDS.W          R0, R8, #0xFFFFFFFF ; unk0
-      MOV             R2, R6  ; unk2
-      MOV.W           R3, #0  ; unk3
-      MOV             R5, R1
-      ADC.W           R1, R9, #0xFFFFFFFF
-      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-      SUBS            R0, R0, R4
-      STR             R4, [R7,#0x34]
-      ADDS            R3, R0, #1
-      MOV             R2, R6  ; unk2
-      STR             R3, [R7,#0x2C]
-      MOVS            R3, #0  ; unk3
-      LDRD.W          R0, R1, [SP]
-      MOV             R10, R3
-      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-      LDR.W           R1, [R11,#0x1C]
-      STR             R2, [R7,#0x38]
-      STR.W           R10, [R7,#0x40]
-      */
+      int r2 = unk1[0];
+      int r3 = unk1[4];
+      
+      int r0 = r6 * r0;
+      int r2 = r2 + r0;
+      int r3 = r3 + 0;
+      int r4 = r2 + 1;
+      int r5 = r3 + 0;
+      int r0 = r5 - r9;
+      
+      if(r4 < r8)
+      {
+         int r3 = r10;
+         int r0 = r4;
+         int r1 = r5;
+         int r2 = r6;
+
+         SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+
+         int r8 = r4 - r2;
+         int r9 = r5 - r3;
+      }
+
+      #pragma endregion
+
+      #pragma region
+      
+      int r1 = unk1[0];
+      int r2 = r6;
+      
+      [R7,#0x20] = r8;
+      [R7,#0x24] = r9;
+
+      int r3 = r8 - r1;
+
+      int r0 = unk1[0];
+      int r1 = unk1[4];
+      
+      [R7,#0x28] = r3;
+      
+      int r3 = 0;
+      
+      int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+      int r4 = r0;
+
+      int r0 = r8 + 0xFFFFFFFF;
+
+      int r2 = r6;
+      int r3 = 0;
+      int r5 = r1;
+      int r1 = r9 + 0xFFFFFFFF;
+
+      int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+      
+      int r0 = r0 - r4;
+      
+      [R7,#0x34] = r4;
+      
+      int r3 = r0 + 1;
+      
+      int r2 = r6;
+      
+      [R7,#0x2C] = r3;
+      
+      int r3 = 0;
+
+      int r0 = unk1[0];
+      int r1 = unk1[1];
+      int r10 = r3;
+      
+      SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+      
+      int r1 = [R11,#0x1C];
+
+      [R7,#0x38] = r2;
+      [R7,#0x40] = r10;
+
+      #pragma endregion
 
       if(r1 == 1)
       {
-         /*
-         ORRS.W          R0, R2, R3
-         IT EQ
-         MOVEQ           R4, R10
-         */
+         #pragma region
 
-         if(!eq)
+         int r0 = r2 | r3;
+         if(r0 == 0)
          {
-            /*
-            STRD.W          R4, R10, [SP,#8]
-            LDRD.W          R0, R1, [SP,#8]
-            CMP             R5, R1
-            IT EQ
-            CMPEQ           R4, R0
-            ITE NE
-            MOVNE           R4, R6
-            MOVEQ           R4, R2
-            */
+            r4 = r10;
          }
 
-         /*
-         MOVS            R3, #0
-         STR             R4, [R7,#0x3C]
-         STR             R3, [R7,#0x48]
-         MOV             R0, R8  ; unk0
-         MOV             R1, R9  ; unk1
-         MOV             R2, R6  ; unk2
-         BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-         CMP             R2, #1
-         SBCS.W          R1, R3, #0
-         IT LT
-         MOVLT           R2, R6
-         STR             R2, [R7,#0x44]
-         */
+         if(r0 != 0)
+         {
+            var_38[0] = r4;
+            var_38[1] = r10;
+            
+            int r0 = var_38[0];
+            int r1 = var_38[1];
 
-         /*
-         LDR             R4, [SP,#0x40+arg_0]
-         STRD.W          R8, R9, [R4]
-         ADD             SP, SP, #0x1C
-         */
+            if((r5 == r1) && (r4 == r0))
+            {
+               int r4 = r2;
+            }
+            else
+            {
+               int r4 = r6;
+            }
+         }
+
+         int r3 = 0;
+         [R7,#0x3C] = r4;
+         [R7,#0x48] = r3;
+
+         int r0 = r8;
+         int r1 = r9;
+         int r2 = r6;
+         int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+
+         int r1 = r3 - 0; //why this line. does it influence comparison ?
+         if(r2 < 1)
+         {
+            int r2 = r6;
+         }
+         
+         [R7,#0x44] = r2;
+
+         int r4 = arg_0;
+         
+         [R4] = r8;
+         [R4 + 4] = r9; 
+
+         #pragma endregion
+         
+         return r0;
       }
       else
       {
-         /*
-         ORRS.W          R4, R2, R3
-         MOV             R0, R8  ; unk0
-         ITE NE
-         MOVNE           R3, R6
-         MOVEQ           R3, #0
-         MOV             R1, R9  ; unk1
-         STR             R3, [R7,#0x3C]
-         MOV             R2, R6  ; unk2
-         MOV             R3, R10 ; unk3
-         BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-         CMP             R2, #1
-         SBCS.W          R5, R3, #0
-         ITE GE
-         SUBGE           R4, R6, R2
-         MOVLT           R4, R10
-         STRD.W          R6, R4, [R7,#0x44]
-         */
+         #pragma region
 
-         /*
-         LDR             R4, [SP,#0x40+arg_0]
-         STRD.W          R8, R9, [R4]
-         ADD             SP, SP, #0x1C
-         */
+         int r4 = r2 | r3;
+         int r0 = r8;
+         
+         if(r4 != 0)
+         {
+            int r3 = r6;
+         }
+         else
+         {
+            int r3 = 0;
+         }
+
+         int r1 = r9;
+         [R7,#0x3C] = r3;
+         int r2 = r6;
+         int r3 = r10;
+         int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+         
+         int r5 = r3 - 0; //why this line. does it influence comparison ?
+         if(r2 >= 1)
+         {
+            int r4 = r6 - r2;
+         }
+         else
+         {
+            int r4 = r10;
+         }
+
+         [R7,#0x44] = r6;
+         [R7,#0x48] = r4;
+         
+         int r4 = arg_0;
+         [R4] = r8;
+         [R4 + 4] = r9;
+
+         #pragma endregion
+         
+         return r0;
       }
    }
    else
