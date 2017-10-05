@@ -480,6 +480,285 @@ void* proc_get_table_element_2198B1C(int index)
 
 int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, int arg_0)
 {
+   /*
+   MOV             R9, R3
+   LDRD.W          R4, R5, [R1,#0x20]
+   SUB             SP, SP, #0x1C
+   MOV.W           R10, #0
+   MOVS            R3, #4  ; operation code
+   VMOV.I32        D16, #0x80
+   MOV             R11, R1 ; R1 = CryptEngineData*
+   CMP             R4, R2  ; compare
+   STRD.W          R4, R5, [SP]
+   SBCS.W          R5, R5, R9
+   LDR             R6, [R1,#0x28] ; R1 = CryptEngineData*
+   MOV             R7, R0  ; CryptEngineSubctx *subctx
+   MOV             R8, R2
+   STRD.W          R3, R1, [R0,#8] ; = 4, CryptEngineData*
+   VSTR            D16, [R0,#0x20] ; = 0x80, 0x80
+   STRD.W          R10, R10, [R0,#0x10] ; = 0
+   STRD.W          R10, R10, [R0,#0x18] ; = 0
+   STRD.W          R10, R10, [R0,#0x28] ; = 0
+   STRD.W          R10, R10, [R0,#0x30] ; = 0
+   STRD.W          R10, R10, [R0,#0x38] ; = 0
+   STRD.W          R10, R10, [R0,#0x40] ; = 0
+   STRD.W          R10, R10, [R0,#0x48] ; = 0
+   STRD.W          R10, R10, [R0,#0x50] ; = 0
+   */
+
+   if(? < ?)
+   {
+      /*
+      LDRD.W          R1, R0, [R11,#0x14]
+      BL              sub_21A1AA8
+      SUBS            R0, #1
+      LDRD.W          R2, R3, [SP]
+      MUL.W           R0, R6, R0
+      ADDS            R2, R2, R0
+      ADC.W           R3, R3, #0
+      ADDS            R4, R2, #1
+      ADC.W           R5, R3, #0
+      CMP             R4, R8
+      SBCS.W          R0, R5, R9
+      */
+
+      if(? < ?)
+      {
+         /*
+         MOV             R3, R10
+         MOV             R0, R4  ; unk0
+         MOV             R1, R5  ; unk1
+         MOV             R2, R6  ; unk2
+         BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+         SUBS.W          R8, R4, R2
+         SBC.W           R9, R5, R3
+         */
+      }
+      
+      /*
+      LDR             R1, [SP,#0x40+unk1]
+      MOV             R2, R6  ; unk2
+      STRD.W          R8, R9, [R7,#0x20]
+      SUB.W           R3, R8, R1
+      LDRD.W          R0, R1, [SP]
+      STR             R3, [R7,#0x28]
+      MOVS            R3, #0  ; unk3
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+      MOV             R4, R0
+      ADDS.W          R0, R8, #0xFFFFFFFF ; unk0
+      MOV             R2, R6  ; unk2
+      MOV.W           R3, #0  ; unk3
+      MOV             R5, R1
+      ADC.W           R1, R9, #0xFFFFFFFF
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+      SUBS            R0, R0, R4
+      STR             R4, [R7,#0x34]
+      ADDS            R3, R0, #1
+      MOV             R2, R6  ; unk2
+      STR             R3, [R7,#0x2C]
+      MOVS            R3, #0  ; unk3
+      LDRD.W          R0, R1, [SP]
+      MOV             R10, R3
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+      LDR.W           R1, [R11,#0x1C]
+      STR             R2, [R7,#0x38]
+      STR.W           R10, [R7,#0x40]
+      */
+
+      if(r1 == 1)
+      {
+         /*
+         ORRS.W          R0, R2, R3
+         IT EQ
+         MOVEQ           R4, R10
+         */
+
+         if(!eq)
+         {
+            /*
+            STRD.W          R4, R10, [SP,#8]
+            LDRD.W          R0, R1, [SP,#8]
+            CMP             R5, R1
+            IT EQ
+            CMPEQ           R4, R0
+            ITE NE
+            MOVNE           R4, R6
+            MOVEQ           R4, R2
+            */
+         }
+
+         /*
+         MOVS            R3, #0
+         STR             R4, [R7,#0x3C]
+         STR             R3, [R7,#0x48]
+         MOV             R0, R8  ; unk0
+         MOV             R1, R9  ; unk1
+         MOV             R2, R6  ; unk2
+         BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+         CMP             R2, #1
+         SBCS.W          R1, R3, #0
+         IT LT
+         MOVLT           R2, R6
+         STR             R2, [R7,#0x44]
+         */
+
+         /*
+         LDR             R4, [SP,#0x40+arg_0]
+         STRD.W          R8, R9, [R4]
+         ADD             SP, SP, #0x1C
+         */
+      }
+      else
+      {
+         /*
+         ORRS.W          R4, R2, R3
+         MOV             R0, R8  ; unk0
+         ITE NE
+         MOVNE           R3, R6
+         MOVEQ           R3, #0
+         MOV             R1, R9  ; unk1
+         STR             R3, [R7,#0x3C]
+         MOV             R2, R6  ; unk2
+         MOV             R3, R10 ; unk3
+         BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+         CMP             R2, #1
+         SBCS.W          R5, R3, #0
+         ITE GE
+         SUBGE           R4, R6, R2
+         MOVLT           R4, R10
+         STRD.W          R6, R4, [R7,#0x44]
+         */
+
+         /*
+         LDR             R4, [SP,#0x40+arg_0]
+         STRD.W          R8, R9, [R4]
+         ADD             SP, SP, #0x1C
+         */
+      }
+   }
+   else
+   {
+      /*
+      STRD.W          R8, R9, [R0,#0x20] ; R0 = CryptEngineSubctx *
+      MOV             R3, R10 ; unk3
+      MOV             R0, R2  ; unk0
+      MOV             R1, R9  ; unk1
+      MOV             R2, R6  ; unk2
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+      STR             R0, [SP,#0x40+var_38]
+      MOV             R1, R9  ; unk1
+      LDR             R5, [SP,#0x40+var_38]
+      MOV             R0, R8  ; unk0
+      MOV             R2, R6  ; unk2
+      MOV             R3, R10 ; unk3
+      STR             R5, [R7,#0x34] ; R7 =  CryptEngineSubctx *
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+      MOV             R5, R3
+      LDR.W           R3, [R11,#0x1C] ; R11 = CryptEngineData*
+      MOV             R4, R2
+      ORRS.W          R0, R4, R5
+      STR             R4, [R7,#0x38] ; R7 =  CryptEngineSubctx *
+      ITE EQ
+      MOVEQ           R2, #0
+      MOVNE           R2, #1
+      CMP             R3, #1
+      STR             R2, [R7,#0x2C] ; R7 =  CryptEngineSubctx *
+      */
+
+      if(eq)
+      {
+         if(r2 == 0)
+         {
+            /*
+            STR             R2, [R7,#0x3C]
+            STR             R4, [R7,#0x44]
+            */
+
+            /*
+            LDR             R4, [SP,#0x40+arg_0]
+            STRD.W          R8, R9, [R4]
+            ADD             SP, SP, #0x1C
+            */
+         }
+         else
+         {
+            /*
+            LDR             R1, [SP,#0x40+var_38] ; unk1
+            MOVS            R2, #0
+            STR             R2, [SP,#0x40+var_2C]
+            MOV             R3, R10 ; unk3
+            MOV             R2, R6  ; unk2
+            STR             R1, [SP,#0x40+var_30]
+            LDRD.W          R0, R1, [SP]
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+            LDRD.W          R2, R3, [SP,#0x10]
+            CMP             R1, R3
+            ITE EQ
+            CMPEQ           R0, R2
+            MOVNE           R2, R6
+            BEQ             loc_219BB06
+            */
+
+            if(eq)
+            {
+               /*
+               LDRD.W          R0, R1, [SP]
+               MOV             R2, R6  ; unk2
+               MOV             R3, R10 ; unk3
+               BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+               */
+            }
+            
+            /*
+            STR             R2, [R7,#0x3C]
+            STR             R4, [R7,#0x44]
+            */
+
+            /*
+            LDR             R4, [SP,#0x40+arg_0]
+            STRD.W          R8, R9, [R4]
+            ADD             SP, SP, #0x1C
+            */
+         }
+      }
+      else
+      {
+         if(r2 == 0)
+         {
+            //MOVS            R3, #0
+         }
+         else
+         {
+            /*
+            STR             R6, [R7,#0x3C]
+            SBCS.W          R3, R5, #0
+            */
+
+            if(r4 < 1)
+            {
+               //MOVS            R3, #0
+            }
+            else
+            {
+               /*
+               MOV             R3, R6
+               SUBS            R4, R6, R4
+               STR             R4, [R7,#0x48]
+               */
+            }
+         }
+
+         //STR             R3, [R7,#0x44]
+
+         /*
+         LDR             R4, [SP,#0x40+arg_0]
+         STRD.W          R8, R9, [R4]
+         ADD             SP, SP, #0x1C
+         */
+      }
+   }
+
+
    return 0;
 }
 
