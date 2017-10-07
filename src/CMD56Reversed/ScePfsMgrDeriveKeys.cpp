@@ -182,8 +182,13 @@ int sub_9E407C(int unk0, int unk1, int unk2, int unk3, int* arg_0)
    return 0;
 }
 
-//some kind of this int __cdecl SceSdstor.SceSysclibForDriver._imp_udiv_wrapper_7554ab04(char *data, SceSize size, int sectorSize, int unk3)
-int SceSysclibForDriver_7554ab04(int unk0, int unk1, int unk2, int unk3)
+typedef struct lldiv_t
+{
+   long long q;
+   long long r;
+}lldiv_t;
+
+lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
 {
    if((unk2!= 0) || (unk3 != 0))
    {
@@ -602,7 +607,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          int r1 = r5;
          int r2 = r6;
 
-         SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+         SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
 
          int r8 = r4 - r2;
          int r9 = r5 - r3;
@@ -627,7 +632,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       
       int r3 = 0;
       
-      int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+      int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
       int r4 = r0;
 
       int r0 = r8 + 0xFFFFFFFF;
@@ -637,7 +642,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       int r5 = r1;
       int r1 = r9 + 0xFFFFFFFF;
 
-      int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+      int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
       
       int r0 = r0 - r4;
       
@@ -655,7 +660,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       int r1 = unk1[1];
       int r10 = r3;
       
-      SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+      SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
       
       int r1 = [R11,#0x1C];
 
@@ -699,7 +704,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          int r0 = r8;
          int r1 = r9;
          int r2 = r6;
-         int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+         int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
 
          int r1 = r3 - 0; //why this line. does it influence comparison ?
          if(r2 < 1)
@@ -738,7 +743,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          [R7,#0x3C] = r3;
          int r2 = r6;
          int r3 = r10;
-         int r0 = SceSysclibForDriver_7554ab04(r0, r1, r2, r3);
+         int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
          
          int r5 = r3 - 0; //why this line. does it influence comparison ?
          if(r2 >= 1)
@@ -764,128 +769,152 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
    }
    else
    {
-      /*
-      STRD.W          R8, R9, [R0,#0x20] ; R0 = CryptEngineSubctx *
-      MOV             R3, R10 ; unk3
-      MOV             R0, R2  ; unk0
-      MOV             R1, R9  ; unk1
-      MOV             R2, R6  ; unk2
-      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-      STR             R0, [SP,#0x40+var_38]
-      MOV             R1, R9  ; unk1
-      LDR             R5, [SP,#0x40+var_38]
-      MOV             R0, R8  ; unk0
-      MOV             R2, R6  ; unk2
-      MOV             R3, R10 ; unk3
-      STR             R5, [R7,#0x34] ; R7 =  CryptEngineSubctx *
-      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-      MOV             R5, R3
-      LDR.W           R3, [R11,#0x1C] ; R11 = CryptEngineData*
-      MOV             R4, R2
-      ORRS.W          R0, R4, R5
-      STR             R4, [R7,#0x38] ; R7 =  CryptEngineSubctx *
-      ITE EQ
-      MOVEQ           R2, #0
-      MOVNE           R2, #1
-      CMP             R3, #1
-      STR             R2, [R7,#0x2C] ; R7 =  CryptEngineSubctx *
-      */
+      #pragma region
 
-      if(eq)
+      [R0,#0x20] = r8;
+      [R0,#0x24] = r9;
+      int r3 = r10;
+      int r0 = r2;
+      int r1 = r9;
+      int r2 = r6;
+
+      int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
+
+      var_38 = r0;
+      int r1 = r9;
+      int r5 = var_38;
+
+      int r0 = r8;
+      int r2 = r6;
+      int r3 = r10;
+
+      [R7,#0x34] = r5;
+      
+      int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
+      
+      int r5 = r3;
+
+      int r3 = [R11,#0x1C];
+      int r4 = r2;
+      
+      int r0 = r4 | r5;
+
+      [R7,#0x38] = r4;
+      
+      if(r0 == 0)
+      {
+         int r2 = 0;
+      }
+      else
+      {
+         int r2 = 1;
+      }
+
+      [R7,#0x2C] = r2;
+
+      #pragma endregion
+
+      if(r3 == 1)
       {
          if(r2 == 0)
          {
-            /*
-            STR             R2, [R7,#0x3C]
-            STR             R4, [R7,#0x44]
-            */
+            #pragma region
 
-            /*
-            LDR             R4, [SP,#0x40+arg_0]
-            STRD.W          R8, R9, [R4]
-            ADD             SP, SP, #0x1C
-            */
+            [R7,#0x3C] = r2;
+            [R7,#0x44] = r4;
+
+            int r4 = arg_0;
+            r4[0] = r8;
+            r4[4] = r9;
+
+            #pragma endregion
+            
+            return r0;
          }
          else
          {
-            /*
-            LDR             R1, [SP,#0x40+var_38] ; unk1
-            MOVS            R2, #0
-            STR             R2, [SP,#0x40+var_2C]
-            MOV             R3, R10 ; unk3
-            MOV             R2, R6  ; unk2
-            STR             R1, [SP,#0x40+var_30]
-            LDRD.W          R0, R1, [SP]
-            BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-            LDRD.W          R2, R3, [SP,#0x10]
-            CMP             R1, R3
-            ITE EQ
-            CMPEQ           R0, R2
-            MOVNE           R2, R6
-            BEQ             loc_219BB06
-            */
+            #pragma region
 
-            if(eq)
-            {
-               /*
-               LDRD.W          R0, R1, [SP]
-               MOV             R2, R6  ; unk2
-               MOV             R3, R10 ; unk3
-               BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-               */
-            }
+            int r1 = var_38;
+            int r2 = 0;
+            var_2C = r2;
+            int r3 = r10;
+            int r2 = r6;
+            var_30 = r1;
             
-            /*
-            STR             R2, [R7,#0x3C]
-            STR             R4, [R7,#0x44]
-            */
+            int r0 = unk1[0];
+            int r1 = unk1[1];
+            int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
 
-            /*
-            LDR             R4, [SP,#0x40+arg_0]
-            STRD.W          R8, R9, [R4]
-            ADD             SP, SP, #0x1C
-            */
+            int r2 = var_30[0];
+            int r3 = var_30[1];
+            
+            if(r1 == r3)
+            {
+               if(r0 == r2)
+               {
+                  int r0 = unk1[0];
+                  int r1 = unk1[1];
+
+                  int r2 = r6;
+                  int r3 = r10;
+                  int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
+               }
+            }
+            else
+            {
+               int r2 = r6;
+            }
+
+            [R7,#0x3C] = r2;
+            [R7,#0x44] = r4;
+            
+            int r4 = arg_0;
+
+            r4[0] = r8;
+            r4[4] = r9; 
+
+            #pragma endregion
+
+            return 0;
          }
       }
       else
       {
+         #pragma region
+
          if(r2 == 0)
          {
-            //MOVS            R3, #0
+            int r3 = 0;
          }
          else
          {
-            /*
-            STR             R6, [R7,#0x3C]
-            SBCS.W          R3, R5, #0
-            */
+            [R7,#0x3C] = r6;
+            int r3 = r5 - 0; //does this influence comparison?
 
             if(r4 < 1)
             {
-               //MOVS            R3, #0
+               int r3 = 0;
             }
             else
             {
-               /*
-               MOV             R3, R6
-               SUBS            R4, R6, R4
-               STR             R4, [R7,#0x48]
-               */
+               int r3 = r6;
+               int r4 = r6 - r4;
+               [R7,#0x48] = r4;
             }
          }
 
-         //STR             R3, [R7,#0x44]
+         [R7,#0x44] = r3;
 
-         /*
-         LDR             R4, [SP,#0x40+arg_0]
-         STRD.W          R8, R9, [R4]
-         ADD             SP, SP, #0x1C
-         */
+         int r4 = arg_0;
+         r4[0] = r8;
+         r4[4] = r9;
+
+         #pragma endregion
+         
+         return 0;
       }
    }
-
-
-   return 0;
 }
 
 int validate_subctx_zero_pointers_219BB14(CryptEngineSubctx *subctx)
