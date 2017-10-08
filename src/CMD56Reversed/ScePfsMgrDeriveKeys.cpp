@@ -103,10 +103,10 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t dest_offset; // 0x38
    uint32_t size0; // 0x3C
    
-   uint32_t size1;
+   uint32_t size1; //0x40
    uint32_t unk_44;
    uint32_t size3; //0x48
-   char* hmac_sha1_digest; // digest to verify (possibly table)
+   char* hmac_sha1_digest; // 0x4C digest to verify (possibly table)
    
    void* buffer0; // 0x50
    void* buffer1; // 0x54
@@ -524,70 +524,71 @@ void* proc_get_table_element_2198B1C(int index)
    return 0;
 }
 
-int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, void* arg_0)
+typedef struct init_res_219B934
+{
+   uint32_t unk_0;
+   uint32_t unk_4;
+}init_res_219B934;
+
+int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, init_res_219B934* init_result)
 {
    #pragma region
 
-   int r9 = r3;
-
-   int r4 = [R1,#0x20];
-   int r5 = [R1,#0x24];
-
-   int r10 = 0;
-
-   int r3 = 4;
-   
-   //VMOV.I32        D16, #0x80
-
-   int r11 = r1;
+   int r4 = data->unk_20;
+   int r5 = data->unk_24;
    
    unk1[0] = r4;
    unk1[4] = r5;
 
-   int r5 = r5 - r9;
+   int r5 = r5 - unk3;
    
-   int r6 = [R1,#0x28];
-   int r7 = r0;
-   int r8 = r2;
+   int r6 = data->size1; // 0x28
    
-   [R0,#8] = r3;
-   [R0,#C] = r1;
+   int r9 = unk3;
+   int r8 = unk2;
    
-   //VSTR            D16, [R0,#0x20] ; = 0x80, 0x80
-
-   [R0,#0x10] = r10;
-   [R0,#0x14] = r10;
-
-   [R0,#0x18] = r10;
-   [R0,#0x1C] = r10;
-
-   [R0,#0x28] = r10;
-   [R0,#0x2C] = r10;
+   subctx->opt_code = 4; // 0x08
+   subctx->data = data; //0x0C
    
-   [R0,#0x30] = r10;
-   [R0,#0x34] = r10;
+   subctx->unk_20 = 0x80;
+   subctx->unk_24 = 0x80;
 
-   [R0,#0x38] = r10;
-   [R0,#0x3C] = r10;
+   subctx->unk_10 = 0;
+   subctx->source = 0; //0x14
 
-   [R0,#0x40] = r10;
-   [R0,#0x44] = r10;
+   subctx->unk_18 = 0;
+   subctx->unk_1C = 0;
 
-   [R0,#0x48] = r10;
-   [R0,#0x4C] = r10;
+   subctx->size2 = 0; //0x28
+   subctx->nDigests = 0; //0x2C
+   
+   subctx->unk_30 = 0;
+   subctx->seed0_base = 0; //0x34
 
-   [R0,#0x50] = r10;
-   [R0,#0x54] = r10;
+   subctx->dest_offset = 0; //0x38
+   subctx->size0 = 0; //0x3C
+
+   subctx->size1 = 0; //0x40
+   subctx->unk_44 = 0;
+
+   subctx->size3 = 0; //0x48
+   subctx->hmac_sha1_digest = 0; //0x4C
+
+   subctx->buffer0 = 0; //0x50
+   subctx->buffer1 = 0; //0x54
 
    #pragma endregion
 
-   if(r4 < r2)
+   int r10 = 0;
+   int r3 = 4;
+
+   if(r4 < unk2)
    {
       #pragma region
 
-      int r1 = [R11,#0x14];
-      int r0 = [R11,#0x18];
-      int r0 = sub_21A1AA8();
+      int r1 = data->unk_14; //0x14
+      int r0 = data->unk_18; //0x18
+      int r0 = 8;
       int r0 = r0 - 1;
       
       int r2 = unk1[0];
@@ -620,15 +621,15 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       int r1 = unk1[0];
       int r2 = r6;
       
-      [R7,#0x20] = r8;
-      [R7,#0x24] = r9;
+      subctx->unk_20 = r8;
+      subctx->unk_24 = r9;
 
       int r3 = r8 - r1;
 
       int r0 = unk1[0];
       int r1 = unk1[4];
       
-      [R7,#0x28] = r3;
+      subctx->size2 = r3; //0x28
       
       int r3 = 0;
       
@@ -646,13 +647,13 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       
       int r0 = r0 - r4;
       
-      [R7,#0x34] = r4;
+      subctx->seed0_base = r4; //0x34
       
       int r3 = r0 + 1;
       
       int r2 = r6;
       
-      [R7,#0x2C] = r3;
+      subctx->nDigests = r3; //0x2C
       
       int r3 = 0;
 
@@ -662,10 +663,10 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       
       SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
       
-      int r1 = [R11,#0x1C];
+      int r1 = data->unk_1C;
 
-      [R7,#0x38] = r2;
-      [R7,#0x40] = r10;
+      subctx->dest_offset = r2; //0x38
+      subctx->size1 = r10; //0x40
 
       #pragma endregion
 
@@ -698,8 +699,8 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          }
 
          int r3 = 0;
-         [R7,#0x3C] = r4;
-         [R7,#0x48] = r3;
+         subctx->size0 = r4; //0x3C
+         subctx->size3 = r3; //0x48
 
          int r0 = r8;
          int r1 = r9;
@@ -712,12 +713,10 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
             int r2 = r6;
          }
          
-         [R7,#0x44] = r2;
+         subctx->unk_44 = r2; //0x44
 
-         int r4 = arg_0;
-         
-         [R4] = r8;
-         [R4 + 4] = r9; 
+         init_result->unk_0 = r8;
+         init_result->unk_4 = r9;
 
          #pragma endregion
          
@@ -740,7 +739,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          }
 
          int r1 = r9;
-         [R7,#0x3C] = r3;
+         subctx->size0 = r3; //0x3C
          int r2 = r6;
          int r3 = r10;
          int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
@@ -755,12 +754,11 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
             int r4 = r10;
          }
 
-         [R7,#0x44] = r6;
-         [R7,#0x48] = r4;
+         subctx->unk_44 = r6;
+         subctx->size3 = r4; //0x48
          
-         int r4 = arg_0;
-         [R4] = r8;
-         [R4 + 4] = r9;
+         init_result->unk_0 = r8;
+         init_result->unk_4 = r9;
 
          #pragma endregion
          
@@ -771,8 +769,9 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
    {
       #pragma region
 
-      [R0,#0x20] = r8;
-      [R0,#0x24] = r9;
+      subctx->unk_20 = r8;
+      subctx->unk_24 = r9;
+
       int r3 = r10;
       int r0 = r2;
       int r1 = r9;
@@ -788,18 +787,18 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       int r2 = r6;
       int r3 = r10;
 
-      [R7,#0x34] = r5;
+      subctx->seed0_base = r5; //0x34
       
       int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
       
       int r5 = r3;
 
-      int r3 = [R11,#0x1C];
+      int r3 = data->unk_1C;
       int r4 = r2;
       
       int r0 = r4 | r5;
 
-      [R7,#0x38] = r4;
+      subctx->dest_offset = r4; //0x38
       
       if(r0 == 0)
       {
@@ -810,7 +809,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          int r2 = 1;
       }
 
-      [R7,#0x2C] = r2;
+      subctx->nDigests = r2; //0x2C
 
       #pragma endregion
 
@@ -820,12 +819,11 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          {
             #pragma region
 
-            [R7,#0x3C] = r2;
-            [R7,#0x44] = r4;
+            subctx->size0 = r2; //0x3C
+            subctx->unk_44 = r4;
 
-            int r4 = arg_0;
-            r4[0] = r8;
-            r4[4] = r9;
+            init_result->unk_0 = r8;
+            init_result->unk_4 = r9;
 
             #pragma endregion
             
@@ -849,30 +847,25 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
             int r2 = var_30[0];
             int r3 = var_30[1];
             
-            if(r1 == r3)
+            if((r1 == r3) && (r0 == r2))
             {
-               if(r0 == r2)
-               {
-                  int r0 = unk1[0];
-                  int r1 = unk1[1];
+               int r0 = unk1[0];
+               int r1 = unk1[1];
 
-                  int r2 = r6;
-                  int r3 = r10;
-                  int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
-               }
+               int r2 = r6;
+               int r3 = r10;
+               int r0 = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
             }
             else
             {
                int r2 = r6;
             }
 
-            [R7,#0x3C] = r2;
-            [R7,#0x44] = r4;
+            subctx->size0 = r2; //0x3C
+            subctx->unk_44 = r4;
             
-            int r4 = arg_0;
-
-            r4[0] = r8;
-            r4[4] = r9; 
+            init_result->unk_0 = r8;
+            init_result->unk_4 = r9;
 
             #pragma endregion
 
@@ -889,7 +882,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
          }
          else
          {
-            [R7,#0x3C] = r6;
+            subctx->size0 = r6; //0x3C
             int r3 = r5 - 0; //does this influence comparison?
 
             if(r4 < 1)
@@ -900,15 +893,14 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
             {
                int r3 = r6;
                int r4 = r6 - r4;
-               [R7,#0x48] = r4;
+               subctx->size3 = r4; //0x48
             }
          }
 
-         [R7,#0x44] = r3;
+         subctx->unk_44 = r3;
 
-         int r4 = arg_0;
-         r4[0] = r8;
-         r4[4] = r9;
+         init_result->unk_0 = r8;
+         init_result->unk_4 = r9;
 
          #pragma endregion
          
