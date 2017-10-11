@@ -167,60 +167,89 @@ int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key,
    return 0;
 }
 
+//----------------------
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_1901cb5e(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
+{
+   return 0;
+}
+
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
+
+//
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_121fa69f(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable)
+{
+   return 0;
+}
+
+//
 
 int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(const char* src, char* dst, int size, const char* key, int key_size, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
 
-int sub_9E407C(int unk0, int unk1, int unk2, int unk3, int* arg_0)
+//
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(const char* src, char* dst, int size, const char* key, int key_size, int mask_enable)
 {
    return 0;
 }
 
-typedef struct lldiv_t
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(const char* src, char* dst, int size, const char* key, int key_size, int mask_enable)
+{
+   return 0;
+}
+
+//
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrSHA1ForDriver_eb3af9b5(const char* src, char* dst, int size, char* iv, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, char* dst, int size, const char* key, char* iv, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+//
+
+typedef struct arm_lldiv_t
 {
    long long q;
    long long r;
-}lldiv_t;
+}arm_lldiv_t;
 
-lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
+arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
 {
-   if((unk2!= 0) || (unk3 != 0))
-   {
-      int res_array[2] = {0};
-      return sub_9E407C(unk0, unk1, unk2, unk3, res_array);
-      //does it also return r2, r3
-   }
-   else
-   {
-      if(unk1 == 0)
-      {
-         if(unk0 < 0)
-         {
-            int r0 = 0x00000000;
-            int r1 = 0x80000000;
-            int var_4 = 0xFFFFFF45 + 0xFFFFFF45;
-            return r0, r1;
-         }
-         if(unk0 > 0)
-         {
-            int r0 = 0xFFFFFFFF;
-            int r1 = 0x7FFFFFFF;
-            int var_4 = 0xFFFFFF45 + 0xFFFFFF45;
-            return r0, r1;
-         }
-      }
+   return arm_lldiv_t();
+}
 
-      int r0 = 0xFFFFFF45;
-      int r1 = 0xFFFFFF45;
-      int var_4 = 0xFFFFFF45 + 0xFFFFFF45;
-      return r0, r1;
-   }  
+//----------------------
+
+int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(char *key, char *iv, int size, char *src, char *dst)
+{
+   return 0;
 }
 
 //----------------------
@@ -530,6 +559,7 @@ typedef struct init_res_219B934
    uint32_t unk_4;
 }init_res_219B934;
 
+/*
 int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data, int unk2, int unk3, init_res_219B934* init_result)
 {
    #pragma region
@@ -908,6 +938,7 @@ int init_crypto_context_219B934(CryptEngineSubctx *subctx, CryptEngineData *data
       }
    }
 }
+*/
 
 int validate_subctx_zero_pointers_219BB14(CryptEngineSubctx *subctx)
 {
