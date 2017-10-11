@@ -285,6 +285,46 @@ int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, c
    return 0;
 }
 
+int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* klicensee, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
+{
+   uint16_t kid = 0 - (key_id - 1) + (key_id - 1); // ???
+
+   int size_tail = size & 0xF; // get size of tail
+   int size_block = size & (~0xF); // get block size aligned to 0x10 boundary
+   
+   //encrypt N blocks of source data with klicensee and iv
+
+   if(size_block != 0)
+   {
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(src, dst, size_block, klicensee, 0x80, iv, kid, 1);
+      if(result0 != 0)
+         return result0;  
+   }
+
+   //handle tail section - do a Cipher Text Stealing
+
+   if(size_tail == 0)
+      return 0;
+
+   //align destination buffer
+
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+
+   //encrypt iv using klicensee
+     
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, klicensee, 0x80, kid, 1);
+   if(result1 != 0)
+      return result1;
+
+   //produce destination tail by xoring source tail with encrypted iv
+
+   for(int i = 0; i < size_tail; i++)
+      dst[size_block + i] = src[size_block + i] ^ iv_enc_aligned[i];
+
+   return 0;
+}
+
 //----------------------
 
 int sha1Digest_219DE54(char *result, const char *source, int size)
@@ -393,46 +433,6 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    memcpy(key, klicensee, 0x10);
 
    memcpy(iv_xor_key, drvkey, 0x10);
-
-   return 0;
-}
-
-int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* klicensee, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
-{
-   uint16_t kid = 0 - (key_id - 1) + (key_id - 1); // ???
-
-   int size_tail = size & 0xF; // get size of tail
-   int size_block = size & (~0xF); // get block size aligned to 0x10 boundary
-   
-   //encrypt N blocks of source data with klicensee and iv
-
-   if(size_block != 0)
-   {
-      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(src, dst, size_block, klicensee, 0x80, iv, kid, 1);
-      if(result0 != 0)
-         return result0;  
-   }
-
-   //handle tail section - do a Cipher Text Stealing
-
-   if(size_tail == 0)
-      return 0;
-
-   //align destination buffer
-
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
-
-   //encrypt iv using klicensee
-     
-   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, klicensee, 0x80, kid, 1);
-   if(result1 != 0)
-      return result1;
-
-   //produce destination tail by xoring source tail with encrypted iv
-
-   for(int i = 0; i < size_tail; i++)
-      dst[size_block + i] = src[size_block + i] ^ iv_enc_aligned[i];
 
    return 0;
 }
