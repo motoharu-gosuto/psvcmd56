@@ -249,66 +249,38 @@ arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d
 
 //encrypt / decrypt
 
-int encrypt_cbc_encrypt_aes_ecb_with_key_callback_219D8AC(const char *key, char *iv, uint32_t size, const char* src, char* dst)
+int encrypt_cbc_encrypt_aes_ecb_with_key_callback_219D8AC(const char* key, char* iv, uint32_t size, const char* src, char* dst)
 {
-   int r7 = r0;
-   int r11 = r1;
-   int r9 = r3;
-   int r10 = dst;
-   int r6 = r2 & 0xF;
-   int r4 = r2 & (~0xF);
+   int size_tail = size & 0xF;
+   int size_block = size & (~0xF);
+
+   //encrypt N blocks of source data with key and iv
    
-   if(bne)
+   if(size_block != 0)
    {
-      int r2 = 0x80;
-      int r3 = 1;
-      iv = r1;
-      int r0 = r9;
-      key_size = r2;
-      int r1 = r10;
-      mask_enable = r3;
-      int r2 = r4;
-      int r3 = r7;
-      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15();
-      if(r0 != 0)
-         return r0;
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15(src, dst, size_block, key, 0x80, iv, 1);
+      if(result0 != 0)
+         return result0;
    }
 
-   int r0 = r6;
-   if(r6 == 0)
-      return r0;
+   //handle tail section - do a Cipher Text Stealing
 
-   int r3 = var_AC;
-   int r2 = 1;
-   int r8 = 0 - r3;
-   int lr = 0x80;
-   int r8 = r8 & 0x3F;
-   SP[0] = lr;
-   SP[4] = r2;
-   int r8 = r3;
-   int r0 = r11;
-   int r3 = r7;
-   int r1 = r8;
-   int r2 = 0x10;
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d();
-   if(r0 != 0)
-      return r0;
+   if(size_tail == 0)
+      return 0;
 
-   int r1 = r10 + r4;
-   int r3 = r9 + r4;
-   int r4 = r0;
-   
-   while(true)
-   {
-      int lr = r3[r4];
-      int r7 = r8[r4];
-      int r7 = lr ^ r7;
-      r1[r4] = r7;
-      int r4 = r4 + 1;
+   //align destination buffer
 
-      if(r4 == r6)
-         break;
-   }
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+
+   //encrypt iv using key
+
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(iv, iv_enc_aligned, 0x10, key, 0x80, 1);
+   if(result1 != 0)
+      return result1;
+
+   for(int i = 0; i < size_tail; i++)
+      dst[size_block + i] = src[size_block + i] ^ iv_enc_aligned[i]; 
 
    return 0;
 }
