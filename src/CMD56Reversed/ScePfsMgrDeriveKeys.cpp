@@ -181,19 +181,19 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(const char* 
 
 //
 
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(const char* src, char* dst, int size, const char* key, int key_size, uint16_t key_id, int mask_enable)
+{
+   return 0;
+}
+
+//---------------------
+
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_121fa69f(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable)
 {
    return 0;
 }
 
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable)
-{
-   return 0;
-}
-
-//
-
-int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(const char* src, char* dst, int size, const char* key, int key_size, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
@@ -210,7 +210,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(const char* 
    return 0;
 }
 
-//
+//---------------------
 
 int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable, int command_bit)
 {
@@ -323,7 +323,7 @@ int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, c
    return 0;
 }
 
-//encrypt / decrypt
+//encrypt / decrypt with key_id
 
 int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, char* iv, uint32_t size, char* src, char* dst, uint16_t key_id)
 {
@@ -402,6 +402,58 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
    for(int i = 0; i < size_tail; i++)
       dst[size_block + i] = src[size_block + i] ^ iv_enc_aligned[i];
 
+   return 0;
+}
+
+//----------------------
+
+//
+
+int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* dst)
+{
+   return 0;
+}
+
+int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
+{
+   return 0;
+}
+
+//
+
+int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
+{
+   return 0;
+}
+
+int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
+{
+   return 0;
+}
+
+//----------------------
+
+//
+
+int aes_encrypt_ecb_decrypt_with_key_callback_219D714(char* src, char* ecb_key, char* key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
+{
+   return 0;
+}
+
+int aes_encrypt_ecb_encrypt_with_key_callback_219D694(char* src, char* cbc_key, char* key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
+{
+   return 0;
+}
+
+//
+
+int aes_encrypt_aes_cmac_with_key_callback_219D794(char* src, char* cmac_key, char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
+{
+   return 0;
+}
+
+int aes_encrypt_aes_cmac_with_key_callback_219D820(char* src, char* cmac_key, char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
+{
    return 0;
 }
 
