@@ -247,7 +247,86 @@ arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d
 
 //----------------------
 
-int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, char* iv, int size, const char* src, char* dst)
+//encrypt / decrypt
+
+int encrypt_cbc_encrypt_aes_ecb_with_key_callback_219D8AC(const char *key, char *iv, uint32_t size, const char* src, char* dst)
+{
+   /*
+   MOV             R7, R0  ; key
+   MOV             R11, R1 ; iv
+   LDR             R4, [R5]
+   MOV             R9, R3  ; src
+   LDR.W           R10, [SP,#0xC0+dst]
+   AND.W           R6, R2, #0xF ; size
+   STR             R4, [SP,#0xC0+var_2C]
+   BICS.W          R4, R2, #0xF ; size
+   */
+
+   if(bne)
+   {
+      /*
+      MOVS            R2, #0x80 ; key_size
+      MOVS            R3, #1  ; mask_enable
+      STR             R1, [SP,#0xC0+iv] ; iv
+      MOV             R0, R9  ; src
+      STR             R2, [SP,#0xC0+key_size] ; key_size
+      MOV             R1, R10 ; dst
+      STR             R3, [SP,#0xC0+mask_enable] ; mask_enable
+      MOV             R2, R4  ; size
+      MOV             R3, R7  ; key
+      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15
+      */
+
+      if(r0 != 0)
+         return r0;
+   }
+
+   //MOV             R0, R6
+   if(r6 == 0)
+      return r0;
+
+   /*
+   ADD             R3, SP, #0xC0+var_AC
+   MOVS            R2, #1
+   RSB.W           R8, R3, #0
+   MOV.W           LR, #0x80
+   AND.W           R8, R8, #0x3F
+   STRD.W          LR, R2, [SP]
+   ADD             R8, R3
+   MOV             R0, R11 ; src
+   MOV             R3, R7  ; key
+   MOV             R1, R8  ; dst
+   MOVS            R2, #0x10 ; size
+   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_c517770d
+   */
+
+   if(r0 != 0)
+      return r0;
+
+   /*
+   ADD.W           R1, R10, R4
+   ADD.W           R3, R9, R4
+   MOV             R4, R0
+   */
+
+   while(true)
+   {
+      /*
+      LDRB.W          LR, [R3,R4]
+      LDRB.W          R7, [R4,R8]
+      EOR.W           R7, LR, R7
+      STRB            R7, [R1,R4]
+      ADDS            R4, #1
+      */
+
+      if(r4 == r6)
+         break;
+   }
+
+   return 0;
+}
+
+int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, char* iv, uint32_t size, const char* src, char* dst)
 {
    int size_tail = size & 0xF; // get size of tail
    int size_block = size & (~0xF); // get block size aligned to 0x10 boundary
@@ -285,7 +364,9 @@ int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, c
    return 0;
 }
 
-int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, char* iv, int size, char* src, char* dst, uint16_t key_id)
+//encrypt / decrypt
+
+int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, char* iv, uint32_t size, char* src, char* dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
