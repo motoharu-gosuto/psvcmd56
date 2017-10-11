@@ -271,7 +271,7 @@ int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, c
    char iv_enc[0x10] = {0};
    char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
    
-   //encrypt iv using klicensee
+   //encrypt iv using key
 
    int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(iv, iv_enc_aligned, 0x10, key, 0x80, 1);
    if(result1 != 0)
@@ -287,71 +287,40 @@ int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, c
 
 int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, char* iv, int size, char* src, char* dst, uint16_t key_id)
 {
-   uint16_t r4 = key_id;
-   int r10 = r3;
-   int r7 = r0;
-   int r9 = r1;
-   int r11 = dst;
-   int r3 = r4 - 1;
+   uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
-   int r6 = r2 & 0xF;
-   int r8 = 0 - r3;
-   int r8 = r8 + r3;
-   int r4 = r2 & (~0xF);
+   int size_tail = size & 0xF;
+   int size_block = size & (~0xF);
    
-   if(bne)
+   //decrypt N blocks of source data with key and iv
+
+   if(size_block != 0)
    {
-      int r2 = 0x80
-      int r3 = 1;
-      iv = r1;
-      int r0 = r10;
-      key_size = r2;
-      int r1 = r11;
-      mask_enable = r3;
-      int r2 = r4;
-      key_id = r8;
-      int r3 = r7;
-      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_1901cb5e();
-      if(r0 != 0)
-         return r0;
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_1901cb5e(src, dst, size_block, key, 0x80, iv, kid, 1);
+      if(result0 != 0)
+         return result0;
    }
 
-   int r0 = r6;
-   if(r6 == 0)
+   //handle tail section - do a Cipher Text Stealing
+
+   if(size_tail == 0)
       return 0;
 
-   int r3 = &var_AC;
-   int r2 = 0x80;
-   int r3 = 0 - r1;
-   int lr = 1;
-   int r1 = r1 & 0x3F;
-   key_id = r8;
-   int r8 = r1 + r3;
-   key_size = r2;
-   int r0 = r9;
-   int r3 = r7;
-   int r1 = r8;
-   int r2 = 0x10;
-   mask_enable = lr;
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af();
-   if(r0 != 0)
-      return r0;
+   //align destination buffer
 
-   int r11 = r11 + r4;
-   int r10 = r10 + r4;
-   int r4 = r0;
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
-   while(true)
-   {
-      int lr = r10[r4];
-      int r7 = r8[r4]
-      int r7 = lr ^ r7;
-      r11[r4] = r7;
-      int r4 = r4 + 1;
-      
-      if(r4 == r6)
-         break;
-   }
+   //encrypt iv using key
+
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, key, 0x80, kid, 1);
+   if(result1 != 0)
+      return result1;
+
+   //produce destination tail by xoring source tail with encrypted iv
+
+   for(int i = 0; i < size_tail; i++)
+      dst[size_block + i] = src[size_block + i] ^ iv_enc_aligned[i];
 
    return 0;
 }
