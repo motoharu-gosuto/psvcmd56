@@ -249,75 +249,63 @@ arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d
 
 int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(char *key, char *iv, int size, char *src, char *dst)
 {
-   /*
-   MOV             R7, R0
-   MOV             R11, R1 ; iv
-   LDR             R4, [R5]
-   MOV             R9, R3  ; src
-   LDR.W           R10, [SP,#0xC0+dst]
-   AND.W           R6, R2, #0xF ; size
-   STR             R4, [SP,#0xC0+var_2C]
-   BICS.W          R4, R2, #0xF ; size
-   */
-   if(bne)
-   {
-      /*
-      MOVS            R2, #0x80 ; key_size
-      MOVS            R3, #1  ; mask_enable
-      STR             R1, [SP,#0xC0+iv] ; iv
-      MOV             R0, R9  ; src
-      STR             R2, [SP,#0xC0+key_size] ; key_size
-      MOV             R1, R10 ; dst
-      STR             R3, [SP,#0xC0+var_B8] ; mask_enable
-      MOV             R2, R4  ; size
-      MOV             R3, R7  ; key
-      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCBCDecryptForDriver_121fa69f ; decrypt data
-      */
+   int r7 = r0;
+   int r11 = r1;
+   int r9 = r3;
+   int r10 = dst;
+   int r6 = r2 & 0xF;
+   int r4 = r2 & (~0xF);
 
+   if(r4 != 0)
+   {
+      int r2 = 0x80;
+      int r3 = 1;
+      iv = r1;
+      int r0 = r9;
+      key_size = r2;
+      r1 = r10;
+      mask_enable = 1;
+      int r2 = r4;
+      int r3 = r7;
+      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_121fa69f();
       if(r0 != 0)
          return r0;
-  
    }
 
-   //MOV             R0, R6  ; check size & 0x0F
-
+   int r0 = r6;
+   
    if(r6 == 0)
       return r0;
 
-   /*
-   ADD             R3, SP, #0xC0+var_AC
-   MOVS            R2, #1  ; mask_enable
-   RSB.W           R8, R3, #0
-   MOV.W           LR, #0x80 ; key_size
-   AND.W           R8, R8, #0x3F
-   STRD.W          LR, R2, [SP,#0xC0+key_size]
-   ADD             R8, R3
-   MOV             R0, R11 ; src
-   MOV             R3, R7  ; key
-   MOV             R1, R8  ; dst
-   MOVS            R2, #0x10 ; size
-   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_c517770d ; encrypt iv
-   */
-
+   int r3 = &var_AC;
+   int r2 = 1;
+   int r8 = 0 - r3;
+   int lr = 0x80;
+   int r8 = r8 & 0x3F;
+   key_size = lr;
+   mask_enable = r2;
+   int r8 = r8 + r3;
+   int r0 = r11;
+   int r3 = r7;
+   int r1 = r8;
+   int r2 = 0x10;
+   
+   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d();
    if(r0 != 0)
       return r0;
 
-   /*
-   ADD.W           R1, R10, R4 ; R10 = dst1, R4 = size
-   ADD.W           R3, R9, R4 ; R9 = src1
-   MOV             R4, R0  ; R0 = 0 - init counter
-   */
-
+   int r1 = r10 + r4;
+   int r3 = r9 + r4;
+   int r4 = r0;
+   
    while(true)
    {
-      /*
-      LDRB.W          LR, [R3,R4] ; R3 = source data
-      LDRB.W          R7, [R4,R8] ; R8 = encrypted IV
-      EOR.W           R7, LR, R7 ; XOR
-      STRB            R7, [R1,R4] ; R1 = destination
-      ADDS            R4, #1  ; inc counter
-      */
-
+      int lr = r3[r4];
+      int r7 = r4[r8];
+      int r7 = lr ^ r7;
+      [R1,R4] = r7;
+      int r4 = r4 + 1;
+      
       if(r4 == r6)
          break;
    }
