@@ -407,303 +407,170 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
 
 //----------------------
 
-//
+// FUNCTIONS ARE SIMILAR ?
 
 int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
 {
-   int r7 = r0;
-   int r10 = r1;
-   int r11 = r3;
-   int r8 = dst;
-   int r6 = r2 & 0xF;
-   int r4 = r2 & (0x~F);
+   int size_tail = size & 0xF;
+   int size_block = size & (~0xF);
    
-   if(r4 != 0)
+   //cmac N blocks of source data with klicensee and iv
+
+   if(size_block != 0)
    {
-      int r1 = 0x80;
-      int r2 = 1;
-      int r3 = 0;
-      sp[0] = r1;
-      sp[4] = r10;
-      mask_enable = r2;
-      int r0 = r11;
-      command_bit = r3;
-      int r1 = r8;
-      int r2 = r4;
-      int r3 = r7;
-      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d();
-      if(r0 != 0)
-         return r0;
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, 1, 0);
+      if(result0 != 0)
+         return result0;
    }
 
-   int r0 = r6;
-   if(r6 == 0)
+   //handle tail section - do a Cipher Text Stealing
+
+   if(size_tail == 0)
       return 0;
 
-   int r3 = var_AC;
-   int r2 = 1;
-   int r9 = 0 - r3;
-   int lr = 0x80;
-   
-   int r9 = r9 & 0x3F;
-   
-   sp[0] = lr;
-   sp[4] = r2;
+   //align destination buffer
 
-   int r9 = r9 + r3;
-   int r0 = r10;
-   int r3 = r7;
-   int r1 = r9;
-   int r2 = 0x10;
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d();
-   if(r0 != 0)
-      return r0;
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
-   int r3 = r11 + r4;
-   int r4 = r0;
-   
-   while(true)
-   {
-      int lr = r3[r4];
-      int r7 = r9[r4];
-      int r7 = lr ^ r7;
-      r8[r4] = r7;
-      int r4 = r4 + 1;
-      
-      if(r4 == r6)
-         break;
-   }
+   //encrypt iv using key
+
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, 1);
+   if(result1 != 0)
+      return result1;
+
+   //produce destination tail by xoring source tail with encrypted iv
+
+   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+
+   for(int i = 0; i < size_tail; i++)
+      cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
 
    return 0;
 }
 
 int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
 {
-   int r7 = r0;
-   int r10 = r1;
-   int r11 = r3;
-   int r8 = cmac_dst;
+   int size_tail = size & 0xF;
+   int size_block = size & (~0xF);
 
-   int r6 = r2 & 0xF;
-   int r4 = r2 & (~0xF);
+   //cmac N blocks of source data with klicensee and iv
 
-   if(bne)
+   if(size_block != 0)
    {
-      int r1 = 0x80;
-      int r2 = 1;
-      int r3 = 0;
-
-      sp[0] = r1;
-      sp[4] = r10;
-
-      mask_enable = r2;
-      int r0 = r11;
-      command_bit = r3;
-
-      int r1 = r8;
-      int r2 = r4;
-      int r3 = r7;
-      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d();
-      if(r0 != 0)
-         return r0;
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, 1, 0);
+      if(result0 != 0)
+         return result0;
    }
 
-   int r0 = r6;
-   if(r6 == 0)
-      return r0;
+   //handle tail section - do a Cipher Text Stealing
 
-   int r3 = var_AC;
-   int r2 = 1;
-   int r9 = 0 - r3;
-   int lr = 0x80;
-   int r9 = r9 & 0x3F;
+   if(size_tail == 0)
+      return 0;
 
-   sp[0] =  lr;
-   sp[4] = r2;
+   //align destination buffer
 
-   int r9 = r9 + r3;
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
-   int r0 = r10;
-   int r3 = r7;
-   int r1 = r9;
-   int r2 = 0x10;
-   
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d();
+   //encrypt iv using key
 
-   if(r0 != 0)
-      return r0;
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, 1);
+   if(result1 != 0)
+      return result1;
 
-   int r3 = r11 + r4;
-   int r4 = r0;
+   //produce destination tail by xoring source tail with encrypted iv
 
-   while(true)
-   {
-      int lr = r3[r4];
-      int r7 = r9[r4];
-      r7 = lr ^ r7;
-      r8[r4] = r7;
+   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
 
-      int r4 = r4 + 1;
-
-      if(r4 == r6)
-         break;
-   }
+   for(int i = 0; i < size_tail; i++)
+      cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
 
    return 0;
 }
 
-//
+// FUNCTIONS ARE SIMILAR ?
 
 int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
-   uint16_t r4 = key_id;
-   int r11 = r3;
-   int r7 = r0;
-   int r10 = r1;
-   int r8 = cmac_dst;
-   int r3 = r4 - 1;
-   int r6 = r2 & 0xF;
-   int r9 = 0 - r3;
-   int r9 = r9 + r3;
-   int r4 = r2 & (~0xF);
+   uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
-   if(bne)
+   int size_tail = size & 0xF;
+   int size_block = size & (~0xF);
+
+   //cmac N blocks of source data with klicensee and iv
+
+   if(size_block != 0)
    {
-      int r1 = 0x80;
-      int r2 = 1;
-      int r3 = 0;
-      key_size = r1;
-      mask_enable = r2;
-      int r0 = r11;
-      command_bit = r3;
-      int r1 = r8;
-      iv = r10;
-      next = r9;
-      int r2 = r4;
-      int r3 = r7;
-      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5();
-
-      if(r0 != 0)
-         return r0;
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, kid, 1, 0);
+      if(result0 != 0)
+         return result0;
    }
 
-   int r0 = r6;
-   if(r6 == 0)
+   //handle tail section - do a Cipher Text Stealing
+   
+   if(size_tail == 0)
       return 0;
 
-   int r3 = var_AC;
-   int r2 = 0x80;
-   int r1 = 0 - r3;
-   int lr = 1;
-   int r1 = r1 & 0x3F;
-   iv = r9;
-   int r9 = r1 + r3;
-   key_size = r2;
-   int r0 = r10;
-   int r3 = r7;
-   int r1 = r9;
-   int r2 = 0x10;
-   mask_enable = lr;
-   
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af();
+   //align destination buffer
 
-   if(r0 != 0)
-      return r0;
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
-   int r11 = r11 + r4;
-   int r4 = r0;
-   
-   while(true)
-   {
-      int lr = r11[r4];
-      int r7 = r9[r4];
-      int r7 = lr ^ r7;
-      r8[r4] = r7;
+   //encrypt iv using key
 
-      int r4 = r4 + 1;
-      
-      if(r4 == r6)
-         break;
-   }
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, kid, 1);
+   if(result1 != 0)
+      return result1;
+
+   //produce destination tail by xoring source tail with encrypted iv
+
+   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+
+   for(int i = 0; i < size_tail; i++)
+      cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
 
    return 0;
 }
 
 int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
-   uint16_t r4 = key_id;
-   int r11 = r3;
-   int r7 = r0;
-   int r10 = r1;
-   int r8 = cmac_dst;
-   int r3 = r4 - 1;
-   int r6 = r2 & 0xF;
-   int r9 = 0 - r3;
-   int r9 = r9 + r3;
-   int r4 = r2 & (~0xF)
+   uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
-   if(bne)
+   int size_tail = size & 0xF;
+   int size_block = size & (~0xF);
+
+   //cmac N blocks of source data with klicensee and iv
+
+   if(size_block != 0)
    {
-      int r1 = 0x80;
-      int r2 = 1;
-      int r3 = 0;
-      key_size  = r1;
-      mask_enable = r2;
-      int r0 = r11;
-      command_bit = r3;
-      int r1 = r8;
-
-      iv = r10;
-      next = r9;
-
-      int r2 = r4;
-      int r3 = r7;
-
-      int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5();
-
-      if(r0 != 0)
-         return r0;
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, kid, 1, 0);
+      if(result0 != 0)
+         return result0;
    }
 
-   int r0 = r6;
+   //handle tail section - do a Cipher Text Stealing
 
-   if(r6 == 0)
+   if(size_tail == 0)
       return 0;
 
-   int r3 = var_AC;
-   int r2 = 0x80;
-   int r1 = 0 - r3;
-   int lr = 1;
-   int r1 = r1 & 0x3F;
-   iv = r9;
-   int r9 = r1 + r3;
-   key_size = r2;
-   int r0 = r10;
-   int r3 = r7;
-   int r1 = r9;
-   int r2 = 0x10;
-   mask_enable = lr;
-   
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af();
+   //align destination buffer
 
-   if(r0 != 0)
-      return r0;
+   char iv_enc[0x10] = {0};
+   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
-   int r11 = r11 + r4;
-   int r4 = r0;
+   //encrypt iv using key
    
-   while(true)
-   {
-      int lr = r11[r4];
-      int r7 = r9[r4];
-      int r7 = lr ^ r7;
-      r8[r4] = r7;
-      
-      int r4 = r4 + 1;
-      
-      if(r4 == r6)
-         break;
-   }
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, kid, 1);
+   if(result1 != 0)
+      return result1;
+
+   //produce destination tail by xoring source tail with encrypted iv
+
+   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+
+   for(int i = 0; i < size_tail; i++)
+      cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
 
    return 0;
 }
