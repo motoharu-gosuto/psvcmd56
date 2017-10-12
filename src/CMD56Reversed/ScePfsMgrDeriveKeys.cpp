@@ -169,19 +169,19 @@ int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key,
 
 //----------------------
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_1901cb5e(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptWithKeygenForDriver_711c057a(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
 
 //
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(const char* src, char* dst, int size, const char* key, int key_size, uint16_t key_id, int mask_enable)
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(const char* src, char* dst, int size, const char* key, int key_size, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
@@ -217,7 +217,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(const char* src, c
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable, int command_bit)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable, int command_bit)
 {
    return 0;
 }
@@ -336,7 +336,7 @@ int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, ch
 
    if(size_block != 0)
    {
-      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_1901cb5e(src, dst, size_block, key, 0x80, iv, kid, 1);
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(src, dst, size_block, key, 0x80, iv, kid, 1);
       if(result0 != 0)
          return result0;
    }
@@ -353,7 +353,7 @@ int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, ch
 
    //encrypt iv using key
 
-   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, key, 0x80, kid, 1);
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, key, 0x80, kid, 1);
    if(result1 != 0)
       return result1;
 
@@ -376,7 +376,7 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
 
    if(size_block != 0)
    {
-      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_711c057a(src, dst, size_block, klicensee, 0x80, iv, kid, 1);
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptWithKeygenForDriver_711c057a(src, dst, size_block, klicensee, 0x80, iv, kid, 1);
       if(result0 != 0)
          return result0;  
    }
@@ -393,7 +393,7 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
 
    //encrypt iv using klicensee
      
-   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, klicensee, 0x80, kid, 1);
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, klicensee, 0x80, kid, 1);
    if(result1 != 0)
       return result1;
 
@@ -407,7 +407,7 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
 
 //----------------------
 
-// FUNCTIONS ARE SIMILAR ?
+// FUNCTIONS ARE SIMILAR
 
 int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
 {
@@ -441,7 +441,7 @@ int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uin
 
    //produce destination tail by xoring source tail with encrypted iv
 
-   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+   //CMAC result has constant size - that is why iv is xored with the beginning of dest buffer
 
    for(int i = 0; i < size_tail; i++)
       cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
@@ -481,7 +481,7 @@ int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uin
 
    //produce destination tail by xoring source tail with encrypted iv
 
-   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+   //CMAC result has constant size - that is why iv is xored with the beginning of dest buffer
 
    for(int i = 0; i < size_tail; i++)
       cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
@@ -489,7 +489,7 @@ int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uin
    return 0;
 }
 
-// FUNCTIONS ARE SIMILAR ?
+// FUNCTIONS ARE SIMILAR
 
 int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
@@ -502,7 +502,7 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, 
 
    if(size_block != 0)
    {
-      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, kid, 1, 0);
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, kid, 1, 0);
       if(result0 != 0)
          return result0;
    }
@@ -519,13 +519,13 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, 
 
    //encrypt iv using key
 
-   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, kid, 1);
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, kid, 1);
    if(result1 != 0)
       return result1;
 
    //produce destination tail by xoring source tail with encrypted iv
 
-   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+   //CMAC result has constant size - that is why iv is xored with the beginning of dest buffer
 
    for(int i = 0; i < size_tail; i++)
       cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
@@ -544,7 +544,7 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
    if(size_block != 0)
    {
-      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_83b058f5(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, kid, 1, 0);
+      int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(cmac_src, cmac_dst, size_block, cmac_key, 0x80, iv, kid, 1, 0);
       if(result0 != 0)
          return result0;
    }
@@ -561,13 +561,13 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
    //encrypt iv using key
    
-   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, kid, 1);
+   int result1 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(iv, iv_enc_aligned, 0x10, cmac_key, 0x80, kid, 1);
    if(result1 != 0)
       return result1;
 
    //produce destination tail by xoring source tail with encrypted iv
 
-   //WHY DEST IS NOT WRITTEN AT size_block OFFSET?
+   //CMAC result has constant size - that is why iv is xored with the beginning of dest buffer
 
    for(int i = 0; i < size_tail; i++)
       cmac_dst[i] = cmac_src[size_block + i] ^ iv_enc_aligned[i];
