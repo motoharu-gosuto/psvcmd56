@@ -589,7 +589,7 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
 //----------------------
 
-// this is something like CMAC but both dec and enc functions are present
+// this is most likely SW version of CMAC. both dec and enc functions are implemented
 //https://crypto.stackexchange.com/questions/47223/xex-mode-how-to-perturb-the-tweak
 
 int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
@@ -621,6 +621,8 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
    return 0;
 }
 
+//IV is a subkey base
+
 int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
@@ -633,7 +635,6 @@ int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* iv, const char
    xor_219D624((int*)src, (int*)drv_iv, (int*)dst, size); // xor src with drv_iv to get dst
 
    int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(dst, dst, size, dst_key, key_size, 1); //decrypt dst data using dst_key key
-   
    if(result0 == 0)
       xor_219D624((int*)dst, (int*)drv_iv, (int*)dst, size); //xor dst with drv_iv to get real dst
 
@@ -642,54 +643,24 @@ int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* iv, const char
 
 int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
-   int r7 = r3;
-   int r10 = r0;
-   int r3 = r2;
-   int r6 = size;
-   int r8 = src;
-   int r2 = r7;
-   int r9 = r1;
-   int r0 = ctx;
-   int r1 = 0x80;
-   int r5 = ecb_src_dst;
+   char aes_ctx[0x1F0] = {0};
+   char drv_iv[0x10] = {0};
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(r0, r1, r2, r3);
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, iv_key);
 
-   int r1 = r10;
-   int r2 = dst;
-   int r0 = ctx;
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, iv, drv_iv);
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(r0, r1, r2, r3);
-   
-   int r0 = r8;
-   int r1 = dst;
-   int r2 = r5;
-   int r3 = r6;
+   xor_219D624((int*)src, (int*)drv_iv, (int*)dst, size);
 
-   xor_219D624(r0, r1, r2, r3);
+   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(dst, dst, size, dst_key, key_size, 1);
+   if(result0 == 0)
+      xor_219D624((int*)dst, (int*)drv_iv, (int*)dst, size);
 
-   int lr = 1;
-   key_size = r7;
-   int r3 = r9;
-   int r0 = r5;
-   int r1 = r5;
-   int r2 = r6;
-   mask_enable = lr;
-
-   int r7 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(r0, r1, r2, r3, key_size, mask_enable);
-   if(r7 == 0)
-   {
-      int r0 = r5;
-      int r1 = dst;
-      int r3 = r6;
-      int r2 = r5;
-      xor_219D624(r0, r1, r2, r3);
-   }
-
-   return r7;
+   return result0;
 }
 
-// this is something like CMAC but both dec and enc functions are present
+// this is most likely SW version of CMAC. both dec and enc functions are implemented
+//https://crypto.stackexchange.com/questions/47223/xex-mode-how-to-perturb-the-tweak
 
 int sub_219D65C(int unk0, int unk1, int unk2, int unk3)
 {
