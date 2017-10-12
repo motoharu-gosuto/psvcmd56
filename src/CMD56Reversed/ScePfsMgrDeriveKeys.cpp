@@ -589,9 +589,10 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
 //----------------------
 
-//
+// this is something like CMAC but both dec and enc functions are present
+//https://crypto.stackexchange.com/questions/47223/xex-mode-how-to-perturb-the-tweak
 
-int sub_219D624(int* src, int* iv, int* dst, uint32_t size)
+int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
 {
    int iv_cpy[4] = {0};
    memcpy(iv_cpy, iv, 0x10);
@@ -629,68 +630,66 @@ int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* iv, const char
 
    SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, iv, drv_iv); //encrypt 0x10 bytes of iv to derive drv_iv
 
-   sub_219D624((int*)src, (int*)drv_iv, (int*)dst, size); // xor src with drv_iv to get dst
+   xor_219D624((int*)src, (int*)drv_iv, (int*)dst, size); // xor src with drv_iv to get dst
 
    int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(dst, dst, size, dst_key, key_size, 1); //decrypt dst data using dst_key key
    
    if(result0 == 0)
-      sub_219D624((int*)dst, (int*)drv_iv, (int*)dst, size); //xor dst with drv_iv to get real dst
+      xor_219D624((int*)dst, (int*)drv_iv, (int*)dst, size); //xor dst with drv_iv to get real dst
 
    return result0;
 }
 
 int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
-   /*
-   MOV             R7, R3
-   MOV             R10, R0 ; src
-   LDR             R5, [R4]
-   MOV             R3, R2  ; key
-   LDRD.W          R6, R8, [SP,#0x230+size] ; size, ?
-   MOV             R2, R7  ; keysize
-   MOV             R9, R1  ; cbc_key
-   ADD             R0, SP, #0x230+ctx ; ctx
-   STR             R5, [SP,#0x230+var_24]
-   MOVS            R1, #0x80 ; blocksize
-   LDR             R5, [SP,#0x230+ecb_src_dst] ; ecb_src_dst
-   BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_aes_init_2_eda97d6d
-   MOV             R1, R10 ; src
-   ADD             R2, SP, #0x230+dst ; dst
-   ADD             R0, SP, #0x230+ctx ; ctx
-   BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_aes_encrypt_2_302947b6
-   MOV             R0, R8  ; unk0
-   ADD             R1, SP, #0x230+dst ; dst
-   MOV             R2, R5  ; ecb_src_dst
-   MOV             R3, R6  ; size
-   BL              sub_219D624
-   MOV.W           LR, #1
-   STR             R7, [SP,#0x230+key_size] ; arg_0 - key_size
-   MOV             R3, R9  ; key
-   MOV             R0, R5  ; src
-   MOV             R1, R5  ; dst
-   MOV             R2, R6  ; size
-   STR.W           LR, [SP,#0x230+mask_enable] ; mask_enable
-   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_c517770d
-   MOV             R7, R0
-   */
+   int r7 = r3;
+   int r10 = r0;
+   int r3 = r2;
+   int r6 = size;
+   int r8 = src;
+   int r2 = r7;
+   int r9 = r1;
+   int r0 = ctx;
+   int r1 = 0x80;
+   int r5 = ecb_src_dst;
 
-   if(r0 == 0)
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(r0, r1, r2, r3);
+
+   int r1 = r10;
+   int r2 = dst;
+   int r0 = ctx;
+
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(r0, r1, r2, r3);
+   
+   int r0 = r8;
+   int r1 = dst;
+   int r2 = r5;
+   int r3 = r6;
+
+   xor_219D624(r0, r1, r2, r3);
+
+   int lr = 1;
+   key_size = r7;
+   int r3 = r9;
+   int r0 = r5;
+   int r1 = r5;
+   int r2 = r6;
+   mask_enable = lr;
+
+   int r7 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(r0, r1, r2, r3, key_size, mask_enable);
+   if(r7 == 0)
    {
-      /*
-      MOV             R0, R5  ; unk0
-      ADD             R1, SP, #0x230+dst ; dst
-      MOV             R3, R6  ; size
-      MOV             R2, R5  ; ecb_src_dst
-      BL              sub_219D624
-      */
+      int r0 = r5;
+      int r1 = dst;
+      int r3 = r6;
+      int r2 = r5;
+      xor_219D624(r0, r1, r2, r3);
    }
 
-   //MOV             R0, R7
-
-   return 0;
+   return r7;
 }
 
-//
+// this is something like CMAC but both dec and enc functions are present
 
 int sub_219D65C(int unk0, int unk1, int unk2, int unk3)
 {
