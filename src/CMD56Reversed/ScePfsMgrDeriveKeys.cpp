@@ -593,26 +593,43 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
 int sub_219D624(char* unk0, char* unk1, char* unk2, uint32_t unk3)
 {
-   //LDMIA.W         R1, {R4-R7}
+   int r4 = unk1[0x0];
+   int r5 = unk1[0x4];
+   int r6 = unk1[0x8];
+   int r7 = unk1[0xC];
 
    while(true)
    {
+      int r8 =  unk0[0x0]
+      int r9 =  unk0[0x4]
+      int r10 = unk0[0x8]
+      int r12 = unk0[0xC]
+      unk0 = unk0 + 0x10;
+
+      int r8 = r8 ^ r4;
+      int r4 = r4 + r4;
+      int r9 = r9 ^ r5;
+      int r5 = r5 + r5;
+      int r10 = r10 ^ r6;
+      int r6 = r6 + r6;
+      int r12 = r12 ^ r7;
+      int r7 = r7 + r7;
+
+      unk2[0x0] = r8;
+      unk2[0x4] = r9;
+      unk2[0x8] = r10;
+      unk2[0xC] = r12;
+
+      unk2 = unk2 + 0x10;
+
       /*
-      LDMIA.W         R0!, {R8-R10,R12}
-      EOR.W           R8, R8, R4
-      ADDS            R4, R4, R4
-      EOR.W           R9, R9, R5
-      ADCS            R5, R5
-      EOR.W           R10, R10, R6
-      ADCS            R6, R6
-      EOR.W           R12, R12, R7
-      ADCS            R7, R7
-      STMIA.W         R2!, {R8-R10,R12}
       IT CS
       EORCS.W         R4, R4, #0x87
-      SUBS            R3, #0x10
-      BNE             loc_219D62C
       */
+
+      unk3 = unk3 - 0x10;
+      if(unk3 == 0)
+         break;
    }
 
    return 0;
