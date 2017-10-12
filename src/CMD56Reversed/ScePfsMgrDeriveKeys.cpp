@@ -169,6 +169,18 @@ int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key,
 
 //----------------------
 
+int SceKernelUtilsForDriver_aes_init_2_eda97d6d(void *ctx, uint32_t blocksize, uint32_t keysize, const char *key)
+{
+   return 0;
+}
+
+int SceKernelUtilsForDriver_aes_encrypt_2_302947b6(void* ctx, const char* src, char* dst)
+{
+   return 0;
+}
+
+//----------------------
+
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
 {
    return 0;
@@ -587,53 +599,56 @@ int sub_219D624(int unk0, int unk1, int unk2, int unk3)
 
 int aes_encrypt_ecb_decrypt_with_key_callback_219D714(char* src, char* ecb_key, char* key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
 {
-   /*
-   MOV             R7, R3  ; keysize
-   MOV             R10, R0 ; src
-   LDR             R5, [R4]
-   MOV             R3, R2  ; key
-   LDRD.W          R6, R8, [SP,#0x230+size] ; size
-   MOV             R2, R7  ; keysize
-   MOV             R9, R1  ; ecb_key
-   ADD             R0, SP, #0x230+ctx ; ctx
-   STR             R5, [SP,#0x230+var_24]
-   MOVS            R1, #0x80 ; blocksize
-   LDR             R5, [SP,#0x230+ecb_src_dst] ; ecb_src_dst
-   BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_aes_init_2_eda97d6d
-   MOV             R1, R10 ; src
-   ADD             R2, SP, #0x230+dst ; dst
-   ADD             R0, SP, #0x230+ctx ; ctx
-   BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_aes_encrypt_2_302947b6
-   MOV             R0, R8  ; unk0
-   ADD             R1, SP, #0x230+dst ; dst
-   MOV             R2, R5  ; ecb_src_dst
-   MOV             R3, R6  ; size
-   BL              sub_219D624
-   MOV.W           LR, #1
-   STR             R7, [SP,#0x230+key_size] ; arg_0 - keysize
-   MOV             R3, R9  ; key
-   MOV             R0, R5  ; src
-   MOV             R1, R5  ; dst
-   MOV             R2, R6  ; size
-   STR.W           LR, [SP,#0x230+mask_enable] ; mask_enable
-   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBDecryptForDriver_7c978be7
-   MOV             R7, R0
-   */
+   int r7 = r3;
+   int r10 = r0;
+   int r3 = r2;
+   int r6 = size;
+   int r8 = arg_4;
+   int r2 = r7;
+   int r9 = r1;
 
+   int r0 = ctx;
+   int r1 = 0x80;
+   int r5 = ecb_src_dst;
+
+   int r0 = SceKernelUtilsForDriver_aes_init_2_eda97d6d(r0, r1, r2, r3);
+
+   int r1 = r10;
+   int r2 = dst;
+   int r0 = ctx;
+
+   int r0 = SceKernelUtilsForDriver_aes_encrypt_2_302947b6(r0, r1, r2);
+   
+   int r0 = r8;
+   int r1 = dst;
+   int r2 = r5;
+   int r3 = r6;
+
+   int r0 = sub_219D624(r0, r1, r2, r3);
+
+   int lr = 1;
+   key_size = r7;
+   int r3 = r9;
+   int r0 = r5;
+   int r1 = r5;
+   int r2 = r6;
+   mask_enable = lr;
+
+   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(r0, r1, r2, r3, key_size, mask_enable);
+   int r7 = r0;
+   
    if(r0 == 0)
    {
-      /*
-      MOV             R0, R5  ; unk0
-      ADD             R1, SP, #0x230+dst ; dst
-      MOV             R3, R6  ; size
-      MOV             R2, R5  ; ecb_src_dst
-      BL              sub_219D624
-      */
+      int r0 = r5;
+      int r1 = dst;
+      int r3 = r6;
+      int r2 = r5;
+      int r0 = sub_219D624(r0, r1, r2, r3);
    }
 
-   //MOV             R0, R7
+   int r0 = r7;
 
-   return 0;
+   return r0;
 }
 
 int aes_encrypt_ecb_encrypt_with_key_callback_219D694(char* src, char* cbc_key, char* key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
