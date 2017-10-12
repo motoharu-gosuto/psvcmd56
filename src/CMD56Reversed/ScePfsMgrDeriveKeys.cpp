@@ -591,70 +591,55 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
 //
 
-int sub_219D624(char* unk0, char* unk1, char* unk2, uint32_t unk3)
+int sub_219D624(int* src, int* iv, int* dst, uint32_t size)
 {
-   int r4 = unk1[0x0];
-   int r5 = unk1[0x4];
-   int r6 = unk1[0x8];
-   int r7 = unk1[0xC];
+   int iv_cpy[4] = {0};
+   memcpy(iv_cpy, iv, 0x10);
 
-   while(true)
+   while(size != 0)
    {
-      int r8 =  unk0[0x0]
-      int r9 =  unk0[0x4]
-      int r10 = unk0[0x8]
-      int r12 = unk0[0xC]
-      unk0 = unk0 + 0x10;
+      dst[0] = src[0] ^ iv_cpy[0];
+      dst[1] = src[1] ^ iv_cpy[1];
+      dst[2] = src[2] ^ iv_cpy[2];
+      dst[3] = src[3] ^ iv_cpy[3];
 
-      int r8 = r8 ^ r4;
-      int r4 = r4 + r4;
-      int r9 = r9 ^ r5;
-      int r5 = r5 + r5;
-      int r10 = r10 ^ r6;
-      int r6 = r6 + r6;
-      int r12 = r12 ^ r7;
-      int r7 = r7 + r7;
+      src += 4;
+      dst += 4;
+      
+      iv_cpy[0] = iv_cpy[0] + iv_cpy[0];
+      iv_cpy[1] = iv_cpy[1] + iv_cpy[1];
+      iv_cpy[2] = iv_cpy[2] + iv_cpy[2];
+      iv_cpy[3] = iv_cpy[3] + iv_cpy[3];
 
-      unk2[0x0] = r8;
-      unk2[0x4] = r9;
-      unk2[0x8] = r10;
-      unk2[0xC] = r12;
-
-      unk2 = unk2 + 0x10;
-
-      /*
-      IT CS
-      EORCS.W         R4, R4, #0x87
-      */
-
-      unk3 = unk3 - 0x10;
-      if(unk3 == 0)
-         break;
+      if(true) // this condition should check carry bit after one of the 4 add operations
+         iv_cpy[0] = iv_cpy[0] + 0x87;
+      
+      size = size - 0x10;
    }
 
    return 0;
 }
 
-int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* aes_src, const char* ecb_key, const char* aes_key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
+int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char aes_dst[0x10] = {0};
+   char drv_iv[0x10] = {0};
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, aes_key); //initialize aes ctx with key
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, iv_key); //initialize aes ctx with iv_key
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, aes_src, aes_dst); //encrypt 0x10 bytes of aes_src data 
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, iv, drv_iv); //encrypt 0x10 bytes of iv to derive drv_iv
 
-   sub_219D624(arg_4, aes_dst, ecb_src_dst, size); //?
+   sub_219D624((int*)src, (int*)drv_iv, (int*)dst, size); // xor src with drv_iv to get dst
 
-   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(ecb_src_dst, ecb_src_dst, size, ecb_key, key_size, 1); //decrypt ecb_src_dst data using ecb_key key
+   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(dst, dst, size, dst_key, key_size, 1); //decrypt dst data using dst_key key
    
    if(result0 == 0)
-      sub_219D624(ecb_src_dst, aes_dst, ecb_src_dst, size); //?
+      sub_219D624((int*)dst, (int*)drv_iv, (int*)dst, size); //xor dst with drv_iv to get real dst
 
    return result0;
 }
 
-int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* aes_src, const char* ecb_key, const char* aes_key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
+int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    /*
    MOV             R7, R3
