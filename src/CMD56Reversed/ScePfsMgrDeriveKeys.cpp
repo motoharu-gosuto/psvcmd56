@@ -709,57 +709,22 @@ int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* subkey, const cha
 
 int aes_encrypt_aes_cmac_with_key_callback_219D820(const char* src, const char* cmac_key, const char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
 {
-   int r8 = r3;
-   int r10 = r0;
-   int r3 = r2;
-   int r6 = dst_cmac;
-   int r9 = r1;
-   int r2 = r8;
-   int r1 = 0x80;
-   int r9 = ctx;
-   int r5 = size;
-   int r7 = src_cmac;
+   char aes_ctx[0x1F0] = {0};
+   char dst[0x10] = {0};
+   char var_34[0x10] = {0}; //HOW IV IS INITIALIZED ?
+
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, key);
+
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, src, dst);
+
+   xor_219D65C((int*)src_cmac, (int*)dst, (int*)dst_cmac, size); // WHAT DOES THIS DO IF dst IS OVERWRITTEN BY NEXT CMAC CALL ANYWAY ?
+
+   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(src_cmac, dst_cmac, size, cmac_key, keysize, var_34, 1, 0);
    
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(r0, r1, r2, r3);
+   if(result0 == 0)
+      xor_219D65C((int*)dst_cmac, (int*)dst, (int*)dst_cmac, size);
 
-   int r1 = r10;
-   int r2 = dst;
-   int r0 = ctx;
-   int r10 = var_34;
-
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(r0, r1, r2);
-   
-   int r0 = r7;
-   int r1 = dst;
-   int r2 = r6;
-   int r3 = r5;
-   xor_219D65C(r0, r1, r2, r3);
-
-   int r12 = 1;
-   int lr = 0;
-   int r0  r7;
-   key_size = r8;
-   int r3 = r9;
-   int r1 = r6;
-   int r2 = r5;
-
-   var_244 = r10;
-   var_248 = r12;
-   command_bit = lr;
-   
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(r0, r1, r2, r3, key_size, iv, mask_enable, command_bit);
-   int r7 = r0;
-   
-   if(r0 == 0)
-   {
-      int r0 = r6;
-      int r1 = dst;
-      int r3 = r5;
-      int r2 = r6;
-      xor_219D65C(r0, r1, r2, r3);
-   }
-
-   return r7;
+   return result0;
 }
 
 //############## LEVEL 2 - CRYPTO WRAPPER SELECTORS ###############
