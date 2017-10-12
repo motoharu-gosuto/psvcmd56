@@ -607,10 +607,10 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
       src += 4;
       dst += 4;
       
-      iv_cpy[0] = iv_cpy[0] + iv_cpy[0];
-      iv_cpy[1] = iv_cpy[1] + iv_cpy[1];
-      iv_cpy[2] = iv_cpy[2] + iv_cpy[2];
-      iv_cpy[3] = iv_cpy[3] + iv_cpy[3];
+      iv_cpy[0] += iv_cpy[0];
+      iv_cpy[1] += iv_cpy[1];
+      iv_cpy[2] += iv_cpy[2];
+      iv_cpy[3] += iv_cpy[3];
 
       if(true) // this condition should check carry bit after one of the 4 add operations
          iv_cpy[0] = iv_cpy[0] + 0x87;
@@ -664,35 +664,26 @@ int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* subkey, const 
 
 int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
 {
-   int r4 = iv[0];
-   int r5 = iv[1];
-   int r6 = iv[2];
-   int r7 = iv[3];
+   int iv_cpy[4] = {0};
+   memcpy(iv_cpy, iv, 0x10);
 
    while(size != 0)
    {
-      int r8 = src[0];
-      int r9 = src[1];
-      int r10 = src[2];
-      int r12 = src[3];
+      dst[0] = src[0] ^ iv_cpy[0];
+      dst[1] = src[1] ^ iv_cpy[1];
+      dst[2] = src[2] ^ iv_cpy[2];
+      dst[3] = src[3] ^ iv_cpy[3];
+
       src += 4;
+      dst += 4;
 
-      int r8 = r8 ^ r4;
-      int r4 = r4 + r4;
-      int r9 = r9 ^ r5;
-      int r5 = r5 + r5;
-      int r10 = r10 ^ r6;
-      int r6 = r6 + r6;
-      int r12 = r12 ^ r7;
-      int r7 = r7 + r7;
-
-      dst[0] = r8;
-      dst[1] = r9;
-      dst[2] = r10;
-      dst[3] = r12;
+      iv_cpy[0] += iv_cpy[0];
+      iv_cpy[1] += iv_cpy[1];
+      iv_cpy[2] += iv_cpy[2];
+      iv_cpy[3] += iv_cpy[3];
 
       if(true) // this condition should check carry bit after one of the 4 add operations
-         r4 = r4 ^ 0x87;
+         iv_cpy[0] = iv_cpy[0] + 0x87;
       
       size = size - 0x10;
    }
