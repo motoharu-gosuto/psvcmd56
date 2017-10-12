@@ -707,22 +707,22 @@ int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* subkey, const cha
    return result0;
 }
 
-int aes_encrypt_aes_cmac_with_key_callback_219D820(const char* src, const char* cmac_key, const char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
+int aes_encrypt_aes_cmac_with_key_callback_219D820(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char dst[0x10] = {0};
-   char var_34[0x10] = {0}; //HOW IV IS INITIALIZED ?
+   char drv_subkey[0x10] = {0};
+   char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, key);
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, src, dst);
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey);
 
-   xor_219D65C((int*)src_cmac, (int*)dst, (int*)dst_cmac, size); // WHAT DOES THIS DO IF dst IS OVERWRITTEN BY NEXT CMAC CALL ANYWAY ?
+   xor_219D65C((int*)src, (int*)drv_subkey, (int*)dst, size); // WHAT DOES THIS DO IF dst IS OVERWRITTEN BY NEXT CMAC CALL ANYWAY ?
 
-   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(src_cmac, dst_cmac, size, cmac_key, keysize, var_34, 1, 0);
+   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(src, dst, size, dst_key, keysize, iv, 1, 0);
    
    if(result0 == 0)
-      xor_219D65C((int*)dst_cmac, (int*)dst, (int*)dst_cmac, size);
+      xor_219D65C((int*)dst, (int*)drv_subkey, (int*)dst, size);
 
    return result0;
 }
