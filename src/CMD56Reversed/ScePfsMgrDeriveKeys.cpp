@@ -259,7 +259,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, 
 
 //encrypt / decrypt
 
-int encrypt_cbc_encrypt_aes_ecb_with_key_callback_219D8AC(const char* key, char* iv, uint32_t size, const char* src, char* dst)
+int AESCBCEncrypt_base_219D8AC(const char* key, char* iv, uint32_t size, const char* src, char* dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -295,7 +295,7 @@ int encrypt_cbc_encrypt_aes_ecb_with_key_callback_219D8AC(const char* key, char*
    return 0;
 }
 
-int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, char* iv, uint32_t size, const char* src, char* dst)
+int AESCBCDecrypt_base_219D950(const char* key, char* iv, uint32_t size, const char* src, char* dst)
 {
    int size_tail = size & 0xF; // get size of tail
    int size_block = size & (~0xF); // get block size aligned to 0x10 boundary
@@ -335,7 +335,7 @@ int decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950(const char* key, c
 
 //encrypt / decrypt with key_id
 
-int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, char* iv, uint32_t size, char* src, char* dst, uint16_t key_id)
+int AESCBCDecryptWithKeygen_base_219DAAC(const char* key, char* iv, uint32_t size, char* src, char* dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -375,7 +375,7 @@ int decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC(const char* key, ch
    return 0;
 }
 
-int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* klicensee, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
+int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1); // ???
 
@@ -419,7 +419,7 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
 
 // FUNCTIONS ARE SIMILAR
 
-int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
+int AESCMAC_base_1_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -459,7 +459,7 @@ int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uin
    return 0;
 }
 
-int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
+int AESCMAC_base_2_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -501,7 +501,7 @@ int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uin
 
 // FUNCTIONS ARE SIMILAR
 
-int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
+int AESCMACWithKeygen_base_1_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -543,7 +543,7 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, 
    return 0;
 }
 
-int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
+int AESCMACWithKeygen_base_2_219DD64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -621,7 +621,7 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
 
 //IV is a subkey base
 
-int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
+int AESCMACDecryptSw_base_219D714(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -639,7 +639,7 @@ int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* subkey, const 
    return result0;
 }
 
-int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
+int AESCMACEncryptSw_base_219D694(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -688,7 +688,7 @@ int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
    return 0;
 }
 
-int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
+int AESCMACSw_base_1_219D794(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -707,7 +707,7 @@ int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* subkey, const cha
    return result0;
 }
 
-int aes_encrypt_aes_cmac_with_key_callback_219D820(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
+int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
