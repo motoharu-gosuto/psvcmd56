@@ -593,6 +593,27 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
 int sub_219D624(char* unk0, char* unk1, char* unk2, uint32_t unk3)
 {
+   //LDMIA.W         R1, {R4-R7}
+
+   while(true)
+   {
+      /*
+      LDMIA.W         R0!, {R8-R10,R12}
+      EOR.W           R8, R8, R4
+      ADDS            R4, R4, R4
+      EOR.W           R9, R9, R5
+      ADCS            R5, R5
+      EOR.W           R10, R10, R6
+      ADCS            R6, R6
+      EOR.W           R12, R12, R7
+      ADCS            R7, R7
+      STMIA.W         R2!, {R8-R10,R12}
+      IT CS
+      EORCS.W         R4, R4, #0x87
+      SUBS            R3, #0x10
+      BNE             loc_219D62C
+      */
+   }
 
    return 0;
 }
