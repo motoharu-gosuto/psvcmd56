@@ -662,27 +662,39 @@ int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* subkey, const 
 // this is most likely SW version of CMAC. both dec and enc functions are implemented
 //https://crypto.stackexchange.com/questions/47223/xex-mode-how-to-perturb-the-tweak
 
-int sub_219D65C(int* unk0, int* unk1, int* unk2, uint32_t size)
+int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
 {
-   //LDMIA.W         R1, {R4-R7}
+   int r4 = iv[0];
+   int r5 = iv[1];
+   int r6 = iv[2];
+   int r7 = iv[3];
 
-   while(true)
+   while(size != 0)
    {
-      /*
-      LDMIA.W         R0, {R8-R10,R12}
-      EOR.W           R8, R8, R4
-      ADDS            R4, R4, R4
-      EOR.W           R9, R9, R5
-      ADCS            R5, R5
-      EOR.W           R10, R10, R6
-      ADCS            R6, R6
-      EOR.W           R12, R12, R7
-      ADCS            R7, R7
-      STMIA.W         R2, {R8-R10,R12}
-      IT CS
-      EORCS.W         R4, R4, #0x87
-      SUBS            R3, #0x10
-      */
+      int r8 = src[0];
+      int r9 = src[1];
+      int r10 = src[2];
+      int r12 = src[3];
+      src += 4;
+
+      int r8 = r8 ^ r4;
+      int r4 = r4 + r4;
+      int r9 = r9 ^ r5;
+      int r5 = r5 + r5;
+      int r10 = r10 ^ r6;
+      int r6 = r6 + r6;
+      int r12 = r12 ^ r7;
+      int r7 = r7 + r7;
+
+      dst[0] = r8;
+      dst[1] = r9;
+      dst[2] = r10;
+      dst[3] = r12;
+
+      if(true) // this condition should check carry bit after one of the 4 add operations
+         r4 = r4 ^ 0x87;
+      
+      size = size - 0x10;
    }
 
    return 0;
@@ -698,14 +710,14 @@ int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* src, const char* 
 
    SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, src, dst);
 
-   sub_219D65C((int*)src_cmac, (int*)dst, (int*)dst_cmac, size);
+   xor_219D65C((int*)src_cmac, (int*)dst, (int*)dst_cmac, size);
 
    int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(src_cmac, dst_cmac, size, cmac_key, keysize, var_34, 1, 0);
    int r7 = r0;
    
    if(r7 == 0)
    {
-      sub_219D65C((int*)dst_cmac, (int*)dst, (int*)dst_cmac, size);
+      xor_219D65C((int*)dst_cmac, (int*)dst, (int*)dst_cmac, size);
    }
 
    return r7;
