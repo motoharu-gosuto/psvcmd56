@@ -591,67 +591,32 @@ int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, 
 
 //
 
-int sub_219D624(int unk0, int unk1, int unk2, int unk3)
+int sub_219D624(char* unk0, char* unk1, char* unk2, uint32_t unk3)
 {
 
    return 0;
 }
 
-int aes_encrypt_ecb_decrypt_with_key_callback_219D714(char* src, char* ecb_key, char* key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
+int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* aes_src, const char* ecb_key, const char* aes_key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
 {
-   int r7 = r3;
-   int r10 = r0;
-   int r3 = r2;
-   int r6 = size;
-   int r8 = arg_4;
-   int r2 = r7;
-   int r9 = r1;
+   char aes_ctx[0x1F0] = {0};
+   char aes_dst[0x10] = {0};
 
-   int r0 = ctx;
-   int r1 = 0x80;
-   int r5 = ecb_src_dst;
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, aes_key); //initialize aes ctx with key
 
-   int r0 = SceKernelUtilsForDriver_aes_init_2_eda97d6d(r0, r1, r2, r3);
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, aes_src, aes_dst); //encrypt 0x10 bytes of aes_src data 
 
-   int r1 = r10;
-   int r2 = dst;
-   int r0 = ctx;
+   sub_219D624(arg_4, aes_dst, ecb_src_dst, size); //?
 
-   int r0 = SceKernelUtilsForDriver_aes_encrypt_2_302947b6(r0, r1, r2);
+   int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(ecb_src_dst, ecb_src_dst, size, ecb_key, key_size, 1); //decrypt ecb_src_dst data using ecb_key key
    
-   int r0 = r8;
-   int r1 = dst;
-   int r2 = r5;
-   int r3 = r6;
+   if(result0 == 0)
+      sub_219D624(ecb_src_dst, aes_dst, ecb_src_dst, size); //?
 
-   int r0 = sub_219D624(r0, r1, r2, r3);
-
-   int lr = 1;
-   key_size = r7;
-   int r3 = r9;
-   int r0 = r5;
-   int r1 = r5;
-   int r2 = r6;
-   mask_enable = lr;
-
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(r0, r1, r2, r3, key_size, mask_enable);
-   int r7 = r0;
-   
-   if(r0 == 0)
-   {
-      int r0 = r5;
-      int r1 = dst;
-      int r3 = r6;
-      int r2 = r5;
-      int r0 = sub_219D624(r0, r1, r2, r3);
-   }
-
-   int r0 = r7;
-
-   return r0;
+   return result0;
 }
 
-int aes_encrypt_ecb_encrypt_with_key_callback_219D694(char* src, char* cbc_key, char* key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
+int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* aes_src, const char* ecb_key, const char* aes_key, uint32_t key_size, uint32_t size, char* arg_4, char* ecb_src_dst)
 {
    /*
    MOV             R7, R3
@@ -709,7 +674,7 @@ int sub_219D65C(int unk0, int unk1, int unk2, int unk3)
    return 0;
 }
 
-int aes_encrypt_aes_cmac_with_key_callback_219D794(char* src, char* cmac_key, char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
+int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* src, const char* cmac_key, const char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
 {
    /*
    MOV             R8, R3  ; keysize
@@ -763,7 +728,7 @@ int aes_encrypt_aes_cmac_with_key_callback_219D794(char* src, char* cmac_key, ch
    return 0;
 }
 
-int aes_encrypt_aes_cmac_with_key_callback_219D820(char* src, char* cmac_key, char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
+int aes_encrypt_aes_cmac_with_key_callback_219D820(const char* src, const char* cmac_key, const char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
 {
    /*
    MOV             R8, R3  ; keysize
