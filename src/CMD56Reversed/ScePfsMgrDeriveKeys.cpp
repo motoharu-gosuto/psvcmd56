@@ -257,6 +257,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, 
 
 //############## LEVEL 1 - CRYPTO BASE WRAPPERS ###############
 
+//#### GROUP 1 ####
+
 //encrypt / decrypt
 
 int AESCBCEncrypt_base_219D8AC(const char* key, char* iv, uint32_t size, const char* src, char* dst)
@@ -415,7 +417,7 @@ int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32
    return 0;
 }
 
-//----------------------
+//#### GROUP 2 ####
 
 // FUNCTIONS ARE SIMILAR
 
@@ -585,7 +587,7 @@ int AESCMACWithKeygen_base_2_219DD64(char* cmac_key, char* iv, uint32_t size, ch
    return 0;
 }
 
-//----------------------
+//#### GROUP 3 ####
 
 // this is most likely SW version of CMAC. both dec and enc functions are implemented
 //https://crypto.stackexchange.com/questions/47223/xex-mode-how-to-perturb-the-tweak
@@ -656,6 +658,8 @@ int AESCMACEncryptSw_base_219D694(const char* subkey, const char* dst_key, const
 
    return result0;
 }
+
+//#### GROUP 4 ####
 
 // this is some CMAC variation but I am not sure ? both functions are similar but most likely ment to be dec / enc
 
@@ -729,7 +733,29 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 //############## LEVEL 2 - CRYPTO WRAPPER SELECTORS ###############
 
+//#### GROUP 1, GROUP 2 ####
 
+int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
+{
+   return 0;
+}
+
+int aes_encrypt_aes_cmac_219D2DC(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
+{
+   return 0;
+}
+
+//#### GROUP 3, GROUP 4 ####
+
+int aes_decrypt_aes_cmac_219D174(char *cmac_key, char *key, int keysize, int ignored, int seed0, int seed1, int size0, int size1, char *src_cmac_base, char *dst_cmac_base, int flag)
+{
+   return 0;
+}
+
+int aes_encrypt_aes_cmac_219D00C(char *cmac_key, char *key, int keysize, int ignored, int seed0, int seed1, int size0, int size1, char *src_cmac_base, char *dst_cmac_base, int flag)
+{
+   return 0;
+}
 
 //----------------------
 
@@ -875,7 +901,7 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const c
 
    memcpy(iv_aligned, iv_21A93F0, 0x10); //initialize iv
 
-   encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(klicensee, iv_aligned, 0x14, combo_aligned, drvkey_aligned, key_id);
+   AESCBCEncryptWithKeygen_base_219D9F4(klicensee, iv_aligned, 0x14, combo_aligned, drvkey_aligned, key_id);
 
    memcpy(hmac_key, drvkey_aligned, 0x14); // copy derived key
    
