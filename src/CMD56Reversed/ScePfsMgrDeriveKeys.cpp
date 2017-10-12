@@ -623,38 +623,38 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
 
 //IV is a subkey base
 
-int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
+int aes_encrypt_ecb_decrypt_with_key_callback_219D714(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char drv_iv[0x10] = {0};
+   char drv_subkey[0x10] = {0};
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, iv_key); //initialize aes ctx with iv_key
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, subkey_key); //initialize aes ctx with iv_key
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, iv, drv_iv); //encrypt 0x10 bytes of iv to derive drv_iv
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey); //encrypt 0x10 bytes of subkey to derive drv_subkey
 
-   xor_219D624((int*)src, (int*)drv_iv, (int*)dst, size); // xor src with drv_iv to get dst
+   xor_219D624((int*)src, (int*)drv_subkey, (int*)dst, size); // xor src with drv_iv to get dst
 
    int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(dst, dst, size, dst_key, key_size, 1); //decrypt dst data using dst_key key
    if(result0 == 0)
-      xor_219D624((int*)dst, (int*)drv_iv, (int*)dst, size); //xor dst with drv_iv to get real dst
+      xor_219D624((int*)dst, (int*)drv_subkey, (int*)dst, size); //xor dst with drv_iv to get real dst
 
    return result0;
 }
 
-int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* iv, const char* dst_key, const char* iv_key, uint32_t key_size, uint32_t size, char* src, char* dst)
+int aes_encrypt_ecb_encrypt_with_key_callback_219D694(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char drv_iv[0x10] = {0};
+   char drv_subkey[0x10] = {0};
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, iv_key);
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, subkey_key);
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, iv, drv_iv);
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey);
 
-   xor_219D624((int*)src, (int*)drv_iv, (int*)dst, size);
+   xor_219D624((int*)src, (int*)drv_subkey, (int*)dst, size);
 
    int result0 = SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(dst, dst, size, dst_key, key_size, 1);
    if(result0 == 0)
-      xor_219D624((int*)dst, (int*)drv_iv, (int*)dst, size);
+      xor_219D624((int*)dst, (int*)drv_subkey, (int*)dst, size);
 
    return result0;
 }
