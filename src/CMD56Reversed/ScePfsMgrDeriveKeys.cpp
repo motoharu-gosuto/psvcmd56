@@ -152,6 +152,17 @@ typedef struct ctx_12f8d58e
 
 //----------------------
 
+typedef struct arm_lldiv_t
+{
+   long long q;
+   long long r;
+}arm_lldiv_t;
+
+arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
+{
+   return arm_lldiv_t();
+}
+
 ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
 {
    return 0;
@@ -179,7 +190,7 @@ int SceKernelUtilsForDriver_aes_encrypt_2_302947b6(void* ctx, const char* src, c
    return 0;
 }
 
-//----------------------
+//############## LEVEL 0 - CRYPTO PRIMITIVES ###############
 
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
 {
@@ -244,20 +255,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, 
    return 0;
 }
 
-//
-
-typedef struct arm_lldiv_t
-{
-   long long q;
-   long long r;
-}arm_lldiv_t;
-
-arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
-{
-   return arm_lldiv_t();
-}
-
-//----------------------
+//############## LEVEL 1 - CRYPTO BASE WRAPPERS ###############
 
 //encrypt / decrypt
 
@@ -711,57 +709,62 @@ int aes_encrypt_aes_cmac_with_key_callback_219D794(const char* subkey, const cha
 
 int aes_encrypt_aes_cmac_with_key_callback_219D820(const char* src, const char* cmac_key, const char* key, uint32_t keysize, uint32_t size, char* src_cmac, char* dst_cmac)
 {
-   /*
-   MOV             R8, R3  ; keysize
-   MOV             R10, R0
-   LDR             R5, [R4]
-   MOV             R3, R2  ; key
-   LDR             R6, [SP,#0x248+dst_cmac] ; dst_cmac
-   MOV             R9, R1  ; cmac_key
-   MOV             R2, R8  ; keysize
-   MOVS            R1, #0x80 ; blocksize
-   STR             R5, [SP,#0x248+var_24]
-   ADD             R0, SP, #0x248+ctx ; ctx
-   LDRD.W          R5, R7, [SP,#0x248+size] ; size, src_cmac
-   BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_aes_init_2_eda97d6d
-   MOV             R1, R10 ; src
-   ADD             R2, SP, #0x248+dst ; dst
-   ADD             R0, SP, #0x248+ctx ; ctx
-   ADD.W           R10, SP, #0x248+var_34
-   BLX             ScePfsMgr.SceKernelUtilsForDriver._imp_aes_encrypt_2_302947b6
-   MOV             R0, R7  ; cmac_crc
-   ADD             R1, SP, #0x248+dst ; dst
-   MOV             R2, R6  ; dst_cmac
-   MOV             R3, R5  ; size
-   BL              sub_219D65C
-   MOV.W           R12, #1
-   MOV.W           LR, #0
-   MOV             R0, R7  ; src
-   STR.W           R8, [SP,#0x248+key_size] ; key_size
-   MOV             R3, R9  ; key
-   MOV             R1, R6  ; dst
-   MOV             R2, R5  ; size
-   STRD.W          R10, R12, [SP,#0x248+var_244]
-   STR.W           LR, [SP,#0x248+command_bit] ; command_bit
-   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCMACForDriver_1b14658d
-   MOV             R7, R0
-   */
+   int r8 = r3;
+   int r10 = r0;
+   int r3 = r2;
+   int r6 = dst_cmac;
+   int r9 = r1;
+   int r2 = r8;
+   int r1 = 0x80;
+   int r9 = ctx;
+   int r5 = size;
+   int r7 = src_cmac;
+   
+   SceKernelUtilsForDriver_aes_init_2_eda97d6d(r0, r1, r2, r3);
 
+   int r1 = r10;
+   int r2 = dst;
+   int r0 = ctx;
+   int r10 = var_34;
+
+   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(r0, r1, r2);
+   
+   int r0 = r7;
+   int r1 = dst;
+   int r2 = r6;
+   int r3 = r5;
+   xor_219D65C(r0, r1, r2, r3);
+
+   int r12 = 1;
+   int lr = 0;
+   int r0  r7;
+   key_size = r8;
+   int r3 = r9;
+   int r1 = r6;
+   int r2 = r5;
+
+   var_244 = r10;
+   var_248 = r12;
+   command_bit = lr;
+   
+   int r0 = SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(r0, r1, r2, r3, key_size, iv, mask_enable, command_bit);
+   int r7 = r0;
+   
    if(r0 == 0)
    {
-      /*
-      MOV             R0, R6  ; cmac_crc
-      ADD             R1, SP, #0x248+dst ; dst
-      MOV             R3, R5  ; size
-      MOV             R2, R6  ; dst_cmac
-      BL              sub_219D65C
-      */
+      int r0 = r6;
+      int r1 = dst;
+      int r3 = r5;
+      int r2 = r6;
+      xor_219D65C(r0, r1, r2, r3);
    }
 
-   //MOV             R0, R7
-
-   return 0;
+   return r7;
 }
+
+//############## LEVEL 2 - CRYPTO WRAPPER SELECTORS ###############
+
+
 
 //----------------------
 
