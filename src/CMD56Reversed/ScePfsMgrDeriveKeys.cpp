@@ -411,11 +411,156 @@ int encrypt_aes_cbc_encrypt_aes_ecb_with_key_id_callback_219D9F4(const char* kli
 
 int aes_cmac_ecb_with_key_encrypt_callback_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* dst)
 {
+   /*
+   MOV             R5, 0x9EA004
+   SUB             SP, SP, #0x9C
+   MOV             R7, R0  ; cmac_key
+   MOV             R10, R1 ; iv
+   LDR             R4, [R5]
+   MOV             R11, R3 ; cmac_src
+   LDR.W           R8, [SP,#0xC0+dst] ; cmac_dst
+   AND.W           R6, R2, #0xF ; size
+   STR             R4, [SP,#0xC0+var_2C]
+   BICS.W          R4, R2, #0xF ; size
+   */
+
+   if(bne)
+   {
+      /*
+      MOVS            R1, #0x80
+      MOVS            R2, #1
+      MOVS            R3, #0
+      STMEA.W         SP, {R1,R10} ; int key_size, char *iv
+      STR             R2, [SP,#0xC0+mask_enable] ; mask_enable
+      MOV             R0, R11 ; src
+      STR             R3, [SP,#0xC0+command_bit] ; command_bit
+      MOV             R1, R8  ; dst
+      MOV             R2, R4  ; size
+      MOV             R3, R7  ; key
+      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCMACForDriver_1b14658d
+      */
+
+      if(r0 != 0)
+         return r0;
+   }
+
+   //MOV             R0, R6
+
+   if(r6 == 0)
+      return 0;
+
+   /*
+   ADD             R3, SP, #0xC0+var_AC
+   MOVS            R2, #1
+   RSB.W           R9, R3, #0
+   MOV.W           LR, #0x80
+   AND.W           R9, R9, #0x3F
+   STRD.W          LR, R2, [SP]
+   ADD             R9, R3
+   MOV             R0, R10 ; src
+   MOV             R3, R7  ; key
+   MOV             R1, R9  ; dst
+   MOVS            R2, #0x10 ; size
+   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_c517770d
+   */
+
+   if(r0 != 0)
+      return r0;
+
+   /*
+   ADD.W           R3, R11, R4
+   MOV             R4, R0
+   */
+
+   while(true)
+   {
+      /*
+      LDRB.W          LR, [R3,R4]
+      LDRB.W          R7, [R4,R9]
+      EOR.W           R7, LR, R7
+      STRB.W          R7, [R8,R4]
+      ADDS            R4, #1
+      */
+
+      if(r4 == r6)
+         break;
+   }
+
    return 0;
 }
 
 int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
 {
+   /*
+   MOV             R7, R0  ; cmac_key
+   MOV             R10, R1 ; iv
+   LDR             R4, [R5]
+   MOV             R11, R3 ; cmac_src
+   LDR.W           R8, [SP,#0xC0+cmac_dst] ; cmac_dst
+   AND.W           R6, R2, #0xF ; size
+   STR             R4, [SP,#0xC0+var_2C]
+   BICS.W          R4, R2, #0xF ; size
+   */
+
+   if(bne)
+   {
+      /*
+      MOVS            R1, #0x80 ; key_size
+      MOVS            R2, #1
+      MOVS            R3, #0
+      STMEA.W         SP, {R1,R10} ; int key_size, char *iv
+      STR             R2, [SP,#0xC0+mask_enable] ; mask_enable
+      MOV             R0, R11 ; src
+      STR             R3, [SP,#0xC0+command_bit] ; command_bit
+      MOV             R1, R8  ; dst
+      MOV             R2, R4  ; size
+      MOV             R3, R7  ; key
+      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCMACForDriver_1b14658d
+      */
+      if(r0 != 0)
+         return r0;
+   }
+
+   //MOV             R0, R6
+   if(r6 == 0)
+      return r0;
+
+   /*
+   ADD             R3, SP, #0xC0+var_AC
+   MOVS            R2, #1
+   RSB.W           R9, R3, #0
+   MOV.W           LR, #0x80
+   AND.W           R9, R9, #0x3F
+   STRD.W          LR, R2, [SP]
+   ADD             R9, R3
+   MOV             R0, R10 ; src
+   MOV             R3, R7  ; key
+   MOV             R1, R9  ; dst
+   MOVS            R2, #0x10 ; size
+   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_c517770d
+   */
+
+   if(r0 != 0)
+      return r0;
+
+   /*
+   ADD.W           R3, R11, R4
+   MOV             R4, R0
+   */
+
+   while(true)
+   {
+      /*
+      LDRB.W          LR, [R3,R4]
+      LDRB.W          R7, [R4,R9]
+      EOR.W           R7, LR, R7
+      STRB.W          R7, [R8,R4]
+      ADDS            R4, #1
+      */
+      if(r4 == r6)
+         break;
+   }
+
    return 0;
 }
 
@@ -423,11 +568,171 @@ int aes_cmac_with_key_ecb_encrypt_callback_219DB64(char* cmac_key, char* iv, uin
 
 int aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
+   /*
+   LDRH.W          R4, [SP,#0xC8+key_id] ; key_id
+   MOV             R5, 0x9EA004
+   MOV             R11, R3 ; cmac_src
+   MOV             R7, R0  ; key
+   LDR             R0, [R5]
+   MOV             R10, R1 ; iv
+   LDR.W           R8, [SP,#0xC8+cmac_dst] ; cmac_dst
+   SUBS            R3, R4, #1 ; key_id
+   AND.W           R6, R2, #0xF ; size
+   RSBS.W          R9, R3, #0 ; key_id
+   STR             R0, [SP,#0xC8+var_2C]
+   ADCS.W          R9, R9, R3 ; key_id
+   BICS.W          R4, R2, #0xF ; size
+   */
+
+   if(bne)
+   {
+      /*
+      MOVS            R1, #0x80
+      MOVS            R2, #1
+      MOVS            R3, #0
+      STR             R1, [SP,#0xC8+key_size] ; key_size
+      STR             R2, [SP,#0xC8+mask_enable] ; mask_enable
+      MOV             R0, R11 ; src
+      STR             R3, [SP,#0xC8+command_bit] ; command_bit = 0
+      MOV             R1, R8  ; dst
+      STRD.W          R10, R9, [SP,#0xC8+iv]
+      MOV             R2, R4  ; size
+      MOV             R3, R7  ; key
+      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCMACForDriver_83b058f5
+      */
+
+      if(r0 != 0)
+         return r0;
+   }
+
+   //MOV             R0, R6
+   if(r6 == 0)
+      return 0;
+
+   /*
+   ADD             R3, SP, #0xC8+var_AC
+   MOVS            R2, #0x80
+   NEGS            R1, R3
+   MOV.W           LR, #1
+   AND.W           R1, R1, #0x3F
+   STR.W           R9, [SP,#0xC8+iv] ; key_id
+   ADD.W           R9, R1, R3
+   STR             R2, [SP,#0xC8+key_size] ; key_size
+   MOV             R0, R10 ; src
+   MOV             R3, R7  ; key
+   MOV             R1, R9  ; dst
+   MOVS            R2, #0x10 ; size
+   STR.W           LR, [SP,#0xC8+var_C0] ; mask_enable
+   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_0f7d28af
+   */
+
+   if(r0 != 0)
+      return r0;
+
+   /*
+   ADD             R11, R4
+   MOV             R4, R0
+   */
+
+   while(true)
+   {
+      /*
+      LDRB.W          LR, [R11,R4]
+      LDRB.W          R7, [R4,R9]
+      EOR.W           R7, LR, R7
+      STRB.W          R7, [R8,R4]
+      ADDS            R4, #1
+      */
+
+      if(r4 == r6)
+         break;
+   }
+
    return 0;
 }
 
 int aes_cmac_with_key_id_ecb_encrypt_callback_219DD64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
+   /*
+   LDRH.W          R4, [SP,#0xC8+key_id] ; key_id
+   MOV             R5, 0x9EA004
+   MOV             R11, R3 ; cmac_src
+   MOV             R7, R0  ; cmac_key
+   LDR             R0, [R5]
+   MOV             R10, R1 ; iv
+   LDR.W           R8, [SP,#0xC8+cmac_dst] ; cmac_dst
+   SUBS            R3, R4, #1 ; key_id
+   AND.W           R6, R2, #0xF ; size
+   RSBS.W          R9, R3, #0 ; key_id
+   STR             R0, [SP,#0xC8+var_2C]
+   ADCS.W          R9, R9, R3 ; key_id
+   BICS.W          R4, R2, #0xF ; size
+   */
+
+   if(bne)
+   {
+      /*
+      MOVS            R1, #0x80
+      MOVS            R2, #1
+      MOVS            R3, #0
+      STR             R1, [SP,#0xC8+key_size] ; key_size
+      STR             R2, [SP,#0xC8+mask_enable] ; mask_enable
+      MOV             R0, R11 ; src
+      STR             R3, [SP,#0xC8+command_bit] ; command_bit
+      MOV             R1, R8  ; dst
+      STRD.W          R10, R9, [SP,#0xC8+iv]
+      MOV             R2, R4  ; size
+      MOV             R3, R7  ; key
+      BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESCMACForDriver_83b058f5
+      */
+
+      if(r0 != 0)
+         return r0;
+   }
+
+   //MOV             R0, R6
+
+   if(r6 == 0)
+      return 0;
+
+   /*
+   ADD             R3, SP, #0xC8+var_AC
+   MOVS            R2, #0x80
+   NEGS            R1, R3
+   MOV.W           LR, #1
+   AND.W           R1, R1, #0x3F
+   STR.W           R9, [SP,#0xC8+iv] ; key_id
+   ADD.W           R9, R1, R3
+   STR             R2, [SP,#0xC8+key_size] ; key_size
+   MOV             R0, R10 ; src
+   MOV             R3, R7  ; key
+   MOV             R1, R9  ; dst
+   MOVS            R2, #0x10 ; size
+   STR.W           LR, [SP,#0xC8+var_C0] ; mask_enable
+   BLX             ScePfsMgr.SceSblSsMgrForDriver._imp_sceSblSsMgrAESECBEncryptForDriver_0f7d28af
+   */
+
+   if(r0 != 0)
+      return r0;
+
+   /*
+   ADD             R11, R4
+   MOV             R4, R0
+   */
+
+   while(true)
+   {
+      /*
+      LDRB.W          LR, [R11,R4]
+      LDRB.W          R7, [R4,R9]
+      EOR.W           R7, LR, R7
+      STRB.W          R7, [R8,R4]
+      ADDS            R4, #1
+      */
+      if(r4 == r6)
+         break;
+   }
+
    return 0;
 }
 
