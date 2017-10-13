@@ -735,205 +735,95 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 //#### GROUP 1, GROUP 2 ####
 
-int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, uint16_t key_id)
+int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, uint16_t flag, uint16_t key_id)
 {
-   uint16_t r4 = key_id;
-   int r5 = r1;
-   int r6 = &IV_3C+7;
-   int r1 = &var_3D;
-   uint16_t r7 = flag;
+   char IV_3C[0x10] = {0};
 
-   key_54 = r0;
-   key_id_4C = r4;
-   iv_seeds_68[0] = r2;
-   iv_seeds_68[1] = r3;
-   int r4 = size0;
-   num = r4;
-   int r10 = size1;
-   int r4 = src;
-   source = r4;
-   int r4 = dst;
-   destination = r4;
-
-   while(true)
+   int iv_seed0_tmp0 = iv_seed0;
+   int iv_seed1_tmp0 = iv_seed1;
+   
+   for(int i = 0; i < 8; i++)
    {
-      ++r1[0] = r2;
-      int r2 = r2 >> 8;
-      int r2 = r2 | (r3 << 24);
-      int r3 = r3 >> 8;
-      
-      if(r1 == r6)
-         break;
+      IV_3C[i] = iv_seed0_tmp0;
+
+      iv_seed0_tmp0 = iv_seed0_tmp0 >> 8;
+      iv_seed0_tmp0 = iv_seed0_tmp0 | (iv_seed1_tmp0 << 24);
+      iv_seed1_tmp0 = iv_seed1_tmp0 >> 8;
    }
 
-   int r2 = 0;
-   int r4 = &IV_3C;
-   int r3 = r2;
+   memset(IV_3C + 8, 0, 8);
 
-   IV_3C[0x8] = r2;
-   IV_3C[0x9] = r2;
-   IV_3C[0xA] = r2;
-   IV_3C[0xB] = r2;
-   IV_3C[0xC] = r2;
-   IV_3C[0xD] = r2;
-   IV_3C[0xE] = r2;
-   IV_3C[0xF] = r2;
-
-   while(true)
+   for(int i = 0; i < 0x10; i++)
+      IV_3C[i] = IV_3C[i] ^ iv_xor_key[i];
+  
+   if(size0 != 0)
    {
-      int r2 = r4[r3];
-      int r1 = r5[r3];
-      int r2 = r2 ^ r1;
-      r4[r3] = r2;
-      r3++;
-      
-      if(r3 == 0x10)
-         break;
-   }
+      #pragma region
 
-   int r0 = num;
+      int g_offset = 0;
+      int g_size = size0;
 
-   if(r0 == 0)
-   {
-      int r7 = r7 & 1;
-      var_44 = r7;
-   }
-   else
-   {
-      int r9 = num;
-      int r3 = r7 & 2;
-      int r12 = AESCBCDecryptWithKeygen_base_219DAAC;
-      int r11 = AESCBCDecrypt_base_219D950;
-      int r7 = r7 & 1;
-      int r8 = 0;
-
-      int r0 = (int)r7;
-      var_44 = r7;
-      int r3 = (int)r3;
-      var_58 = r0;
-      int r7 = r8;
-      var_5C = r3;
-
-      while(true)
+      do
       {
-         int r2 = iv_seeds_68[0];
-         int r3 = iv_seeds_68[1];
-         int r1 = var_3D;
-         int r2 = r2 + r8;
-         int r3 = r3 + 0;
+         int iv_seed0_tmp1 = iv_seed0;
+         int iv_seed1_tmp1 = iv_seed1;
+
+         iv_seed0_tmp1 = iv_seed0_tmp1 + g_offset;
+         iv_seed1_tmp1 = iv_seed1_tmp1 + 0;
          
-         while(true)
+         for(int i = 0; i < 8; i++)
          {
-            ++r1[0] = r2;
-            int r2 = r2 >> 8;
-            int r2 = r2 | (r3 << 24);
-            int r3 = r3 >> 8;
+            IV_3C[i] = iv_seed0_tmp1;
             
-            if(r6 == r1)
-               break;
+            iv_seed0_tmp1 = iv_seed0_tmp1 >> 8;
+            iv_seed0_tmp1 = iv_seed0_tmp1 | (iv_seed1_tmp1 << 24);
+            iv_seed1_tmp1 = iv_seed1_tmp1 >> 8;
          }
 
-         int r3 = 0;
+         memset(IV_3C + 8, 0, 8);
 
-         IV_3C[0x8] = r7;
-         IV_3C[0x9] = r7;
-         IV_3C[0xA] = r7;
-         IV_3C[0xB] = r7;
-         IV_3C[0xC] = r7;
-         IV_3C[0xD] = r7;
-         IV_3C[0xE] = r7;
-         IV_3C[0xF] = r7;
+         for(int i = 0; i < 0x10; i++)
+            IV_3C[i] = IV_3C[i] ^ iv_xor_key[i];
 
-         while(true)
+         int size_arg = 0;
+
+         if(size1 < g_size)
+            size_arg = size1;
+         else
+            size_arg = g_size;
+
+         if((flag & 2) == 0)
          {
-            int r2 = r4[r3];
-            int r1 = r5[r3];
-            int r2 = r2 ^ r1;
-            r4[r3] = r2;
-            r3++;
-            
-            if(r3 == 0x10)
-               break;
-         }
-
-         int r3 = source;
-         
-         //CMP R10, R9
-         
-         if(CC)
-         {
-            //MOVCC           R2, R10 ;  int size
+            if((flag & 1) != 0)
+               AESCMAC_base_1_219DC08(key, IV_3C, size_arg, src + g_offset, (char*)0x1771100);
+            else
+               AESCBCDecrypt_base_219D950(key, IV_3C, size_arg, src + g_offset, dst + g_offset);
          }
          else
          {
-            //MOVCS           R2, R9  ;  int size
+            if((flag & 1) != 0)
+               AESCMACWithKeygen_base_2_219DD64(key, IV_3C, size_arg, src + g_offset, (char*)0x1771100, key_id);
+            else
+               AESCBCDecryptWithKeygen_base_219DAAC(key, IV_3C, size_arg, src + g_offset, dst + g_offset, key_id);
          }
 
-         int r1 = var_58;
-         int r3 = r3 + r8;
+         g_offset = g_offset + size1;
+         g_size = g_size - size1;
+      }
+      while(size0 > g_offset);
 
-         if(r1 != 0)
-         {
-            int r1 = 0x1771100;
+      #pragma endregion
+   }
 
-            int r12 = AESCMACWithKeygen_base_2_219DD64;
-            int r11 = AESCMAC_base_1_219DC08;
-         }
-         else
-         {
-            int r1 = destination;
-            int r1 = r1 + r8;
-         }
-
-         int r0 = var_5C;
-         dst_78 = r1;
-
-         if(r0 == 0)
-         {
-            var_70 = r12;
-            int r1 = r4;
-            int r0 = key_54;
-            int r0 = r11();
-            int r12 = var_70;
-         }
-         else
-         {
-            int r1 = key_id_4C;
-            var_70 = r12;
-            int r0 = key_54;
-            var_74 = r1;
-            int r1 = r4;
-            int r0 = r12();
-            int r12 = var_70;
-         }
-
-         int r2 = num;
-         int r8 = r8 + r10;
-         int r9 = r9 - r10;
-         
-         if(r2 <= r8)
-            break;
+   if((flag & 1) != 0)
+   {
+      if(dst != src)
+      {
+         memcpy(dst, src, size0);
       }
    }
 
-   int r4 = var_44;
-
-   if(r4 != 0)
-   {
-      int r4 = destination;
-      int r0 = source;
-      if(r4 != r0)
-      {
-         int r0 = r4;
-         int r1 = source;
-         int r2 = num;
-         memcpy(r0, r1, r2);
-      }
-   }
-
-   int r0 = 0;
-
-   return r0;
+   return 0;
 }
 
 int aes_encrypt_aes_cmac_219D2DC(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
