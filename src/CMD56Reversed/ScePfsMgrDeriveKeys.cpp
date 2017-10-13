@@ -735,235 +735,205 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 //#### GROUP 1, GROUP 2 ####
 
-int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
+int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, uint16_t key_id)
 {
-   /*
-   LDRH.W          R4, [SP,#0x78+key_id]
-   MOV             R5, R1  ; iv_xor_key
-   ADD.W           R6, SP, #0x78+IV_3C+7 ; pointer to half of IV
-   ADD.W           R1, SP, #0x78+var_3D ; pointer before IV
-   LDRH.W          R7, [SP,#0x78+flag]
-   STR             R0, [SP,#0x78+key_54] ; key
-   STR             R4, [SP,#0x78+key_id_4C] ; key_id
-   MOV             R4, 0x9EA004
-   STRD.W          R2, R3, [SP,#0x78+iv_seeds_68]
-   STR             R4, [SP,#0x78+var_48]
-   LDR             R4, [SP,#0x78+size0] ; get size
-   STR             R4, [SP,#0x78+num] ; set size
-   LDRD.W          R10, R4, [SP,#0x78+size1] ; R10 = size; R4 = source
-   STR             R4, [SP,#0x78+source]
-   LDR             R4, [SP,#0x78+dst]
-   STR             R4, [SP,#0x78+destination]
-   LDR             R4, [SP,#0x78+var_48]
-   LDR             R0, [R4]
-   STR             R0, [SP,#0x78+var_2C]
-   */
+   uint16_t r4 = key_id;
+   int r5 = r1;
+   int r6 = &IV_3C+7;
+   int r1 = &var_3D;
+   uint16_t r7 = flag;
+
+   key_54 = r0;
+   key_id_4C = r4;
+   iv_seeds_68[0] = r2;
+   iv_seeds_68[1] = r3;
+   int r4 = size0;
+   num = r4;
+   int r10 = size1;
+   int r4 = src;
+   source = r4;
+   int r4 = dst;
+   destination = r4;
 
    while(true)
    {
-      /*
-      STRB.W          R2, [R1,#1]!
-      LSRS            R2, R2, #8 ; >> 8
-      ORR.W           R2, R2, R3,LSL#24
-      MOV.W           R3, R3,LSR#8
-      */
+      ++r1[0] = r2;
+      int r2 = r2 >> 8;
+      int r2 = r2 | (r3 << 24);
+      int r3 = r3 >> 8;
+      
       if(r1 == r6)
          break;
    }
 
-   /*
-   MOVS            R2, #0  ; set half of IV to 0
-   ADD             R4, SP, #0x78+IV_3C ; iv
-   MOV             R3, R2  ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+8] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+9] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+0xA] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+0xB] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+0xC] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+0xD] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+0xE] ; = 0
-   STRB.W          R2, [SP,#0x78+IV_3C+0xF] ; = 0
-   */
+   int r2 = 0;
+   int r4 = &IV_3C;
+   int r3 = r2;
+
+   IV_3C[0x8] = r2;
+   IV_3C[0x9] = r2;
+   IV_3C[0xA] = r2;
+   IV_3C[0xB] = r2;
+   IV_3C[0xC] = r2;
+   IV_3C[0xD] = r2;
+   IV_3C[0xE] = r2;
+   IV_3C[0xF] = r2;
 
    while(true)
    {
-      /*
-      LDRB            R2, [R4,R3] ; R4 = iv
-      LDRB            R1, [R5,R3] ; R5 = iv_xor_key
-      EORS            R2, R1
-      STRB            R2, [R4,R3]
-      ADDS            R3, #1
-      */
-
+      int r2 = r4[r3];
+      int r1 = r5[r3];
+      int r2 = r2 ^ r1;
+      r4[r3] = r2;
+      r3++;
+      
       if(r3 == 0x10)
          break;
    }
 
-   //LDR             R0, [SP,#0x78+num]
+   int r0 = num;
 
    if(r0 == 0)
    {
-      /*
-      AND.W           R7, R7, #1
-      STR             R7, [SP,#0x78+var_44]
-      */
+      int r7 = r7 & 1;
+      var_44 = r7;
    }
    else
    {
-      /*
-      LDR.W           R9, [SP,#0x78+num]
-      AND.W           R3, R7, #2
-      MOVW            R12, #((AESCBCDecryptWithKeygen_base_219DAAC+1) AND 0xFFFF) ; 0219DAAD code reference
-      AND.W           R7, R7, #1
-      MOVW            R11, #((AESCBCDecrypt_base_219D950+1) AND 0xFFFF) ; 0219D951 code reference
-      MOV.W           R8, #0
-      UXTH            R0, R7
-      STR             R7, [SP,#0x78+var_44]
-      UXTH            R3, R3
-      MOVT.W          R12, #(high16((AESCBCDecryptWithKeygen_base_219DAAC+1))) ; 0219DAAD code reference
-      MOVT.W          R11, #(high16((AESCBCDecrypt_base_219D950+1))) ; 0219D951 code reference
-      STR             R0, [SP,#0x78+var_58]
-      MOV             R7, R8  ; = 0
-      STR             R3, [SP,#0x78+var_5C]
-      */
+      int r9 = num;
+      int r3 = r7 & 2;
+      int r12 = AESCBCDecryptWithKeygen_base_219DAAC;
+      int r11 = AESCBCDecrypt_base_219D950;
+      int r7 = r7 & 1;
+      int r8 = 0;
+
+      int r0 = (int)r7;
+      var_44 = r7;
+      int r3 = (int)r3;
+      var_58 = r0;
+      int r7 = r8;
+      var_5C = r3;
 
       while(true)
       {
-         /*
-         LDRD.W          R2, R3, [SP,#0x78+iv_seeds_68]
-         ADD.W           R1, SP, #0x78+var_3D ; pointer before IV
-         ADDS.W          R2, R2, R8 ; R8 = 0
-         ADC.W           R3, R3, #0
-         */
-
+         int r2 = iv_seeds_68[0];
+         int r3 = iv_seeds_68[1];
+         int r1 = var_3D;
+         int r2 = r2 + r8;
+         int r3 = r3 + 0;
+         
          while(true)
          {
-            /*
-            STRB.W          R2, [R1,#1]!
-            LSRS            R2, R2, #8
+            ++r1[0] = r2;
+            int r2 = r2 >> 8;
+            int r2 = r2 | (r3 << 24);
+            int r3 = r3 >> 8;
             
-            ORR.W           R2, R2, R3,LSL#24
-            MOV.W           R3, R3,LSR#8
-            */
             if(r6 == r1)
                break;
          }
 
-         /*
-         MOVS            R3, #0
-         STRB.W          R7, [SP,#0x78+IV_3C+8] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+9] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+0xA] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+0xB] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+0xC] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+0xD] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+0xE] ; = 0
-         STRB.W          R7, [SP,#0x78+IV_3C+0xF] ; = 0
-         */
+         int r3 = 0;
+
+         IV_3C[0x8] = r7;
+         IV_3C[0x9] = r7;
+         IV_3C[0xA] = r7;
+         IV_3C[0xB] = r7;
+         IV_3C[0xC] = r7;
+         IV_3C[0xD] = r7;
+         IV_3C[0xE] = r7;
+         IV_3C[0xF] = r7;
 
          while(true)
          {
-            /*
-            LDRB            R2, [R4,R3] ; R4 = iv
-            LDRB            R1, [R5,R3] ; R5 = iv_xor_key
-            EORS            R2, R1
-            STRB            R2, [R4,R3] ; R4 = iv
-            ADDS            R3, #1
-            */
+            int r2 = r4[r3];
+            int r1 = r5[r3];
+            int r2 = r2 ^ r1;
+            r4[r3] = r2;
+            r3++;
+            
             if(r3 == 0x10)
                break;
          }
 
-         /*
-         LDR             R3, [SP,#0x78+source]
-         CMP             R10, R9
-         ITE CC
-         MOVCC           R2, R10 ;  int size
-         MOVCS           R2, R9  ;  int size
-         LDR             R1, [SP,#0x78+var_58]
-         ADD             R3, R8  ; char *src
-         */
+         int r3 = source;
+         
+         //CMP R10, R9
+         
+         if(CC)
+         {
+            //MOVCC           R2, R10 ;  int size
+         }
+         else
+         {
+            //MOVCS           R2, R9  ;  int size
+         }
+
+         int r1 = var_58;
+         int r3 = r3 + r8;
 
          if(r1 != 0)
          {
-            /*
-            MOVW            R1, #0x1100
-            MOVW            R12, #((AESCMACWithKeygen_base_2_219DD64+1) AND 0xFFFF) ; 0219DD65 code reference
-            MOVW            R11, #((AESCMAC_base_1_219DC08+1) AND 0xFFFF) ; 0219DC09 code reference
-            MOVT.W          R1, #0x177 ; 0x1771100 (0x100)
-            MOVT.W          R12, #(high16((AESCMACWithKeygen_base_2_219DD64+1))) ; 0219DD65 code reference
-            MOVT.W          R11, #(high16((AESCMAC_base_1_219DC08+1))) ; 0219DC09 code reference
-            */
+            int r1 = 0x1771100;
+
+            int r12 = AESCMACWithKeygen_base_2_219DD64;
+            int r11 = AESCMAC_base_1_219DC08;
          }
          else
          {
-            /*
-            LDR             R1, [SP,#0x78+destination]
-            ADD             R1, R8
-            */
+            int r1 = destination;
+            int r1 = r1 + r8;
          }
 
-         /*
-         LDR             R0, [SP,#0x78+var_5C]
-         STR             R1, [SP,#0x78+dst_78] ; char *dst (0x1771100 (0x100))
-         */
+         int r0 = var_5C;
+         dst_78 = r1;
 
          if(r0 == 0)
          {
-            /*
-            STR.W           R12, [SP,#0x78+var_70]
-            MOV             R1, R4  ; char *iv
-            LDR             R0, [SP,#0x78+key_54] ; char *key
-            BLX             R11     ; decrypt_aes_cbc_encrypt_aes_ecb_with_key_callback_219D950 (char *key, char *iv, int size, char *src, char *dst)
-            LDR.W           R12, [SP,#0x78+var_70]
-            */
+            var_70 = r12;
+            int r1 = r4;
+            int r0 = key_54;
+            int r0 = r11();
+            int r12 = var_70;
          }
          else
          {
-            /*
-            LDR             R1, [SP,#0x78+key_id_4C]
-            STR.W           R12, [SP,#0x78+var_70]
-            LDR             R0, [SP,#0x78+key_54] ; key
-            STR             R1, [SP,#0x78+var_74] ; key_id
-            MOV             R1, R4
-            BLX             R12     ; decrypt_cbc_encrypt_aes_ecb_with_key_id_callback_219DAAC (char *key, char *iv, int size, char *src, char *dst, int key_id)
-            LDR.W           R12, [SP,#0x78+var_70]
-            */
+            int r1 = key_id_4C;
+            var_70 = r12;
+            int r0 = key_54;
+            var_74 = r1;
+            int r1 = r4;
+            int r0 = r12();
+            int r12 = var_70;
          }
 
-         /*
-         LDR             R2, [SP,#0x78+num]
-         ADD             R8, R10
-         SUB.W           R9, R9, R10
-         */
-
+         int r2 = num;
+         int r8 = r8 + r10;
+         int r9 = r9 - r10;
+         
          if(r2 <= r8)
             break;
       }
    }
 
-   //LDR             R4, [SP,#0x78+var_44]
+   int r4 = var_44;
 
    if(r4 != 0)
    {
-      //LDR             R4, [SP,#0x78+destination]
-      //LDR             R0, [SP,#0x78+source]
+      int r4 = destination;
+      int r0 = source;
       if(r4 != r0)
       {
-         /*
-         MOV             R0, R4  ; destination
-         LDR             R1, [SP,#0x78+source] ; source
-         LDR             R2, [SP,#0x78+num] ; num
-         BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-         */
+         int r0 = r4;
+         int r1 = source;
+         int r2 = num;
+         memcpy(r0, r1, r2);
       }
    }
 
-   /*
-   MOVS            R0, #0
-   */
+   int r0 = 0;
 
-   return 0;
+   return r0;
 }
 
 int aes_encrypt_aes_cmac_219D2DC(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
