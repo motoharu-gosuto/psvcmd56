@@ -733,27 +733,26 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 //############## LEVEL 2 - CRYPTO WRAPPER SELECTORS ###############
 
-#define PFS_CRYPTO_USE_CMAC   0x00000001 //1
-#define PFS_CRYPTO_USE_KEYGEN 0x00000002 //2
+#define PFS_CRYPTO_USE_CMAC   0x0001 //1
+#define PFS_CRYPTO_USE_KEYGEN 0x0002 //2
 
 //#### GROUP 1, GROUP 2 ####
 
 char g_1771100[0x10] = {0};
 
-int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, int size, int block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
    char IV_3C[0x10] = {0};
 
-   int iv_seed0_tmp0 = iv_seed0;
-   int iv_seed1_tmp0 = iv_seed1;
+   int tk_tmp00 = tweak_key0;
+   int tk_tmp10 = tweak_key1;
    
    for(int i = 0; i < 8; i++)
    {
-      IV_3C[i] = iv_seed0_tmp0;
+      IV_3C[i] = tk_tmp00;
 
-      iv_seed0_tmp0 = iv_seed0_tmp0 >> 8;
-      iv_seed0_tmp0 = iv_seed0_tmp0 | (iv_seed1_tmp0 << 24);
-      iv_seed1_tmp0 = iv_seed1_tmp0 >> 8;
+      tk_tmp00 = (tk_tmp00 >> 8) | (tk_tmp10 << 24);
+      tk_tmp10 = tk_tmp10 >> 8;
    }
 
    memset(IV_3C + 8, 0, 8);
@@ -761,28 +760,22 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int iv
    for(int i = 0; i < 0x10; i++)
       IV_3C[i] = IV_3C[i] ^ iv_xor_key[i];
   
-   if(size0 != 0)
+   if(size != 0)
    {
-      #pragma region
-
-      int g_offset = 0;
-      int g_size = size0;
+      int offset = 0;
+      int bytes_left = size;
 
       do
       {
-         int iv_seed0_tmp1 = iv_seed0;
-         int iv_seed1_tmp1 = iv_seed1;
-
-         iv_seed0_tmp1 = iv_seed0_tmp1 + g_offset;
-         iv_seed1_tmp1 = iv_seed1_tmp1 + 0;
+         int tk_tmp01 = tweak_key0 + offset;
+         int tk_tmp11 = tweak_key1 + 0;
          
          for(int i = 0; i < 8; i++)
          {
-            IV_3C[i] = iv_seed0_tmp1;
+            IV_3C[i] = tk_tmp01;
             
-            iv_seed0_tmp1 = iv_seed0_tmp1 >> 8;
-            iv_seed0_tmp1 = iv_seed0_tmp1 | (iv_seed1_tmp1 << 24);
-            iv_seed1_tmp1 = iv_seed1_tmp1 >> 8;
+            tk_tmp01 = (tk_tmp01 >> 8) | (tk_tmp11 << 24);
+            tk_tmp11 = tk_tmp11 >> 8;
          }
 
          memset(IV_3C + 8, 0, 8);
@@ -790,41 +783,41 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int iv
          for(int i = 0; i < 0x10; i++)
             IV_3C[i] = IV_3C[i] ^ iv_xor_key[i];
 
-         int size_arg = 0;
+         // select block_size if we did not yet reach tail of the data. 
+         // or select bytes_left which will be the size of the tail in the end
 
-         if(size1 < g_size)
-            size_arg = size1;
+         int size_arg = 0;
+         if(block_size < bytes_left)
+            size_arg = block_size;
          else
-            size_arg = g_size;
+            size_arg = bytes_left;
 
          if((flag & PFS_CRYPTO_USE_KEYGEN) != 0)
          {
             if((flag & PFS_CRYPTO_USE_CMAC) != 0)
-               AESCMACWithKeygen_base_2_219DD64(key, IV_3C, size_arg, src + g_offset, g_1771100, key_id);
+               AESCMACWithKeygen_base_2_219DD64(key, IV_3C, size_arg, src + offset, g_1771100, key_id);
             else
-               AESCBCDecryptWithKeygen_base_219DAAC(key, IV_3C, size_arg, src + g_offset, dst + g_offset, key_id);
+               AESCBCDecryptWithKeygen_base_219DAAC(key, IV_3C, size_arg, src + offset, dst + offset, key_id);
          }
          else
          {
             if((flag & PFS_CRYPTO_USE_CMAC) != 0)
-               AESCMAC_base_1_219DC08(key, IV_3C, size_arg, src + g_offset, g_1771100);
+               AESCMAC_base_1_219DC08(key, IV_3C, size_arg, src + offset, g_1771100);
             else
-               AESCBCDecrypt_base_219D950(key, IV_3C, size_arg, src + g_offset, dst + g_offset);
+               AESCBCDecrypt_base_219D950(key, IV_3C, size_arg, src + offset, dst + offset);
          }
 
-         g_offset = g_offset + size1;
-         g_size = g_size - size1;
+         offset = offset + block_size;
+         bytes_left = bytes_left - block_size;
       }
-      while(size0 > g_offset);
-
-      #pragma endregion
+      while(size > offset);
    }
 
    if((flag & PFS_CRYPTO_USE_CMAC) != 0)
    {
       if(dst != src)
       {
-         memcpy(dst, src, size0);
+         memcpy(dst, src, size);
       }
    }
 
