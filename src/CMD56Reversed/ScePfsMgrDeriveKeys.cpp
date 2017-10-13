@@ -826,237 +826,209 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tw
 
 int aes_encrypt_aes_cmac_219D2DC(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
 {
-   /*
-   LDRH.W          R4, [SP,#0x78+key_id]
-   MOV             R5, R1  ; iv_xor_key
-   ADD.W           R6, SP, #0x78+IV+7 ; IV - second part
-   ADD.W           R1, SP, #0x78+var_3D ; IV before first part
-   LDRH.W          R7, [SP,#0x78+flag] ; flag
-   STR             R0, [SP,#0x78+key] ;  key
-   STR             R4, [SP,#0x78+var_key_id] ;  key_id
-   MOV             R4, 0x9EA004
-   STRD.W          R2, R3, [SP,#0x78+seeds] ; seed0, seed1
-   STR             R4, [SP,#0x78+var_48]
-   LDR             R4, [SP,#0x78+size0]
-   STR             R4, [SP,#0x78+num] ; size0
-   LDRD.W          R10, R4, [SP,#0x78+size1] ; size1, ?
-   STR             R4, [SP,#0x78+source]
-   LDR             R4, [SP,#0x78+dst]
-   STR             R4, [SP,#0x78+destination]
-   LDR             R4, [SP,#0x78+var_48]
-   LDR             R0, [R4]
-   STR             R0, [SP,#0x78+var_2C]
-   */
-
+   int r4 = key_id;
+   int r5 = r1;
+   int r6 = IV+7;
+   int r1 = var_3D;
+   int r7 = flag;
+   key = key;
+   var_key_id = r4;
+   seeds[0] = r2;
+   seeds[1] = r3;
+   int r4 = size0;
+   num = r4;
+   int r10 = size1;
+   int r4 = src;
+   source = r4;
+   int r4 = dst;
+   destination = r4;
+   
    while(true)
    {
-      /*
-      STRB.W          R2, [R1,#1]!
-      LSRS            R2, R2, #8
-      ORR.W           R2, R2, R3,LSL#24
-      MOV.W           R3, R3,LSR#8
-      */
+      ++r1[0] = r2;
+      int r2 = r2 >> 8;
+      int r2 = r2 | (r3 << 24);
+      int r3 = r3 >> 8;
+
       if(r1 == r6)
          break;
    }
 
-   /*
-   MOVS            R2, #0  ; init second part of IV with 0
-   ADD             R4, SP, #0x78+IV ; iv
-   MOV             R3, R2  ; counter
-   STRB.W          R2, [SP,#0x78+IV+8] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+9] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+0xA] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+0xB] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+0xC] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+0xD] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+0xE] ; = 0
-   STRB.W          R2, [SP,#0x78+IV+0xF] ; = 0
-   */
+   int r2 = 0;
+   int r4 = IV;
+   int r3 = r2;
+   
+   IV[0x8] = r2;
+   IV[0x9] = r2;
+   IV[0xA] = r2;
+   IV[0xB] = r2;
+   IV[0xC] = r2;
+   IV[0xD] = r2;
+   IV[0xE] = r2;
+   IV[0xF] = r2;
 
    while(true)
    {
-      /*
-      LDRB            R2, [R4,R3]
-      LDRB            R1, [R5,R3] ; iv_xor_key
-      EORS            R2, R1  ; XOR iv
-      STRB            R2, [R4,R3]
-      ADDS            R3, #1
-      */
-
+      int r2 = r4[r3];
+      int r1 = r5[r3];
+      int r2 = r2 ^ r1;
+      r4[r3] = r2;
+      int r3 = r3 + 1;
+      
       if(r3 == 0x10)
          break;
    }
    
-   //LDR             R0, [SP,#0x78+num] ; size
+   int r0 = num;
 
    if(r0 == 0)
    {
-      /*
-      AND.W           R7, R7, #1
-      STR             R7, [SP,#0x78+flag1]
-      */
+      int r7 = r7 & 1;
+      flag1 = r7;
    }
    else
    {
       #pragma region
 
-      /*
-      LDR.W           R9, [SP,#0x78+num] ; size
-      AND.W           R3, R7, #2 ; flag
-      MOVW            R12, #((AESCBCEncryptWithKeygen_base_219D9F4+1) AND 0xFFFF) ; 0219D9F5 code reference
-      AND.W           R7, R7, #1 ; flag
-      MOVW            R11, #((AESCBCEncrypt_base_219D8AC+1) AND 0xFFFF) ; 0219D8AD code reference
-      MOV.W           R8, #0
-      UXTH            R0, R7  ; flag
-      STR             R7, [SP,#0x78+flag1] ; flag1
-      UXTH            R3, R3  ; flag
-      MOVT.W          R12, #(high16((AESCBCEncryptWithKeygen_base_219D9F4+1))) ; 0219D9F5 code reference
-      MOVT.W          R11, #(high16((AESCBCEncrypt_base_219D8AC+1))) ; 0219D8AD code reference
-      STR             R0, [SP,#0x78+flag3] ; flag3
-      MOV             R7, R8
-      STR             R3, [SP,#0x78+flag2] ; mode flag
-      */
+      int r9 = num;
+      int r3 = r7 & 2;
+      int r7 = r7 & 1;
+
+      int r11 = AESCBCEncrypt_base_219D8AC;
+      int r12 = AESCBCEncryptWithKeygen_base_219D9F4;
+
+      int r8 = 0;
+
+      int r0 = (int)r7;
+      flag1 = r7;
+      int r3 = (int)r3;
+      flag3 = r0;
+      
+      int r7 = r8;
+      flag2 = r3;
 
       do
       {
-         /*
-         LDRD.W          R2, R3, [SP,#0x78+seeds]
-         ADD.W           R1, SP, #0x78+var_3D
-         ADDS.W          R2, R2, R8
-         ADC.W           R3, R3, #0
-         */
+         int r2 = seeds[0];
+         int r3 = seeds[3];
+         int r1 = var_3D;
+         int r2 = r2 + r8;
+         int r3 = r3 + 0;
 
          while(true)
          {
-            /*
-            STRB.W          R2, [R1,#1]!
-            LSRS            R2, R2, #8
-            ORR.W           R2, R2, R3,LSL#24
-            MOV.W           R3, R3,LSR#8
-            BNE             loc_219D3A4
-            */
+            ++r1[0] = r2;
+            int r2 = r2 >> 8;
+            int r2 = r2 | (r3 << 24);
+            int r3 = r3 >> 8;
 
             if(r6 == r1)
                break;
          }
 
-         /*
-         MOVS            R3, #0
-         STRB.W          R7, [SP,#0x78+IV+8]
-         STRB.W          R7, [SP,#0x78+IV+9]
-         STRB.W          R7, [SP,#0x78+IV+0xA]
-         STRB.W          R7, [SP,#0x78+IV+0xB]
-         STRB.W          R7, [SP,#0x78+IV+0xC]
-         STRB.W          R7, [SP,#0x78+IV+0xD]
-         STRB.W          R7, [SP,#0x78+IV+0xE]
-         STRB.W          R7, [SP,#0x78+IV+0xF]
-         */
+         int r3 = 0;
+         
+         IV[0x8] = r7;
+         IV[0x9] = r7;
+         IV[0xA] = r7;
+         IV[0xB] = r7;
+         IV[0xC] = r7;
+         IV[0xD] = r7;
+         IV[0xE] = r7;
+         IV[0xF] = r7;
 
          while(true)
          {
-            /*
-            LDRB            R2, [R4,R3]
-            LDRB            R1, [R5,R3]
-            EORS            R2, R1
-            STRB            R2, [R4,R3]
-            ADDS            R3, #1
-            */
+            int r2 = r4[r3];
+            int r1 = r5[r3];
+            int r2 = r2 ^ r1;
+            r4[r3] = r2;
+
+            int r3 = r3 + 1;
 
             if(r3 == 0x10)
                break;
          }
 
-         /*
-         LDR             R3, [SP,#0x78+source]
-         CMP             R10, R9 ; size
-         ITE CC
-         MOVCC           R2, R10 ; size
-         MOVCS           R2, R9  ; size
-         LDR             R1, [SP,#0x78+flag3]
-         ADD             R3, R8
-         */
+         int r3 = source;
+         if(r10 < r9)
+         {
+            int r2 = r10;
+         }
+         else
+         {
+            int r2 = r9;
+         }
+
+         int r1 = flag3;
+
+         int r3 = r3 + r8;
 
          if(r1 != 0)
          {
-            /*
-            MOVW            R1, #0x1100
-            MOVW            R12, #((AESCMACWithKeygen_base_1_219DCAC+1) AND 0xFFFF) ; 0219DCAD code reference
-            MOVW            R11, #((AESCMAC_base_2_219DB64+1) AND 0xFFFF) ; 0219DB65 code reference
-            MOVT.W          R1, #0x177
-            MOVT.W          R12, #(high16((AESCMACWithKeygen_base_1_219DCAC+1))) ; 0219DCAD code reference
-            MOVT.W          R11, #(high16((AESCMAC_base_2_219DB64+1))) ; 0219DB65 code reference
-            */
+            int r1 = 0x1771100;
+            
+            int r12 = AESCMACWithKeygen_base_1_219DCAC;
+            int r11 = AESCMAC_base_2_219DB64;
          }
          else
          {
-            /*
-            LDR             R1, [SP,#0x78+destination]
-            ADD             R1, R8
-            */
+            int r1 = destination;
+            int r1 = r1 + r8;
          }
 
-         /*
-         LDR             R0, [SP,#0x78+flag2]
-         STR             R1, [SP,#0x78+arg_0_i]
-         */
+         int r0 = flag2;
+         arg_0_i = r1;
 
          if(r0 == 0)
          {
-            /*
-            STR.W           R12, [SP,#0x78+var_70]
-            MOV             R1, R4  ; iv
-            LDR             R0, [SP,#0x78+key] ; key
-            BLX             R11     ; aes_cmac_with_key_ecb_encrypt_callback_219DB64
-            LDR.W           R12, [SP,#0x78+var_70]
-            */
+            var_70 = r12;
+            int r1 = r4;
+            int r0 = key;
+            
+            r11();
+
+            int r12 = var_70;
          }
          else
          {
-            /*
-            LDR             R1, [SP,#0x78+var_key_id]
-            STR.W           R12, [SP,#0x78+var_70]
-            LDR             R0, [SP,#0x78+key] ; char *key
-            STR             R1, [SP,#0x78+arg_4_i] ;  key_id
-            MOV             R1, R4  ; char *iv
-            BLX             R12     ; aes_cmac_with_key_id_ecb_encrypt_callback_219DCAC
-            LDR.W           R12, [SP,#0x78+var_70]
-            */
+            int r1 = var_key_id;
+            var_70 = r12;
+
+            int r0 = key;
+            arg_4_i = r1;
+            int r1 = r4;
+
+            r12();
+
+            int r12 = var_70;
          }
 
-         /*
-         LDR             R2, [SP,#0x78+num]
-         ADD             R8, R10
-         SUB.W           R9, R9, R10
-         */
+         int r2 = num;
+         int r8 = r8 + r10;
+         int r9 = r9 - r10;
       }
       while(r2 > r8)
 
       #pragma endregion
    }
 
-   //LDR             R4, [SP,#0x78+flag1]
+   int r4 = flag1;
    if(r4 != 0)
    {
-      /*
-      LDR             R4, [SP,#0x78+destination]
-      LDR             R0, [SP,#0x78+source]
-      */
+      int r4 = destination;
+      int r0 = source;
 
       if(r4 != 0)
       {
-         /*
-         MOV             R0, R4  ; destination
-         LDR             R1, [SP,#0x78+source] ; source
-         LDR             R2, [SP,#0x78+num] ; num
-         BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-         */
+         int r0 = r4;
+         int r1 = source;
+         int r2 = num;
+         memcpy(r0, r1, r2);
       }
    }
 
-   //MOVS            R0, #0
-
-   return r0;
+   return 0;
 }
 
 //#### GROUP 3, GROUP 4 ####
