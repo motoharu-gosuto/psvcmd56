@@ -337,7 +337,7 @@ int AESCBCDecrypt_base_219D950(const char* key, char* iv, uint32_t size, const c
 
 //encrypt / decrypt with key_id
 
-int AESCBCDecryptWithKeygen_base_219DAAC(const char* key, char* iv, uint32_t size, char* src, char* dst, uint16_t key_id)
+int AESCBCDecryptWithKeygen_base_219DAAC(const char* key, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -421,7 +421,7 @@ int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32
 
 // FUNCTIONS ARE SIMILAR
 
-int AESCMAC_base_1_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
+int AESCMAC_base_1_219DC08(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -461,7 +461,7 @@ int AESCMAC_base_1_219DC08(char* cmac_key, char* iv, uint32_t size, char* cmac_s
    return 0;
 }
 
-int AESCMAC_base_2_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst)
+int AESCMAC_base_2_219DB64(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -503,7 +503,7 @@ int AESCMAC_base_2_219DB64(char* cmac_key, char* iv, uint32_t size, char* cmac_s
 
 // FUNCTIONS ARE SIMILAR
 
-int AESCMACWithKeygen_base_1_219DCAC(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
+int AESCMACWithKeygen_base_1_219DCAC(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -545,7 +545,7 @@ int AESCMACWithKeygen_base_1_219DCAC(char* cmac_key, char* iv, uint32_t size, ch
    return 0;
 }
 
-int AESCMACWithKeygen_base_2_219DD64(char* cmac_key, char* iv, uint32_t size, char* cmac_src, char* cmac_dst, uint16_t key_id)
+int AESCMACWithKeygen_base_2_219DD64(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -733,9 +733,14 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 //############## LEVEL 2 - CRYPTO WRAPPER SELECTORS ###############
 
+#define PFS_CRYPTO_USE_CMAC   0x00000001 //1
+#define PFS_CRYPTO_USE_KEYGEN 0x00000002 //2
+
 //#### GROUP 1, GROUP 2 ####
 
-int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, uint16_t flag, uint16_t key_id)
+char g_1771100[0x10] = {0};
+
+int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
    char IV_3C[0x10] = {0};
 
@@ -792,19 +797,19 @@ int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int 
          else
             size_arg = g_size;
 
-         if((flag & 2) == 0)
+         if((flag & PFS_CRYPTO_USE_KEYGEN) != 0)
          {
-            if((flag & 1) != 0)
-               AESCMAC_base_1_219DC08(key, IV_3C, size_arg, src + g_offset, (char*)0x1771100);
+            if((flag & PFS_CRYPTO_USE_CMAC) != 0)
+               AESCMACWithKeygen_base_2_219DD64(key, IV_3C, size_arg, src + g_offset, g_1771100, key_id);
             else
-               AESCBCDecrypt_base_219D950(key, IV_3C, size_arg, src + g_offset, dst + g_offset);
+               AESCBCDecryptWithKeygen_base_219DAAC(key, IV_3C, size_arg, src + g_offset, dst + g_offset, key_id);
          }
          else
          {
-            if((flag & 1) != 0)
-               AESCMACWithKeygen_base_2_219DD64(key, IV_3C, size_arg, src + g_offset, (char*)0x1771100, key_id);
+            if((flag & PFS_CRYPTO_USE_CMAC) != 0)
+               AESCMAC_base_1_219DC08(key, IV_3C, size_arg, src + g_offset, g_1771100);
             else
-               AESCBCDecryptWithKeygen_base_219DAAC(key, IV_3C, size_arg, src + g_offset, dst + g_offset, key_id);
+               AESCBCDecrypt_base_219D950(key, IV_3C, size_arg, src + g_offset, dst + g_offset);
          }
 
          g_offset = g_offset + size1;
@@ -815,7 +820,7 @@ int aes_decrypt_aes_cmac_219D480(char *key, char *iv_xor_key, int iv_seed0, int 
       #pragma endregion
    }
 
-   if((flag & 1) != 0)
+   if((flag & PFS_CRYPTO_USE_CMAC) != 0)
    {
       if(dst != src)
       {
