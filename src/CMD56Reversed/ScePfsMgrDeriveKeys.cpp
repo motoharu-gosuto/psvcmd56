@@ -2506,175 +2506,6 @@ void loc_219C206()
    }
 }
 
-void loc_219C3A0()
-{
-   /*
-   LDR             R5, [SP,#0xC0+ignored]
-   AND.W           R3, R5, #0x41
-   */
-
-   if(r3 == 0x41)
-   {
-      return loc_219C206();
-   }
-
-   //LDR             R5, [SP,#0xC0+key]
-
-   if(r5 == 0)
-   {
-      return loc_219C206();
-   }
-
-   /*
-   LDR             R0, [SP,#0xC0+ignored]
-   MOV             R8, R6  ; real digest for comparison
-   STRD.W          R10, R9, [SP,#0x5C]
-   MOV.W           R11, #0
-   MOV             R9, R4  ; hmac_src_size
-   LDR             R6, [SP,#0xC0+hmac_key] ; hmac_src
-   AND.W           R7, R0, #9
-   ADD             R5, SP, #0xC0+bytes14 ; hmac_digest
-   MOV             R4, R7
-   LDR.W           R10, [SP,#0xC0+unk1] ; hmac_key
-   LDR             R7, [SP,#0xC0+key]
-   */
-
-   //loc_219C3E4
-   while(true)
-   {
-      /*
-      MOV             R1, R10
-      MOV             R0, R5  ; digest_result
-      MOV             R2, R6  ; src
-      MOV             R3, R9  ; size
-      BL              hmac_sha1_digest_219DE7C
-      MOV             R0, R8  ; unk0
-      MOV             R1, R5  ; unk1 - calculated result
-      BL              proc_verify_14_bytes_219DE44
-      */
-
-      if((r0 != 0) || (r4 == 1))
-      {
-         /*
-         ADD.W           R11, R11, #1
-         ADD             R6, R9
-         ADD.W           R8, R8, #0x14
-         */
-         if(r11 == r7)
-            break;
-      }
-      else
-      {
-         //MOV             R3, 0x80140F02
-         //LDR             R5, [SP,#0xC0+crypt_ctx]
-         //STR             R3, [R5,#0xC] ; set error to field 0xC
-         return;
-      }
-   }
-
-   /*
-   MOV             R4, R9
-   LDRD.W          R10, R9, [SP,#0x5C]
-   */
-
-   return loc_219C206();
-}
-
-void loc_0219C176()
-{
-   /*
-   LDR             R7, [SP,#0xC0+ignored]
-   AND.W           R3, R7, #0x41
-   */
-
-   if(r3 == 0x41)
-   {
-      return  loc_219C206();
-   }
-
-   /*
-   LDRD.W          R0, R1, [SP,#0x48]
-   MOV             R2, R4  ; unk2
-   MOV             R3, R5  ; unk3
-   BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-   STR             R0, [SP,#0xC0+data]
-   LDR             R0, [SP,#0xC0+key]
-   */
-
-   if(r0 == 0)
-   {
-      return loc_219C206();
-   }
-
-   /*
-   LDR             R1, [SP,#0xC0+ignored]
-   ADD.W           R12, SP, #0xC0+data
-   MOV             R8, R6
-   MOV             R11, R5
-   STR.W           R9, [SP,#0xC0+var_5C]
-   ADD             R5, SP, #0xC0+bytes14
-   AND.W           R1, R1, #9
-   LDR             R7, [SP,#0xC0+hmac_key]
-   STRD.W          R1, R10, [SP,#0x5C]
-   MOV             R10, R12
-   LDRD.W          R6, R9, [SP,#0x54]
-   */
-
-   //loc_219C1CE 
-   while(true)
-   {
-      /*
-      MOV             R1, R9
-      MOV             R2, R10 ; data
-      MOVS            R3, #4  ; data_len
-      ADD             R0, SP, #0xC0+digest ; digest
-      BL              hmacSha1Digest_219DE68
-      ADD             R1, SP, #0xC0+digest ; key_ctx_klicensee
-      MOV             R0, R5  ; digest_result
-      MOV             R2, R7  ; src
-      CMP             R4, R6
-      ITE CC
-      MOVCC           R3, R4
-      MOVCS           R3, R6  ; size
-      BL              hmac_sha1_digest_219DE7C
-      MOV             R0, R8  ; unk0
-      MOV             R1, R5  ; unk1
-      BL              proc_verify_14_bytes_219DE44
-      */
-
-      //LDR             R2, [SP,#0xC0+var_64]
-
-      if((r0 != 0) || (r2 == 1))
-      {
-         /*
-         LDR             R3, [SP,#0xC0+data]
-         ADD.W           R11, R11, #1
-         SUBS            R6, R6, R4
-         ADD             R7, R4
-         ADD.W           R8, R8, #0x14
-         ADDS            R3, #1
-         STR             R3, [SP,#0xC0+data]
-         LDR             R3, [SP,#0xC0+key]
-         */
-
-         if(r11 == r3)
-            break;
-      }
-      else
-      {
-         //MOV             R3, 0x80140F02
-         //LDR             R5, [SP,#0xC0+crypt_ctx]
-         //STR             R3, [R5,#0xC] ; set error to field 0xC
-         return;
-      }
-   }
-
-   //LDRD.W          R10, R9, [SP,#0x60]
-
-   return loc_219C206();
-}
-
-
 void crypt_engine_work_3()
 {
    /*
@@ -2695,8 +2526,7 @@ void crypt_engine_work_3()
    LDRH.W          R6, [R9,#0x12]
    MLA.W           R3, R4, R7, R3
    VDUP.32         D16, R2
-   STR             R5, [SP,#0xC0+unk0]
-   
+   STR             R5, [SP,#0xC0+unk0]   
    VSHR.U64        D16, D16, #0x20
    STR             R6, [SP,#0xC0+iv_xor_key]
    STR             R1, [SP,#0xC0+var_8C]
@@ -2705,7 +2535,12 @@ void crypt_engine_work_3()
    VSTR            D16, [SP,#0xC0+unk3]
    */
 
-   if(r1 > 0x1F)
+   int r2 = 1;
+   int r3 = 0xC0000B03;
+   int r2 = r2 << r1;
+   int r3 = r3 & r2;
+
+   if((r1 > 0x1F) || (r3 == 0))
    {
       /*
       LDR.W           R5, [R10,#0x50]
@@ -2715,27 +2550,9 @@ void crypt_engine_work_3()
    else
    {
       /*
-      MOVS            R2, #1
-      MOVW            R3, #0xB03
-      LSLS            R2, R1
-      MOVT.W          R3, #0xC000
-      ANDS            R3, R2
+      LDR.W           R5, [R10,#0x54] ; R10 = CryptEngineSubctx*
+      STR             R5, [SP,#0xC0+hmac_key]
       */
-
-      if(r3 == 0)
-      {
-         /*
-         LDR.W           R5, [R10,#0x50]
-         STR             R5, [SP,#0xC0+hmac_key]
-         */
-      }
-      else
-      {
-         /*
-         LDR.W           R5, [R10,#0x54] ; R10 = CryptEngineSubctx*
-         STR             R5, [SP,#0xC0+hmac_key]
-         */
-      }
    }
 
    /*
@@ -2775,28 +2592,174 @@ void crypt_engine_work_3()
    STR             R0, [SP,#0xC0+unk1]
    */
 
-   if(r7 > 0x1F)
+   int r2 = 1;
+   r2 = r2 << r7;
+   int r3 = 0xC0000B03;
+   int r3 = r3 & r2;
+
+   if((r7 > 0x1F) || (r3 == 0))
    {
-      return loc_219C3A0();
+      /*
+      LDR             R5, [SP,#0xC0+ignored]
+      AND.W           R3, R5, #0x41
+      */
+
+      if(r3 == 0x41)
+      {
+         return loc_219C206();
+      }
+
+      //LDR             R5, [SP,#0xC0+key]
+
+      if(r5 == 0)
+      {
+         return loc_219C206();
+      }
+
+      /*
+      LDR             R0, [SP,#0xC0+ignored]
+      MOV             R8, R6  ; real digest for comparison
+      STRD.W          R10, R9, [SP,#0x5C]
+      MOV.W           R11, #0
+      MOV             R9, R4  ; hmac_src_size
+      LDR             R6, [SP,#0xC0+hmac_key] ; hmac_src
+      AND.W           R7, R0, #9
+      ADD             R5, SP, #0xC0+bytes14 ; hmac_digest
+      MOV             R4, R7
+      LDR.W           R10, [SP,#0xC0+unk1] ; hmac_key
+      LDR             R7, [SP,#0xC0+key]
+      */
+
+      while(true)
+      {
+         /*
+         MOV             R1, R10
+         MOV             R0, R5  ; digest_result
+         MOV             R2, R6  ; src
+         MOV             R3, R9  ; size
+         BL              hmac_sha1_digest_219DE7C
+         MOV             R0, R8  ; unk0
+         MOV             R1, R5  ; unk1 - calculated result
+         BL              proc_verify_14_bytes_219DE44
+         */
+
+         if((r0 != 0) || (r4 == 1))
+         {
+            /*
+            ADD.W           R11, R11, #1
+            ADD             R6, R9
+            ADD.W           R8, R8, #0x14
+            */
+            if(r11 == r7)
+               break;
+         }
+         else
+         {
+            //MOV             R3, 0x80140F02
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+      }
+
+      /*
+      MOV             R4, R9
+      LDRD.W          R10, R9, [SP,#0x5C]
+      */
+
+      return loc_219C206();
    }
    else
    {
       /*
-      MOVS            R2, #1
-      MOVW            R3, #0xB03
-      LSLS            R2, R7
-      MOVT.W          R3, #0xC000
-      ANDS            R3, R2
+      LDR             R7, [SP,#0xC0+ignored]
+      AND.W           R3, R7, #0x41
       */
 
-      if(r3 == 0)
+      if(r3 == 0x41)
       {
-         return loc_219C3A0();
+         return  loc_219C206();
       }
-      else
+
+      /*
+      LDRD.W          R0, R1, [SP,#0x48]
+      MOV             R2, R4  ; unk2
+      MOV             R3, R5  ; unk3
+      BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+      STR             R0, [SP,#0xC0+data]
+      LDR             R0, [SP,#0xC0+key]
+      */
+
+      if(r0 == 0)
       {
-         return loc_0219C176();
+         return loc_219C206();
       }
+
+      /*
+      LDR             R1, [SP,#0xC0+ignored]
+      ADD.W           R12, SP, #0xC0+data
+      MOV             R8, R6
+      MOV             R11, R5
+      STR.W           R9, [SP,#0xC0+var_5C]
+      ADD             R5, SP, #0xC0+bytes14
+      AND.W           R1, R1, #9
+      LDR             R7, [SP,#0xC0+hmac_key]
+      STRD.W          R1, R10, [SP,#0x5C]
+      MOV             R10, R12
+      LDRD.W          R6, R9, [SP,#0x54]
+      */
+
+      while(true)
+      {
+         /*
+         MOV             R1, R9
+         MOV             R2, R10 ; data
+         MOVS            R3, #4  ; data_len
+         ADD             R0, SP, #0xC0+digest ; digest
+         BL              hmacSha1Digest_219DE68
+         ADD             R1, SP, #0xC0+digest ; key_ctx_klicensee
+         MOV             R0, R5  ; digest_result
+         MOV             R2, R7  ; src
+         CMP             R4, R6
+         ITE CC
+         MOVCC           R3, R4
+         MOVCS           R3, R6  ; size
+         BL              hmac_sha1_digest_219DE7C
+         MOV             R0, R8  ; unk0
+         MOV             R1, R5  ; unk1
+         BL              proc_verify_14_bytes_219DE44
+         */
+
+         //LDR             R2, [SP,#0xC0+var_64]
+
+         if((r0 != 0) || (r2 == 1))
+         {
+            /*
+            LDR             R3, [SP,#0xC0+data]
+            ADD.W           R11, R11, #1
+            SUBS            R6, R6, R4
+            ADD             R7, R4
+            ADD.W           R8, R8, #0x14
+            ADDS            R3, #1
+            STR             R3, [SP,#0xC0+data]
+            LDR             R3, [SP,#0xC0+key]
+            */
+
+            if(r11 == r3)
+               break;
+         }
+         else
+         {
+            //MOV             R3, 0x80140F02
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+      }
+
+      //LDRD.W          R10, R9, [SP,#0x60]
+
+      return loc_219C206();
    }
 }
 
