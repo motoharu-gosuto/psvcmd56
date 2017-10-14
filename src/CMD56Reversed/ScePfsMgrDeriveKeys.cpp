@@ -1756,7 +1756,1075 @@ int ScePfsCryptEngineThread_219BBB0()
    return 0;
 }
 
-int ScePfsCryptEngineThread_work_219BF20(CryptEngineWorkCtx *work_ctx)
+
+//dec sw ex
+void loc_219C64C()
 {
-   return 0;
+   /*
+   LDR             R5, [SP,#0xC0+key]
+   */
+
+   if(r5 == 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   LDR.W           R10, [SP,#0xC0+key]
+   MOVS            R5, #0
+   MOV             R6, R5
+   MOV             R7, R9
+   */
+
+   while(true)
+   {
+      /*
+      LDRD.W          R8, R9, [SP,#0x48]
+      ADDS            R6, #1
+      LDR             R2, [SP,#0xC0+hmac_key]
+      MOV             R0, R11 ; cmac_key
+      LDR             R3, [SP,#0xC0+ignored] ; ignored
+      MOV             R1, R7  ; key
+      ADDS.W          R8, R8, R5
+      STR             R4, [SP,#0xC0+arg_8_i] ; size0
+      ADD             R2, R5
+      ADC.W           R9, R9, #0
+      STRD.W          R2, R2, [SP,#0x10]
+      MOVS            R2, #0x80 ; keysize
+      STR             R4, [SP,#0xC0+arg_C_i] ; size1
+      ADD             R5, R4
+      STR             R3, [SP,#0xC0+arg_18_i] ; flag
+      STRD.W          R8, R9, [SP]
+      BL              pfs_decrypt_sw_219D174
+      */
+
+      if(r6 == r10)
+         break;
+   }
+
+   /*
+   MOVS            R3, #0
+   LDR             R5, [SP,#0xC0+crypt_ctx]
+   STR             R3, [R5,#0xC] ; set error to field 0xC
+   */
+}
+
+//dec hw ex
+void loc_0219C928()
+{
+   /*
+   LDR             R6, [SP,#0xC0+key]
+   */
+
+   if(r6 == 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   LDR             R7, [SP,#0xC0+key_id]
+   MOV             R10, R9
+   LDR.W           R9, [SP,#0xC0+hmac_key]
+   MOV             R6, R5
+   MOV             R8, R7
+   MOV             R7, R11
+   LDR.W           R11, [SP,#0xC0+key]
+   */
+
+   while(true)
+   {
+      /*
+      ADD.W           R3, R9, R5
+      LDR             R0, [SP,#0xC0+ignored]
+      STR             R3, [SP,#0xC0+arg_8_i] ; src
+      CMP             R4, R8
+      ITE CC
+      MOVCC           LR, R4
+      MOVCS           LR, R8
+      STR             R3, [SP,#0xC0+arg_C_i] ; dst
+      ADDS            R6, #1
+      LDRD.W          R2, R3, [SP,#0x48]
+      SUB.W           R8, R8, R4
+      LDR             R1, [SP,#0xC0+unk0]
+      STR             R0, [SP,#0xC0+arg_10_i] ; flag
+      MOV             R0, R7  ; key
+      ADDS            R2, R2, R5 ; iv_seed0
+      STR             R4, [SP,#0xC0+arg_4_i] ; size1
+      STR             R1, [SP,#0xC0+arg_14_i] ; key_id
+      ADC.W           R3, R3, #0
+      MOV             R1, R10 ; iv_xor_key
+      STR.W           LR, [SP,#0xC0+arg_0_i] ; size0
+      BL              pfs_decrypt_hw_219D480
+      ADD             R5, R4
+      */
+
+      if(r6 == r11)
+         break;
+   }
+
+   /*
+   MOVS            R3, #0
+   LDR             R5, [SP,#0xC0+crypt_ctx]
+   STR             R3, [R5,#0xC] ; set error to field 0xC
+   */
+   return;
+}
+
+//dec sw
+void loc_219C7EA()
+{
+   /*
+   LDR             R5, [SP,#0xC0+hmac_key]
+   MOV             R1, R9  ; key
+   LDR             R7, [SP,#0xC0+ignored]
+   MOV             R0, R11 ; cmac_key
+   STR             R2, [SP,#0xC0+arg_0_i] ; seed0
+   MOVS            R2, #0x80 ; keysize
+   STR             R3, [SP,#0xC0+arg_4_i] ; seed1
+   STRD.W          R5, R5, [SP,#0x10]
+   STRD.W          R4, R4, [SP,#8]
+   STR             R7, [SP,#0xC0+arg_18_i] ; flag
+   BL              pfs_decrypt_sw_219D174
+   LDRD.W          R3, R5, [R10,#0x18]
+   LDR.W           R1, [R10,#0x34]
+   */
+}
+
+//dec hw
+void loc_0219C6F8()
+{
+   /*
+   LDR             R5, [SP,#0xC0+hmac_key]
+   MOV             R1, R9  ; iv_xor_key
+   LDR             R7, [SP,#0xC0+ignored] ; flag
+   MOV             R0, R11 ; key
+   STRD.W          R4, R4, [SP] ; int size0, int size1
+   STRD.W          R5, R5, [SP,#0xC0+arg_8_i] ; char *src, char *dst
+   LDR             R5, [SP,#0xC0+unk0] ; key_id
+   STRD.W          R7, R5, [SP,#0xC0+arg_10_i] ; int flag, int key_id
+   BL              pfs_decrypt_hw_219D480
+   LDRD.W          R3, R5, [R10,#0x18]
+   LDR.W           R1, [R10,#0x34]
+   */
+}
+
+//dec sw
+void loc_219C7C6()
+{
+   /*
+   LDR             R7, [SP,#0xC0+ignored]
+   MOV             R1, R9  ; key
+   STR             R2, [SP,#0xC0+arg_0_i] ; seed0
+   MOV             R0, R11 ; cmac_key
+   STR             R3, [SP,#0xC0+arg_4_i] ; seed1
+   MOVS            R2, #0x80 ; keysize
+   STRD.W          R4, R5, [SP,#0xC]
+   STR             R5, [SP,#0xC0+arg_14_i] ; dst_cmac_base
+   STR             R4, [SP,#0xC0+arg_8_i] ; size0
+   STR             R7, [SP,#0xC0+arg_18_i] ; flag
+   BL              pfs_decrypt_sw_219D174
+   LDRD.W          R3, R5, [R10,#0x18]
+   LDR.W           R1, [R10,#0x34]
+   */
+}
+
+//dec hw
+void loc_0219C544()
+{
+   /*
+   CMP             R0, R4
+   IT CS
+   MOVCS           R0, R4
+   STR             R5, [SP,#0xC0+arg_C_i] ; size1
+   STMEA.W         SP, {R0,R4,R5}
+   MOV             R1, R9  ; iv_xor_key
+   LDR             R5, [SP,#0xC0+ignored]
+   MOV             R0, R11 ; key
+   LDR             R6, [SP,#0xC0+unk0]
+   STRD.W          R5, R6, [SP,#0x10]
+   BL              pfs_decrypt_hw_219D480
+   LDRD.W          R3, R5, [R10,#0x18]
+   LDR.W           R1, [R10,#0x34]
+   */
+}
+
+//dec sw ex
+void loc_219C782()
+{
+   if(r5 == 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+   
+   /*
+   MOV             R3, R5
+   MOVS            R6, #0
+   MOV             R5, R6
+   MOV             R10, R3
+   */
+
+   while(true)
+   {
+      /*
+      LDRD.W          R2, R3, [SP,#0x28]
+      ADD.W           R1, R8, R6
+      ADD.W           LR, R7, R6
+      STR             R1, [SP,#0xC0+arg_10_i] ; src_cmac_base
+      STRD.W          R4, R4, [SP,#8]
+      ADDS            R5, #1
+      ADDS            R2, R2, R6
+      MOV             R0, R11 ; cmac_key
+      ADC.W           R3, R3, #0
+      MOV             R1, R9  ; key
+      STRD.W          R2, R3, [SP]
+      MOVS            R2, #0x80 ; keysize
+      LDR             R3, [SP,#0xC0+ignored] ; ignored
+      ADD             R6, R4
+      STRD.W          LR, R3, [SP,#0x14]
+      BL              pfs_decrypt_sw_219D174
+      */
+
+
+      if(r5 == r10)
+         break;
+   }
+
+   /*
+   MOVS            R3, #0
+   LDR             R5, [SP,#0xC0+crypt_ctx]
+   STR             R3, [R5,#0xC] ; set error to field 0xC
+   */
+   return;
+}
+
+//dec hw ex
+void loc_0219C5C6()
+{
+   if(r5 == 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   MOV             R3, R5
+   MOVS            R6, #0
+   STR.W           R9, [SP,#0xC0+var_8C]
+   MOV             R5, R11
+   MOV             R9, R7
+   MOV             R10, R6
+   MOV             R7, R4
+   MOV             R11, R3
+   MOV             R4, R2
+   */
+
+   while(true)
+   {
+      /*
+      CMP             R4, R7
+      ITE CC
+      MOVCC           R2, R4
+      MOVCS           R2, R7
+      ADD.W           R3, R8, R6
+      STR             R2, [SP,#0xC0+arg_0_i] ; size0
+      ADD.W           LR, R9, R6
+      STR             R3, [SP,#0xC0+arg_8_i] ; src
+      ADD.W           R10, R10, #1
+      LDRD.W          R2, R3, [SP,#0x28]
+      SUBS            R4, R4, R7
+      LDR             R0, [SP,#0xC0+ignored]
+      LDR             R1, [SP,#0xC0+unk0]
+      ADDS            R2, R2, R6 ; iv_seed0
+      STR             R7, [SP,#0xC0+arg_4_i] ; size1
+      STR             R0, [SP,#0xC0+arg_10_i] ; flag
+      ADC.W           R3, R3, #0
+      STR             R1, [SP,#0xC0+arg_14_i] ; key_id
+      MOV             R0, R5  ; key
+      LDR             R1, [SP,#0xC0+var_8C] ; iv_xor_key
+      ADD             R6, R7
+      STR.W           LR, [SP,#0xC0+arg_C_i] ; dst
+      BL              pfs_decrypt_hw_219D480
+      */
+
+      if(r10 == r11)
+         break;
+   }
+   
+   /*
+   MOVS            R3, #0
+   LDR             R5, [SP,#0xC0+crypt_ctx]
+   STR             R3, [R5,#0xC] ; set error to field 0xC
+   */
+   return;
+}
+
+
+void loc_219C622()
+{
+   /*
+   LDR             R6, [SP,#0xC0+iv_xor_key]
+   AND.W           R5, R6, #0x4000
+   UXTH            R5, R5
+   */
+
+   if(r5 == 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   LDR             R7, [SP,#0xC0+iv_xor_key]
+   LSLS            R1, R7, #0x10
+   */
+
+   if(r1 < 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   LDR             R6, [SP,#0xC0+ignored]
+   AND.W           R3, R6, #0x41
+   */
+
+   if(r3 == 0x41)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   //LDR             R6, [SP,#0xC0+var_8C]
+
+   if(r6 <= 0x1F)
+   {
+      /*
+      LDR             R6, [SP,#0xC0+var_8C]
+      MOVS            R2, #1
+      MOV             R3, 0xC0000B03
+      LSLS            R2, R6
+      ANDS            R3, R2
+      */
+
+      if(r3 == 0)
+      {
+         return loc_219C64C();
+      }
+      else
+      {
+         return loc_0219C928();
+      }
+   }
+   else
+   {
+      return loc_219C64C();
+   }
+}
+
+void loc_0219C218()
+{
+   /*
+   LDR             R7, [SP,#0xC0+iv_xor_key]
+   LDR.W           R3, [R10,#0x18]
+   AND.W           R6, R7, #0x4000
+   */
+
+   if(r3 == 0)
+   {
+      #pragma region
+
+      /*
+      UXTH            R6, R6
+      LDR.W           R1, [R10,#0x34]
+      */
+
+      if(r6 == 0)
+      {
+         //LSLS            R2, R7, #0x10
+         if(r2 >= 0)
+         {
+            /*
+            LDR             R7, [SP,#0xC0+ignored]
+            AND.W           R2, R7, #0x41
+            */
+
+            if(r2 != 0x41)
+            {
+               /*
+               LDR             R5, [SP,#0xC0+var_8C]
+               MUL.W           R2, R4, R1
+               MOV             R3, R6  ; ignored
+               */
+
+               if(r5 > 0x1F)
+               {
+                  loc_219C7EA();
+               }
+               else
+               {
+                  /*
+                  MOVS            R0, #1
+                  MOVW            R1, #0xB03
+                  LSLS            R0, R5
+                  MOVT.W          R1, #0xC000
+                  ANDS            R1, R0
+                  */
+
+                  if(r1 == 0)
+                  {
+                     loc_219C7EA();
+                  }
+                  else
+                  {
+                     loc_0219C6F8();
+                  }
+               }
+            }
+         }
+      }
+
+      #pragma endregion
+   }
+   else
+   {
+      /*
+      LDR.W           R1, [R10,#0x34]
+      UXTH            R6, R6
+      */
+   }
+
+   /*
+   LDR.W           R2, [R10,#0x2C]
+   ADDS            R0, R5, R3
+   CMP             R0, R2
+   */
+
+   if(r0 < r2)
+   {
+      /*
+      LDR.W           R0, [R10,#0x40]
+      */
+
+      if(r6 != 0)
+      {
+         /*
+         MUL.W           R3, R4, R3
+         LDR.W           R1, [R10,#0x38]
+         LDR.W           R7, [R10,#0x10]
+         LDR.W           R8, [SP,#0xC0+hmac_key]
+         MUL.W           R2, R4, R5
+         SUBS            R1, R3, R1
+         ADD             R8, R3
+         ADD             R7, R1
+         */
+
+         if(r8 == r7)
+         {
+            //MOVS            R3, #0
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+         else
+         {
+            /*
+            MOV             R0, R7  ; destination
+            MOV             R1, R8  ; source
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+            */
+
+            //MOVS            R3, #0
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+      }
+      else
+      {
+         #pragma region
+
+         /*
+         LDR             R7, [SP,#0xC0+iv_xor_key]
+         SXTH            R7, R7
+         STR             R7, [SP,#0xC0+key]
+         */
+
+         if(r7 >= 0)
+         {
+            /*
+            LDR             R7, [SP,#0xC0+ignored]
+            AND.W           LR, R7, #0x41
+            */
+
+            if(lr != 0x41)
+            {
+               /*
+               SUBS            R5, R2, #1
+               LDR             R7, [SP,#0xC0+var_8C]
+               ADDS            R2, R1, R5
+               LDR             R1, [SP,#0xC0+hmac_key]
+               MOV             R3, R6  ; ignored
+               MUL.W           R2, R4, R2
+               MLA.W           R5, R4, R5, R1
+               */
+
+               if(r7 > 0x1F)
+               {
+                  loc_219C7C6();
+               }
+               else
+               {
+                  /*
+                  MOV.W           LR, #1
+                  MOVW            R1, #0xB03
+                  LSL.W           LR, LR, R7
+                  MOVT.W          R1, #0xC000
+                  AND.W           R1, LR, R1
+                  */
+
+                  if(r1 == 0)
+                  {
+                     loc_219C7C6();
+                  }
+                  else
+                  {
+                     loc_0219C544();
+                  }
+               }
+            }
+         }
+
+         #pragma endregion
+
+         /*
+         MUL.W           R8, R4, R3
+         LDR.W           R7, [R10,#0x38]
+         LDR.W           R0, [R10,#0x10]
+         LDR             R6, [SP,#0xC0+hmac_key]
+         MUL.W           R2, R4, R5
+         SUB.W           R7, R8, R7
+         ADD             R7, R0
+         ADD             R8, R6
+         */
+
+         //goto loc_219C582
+      }
+   }
+   else
+   {
+      /*
+      MUL.W           R8, R4, R3
+      LDR.W           R7, [R10,#0x38]
+      LDR.W           LR, [R10,#0x10]
+      LDR             R0, [SP,#0xC0+hmac_key]
+      MUL.W           R2, R4, R5
+      SUB.W           R7, R8, R7
+      ADD             R7, LR
+      ADD             R8, R0
+      */
+
+      if(r6 != 0)
+      {
+         if(r8 == r7)
+         {
+            //MOVS            R3, #0
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+         else
+         {
+            /*
+            MOV             R0, R7  ; destination
+            MOV             R1, R8  ; source
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+            */
+
+            //MOVS            R3, #0
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+      }
+      else
+      {
+         /*
+         LDR             R6, [SP,#0xC0+iv_xor_key]
+         SXTH            R6, R6
+         STR             R6, [SP,#0xC0+key]
+         */
+
+         //goto loc_219C582
+      }
+   }
+
+   //loc_219C582
+
+   /*
+   LDR             R6, [SP,#0xC0+key]
+   */
+
+   if(r6 < 0)
+   {
+      if(r8 == r7)
+      {
+         //MOVS            R3, #0
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+         return;
+      }
+      else
+      {
+         /*
+         MOV             R0, R7  ; destination
+         MOV             R1, R8  ; source
+         BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+         */
+
+         //MOVS            R3, #0
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+         return;
+      }
+   }
+   else
+   {
+      /*
+      LDR             R6, [SP,#0xC0+ignored]
+      AND.W           R0, R6, #0x41
+      */
+
+      if(r0 == 0x41)
+      {
+         if(r8 == r7)
+         {
+            //MOVS            R3, #0
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+         else
+         {
+            /*
+            MOV             R0, R7  ; destination
+            MOV             R1, R8  ; source
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+            */
+
+            //MOVS            R3, #0
+            //LDR             R5, [SP,#0xC0+crypt_ctx]
+            //STR             R3, [R5,#0xC] ; set error to field 0xC
+            return;
+         }
+      }
+      else
+      {
+         /*
+         ADD             R3, R1
+         LDR             R6, [SP,#0xC0+var_8C]
+         MUL.W           R3, R4, R3
+         VDUP.32         D16, R3
+         VSHR.U64        D16, D16, #0x20
+         VSTR            D16, [SP,#0xC0+key]
+         */
+
+         if(r6 > 0x1F)
+         {
+            loc_219C782();
+         }
+         else
+         {
+            /*
+            LDR             R6, [SP,#0xC0+var_8C]
+            MOVS            R1, #1
+            MOV             R3, 0xC0000B03
+            LSLS            R1, R6
+            ANDS            R3, R1
+            */
+
+            if(r3 == 0)
+            {
+               loc_219C782();
+            }
+            else
+            {
+               loc_0219C5C6();
+            }
+         }
+      }
+   }
+}
+
+
+void loc_219C206()
+{
+   /*
+   LDR.W           R5, [R10,#0x1C]
+   ADD.W           R11, R9, #0x2C
+   ADD.W           R9, R9, #0x3C
+   */
+
+   if(r5 == 0)
+   {
+      loc_219C622();
+   }
+   else
+   {
+      loc_0219C218();
+   }
+}
+
+void loc_219C3A0()
+{
+   /*
+   LDR             R5, [SP,#0xC0+ignored]
+   AND.W           R3, R5, #0x41
+   */
+
+   if(r3 == 0x41)
+   {
+      return loc_219C206();
+   }
+
+   //LDR             R5, [SP,#0xC0+key]
+
+   if(r5 == 0)
+   {
+      return loc_219C206();
+   }
+
+   /*
+   LDR             R0, [SP,#0xC0+ignored]
+   MOV             R8, R6  ; real digest for comparison
+   STRD.W          R10, R9, [SP,#0x5C]
+   MOV.W           R11, #0
+   MOV             R9, R4  ; hmac_src_size
+   LDR             R6, [SP,#0xC0+hmac_key] ; hmac_src
+   AND.W           R7, R0, #9
+   ADD             R5, SP, #0xC0+bytes14 ; hmac_digest
+   MOV             R4, R7
+   LDR.W           R10, [SP,#0xC0+unk1] ; hmac_key
+   LDR             R7, [SP,#0xC0+key]
+   */
+
+   //loc_219C3E4
+   while(true)
+   {
+      /*
+      MOV             R1, R10
+      MOV             R0, R5  ; digest_result
+      MOV             R2, R6  ; src
+      MOV             R3, R9  ; size
+      BL              hmac_sha1_digest_219DE7C
+      MOV             R0, R8  ; unk0
+      MOV             R1, R5  ; unk1 - calculated result
+      BL              proc_verify_14_bytes_219DE44
+      */
+
+      if((r0 != 0) || (r4 == 1))
+      {
+         /*
+         ADD.W           R11, R11, #1
+         ADD             R6, R9
+         ADD.W           R8, R8, #0x14
+         */
+         if(r11 == r7)
+            break;
+      }
+      else
+      {
+         //MOV             R3, 0x80140F02
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+         return;
+      }
+   }
+
+   /*
+   MOV             R4, R9
+   LDRD.W          R10, R9, [SP,#0x5C]
+   */
+
+   return loc_219C206();
+}
+
+void loc_0219C176()
+{
+   /*
+   LDR             R7, [SP,#0xC0+ignored]
+   AND.W           R3, R7, #0x41
+   */
+
+   if(r3 == 0x41)
+   {
+      return  loc_219C206();
+   }
+
+   /*
+   LDRD.W          R0, R1, [SP,#0x48]
+   MOV             R2, R4  ; unk2
+   MOV             R3, R5  ; unk3
+   BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
+   STR             R0, [SP,#0xC0+data]
+   LDR             R0, [SP,#0xC0+key]
+   */
+
+   if(r0 == 0)
+   {
+      return loc_219C206();
+   }
+
+   /*
+   LDR             R1, [SP,#0xC0+ignored]
+   ADD.W           R12, SP, #0xC0+data
+   MOV             R8, R6
+   MOV             R11, R5
+   STR.W           R9, [SP,#0xC0+var_5C]
+   ADD             R5, SP, #0xC0+bytes14
+   AND.W           R1, R1, #9
+   LDR             R7, [SP,#0xC0+hmac_key]
+   STRD.W          R1, R10, [SP,#0x5C]
+   MOV             R10, R12
+   LDRD.W          R6, R9, [SP,#0x54]
+   */
+
+   //loc_219C1CE 
+   while(true)
+   {
+      /*
+      MOV             R1, R9
+      MOV             R2, R10 ; data
+      MOVS            R3, #4  ; data_len
+      ADD             R0, SP, #0xC0+digest ; digest
+      BL              hmacSha1Digest_219DE68
+      ADD             R1, SP, #0xC0+digest ; key_ctx_klicensee
+      MOV             R0, R5  ; digest_result
+      MOV             R2, R7  ; src
+      CMP             R4, R6
+      ITE CC
+      MOVCC           R3, R4
+      MOVCS           R3, R6  ; size
+      BL              hmac_sha1_digest_219DE7C
+      MOV             R0, R8  ; unk0
+      MOV             R1, R5  ; unk1
+      BL              proc_verify_14_bytes_219DE44
+      */
+
+      //LDR             R2, [SP,#0xC0+var_64]
+
+      if((r0 != 0) || (r2 == 1))
+      {
+         /*
+         LDR             R3, [SP,#0xC0+data]
+         ADD.W           R11, R11, #1
+         SUBS            R6, R6, R4
+         ADD             R7, R4
+         ADD.W           R8, R8, #0x14
+         ADDS            R3, #1
+         STR             R3, [SP,#0xC0+data]
+         LDR             R3, [SP,#0xC0+key]
+         */
+
+         if(r11 == r3)
+            break;
+      }
+      else
+      {
+         //MOV             R3, 0x80140F02
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+         return;
+      }
+   }
+
+   //LDRD.W          R10, R9, [SP,#0x60]
+
+   return loc_219C206();
+}
+
+
+void crypt_engine_work_3()
+{
+   /*
+   LDR.W           R9, [R10,#0xC]
+   LDR.W           R2, [R10,#0x34]
+   LDR.W           R5, [R10,#0x2C]
+   LDR.W           R4, [R9,#0x28]
+   LDRH.W          R1, [R9,#0xC]
+   LDRH.W          R6, [R9,#0xE]
+   SUBS            R7, R5, #1
+   LDR.W           R3, [R10,#0x40]
+   MUL.W           R2, R4, R2
+   STR             R5, [SP,#0xC0+key]
+   SUBS            R1, #2
+   LDRH.W          R5, [R9,#0x10]
+   UXTH            R1, R1
+   STR             R6, [SP,#0xC0+ignored]
+   LDRH.W          R6, [R9,#0x12]
+   MLA.W           R3, R4, R7, R3
+   VDUP.32         D16, R2
+   STR             R5, [SP,#0xC0+unk0]
+   
+   VSHR.U64        D16, D16, #0x20
+   STR             R6, [SP,#0xC0+iv_xor_key]
+   STR             R1, [SP,#0xC0+var_8C]
+   LDR.W           R6, [R10,#0x4C]
+   STR             R3, [SP,#0xC0+key_id]
+   VSTR            D16, [SP,#0xC0+unk3]
+   */
+
+   if(r1 > 0x1F)
+   {
+      /*
+      LDR.W           R5, [R10,#0x50]
+      STR             R5, [SP,#0xC0+hmac_key]
+      */
+   }
+   else
+   {
+      /*
+      MOVS            R2, #1
+      MOVW            R3, #0xB03
+      LSLS            R2, R1
+      MOVT.W          R3, #0xC000
+      ANDS            R3, R2
+      */
+
+      if(r3 == 0)
+      {
+         /*
+         LDR.W           R5, [R10,#0x50]
+         STR             R5, [SP,#0xC0+hmac_key]
+         */
+      }
+      else
+      {
+         /*
+         LDR.W           R5, [R10,#0x54] ; R10 = CryptEngineSubctx*
+         STR             R5, [SP,#0xC0+hmac_key]
+         */
+      }
+   }
+
+   /*
+   LDR             R5, [SP,#0xC0+iv_xor_key]
+   LSLS            R5, R5, #0x12
+   */
+
+   if(r5 < 0)
+   {
+      return loc_219C206();
+   }
+
+   /*
+   LDR             R7, [SP,#0xC0+iv_xor_key]
+   LSLS            R0, R7, #0x10
+   */
+
+   if(r0 < 0)
+   {
+      return loc_219C206();
+   }
+
+   /*
+   LDR             R7, [SP,#0xC0+ignored]
+   AND.W           R5, R7, #0x20
+   UXTH            R5, R5
+   */
+
+   if(r5 != 0)
+   {
+      return  loc_219C206();
+   }
+
+   /*
+   LDR             R7, [SP,#0xC0+var_8C]
+   ADD.W           R0, R9, #0x4C
+   STR             R0, [SP,#0xC0+unk1]
+   */
+
+   if(r7 > 0x1F)
+   {
+      return loc_219C3A0();
+   }
+   else
+   {
+      /*
+      MOVS            R2, #1
+      MOVW            R3, #0xB03
+      LSLS            R2, R7
+      MOVT.W          R3, #0xC000
+      ANDS            R3, R2
+      */
+
+      if(r3 == 0)
+      {
+         return loc_219C3A0();
+      }
+      else
+      {
+         return loc_0219C176();
+      }
+   }
+}
+
+void crypt_engine_work_2_4()
+{
+
+}
+
+void ScePfsCryptEngineThread_work_219BF20(CryptEngineWorkCtx *work_ctx)
+{
+   /*
+   LDR.W           R10, [R0,#8] ; get CryptEngineSubctx*
+   LDR.W           R3, [R10,#8] ; get opt code
+   STR             R0, [SP,#0xC0+crypt_ctx]
+   */
+
+   switch(r3)
+   {
+   case 2:
+      crypt_engine_work_2_4();
+      break;
+   case 3:
+      crypt_engine_work_3();
+      break;
+   case 4:
+      crypt_engine_work_2_4();
+      break;
+   default:
+      break;
+   }
 }
