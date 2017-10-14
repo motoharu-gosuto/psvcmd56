@@ -257,7 +257,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, 
 
 //############## LEVEL 1 - CRYPTO BASE WRAPPERS ###############
 
-//#### GROUP 1 ####
+//#### GROUP 1 (hw dec/enc) ####
 
 //encrypt / decrypt
 
@@ -417,7 +417,7 @@ int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32
    return 0;
 }
 
-//#### GROUP 2 ####
+//#### GROUP 2 (hw cmac) ####
 
 // FUNCTIONS ARE SIMILAR
 
@@ -587,7 +587,7 @@ int AESCMACWithKeygen_base_2_219DD64(const char* cmac_key, char* iv, uint32_t si
    return 0;
 }
 
-//#### GROUP 3 ####
+//#### GROUP 3 (sw dec/enc) ####
 
 // this is most likely SW version of CMAC. both dec and enc functions are implemented
 //https://crypto.stackexchange.com/questions/47223/xex-mode-how-to-perturb-the-tweak
@@ -659,7 +659,7 @@ int AESCMACEncryptSw_base_219D694(const char* subkey, const char* dst_key, const
    return result0;
 }
 
-//#### GROUP 4 ####
+//#### GROUP 4 (sw cmac) ####
 
 // this is some CMAC variation but I am not sure ? both functions are similar but most likely ment to be dec / enc
 
@@ -736,11 +736,11 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 #define PFS_CRYPTO_USE_CMAC   0x0001 //1
 #define PFS_CRYPTO_USE_KEYGEN 0x0002 //2
 
-//#### GROUP 1, GROUP 2 ####
+//#### GROUP 1, GROUP 2 (hw dec/enc) ####
 
 char g_1771100[0x10] = {0};
 
-int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int pfs_decrypt_hw_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
    char iv[0x10] = {0};
 
@@ -824,7 +824,7 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tw
    return 0;
 }
 
-int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int pfs_encrypt_hw_219D2DC(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
    char iv[0x10] = {0};
 
@@ -908,9 +908,9 @@ int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tw
    return 0;
 }
 
-//#### GROUP 3, GROUP 4 ####
+//#### GROUP 3, GROUP 4 (sw dec/enc) ####
 
-int aes_decrypt_aes_cmac_219D174(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
+int pfs_decrypt_sw_219D174(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
 {
    char iv[0x10] = {0};
 
@@ -988,7 +988,7 @@ int aes_decrypt_aes_cmac_219D174(const char* key, const char* subkey_key, uint32
    return 0;
 }
 
-int aes_encrypt_aes_cmac_219D00C(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
+int pfs_encrypt_sw_219D00C(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
 {
    char iv[0x10] = {0};
 
