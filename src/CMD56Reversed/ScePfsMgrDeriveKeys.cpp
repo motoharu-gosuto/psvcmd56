@@ -742,23 +742,23 @@ char g_1771100[0x10] = {0};
 
 int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, int size, int block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
-   char IV_3C[0x10] = {0};
+   char iv[0x10] = {0};
 
    int tk_tmp00 = tweak_key0;
    int tk_tmp10 = tweak_key1;
    
    for(int i = 0; i < 8; i++)
    {
-      IV_3C[i] = tk_tmp00;
+      iv[i] = tk_tmp00;
 
       tk_tmp00 = (tk_tmp00 >> 8) | (tk_tmp10 << 24);
       tk_tmp10 = tk_tmp10 >> 8;
    }
 
-   memset(IV_3C + 8, 0, 8);
+   memset(iv + 8, 0, 8);
 
    for(int i = 0; i < 0x10; i++)
-      IV_3C[i] = IV_3C[i] ^ iv_xor_key[i];
+      iv[i] = iv[i] ^ iv_xor_key[i];
   
    if(size != 0)
    {
@@ -772,16 +772,16 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tw
          
          for(int i = 0; i < 8; i++)
          {
-            IV_3C[i] = tk_tmp01;
+            iv[i] = tk_tmp01;
             
             tk_tmp01 = (tk_tmp01 >> 8) | (tk_tmp11 << 24);
             tk_tmp11 = tk_tmp11 >> 8;
          }
 
-         memset(IV_3C + 8, 0, 8);
+         memset(iv + 8, 0, 8);
 
          for(int i = 0; i < 0x10; i++)
-            IV_3C[i] = IV_3C[i] ^ iv_xor_key[i];
+            iv[i] = iv[i] ^ iv_xor_key[i];
 
          // select block_size if we did not yet reach tail of the data. 
          // or select bytes_left which will be the size of the tail in the end
@@ -795,16 +795,16 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tw
          if((flag & PFS_CRYPTO_USE_KEYGEN) != 0)
          {
             if((flag & PFS_CRYPTO_USE_CMAC) != 0)
-               AESCMACWithKeygen_base_2_219DD64(key, IV_3C, size_arg, src + offset, g_1771100, key_id);
+               AESCMACWithKeygen_base_2_219DD64(key, iv, size_arg, src + offset, g_1771100, key_id);
             else
-               AESCBCDecryptWithKeygen_base_219DAAC(key, IV_3C, size_arg, src + offset, dst + offset, key_id);
+               AESCBCDecryptWithKeygen_base_219DAAC(key, iv, size_arg, src + offset, dst + offset, key_id);
          }
          else
          {
             if((flag & PFS_CRYPTO_USE_CMAC) != 0)
-               AESCMAC_base_1_219DC08(key, IV_3C, size_arg, src + offset, g_1771100);
+               AESCMAC_base_1_219DC08(key, iv, size_arg, src + offset, g_1771100);
             else
-               AESCBCDecrypt_base_219D950(key, IV_3C, size_arg, src + offset, dst + offset);
+               AESCBCDecrypt_base_219D950(key, iv, size_arg, src + offset, dst + offset);
          }
 
          offset = offset + block_size;
@@ -824,207 +824,84 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tw
    return 0;
 }
 
-int aes_encrypt_aes_cmac_219D2DC(char *key, char *iv_xor_key, int iv_seed0, int iv_seed1, int size0, int size1, char *src, char *dst, int flag, int key_id)
+int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, int size, int block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
-   int r4 = key_id;
-   int r5 = r1;
-   int r6 = IV+7;
-   int r1 = var_3D;
-   int r7 = flag;
-   key = key;
-   var_key_id = r4;
-   seeds[0] = r2;
-   seeds[1] = r3;
-   int r4 = size0;
-   num = r4;
-   int r10 = size1;
-   int r4 = src;
-   source = r4;
-   int r4 = dst;
-   destination = r4;
-   
-   while(true)
-   {
-      ++r1[0] = r2;
-      int r2 = r2 >> 8;
-      int r2 = r2 | (r3 << 24);
-      int r3 = r3 >> 8;
+   char iv[0x10] = {0};
 
-      if(r1 == r6)
-         break;
+   int tk_tmp00 = tweak_key0;
+   int tk_tmp10 = tweak_key1;
+
+   for(int i = 0; i < 8; i++)
+   {
+      iv[i] = tk_tmp00;
+
+      tk_tmp00 = (tk_tmp00 >> 8) | (tk_tmp10 << 24);
+      tk_tmp10 = tk_tmp10 >> 8;
    }
 
-   int r2 = 0;
-   int r4 = IV;
-   int r3 = r2;
-   
-   IV[0x8] = r2;
-   IV[0x9] = r2;
-   IV[0xA] = r2;
-   IV[0xB] = r2;
-   IV[0xC] = r2;
-   IV[0xD] = r2;
-   IV[0xE] = r2;
-   IV[0xF] = r2;
+   memset(iv + 8, 0, 8);
 
-   while(true)
+   for(int i = 0; i < 0x10; i++)
+      iv[i] = iv[i] ^ iv_xor_key[i];
+
+   if(size != 0)
    {
-      int r2 = r4[r3];
-      int r1 = r5[r3];
-      int r2 = r2 ^ r1;
-      r4[r3] = r2;
-      int r3 = r3 + 1;
-      
-      if(r3 == 0x10)
-         break;
-   }
-   
-   int r0 = num;
-
-   if(r0 == 0)
-   {
-      int r7 = r7 & 1;
-      flag1 = r7;
-   }
-   else
-   {
-      #pragma region
-
-      int r9 = num;
-      int r3 = r7 & 2;
-      int r7 = r7 & 1;
-
-      int r11 = AESCBCEncrypt_base_219D8AC;
-      int r12 = AESCBCEncryptWithKeygen_base_219D9F4;
-
-      int r8 = 0;
-
-      int r0 = (int)r7;
-      flag1 = r7;
-      int r3 = (int)r3;
-      flag3 = r0;
-      
-      int r7 = r8;
-      flag2 = r3;
+      int offset = 0;
+      int bytes_left = size;
 
       do
-      {
-         int r2 = seeds[0];
-         int r3 = seeds[3];
-         int r1 = var_3D;
-         int r2 = r2 + r8;
-         int r3 = r3 + 0;
+      {         
+         int tk_tmp01 = tweak_key0 + offset;
+         int tk_tmp11 = tweak_key1 + 0;
 
-         while(true)
+         for(int i = 0; i < 8; i++)
          {
-            ++r1[0] = r2;
-            int r2 = r2 >> 8;
-            int r2 = r2 | (r3 << 24);
-            int r3 = r3 >> 8;
+            iv[i] = tk_tmp01;
 
-            if(r6 == r1)
-               break;
+            tk_tmp01 = (tk_tmp01 >> 8) | (tk_tmp11 << 24);
+            tk_tmp11 = tk_tmp11 >> 8;
          }
 
-         int r3 = 0;
-         
-         IV[0x8] = r7;
-         IV[0x9] = r7;
-         IV[0xA] = r7;
-         IV[0xB] = r7;
-         IV[0xC] = r7;
-         IV[0xD] = r7;
-         IV[0xE] = r7;
-         IV[0xF] = r7;
+         memset(iv + 8, 0, 8);
 
-         while(true)
+         for(int i = 0; i < 0x10; i++)
+            iv[i] = iv[i] ^ iv_xor_key[i];
+
+         // select block_size if we did not yet reach tail of the data. 
+         // or select bytes_left which will be the size of the tail in the end
+
+         int size_arg = 0;
+         if(block_size < bytes_left)
+            size_arg = block_size;
+         else
+            size_arg = bytes_left;
+
+         if((flag & PFS_CRYPTO_USE_KEYGEN) != 0)
          {
-            int r2 = r4[r3];
-            int r1 = r5[r3];
-            int r2 = r2 ^ r1;
-            r4[r3] = r2;
-
-            int r3 = r3 + 1;
-
-            if(r3 == 0x10)
-               break;
-         }
-
-         int r3 = source;
-         if(r10 < r9)
-         {
-            int r2 = r10;
+            if((flag & PFS_CRYPTO_USE_CMAC) != 0)
+               AESCMACWithKeygen_base_1_219DCAC(key, iv, size_arg, src + offset, g_1771100, key_id);
+            else
+               AESCBCEncryptWithKeygen_base_219D9F4(key, iv, size_arg, src + offset, dst + offset, key_id);
          }
          else
          {
-            int r2 = r9;
+            if((flag & PFS_CRYPTO_USE_CMAC) != 0)
+               AESCMAC_base_2_219DB64(key, iv, size_arg, src + offset, g_1771100);
+            else
+               AESCBCEncrypt_base_219D8AC(key, iv, size_arg, src + offset, dst + offset);
          }
 
-         int r1 = flag3;
-
-         int r3 = r3 + r8;
-
-         if(r1 != 0)
-         {
-            int r1 = 0x1771100;
-            
-            int r12 = AESCMACWithKeygen_base_1_219DCAC;
-            int r11 = AESCMAC_base_2_219DB64;
-         }
-         else
-         {
-            int r1 = destination;
-            int r1 = r1 + r8;
-         }
-
-         int r0 = flag2;
-         arg_0_i = r1;
-
-         if(r0 == 0)
-         {
-            var_70 = r12;
-            int r1 = r4;
-            int r0 = key;
-            
-            r11();
-
-            int r12 = var_70;
-         }
-         else
-         {
-            int r1 = var_key_id;
-            var_70 = r12;
-
-            int r0 = key;
-            arg_4_i = r1;
-            int r1 = r4;
-
-            r12();
-
-            int r12 = var_70;
-         }
-
-         int r2 = num;
-         int r8 = r8 + r10;
-         int r9 = r9 - r10;
+         offset = offset + block_size;
+         bytes_left = bytes_left - block_size;
       }
-      while(r2 > r8)
-
-      #pragma endregion
+      while(size > offset);
    }
 
-   int r4 = flag1;
-   if(r4 != 0)
+   if((flag & PFS_CRYPTO_USE_CMAC) != 0)
    {
-      int r4 = destination;
-      int r0 = source;
-
-      if(r4 != 0)
+      if(dst != src)
       {
-         int r0 = r4;
-         int r1 = source;
-         int r2 = num;
-         memcpy(r0, r1, r2);
+         memcpy(dst, src, size);
       }
    }
 
