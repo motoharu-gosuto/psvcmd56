@@ -912,7 +912,208 @@ int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tw
 
 int aes_decrypt_aes_cmac_219D174(char *cmac_key, char *key, int keysize, int ignored, int seed0, int seed1, int size0, int size1, char *src_cmac_base, char *dst_cmac_base, int flag)
 {
-   return 0;
+   /*
+   MOVW            R4, #0xA004
+   SUB             SP, SP, #0x4C
+   MOVT.W          R4, #0x9E
+   LDR             R3, [R4] ; get cookie
+   LDR.W           R9, [SP,#0x70+size0] ; size
+   STR             R4, [SP,#0x70+var_4C]
+   LDRD.W          R7, R4, [SP,#0x70+size1] ; size1, arg_10
+   STR             R2, [SP,#0x70+keysize] ; keysize
+   ORR.W           R2, R7, R9 ; R7 = size, R9 = size
+   STRD.W          R0, R1, [SP,#0x70+cmac_key] ; store cmac_key, key
+   STR             R4, [SP,#0x70+var_48] ; store arg_10 - char *src_cmac_base
+   LSLS            R2, R2, #0x1C
+   LDR             R4, [SP,#0x70+dst_cmac_base] ; char *dst_cmac_base
+   LDR             R1, [SP,#0x70+seed0] ; seed0
+   STR             R3, [SP,#0x70+var_2C] ; store cookie
+   LDR             R0, [SP,#0x70+seed1] ; seed1
+   STR             R4, [SP,#0x70+var_44] ; char *dst_cmac_base
+   LDRH.W          R10, [SP,#0x70+flag] ; flag
+   */
+
+   if(bne)
+   {
+      //MOV             R0, 0x80140609
+      return r0;
+   }
+
+   if(r9 <= 0xF)
+   {
+      //MOV             R0, 0x80140609
+      return r0;
+   }
+   
+   /*
+   LDR             R3, [SP,#0x70+var_48]
+   ORRS            R3, R4
+   LSLS            R3, R3, #0x1E
+   */
+
+   if(bne)
+   {
+      //MOV             R0, 0x8014060E
+      return r0;
+   }
+
+   /*
+   MOV             R2, R1  ; seed0
+   MOV             R3, R0  ; seed1
+   ADD.W           R1, SP, #0x70+var_3D ; before IV
+   ADD.W           R0, SP, #0x70+IV+7
+   */
+
+   while(true)
+   {
+      /*
+      STRB.W          R2, [R1,#1]! ; R2 = seed0
+      LSRS            R2, R2, #8
+      ORR.W           R2, R2, R3,LSL#24 ; R3 = seed1
+      MOV.W           R3, R3,LSR#8
+      */
+      if(r1 == r0)
+         break;
+   }
+
+   /*
+   AND.W           R4, R10, #1 ; flag
+   MOVS            R3, #0
+   STR             R4, [SP,#0x70+destination] ; flag
+   MOVW            R11, #((AESCMACDecryptSw_base_219D714+1) AND 0xFFFF) ; 0219D715 code reference
+   LDR             R4, [SP,#0x70+var_48] ; char *src_cmac_base
+   MOVT.W          R11, #(high16((AESCMACDecryptSw_base_219D714+1))) ; 0219D715 code reference
+   MOV             R5, R3  ; = 0
+   STRB.W          R3, [SP,#0x70+IV+8] ; = 0 - init IV with zeroes
+   STRB.W          R3, [SP,#0x70+IV+9] ; = 0
+   MOV             R8, R9  ; size
+   SUB.W           R10, R4, R7 ; size - calc char *src_cmac_base
+   LDR             R4, [SP,#0x70+var_44] ; char *dst_cmac_base
+   STRB.W          R3, [SP,#0x70+IV+0xA] ; = 0
+   MOV             R6, R7  ; size
+   STRB.W          R3, [SP,#0x70+IV+0xB] ;  = 0
+   SUBS            R4, R4, R7 ; size - calc  char *dst_cmac_base
+   STRB.W          R3, [SP,#0x70+IV+0xC] ;  = 0
+   STRB.W          R3, [SP,#0x70+IV+0xD] ;  = 0
+   STRB.W          R3, [SP,#0x70+IV+0xE] ;  = 0
+   STRB.W          R3, [SP,#0x70+IV+0xF] ;  = 0
+   MOV             R3, R10 ; char *src_cmac_base
+   STR             R4, [SP,#0x70+var_50] ;  char *dst_cmac_base
+   MOV             R10, R11 ; aes_encrypt_ecb_decrypt_with_key_callback_219D714
+   ADD             R4, SP, #0x70+var_2C
+   MOV             R11, R3 ; char *src_cmac_base
+   */
+
+   while(true)
+   {
+      /*
+      LDR             R3, [SP,#0x70+destination] ; flag
+      CMP             R7, R8  ; size
+      ITE CC
+      MOVCC           R1, R7  ; int size
+      MOVCS           R1, R8  ; int size
+      ADD.W           R2, R11, R6 ; char *src_cmac
+      */
+
+      if(r3 != 0)
+      {
+         /*
+         MOVW            R3, #0x1100
+         MOVW            R10, #((AESCMACSw_base_2_219D820+1) AND 0xFFFF) ; 0219D821 code reference
+         MOVT.W          R3, #0x177 ; 0x1771100 - char *dst_cmac
+         MOVT.W          R10, #(high16((AESCMACSw_base_2_219D820+1))) ; 0219D821 code reference
+         */
+      }
+      else
+      {
+         /*
+         LDR             R3, [SP,#0x70+var_50] ; char *dst_cmac_base
+         ADD             R3, R6  ; calc char *dst_cmac
+         */
+      }
+
+      /*
+      STR             R1, [SP,#0x70+arg_0_i] ;  int size
+      ADD             R0, SP, #0x70+IV ; char *src
+      STRD.W          R2, R3, [SP,#0x70+arg_4_i] ; char *src_cmac, char *dst_cmac
+      ADD             R1, SP, #0x70+cmac_key ; ptr to args
+      LDMIA           R1, {R1-R3} ; load R1, R2, R3 (char *cmac_key, char *key, int keysize)
+      BLX             R10     ; aes_encrypt_aes_cmac_with_key_callback_219D820
+      */
+
+      if(r0 != 0)
+         return r0;
+
+      //ADD             R3, SP, #0x70+IV
+
+      while(true)
+      {
+         /*
+         MOV             R1, R3
+         LDRB.W          R2, [R3],#1
+         */
+
+         if(r2 != 0xFF)
+         {
+            /*
+            ADD.W           R2, R2, #1
+            STRB            R2, [R1]
+            SUB.W           R8, R8, R7
+            ADD.W           R3, R6, R7
+            */
+            break;
+         }
+         else
+         {
+            //STRB.W          R5, [R3,#-1]
+            if(r3 == r4)
+            {
+               /*
+               SUB.W           R8, R8, R7
+               ADD.W           R3, R6, R7
+               */
+               break;
+            }
+         }
+      }
+
+      if(r9 <= r6)
+         break;
+
+      //MOV             R6, R3
+   }
+
+   //LDR             R4, [SP,#0x70+destination]
+   if(r4 == 0)
+   {
+      //LDR             R0, [SP,#0x70+destination]
+      return r0;
+   }
+   else
+   {
+      /*
+      LDRD.W          R1, R4, [SP,#0x28]
+      CMP             R4, R1
+      IT EQ
+      MOVEQ           R0, #0
+      */
+
+      if(beq)
+      {
+         return r0;
+      }
+      else
+      {
+         /*
+         MOV             R0, R4  ; destination
+         MOV             R2, R9  ; num
+         BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+         MOVS            R0, #0
+         */
+
+         return r0;
+      }
+   }
 }
 
 int aes_encrypt_aes_cmac_219D00C(char *cmac_key, char *key, int keysize, int ignored, int seed0, int seed1, int size0, int size1, char *src_cmac_base, char *dst_cmac_base, int flag)
