@@ -988,187 +988,79 @@ int aes_decrypt_aes_cmac_219D174(const char* key, const char* subkey_key, uint32
    return 0;
 }
 
-int aes_encrypt_aes_cmac_219D00C(char *cmac_key, char *key, int keysize, int ignored, int seed0, int seed1, int size0, int size1, char *src_cmac_base, char *dst_cmac_base, int flag)
+int aes_encrypt_aes_cmac_219D00C(char *cmac_key, char *key, int keysize, int ignored, int tweak_key0, int tweak_key1, int size0, int size1, char *src_cmac_base, char *dst_cmac_base, int flag)
 {
-   int r9 = size0;
-   int r7 = size1;
-   int r4 = src_cmac_base;
-   keysize = r2;
-   int r2 = r7 | r9;
-   cmac_key = r0;
-   key = r1;
-   var_48 = r4;
-   int r2 = r2 << 0x1C;
+   char IV[0x10] = {0};
 
-   int r4 = dst_cmac_base;
-   int r1 = seed0;
-   int r0 = seed1;
-   var_44 = r4;
-   short r10 = flag;
-   
-   if(r2 != 0)
+   if(((size1 | size0) << 0x1C) != 0)
       return 0x80140609;
 
-   if(r9 <= 0xF)
+   if(size0 <= 0xF)
       return 0x80140609;
 
-   int r3 = var_48;
-   int r3 = r3 | r4;
-   int r3 = r3 << 0x1E;
-
-   if(r3 != 0)
+   if((((int)src_cmac_base | (int)dst_cmac_base) << 0x1E) != 0)
       return 0x8014060E;
 
-   int r2 = r1;
-   int r3 = r0;
-   int r1 = var_3D;
-   int r0 = IV+7;
+   int tk_tmp00 = tweak_key0;
+   int tk_tmp10 = tweak_key1;
 
-   while(true)
+   for(int i = 0; i < 8; i++)
    {
-      ++r1[0] = r2;
-      int r2 = r2 >> 8;
-      int r2 = r2 | (r3 << 24);
-      int r3 = r3 >> 8;
-      
-      if(r1 == r0)
-         break;
+      IV[i] = tk_tmp00;
+
+      tk_tmp00 = (tk_tmp00 >> 8) | (tk_tmp10 << 24);
+      tk_tmp10 = tk_tmp10 >> 8;
    }
 
-   int r4 = r10 & 1;
-   int r3 = 0;
-   destination = r4;
-
-   int r11 = AESCMACEncryptSw_base_219D694();
-
-   int r4 = var_48;
-
-   int r5 = r3;
-
-   IV[0x8]= r3;
-   IV[0x9]= r3;
-   IV[0xA]= r3;
-   IV[0xB]= r3;
-   IV[0xC]= r3;
-   IV[0xD]= r3;
-   IV[0xE]= r3;
-   IV[0xF]= r3;
-
-   int r8 = r9;
-   int r10 = r4 - r7;
-   int r4 = var_44;
-   int r6 = r7;
-   int r4 = r4 - r7;
-   int r3 = r10;
-   var_50 = r4;
-   int r10 = r11;
-   int r4 = var_2C;
-   int r11 = r3;
+   memset(IV + 8, 0, 8);
+   
+   int bytes_left = size0;
+   int offset = size1;
    
    do
    {
-      #pragma region
-
-      int r3 = destination;
-      if(r7 < r8)
-      {
-         int r1 = r7;
-      }
+      int size_arg = 0;
+      if(size1 < bytes_left)
+         size_arg = size1;
       else
-      {
-         int r1 = r8;
-      }
+         size_arg = bytes_left;
 
-      int r2 = r11 + r6;
-
-      if(r3 != 0)
-      {
-         int r3 = 0x1771100;
-         int r10 = AESCMACSw_base_1_219D794;
-      }
+      int result0 = 0;
+      if((flag & PFS_CRYPTO_USE_CMAC) != 0)
+         result0 = AESCMACSw_base_1_219D794(IV, cmac_key, key, keysize, size_arg, (src_cmac_base - size1) + offset, g_1771100);
       else
-      {
-         int r3 = var_50;
-         int r3 = r3 + r6;
-      }
-
-      arg_0_i = r1;
-      int r0 = IV;
-      arg_4_i = r2;
-      arg_8_i = r3;
-
-      int r1 = cmac_key;
-      int r1 = r1[0];
-      int r2 = r1[1];
-      int r3 = r1[2];
-
-      r10(r0,r1,r2,r3,a0,a4,a8);
+         result0 = AESCMACEncryptSw_base_219D694(IV, cmac_key, key, keysize, size_arg, (src_cmac_base - size1) + offset, (dst_cmac_base - size1) + offset);
       
-      if(r0 != 0)
-         return r0;
+      if(result0 != 0)
+         return result0;
 
-      int r3 = IV;
-
-      while(true)
+      for(int i = 0; i < 0x10; i++)
       {
-         int r1 = r3;
-         int r2 = *r3;
-         r3++;
-         
-         if(r2 != 0xFF)
+         if(IV[i] == 0xFF)
          {
-            int r2 = r2 + 1;
-            *r1 = r2;
-
-            int r8 = r8 - r7;
-            int r3 = r6 + r7;
-            break;
+            IV[i] = 0;
          }
          else
          {
-            r3--;
-            *r3 = r5;
-            
-            if(r3 == r4)
-            {
-               int r8 = r8 - r7;
-               int r3 = r6 + r7;
-               break;
-            }
+            IV[i] = IV[i] + 1;
+            break;
          }
       }
 
-      int r6 = r3;
-
-      #pragma endregion
+      bytes_left = bytes_left - size1;
+      offset = offset + size1;
    }
-   while(r9 > r6);
+   while(size0 > offset);
 
-   int r4 = destination;
-   if(r4 == 0)
+   if((flag & PFS_CRYPTO_USE_CMAC) != 0)
    {
-      int r0 = destination;
-      return r0;
+      if(dst_cmac_base != src_cmac_base)
+      {
+         memcpy(dst_cmac_base, src_cmac_base, size0);
+      }
    }
 
-   int r1 = var_48;
-   int r4 = var_44;
-   if(r4 == r1)
-   {
-      r0 = 0;
-   }
-
-   if(r4 == r1)
-   {
-      return r0;
-   }
-   
-   int r0 = r4;
-   int r2 = r9;
-   memcpy(r0, r1, r2);
-   r0 = 0;
-   
-   return r0;
+   return 0;
 }
 
 //----------------------
