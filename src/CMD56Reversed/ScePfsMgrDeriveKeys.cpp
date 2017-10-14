@@ -623,7 +623,7 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
 
 //IV is a subkey base
 
-int AESCMACDecryptSw_base_219D714(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
+int AESCMACDecryptSw_base_219D714(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, const char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -641,7 +641,7 @@ int AESCMACDecryptSw_base_219D714(const char* subkey, const char* dst_key, const
    return result0;
 }
 
-int AESCMACEncryptSw_base_219D694(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, char* src, char* dst)
+int AESCMACEncryptSw_base_219D694(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, const char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -692,7 +692,7 @@ int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
    return 0;
 }
 
-int AESCMACSw_base_1_219D794(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
+int AESCMACSw_base_1_219D794(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, const char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -711,7 +711,7 @@ int AESCMACSw_base_1_219D794(const char* subkey, const char* dst_key, const char
    return result0;
 }
 
-int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, char* src, char* dst)
+int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, const char* src, char* dst)
 {
    char aes_ctx[0x1F0] = {0};
    char drv_subkey[0x10] = {0};
@@ -740,7 +740,7 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 char g_1771100[0x10] = {0};
 
-int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, int size, int block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
    char iv[0x10] = {0};
 
@@ -824,7 +824,7 @@ int aes_decrypt_aes_cmac_219D480(const char* key, const char* iv_xor_key, int tw
    return 0;
 }
 
-int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, int size, int block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
 {
    char iv[0x10] = {0};
 
@@ -910,17 +910,17 @@ int aes_encrypt_aes_cmac_219D2DC(const char* key, const char* iv_xor_key, int tw
 
 //#### GROUP 3, GROUP 4 ####
 
-int aes_decrypt_aes_cmac_219D174(char *cmac_key, char *key, int keysize, int ignored, int tweak_key0, int tweak_key1, int size0, int block_size, char *src_cmac_base, char *dst_cmac_base, int flag)
+int aes_decrypt_aes_cmac_219D174(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
 {
-   char IV[0x10] = {0};
+   char iv[0x10] = {0};
 
-   if(((block_size | size0) << 0x1C) != 0)
+   if(((block_size | size) << 0x1C) != 0)
       return 0x80140609;
 
-   if(size0 <= 0xF)
+   if(size <= 0xF)
       return 0x80140609;
    
-   if((((int)src_cmac_base | (int)dst_cmac_base) << 0x1E) != 0)
+   if((((int)src | (int)dst) << 0x1E) != 0)
       return 0x8014060E;
 
    int tk_tmp00 = tweak_key0;
@@ -928,19 +928,22 @@ int aes_decrypt_aes_cmac_219D174(char *cmac_key, char *key, int keysize, int ign
 
    for(int i = 0; i < 8; i++)
    {
-      IV[i] = tk_tmp00;
+      iv[i] = tk_tmp00;
 
       tk_tmp00 = (tk_tmp00 >> 8) | (tk_tmp10 << 24);
       tk_tmp10 = tk_tmp10 >> 8;
    }
 
-   memset(IV + 8, 0, 8);
+   memset(iv + 8, 0, 8);
 
-   int bytes_left = size0;
-   int offset = block_size;
+   int offset = 0;
+   int bytes_left = size;
 
    do
    {
+      // select block_size if we did not yet reach tail of the data. 
+      // or select bytes_left which will be the size of the tail in the end
+
       int size_arg = 0;
       if(block_size < bytes_left)
          size_arg = block_size;
@@ -949,22 +952,22 @@ int aes_decrypt_aes_cmac_219D174(char *cmac_key, char *key, int keysize, int ign
 
       int result0 = 0;
       if((flag & PFS_CRYPTO_USE_CMAC) != 0)
-         result0 = AESCMACSw_base_2_219D820(IV, cmac_key, key, keysize, size_arg, ((src_cmac_base - block_size) + offset), g_1771100);
+         result0 = AESCMACSw_base_2_219D820(iv, key, subkey_key, keysize, size_arg, src + offset, g_1771100);
       else
-         result0 = AESCMACDecryptSw_base_219D714(IV, cmac_key, key, keysize, size_arg, ((src_cmac_base - block_size) + offset), ((dst_cmac_base - block_size) + offset));
+         result0 = AESCMACDecryptSw_base_219D714(iv, key, subkey_key, keysize, size_arg, src + offset, dst + offset);
 
       if(result0 != 0)
          return result0;
 
       for(int i = 0; i < 0x10; i++)
       {
-         if(IV[i] == 0xFF)
+         if(iv[i] == 0xFF)
          {
-            IV[i] = 0;
+            iv[i] = 0;
          }
          else
          {
-            IV[i] = IV[i] + 1;
+            iv[i] = iv[i] + 1;
             break;
          }
       }
@@ -972,13 +975,13 @@ int aes_decrypt_aes_cmac_219D174(char *cmac_key, char *key, int keysize, int ign
       offset = offset + block_size;
       bytes_left = bytes_left - block_size;
    }
-   while(size0 > offset);
+   while(size > offset);
 
    if((flag & PFS_CRYPTO_USE_CMAC) != 0)
    {
-      if(dst_cmac_base != src_cmac_base)
+      if(dst != src)
       {
-         memcpy(dst_cmac_base, src_cmac_base, size0);
+         memcpy(dst, src, size);
       }
    }
 
