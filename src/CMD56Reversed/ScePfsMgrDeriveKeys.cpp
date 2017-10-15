@@ -1756,326 +1756,7 @@ int ScePfsCryptEngineThread_219BBB0()
    return 0;
 }
 
-
-//dec sw ex
-void loc_219C64C()
-{
-   /*
-   LDR             R5, [SP,#0xC0+key]
-   */
-
-   if(r5 == 0)
-   {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
-      return;
-   }
-
-   /*
-   LDR.W           R10, [SP,#0xC0+key]
-   MOVS            R5, #0
-   MOV             R6, R5
-   MOV             R7, R9
-   */
-
-   while(true)
-   {
-      /*
-      LDRD.W          R8, R9, [SP,#0x48]
-      ADDS            R6, #1
-      LDR             R2, [SP,#0xC0+hmac_key]
-      MOV             R0, R11 ; cmac_key
-      LDR             R3, [SP,#0xC0+ignored] ; ignored
-      MOV             R1, R7  ; key
-      ADDS.W          R8, R8, R5
-      STR             R4, [SP,#0xC0+arg_8_i] ; size0
-      ADD             R2, R5
-      ADC.W           R9, R9, #0
-      STRD.W          R2, R2, [SP,#0x10]
-      MOVS            R2, #0x80 ; keysize
-      STR             R4, [SP,#0xC0+arg_C_i] ; size1
-      ADD             R5, R4
-      STR             R3, [SP,#0xC0+arg_18_i] ; flag
-      STRD.W          R8, R9, [SP]
-      BL              pfs_decrypt_sw_219D174
-      */
-
-      if(r6 == r10)
-         break;
-   }
-
-   /*
-   MOVS            R3, #0
-   LDR             R5, [SP,#0xC0+crypt_ctx]
-   STR             R3, [R5,#0xC] ; set error to field 0xC
-   */
-}
-
-//dec hw ex
-void loc_0219C928()
-{
-   /*
-   LDR             R6, [SP,#0xC0+key]
-   */
-
-   if(r6 == 0)
-   {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
-      return;
-   }
-
-   /*
-   LDR             R7, [SP,#0xC0+key_id]
-   MOV             R10, R9
-   LDR.W           R9, [SP,#0xC0+hmac_key]
-   MOV             R6, R5
-   MOV             R8, R7
-   MOV             R7, R11
-   LDR.W           R11, [SP,#0xC0+key]
-   */
-
-   while(true)
-   {
-      /*
-      ADD.W           R3, R9, R5
-      LDR             R0, [SP,#0xC0+ignored]
-      STR             R3, [SP,#0xC0+arg_8_i] ; src
-      CMP             R4, R8
-      ITE CC
-      MOVCC           LR, R4
-      MOVCS           LR, R8
-      STR             R3, [SP,#0xC0+arg_C_i] ; dst
-      ADDS            R6, #1
-      LDRD.W          R2, R3, [SP,#0x48]
-      SUB.W           R8, R8, R4
-      LDR             R1, [SP,#0xC0+unk0]
-      STR             R0, [SP,#0xC0+arg_10_i] ; flag
-      MOV             R0, R7  ; key
-      ADDS            R2, R2, R5 ; iv_seed0
-      STR             R4, [SP,#0xC0+arg_4_i] ; size1
-      STR             R1, [SP,#0xC0+arg_14_i] ; key_id
-      ADC.W           R3, R3, #0
-      MOV             R1, R10 ; iv_xor_key
-      STR.W           LR, [SP,#0xC0+arg_0_i] ; size0
-      BL              pfs_decrypt_hw_219D480
-      ADD             R5, R4
-      */
-
-      if(r6 == r11)
-         break;
-   }
-
-   /*
-   MOVS            R3, #0
-   LDR             R5, [SP,#0xC0+crypt_ctx]
-   STR             R3, [R5,#0xC] ; set error to field 0xC
-   */
-   return;
-}
-
-//dec sw
-void loc_219C7EA()
-{
-   /*
-   LDR             R5, [SP,#0xC0+hmac_key]
-   MOV             R1, R9  ; key
-   LDR             R7, [SP,#0xC0+ignored]
-   MOV             R0, R11 ; cmac_key
-   STR             R2, [SP,#0xC0+arg_0_i] ; seed0
-   MOVS            R2, #0x80 ; keysize
-   STR             R3, [SP,#0xC0+arg_4_i] ; seed1
-   STRD.W          R5, R5, [SP,#0x10]
-   STRD.W          R4, R4, [SP,#8]
-   STR             R7, [SP,#0xC0+arg_18_i] ; flag
-   BL              pfs_decrypt_sw_219D174
-   LDRD.W          R3, R5, [R10,#0x18]
-   LDR.W           R1, [R10,#0x34]
-   */
-}
-
-//dec hw
-void loc_0219C6F8()
-{
-   /*
-   LDR             R5, [SP,#0xC0+hmac_key]
-   MOV             R1, R9  ; iv_xor_key
-   LDR             R7, [SP,#0xC0+ignored] ; flag
-   MOV             R0, R11 ; key
-   STRD.W          R4, R4, [SP] ; int size0, int size1
-   STRD.W          R5, R5, [SP,#0xC0+arg_8_i] ; char *src, char *dst
-   LDR             R5, [SP,#0xC0+unk0] ; key_id
-   STRD.W          R7, R5, [SP,#0xC0+arg_10_i] ; int flag, int key_id
-   BL              pfs_decrypt_hw_219D480
-   LDRD.W          R3, R5, [R10,#0x18]
-   LDR.W           R1, [R10,#0x34]
-   */
-}
-
-//dec sw
-void loc_219C7C6()
-{
-   /*
-   LDR             R7, [SP,#0xC0+ignored]
-   MOV             R1, R9  ; key
-   STR             R2, [SP,#0xC0+arg_0_i] ; seed0
-   MOV             R0, R11 ; cmac_key
-   STR             R3, [SP,#0xC0+arg_4_i] ; seed1
-   MOVS            R2, #0x80 ; keysize
-   STRD.W          R4, R5, [SP,#0xC]
-   STR             R5, [SP,#0xC0+arg_14_i] ; dst_cmac_base
-   STR             R4, [SP,#0xC0+arg_8_i] ; size0
-   STR             R7, [SP,#0xC0+arg_18_i] ; flag
-   BL              pfs_decrypt_sw_219D174
-   LDRD.W          R3, R5, [R10,#0x18]
-   LDR.W           R1, [R10,#0x34]
-   */
-}
-
-//dec hw
-void loc_0219C544()
-{
-   /*
-   CMP             R0, R4
-   IT CS
-   MOVCS           R0, R4
-   STR             R5, [SP,#0xC0+arg_C_i] ; size1
-   STMEA.W         SP, {R0,R4,R5}
-   MOV             R1, R9  ; iv_xor_key
-   LDR             R5, [SP,#0xC0+ignored]
-   MOV             R0, R11 ; key
-   LDR             R6, [SP,#0xC0+unk0]
-   STRD.W          R5, R6, [SP,#0x10]
-   BL              pfs_decrypt_hw_219D480
-   LDRD.W          R3, R5, [R10,#0x18]
-   LDR.W           R1, [R10,#0x34]
-   */
-}
-
-//dec sw ex
-void loc_219C782()
-{
-   if(r5 == 0)
-   {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
-      return;
-   }
-   
-   /*
-   MOV             R3, R5
-   MOVS            R6, #0
-   MOV             R5, R6
-   MOV             R10, R3
-   */
-
-   while(true)
-   {
-      /*
-      LDRD.W          R2, R3, [SP,#0x28]
-      ADD.W           R1, R8, R6
-      ADD.W           LR, R7, R6
-      STR             R1, [SP,#0xC0+arg_10_i] ; src_cmac_base
-      STRD.W          R4, R4, [SP,#8]
-      ADDS            R5, #1
-      ADDS            R2, R2, R6
-      MOV             R0, R11 ; cmac_key
-      ADC.W           R3, R3, #0
-      MOV             R1, R9  ; key
-      STRD.W          R2, R3, [SP]
-      MOVS            R2, #0x80 ; keysize
-      LDR             R3, [SP,#0xC0+ignored] ; ignored
-      ADD             R6, R4
-      STRD.W          LR, R3, [SP,#0x14]
-      BL              pfs_decrypt_sw_219D174
-      */
-
-
-      if(r5 == r10)
-         break;
-   }
-
-   /*
-   MOVS            R3, #0
-   LDR             R5, [SP,#0xC0+crypt_ctx]
-   STR             R3, [R5,#0xC] ; set error to field 0xC
-   */
-   return;
-}
-
-//dec hw ex
-void loc_0219C5C6()
-{
-   if(r5 == 0)
-   {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
-      return;
-   }
-
-   /*
-   MOV             R3, R5
-   MOVS            R6, #0
-   STR.W           R9, [SP,#0xC0+var_8C]
-   MOV             R5, R11
-   MOV             R9, R7
-   MOV             R10, R6
-   MOV             R7, R4
-   MOV             R11, R3
-   MOV             R4, R2
-   */
-
-   while(true)
-   {
-      /*
-      CMP             R4, R7
-      ITE CC
-      MOVCC           R2, R4
-      MOVCS           R2, R7
-      ADD.W           R3, R8, R6
-      STR             R2, [SP,#0xC0+arg_0_i] ; size0
-      ADD.W           LR, R9, R6
-      STR             R3, [SP,#0xC0+arg_8_i] ; src
-      ADD.W           R10, R10, #1
-      LDRD.W          R2, R3, [SP,#0x28]
-      SUBS            R4, R4, R7
-      LDR             R0, [SP,#0xC0+ignored]
-      LDR             R1, [SP,#0xC0+unk0]
-      ADDS            R2, R2, R6 ; iv_seed0
-      STR             R7, [SP,#0xC0+arg_4_i] ; size1
-      STR             R0, [SP,#0xC0+arg_10_i] ; flag
-      ADC.W           R3, R3, #0
-      STR             R1, [SP,#0xC0+arg_14_i] ; key_id
-      MOV             R0, R5  ; key
-      LDR             R1, [SP,#0xC0+var_8C] ; iv_xor_key
-      ADD             R6, R7
-      STR.W           LR, [SP,#0xC0+arg_C_i] ; dst
-      BL              pfs_decrypt_hw_219D480
-      */
-
-      if(r10 == r11)
-         break;
-   }
-   
-   /*
-   MOVS            R3, #0
-   LDR             R5, [SP,#0xC0+crypt_ctx]
-   STR             R3, [R5,#0xC] ; set error to field 0xC
-   */
-   return;
-}
+#define IGNORE_ARG 0
 
 void crypt_engine_work_3()
 {
@@ -2388,11 +2069,62 @@ void crypt_engine_work_3()
    
       if((r6 > 0x1F) || (r3 == 0))
       {
-         return loc_219C64C();
+         #pragma region
+         
+         if(key == 0)
+         {
+            int r5 = crypt_ctx;
+            [R5,#0xC] = 0;
+            return;
+         }
+
+         int offset0 = 0;
+         int counter0 = 0;
+   
+         do
+         {
+            pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, unk3[0] + offset0, unk3[1] + 0, r4, r4, hmac_key + offset0, hmac_key + offset0, ignored);
+
+            counter0 = counter0 + 1;
+            offset0 = offset0 + r4;
+         }
+         while(counter0 != key)
+
+         int r5 = crypt_ctx;
+         [R5,#0xC] = 0;
+        
+         #pragma endregion
+         return;
       }
       else
       {
-         return loc_0219C928();
+         #pragma region
+         if(key == 0)
+         {
+            int r5 = crypt_ctx;
+            [R5,#0xC] = 0;
+            return;
+         }
+
+         int offset1 = 0;
+         int counter1 = 0;
+         int bytes_left1 = key_id;
+   
+         do
+         {
+            pfs_decrypt_hw_219D480(r11, r9, unk3[0] + offset1, unk3[1] + 0, ((r4 < bytes_left1) ? r4 : bytes_left1), r4, hmac_key + offset1, hmac_key + offset1, ignored, unk0);
+
+            bytes_left1 = bytes_left1 - r4;
+            offset1 = offset1 + r4;
+            counter1 = counter1 + 1;
+         }
+         while(counter1 != key)
+   
+         int r5 = crypt_ctx;
+         [R5,#0xC] = 0;
+  
+         #pragma endregion
+         return;
       }
       #pragma endregion
    }
@@ -2439,11 +2171,23 @@ void crypt_engine_work_3()
                
                   if((r5 > 0x1F) || (r1 == 0))
                   {
-                     loc_219C7EA();
+                     pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, hmac_key, hmac_key, ignored);
+
+                     int r3 = [R10,#0x18];
+                     int r5 = [R10,#0x1C];
+                     int r1 = [R10,#0x34];
+
+                     //ARE CHANGED VARIABLES USED ? r2, r7
                   }
                   else
                   {
-                     loc_0219C6F8();
+                     pfs_decrypt_hw_219D480(r11, r9, r2, r3, r4, r4, hmac_key, hmac_key, ignored, unk0);
+
+                     int r3 = [R10,#0x18];
+                     int r5 = [R10,#0x1C];
+                     int r1 = [R10,#0x34];
+
+                     //ARE CHANGED VARIABLES USED ? r7
                   }
                }
             }
@@ -2543,11 +2287,23 @@ void crypt_engine_work_3()
                
                   if((r7 > 0x1F) || (r1 == 0))
                   {
-                     loc_219C7C6();
+                     pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, r5, r5, ignored);
+
+                     int r3 = [R10,#0x18];
+                     int r5 = [R10,#0x1C];
+                     int r1 = [R10,#0x34];
+   
+                     // ARE CHANGED VARIABLES USED ? r2, r7
                   }
                   else
                   {
-                     loc_0219C544();
+                     pfs_decrypt_hw_219D480(r11, r9, r2, r3, ((r0 >= r4) ? r4 : r0), r4, r5, r5, ignored, unk0);
+
+                     int r3 = [R10,#0x18];
+                     int r5 = [R10,#0x1C];
+                     int r1 = [R10,#0x34];
+
+                     // ARE CHANGED VARIABLES USED? r6
                   }
                }
             }
@@ -2688,11 +2444,63 @@ void crypt_engine_work_3()
 
             if((r6 > 0x1F) || (r3 == 0))
             {
-               loc_219C782();
+               #pragma region
+
+               if(r5 == 0)
+               {
+                  int r5 = crypt_ctx;
+                  [R5,#0xC] = 0;
+                  return;
+               }
+   
+               int offset2 = 0;
+               int counter2 = 0;
+   
+               do
+               {
+                  pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, key[0] + offset2, key[1] + 0, r4, r4, r8 + offset2, r7 + offset2, ignored);
+
+                  offset2 = offset2 + r4;
+                  counter2 = counter2 + 1;
+               }
+               while(counter2 != r5);
+
+               int r5 = crypt_ctx;
+               [R5,#0xC] = 0;
+   
+               #pragma endregion
+               return;
             }
             else
             {
-               loc_0219C5C6();
+               #pragma region
+               if(r5 == 0)
+               {
+                  int r5 = crypt_ctx;
+                  [R5,#0xC] = 0;  
+                  return;
+               }
+
+               int offset3 = 0;
+               int counter3 = 0;
+               int bytes_left3 = r2;
+               int block_size3 = r4;
+   
+               do
+               {
+                  pfs_decrypt_hw_219D480(r11, r9, key[0] + offset3, key[1] + 0, ((block_size3 <= bytes_left3) ? block_size3 : bytes_left3), block_size3, r8 + offset3, r7 + offset3, ignored, unk0);
+
+                  offset3 = offset3 + block_size3;
+                  bytes_left3 = bytes_left3 - block_size3;
+                  counter3 = counter3 + 1;
+               }
+               while(counter3 != r5)
+   
+               int r5 = crypt_ctx;
+               [R5,#0xC] = 0;
+
+               #pragma endregion
+               return;
             }
 
             #pragma endregion
