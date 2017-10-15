@@ -1810,34 +1810,15 @@ int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t 
    return 0;
 }
 
-void verify_step(CryptEngineWorkCtx* crypt_ctx)
+void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* source)
 {
-   //variable mapping
+   int block_size = crypt_ctx->subctx->data->size1;
+   uint16_t flag1 = crypt_ctx->subctx->data->flag;
+   int nBlocks = crypt_ctx->subctx->nDigests;
+   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
+   char* signatures = crypt_ctx->subctx->hmac_sha1_digest;
 
-   int block_size; // = r4
-   short flag1; // = ignored;
-
-   int tweak_key0; // = unk3[0];
-   int tweak_key1; // = unk3[1];
-
-   int nBlocks; // = key
-
-   short flag0; // = iv_xor_key;
-
-   int bitSize; // = var_8C
-   
-   int size; // = key_id   
-
-   char* signatures; // = r6;
-
-
-
-   
-   
-   
-   char* source; // = hmac_key;
-   
-   //--------------------------
+   //------------------------------
 
    if((flag0 << 0x12) < 0)
       return;
@@ -1933,25 +1914,18 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx)
    }
 }
 
-void work_3_step0(CryptEngineWorkCtx* crypt_ctx)
+void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* buffer)
 {
-   //variable mapping
-
-   short flag0; // = iv_xor_key;
-   short flag1; // = ignored;
-   int bitSize; // = var_8C
-
-   int nBlocks ; // = key;
-   const char* key; // = r11
-   const char* subkey_key; // = r9;
-   int tweak_key0; // = unk3[0];
-   int tweak_key1; // = unk3[1];
-
-   int block_size; // = r4;
-   char* buffer; // = hmac_key;
-   uint16_t kid; // = unk0;
-   int size; // = key_id;
-
+   short flag0 = crypt_ctx->subctx->data->seed1_base;
+   short flag1 = crypt_ctx->subctx->data->flag;
+   
+   int nBlocks = crypt_ctx->subctx->nDigests;
+   const char* key = crypt_ctx->subctx->data->key;
+   const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
+   
+   int block_size = crypt_ctx->subctx->data->size1;
+   uint16_t kid = crypt_ctx->subctx->data->key_id;
+   
    //------------------------------
 
    if(((int)flag0 & 0x4000) == 0)
@@ -2013,6 +1987,20 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx)
 
 void work_3_step1()
 {
+   /*
+   int r4 = crypt_ctx->subctx->data->size1;
+   uint16_t ignored = crypt_ctx->subctx->data->flag;
+   int key = crypt_ctx->subctx->nDigests;
+   int iv_xor_key = crypt_ctx->subctx->data->seed1_base;
+   uint16_t unk0 = crypt_ctx->subctx->data->key_id;
+   const char* r6 = crypt_ctx->subctx->hmac_sha1_digest; // 0x4C - signatures table
+   CryptEngineSubctx* r10 = crypt_ctx->subctx;
+   char* r11 = crypt_ctx->subctx->data->key;
+   char* r9 = crypt_ctx->subctx->data->iv_xor_key;
+   */
+
+   //---------------------------
+
    #pragma region
    /*
    LDR             R7, [SP,#0xC0+iv_xor_key]
@@ -2398,70 +2386,33 @@ void work_3_step1()
 
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
 {
-   int r4 = crypt_ctx->subctx->data->size1;
-   uint16_t ignored = crypt_ctx->subctx->data->flag;
-
    int seed_root = (crypt_ctx->subctx->data->size1) * (crypt_ctx->subctx->seed0_base);
-   int unk3_0 = seed_root >> 0x20;
-   int unk3_1 = seed_root >> 0x20;
-
-   int key = crypt_ctx->subctx->nDigests;
-
-   int iv_xor_key = crypt_ctx->subctx->data->seed1_base;
-
-   uint16_t unk0 = crypt_ctx->subctx->data->key_id;
+   int tweak_key0 = seed_root >> 0x20;
+   int tweak_key1 = seed_root >> 0x20;
 
    int var_8C = (int)crypt_ctx->subctx->data->type - 2;
-
    int key_id = (crypt_ctx->subctx->data->size1) * ((crypt_ctx->subctx->nDigests) - 1) + (crypt_ctx->subctx->size1);
-
-   const char* r6 = crypt_ctx->subctx->hmac_sha1_digest; // 0x4C - signatures table
-
-   //---------------------------
 
    char* hmac_key;
 
    if((var_8C > 0x1F) || ((0xC0000B03 & (1 << var_8C)) == 0))
-   {
-      hmac_key = crypt_ctx->subctx->buffer0; // 0x50
-   }
+      hmac_key = crypt_ctx->subctx->buffer0;
    else
-   {
-      hmac_key = crypt_ctx->subctx->buffer1; // 0x54
-   }
+      hmac_key = crypt_ctx->subctx->buffer1;
 
-   //============ VERIFY ======================
+   verify_step(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
 
-   verify_step(crypt_ctx);
-   if(crypt_ctx->error < 0) //need to add this check since functionality is now split into several functions
+   //need to add this check since dec functionality is now split into several functions
+   if(crypt_ctx->error < 0)
       return;
 
-   //==================================
-
-   //r4 is block_size
-   //r9 changes to iv_xor_key
-
-   CryptEngineSubctx* r10 = crypt_ctx->subctx;
-   
-   int r5 = r10->unk_1C; // 0x1C
-   char* r11 = r10->data->key;
-   char* r9 = r10->data->iv_xor_key;
-
-   if(r5 == 0)
+   if(crypt_ctx->subctx->unk_1C == 0)
    {
-      //----------------------------
-
-      work_3_step0(crypt_ctx);
-
-      //----------------------------
+      work_3_step0(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
    }
    else
    {
-      //----------------------------
-
       work_3_step1();
-
-      //----------------------------
    }
 }
 
