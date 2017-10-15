@@ -1,5 +1,6 @@
 #include "Constants.h"
 #include "SceIofilemgr.h"
+#include "SceSysclib.h"
 
 #include <stdint.h>
 #include <string>
@@ -118,7 +119,7 @@ typedef struct CryptEngineWorkCtx //size is 0x18
    void* unk_0; // pointer to data 0x140 + 0x18 ?
    void* unk_4; // pointer to data 0x140 + 0x18 ?
    CryptEngineSubctx* subctx; // 0x8
-   uint32_t error; //set to 0 or error code after executing crypto task
+   uint32_t error; // 0xC set to 0 or error code after executing crypto task
    
    SceUID threadId; // = set with sceKernelGetThreadIdForDriver. used with ksceKernelSignalCondTo
    uint32_t unk_14;
@@ -161,13 +162,6 @@ typedef struct arm_lldiv_t
 arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
 {
    return arm_lldiv_t();
-}
-
-//returns 0 if data is equal
-//returns -1 if data is not equal
-int SceSysclibForDriver_b5a4d745(char* data0, char* data1, uint32_t size)
-{
-   return 0;
 }
 
 ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
@@ -1261,10 +1255,27 @@ int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint
    return 0;
 }
 
-int proc_verify_14_bytes_219DE44(char* data0, char* data1)
+//return 0 - error
+//return 1 - success
+int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
 {
-   int result = SceSysclibForDriver_b5a4d745(data0, data1, 0x14);
-   return (result < 0) ? 1 : 0;
+   //from what I know - b5a4d745 returns only 0, -1 (not sure about 1) based on reversing and tests
+   //for  0 - CLZ is 32
+   //for  1 - CLZ is 31
+   //for -1 - CLZ is 0
+    
+   //for  0 - >> 5 is 1
+   //for  1 - >> 5 is 0
+   //for -1 - >> 5 is 0
+    
+   //LSRS changes flag to indicate if value is zero or not
+   //zero value is considered as error
+   //which means that original value 1 or -1 is an error and 0 is success
+   //meaning that unk0 and unk1 should be identical for this function to succeed
+   //this is some analog of strcmp or memcmp
+
+   int result = SceSysclibForDriver_b5a4d745(unk0, unk1, 0x14);
+   return (result == 0) ? 1 : 0;
 }
 
 //-------------------------------------
@@ -1799,7 +1810,696 @@ int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t 
    return 0;
 }
 
-void crypt_engine_work_3(CryptEngineWorkCtx * crypt_ctx, CryptEngineSubctx* r10)
+void verify_step(CryptEngineWorkCtx* crypt_ctx)
+{
+   int r5 = iv_xor_key;
+   int r5 = r5 << 0x12;
+
+   if(r5 >= 0)
+   {
+      int r7 = iv_xor_key;
+      int r0 = r7 << 0x10;
+
+      if(r0 >= 0)
+      {
+         short r7 = ignored;
+         short r5 = r7 & 0x20;
+         int r5 = (int)r5;
+
+         if(r5 == 0)
+         {
+            int r7 = var_8C;
+            int r0 = r9 + 0x4C; //hmac_key
+            unk1 = r0;
+
+            int r2 = 1;
+            r2 = r2 << r7;
+            int r3 = 0xC0000B03;
+            int r3 = r3 & r2;
+
+            if((r7 > 0x1F) || (r3 == 0))
+            {
+               //-----------------
+
+               #pragma region VERIFY 0
+
+               short r5 = ignored;
+               int r3 = r5 & 0x41;
+
+               if(r3 != 0x41)
+               {
+                  int r5 = key;
+                  
+                  if(r5 != 0)
+                  {
+                     int r0 = ignored;
+                     int r8 = r6;
+                     var_64[0] = r10;
+                     var_64[1] = r9;
+                     int r11 = 0;
+                     int r9 = r4;
+                     int r6 = hmac_key;
+                     int r7 = r0 & 9;
+                     int r5 = &bytes14;
+                     int r4 = r7;
+                     int r10 = unk1;
+                     int r7 = key;
+                     
+                     do
+                     {
+                        int r1 = r10;
+                        int r0 = r5;
+                        int r2 = r6;
+                        int r3 = r9;
+
+                        int r0 = hmac_sha1_digest_219DE7C(r0, r1, r2, r3);
+                        
+                        int r0 = r8;
+                        int r1 = r5;
+
+                        int r0 = proc_verify_14_bytes_219DE44(r0, r1);
+
+                        //if verify is not successful and flag is not specified
+                        if((r0 == 0) && (r4 != 1))
+                        {
+                           crypt_ctx->error = 0x80140F02;
+                           return;
+                        }
+                        
+                        int r11 = r11 + 1;
+                        int r6 = r9;
+                        int r8 = r8 + 0x14;
+                     }
+                     while(r11 != r7);
+
+                     int r4 = r9;
+                     int r10 = var_64[0];
+                     int r9 = var_64[1];
+                  }
+               }
+
+               #pragma endregion
+
+               //-----------------
+            }
+            else
+            {
+               //-----------------
+
+               #pragma region VERIFY 1
+
+               int r7 = ignored;
+               int r3 = r7 & 0x41;
+               
+               if(r3 != 0x41)
+               {
+                  int r0 = unk3[0];
+                  int r1 = unk3[1];
+                  int r2 = r4;
+                  int r3 = r5;
+
+                  arm_lldiv_t res (r0, r1, r2, r3) = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
+
+                  data = r0;
+                  int r0 = key;
+
+                  if(r0 != 0)
+                  {
+                     int r1 = ignored;
+                     int r12 = data;
+                     int r8 = r6;
+                     int r11 = r5;
+                     var_5C = r9;
+                     int r5 = bytes14;
+                     int r1 = r1 & 9;
+                     int r7 = hmac_key;
+                     var_64[0] = r1;
+                     var_64[1] = r10;
+                     int r10 = r12;
+
+                     int r6 = key_id[0];
+                     int r9 = key_id[1];
+
+                     do
+                     {
+                        int r1 = r9;
+                        int r2 = r10;
+                        int r3 = 4;
+                        int r0 = digest;
+                        int r0 = hmacSha1Digest_219DE68(r0, r1, r2, r3);
+
+                        int r1 = digest;
+                        int r0 = r5;
+                        int r2 = r7;
+
+                        int r3 = (r4 < r6) ? r4 : r6;
+
+                        int r0 = hmac_sha1_digest_219DE7C(r0, r1, r2, r3);
+                        
+                        int r0 = r8;
+                        int r1 = r5;
+                        int r0 = proc_verify_14_bytes_219DE44(r0, r1);
+                        
+                        int r2 = var_64;
+                        
+                        //if verify is not successful and flag is not specified
+                        if((r0 == 0) && (r2 != 1))
+                        {
+                           crypt_ctx->error = 0x80140F02;
+                           return;
+                        }
+                        
+                        int r3 = data;
+                        int r11 = r11 + 1;
+                        int r6 = r6 - r4;
+                        int r7 = r7 + r4;
+                        int r8 = r8 + 0x14;
+                        int r3 = r3 + 1;
+                        data = r3;
+                        int r3 = key;
+                     }
+                     while(r11 != r3);
+
+                     int r10 = var_60[0];
+                     int r9 = var_60[1];
+                  }
+               }
+
+               #pragma endregion
+
+               //-----------------
+            }
+         }
+      }
+   }
+}
+
+void work_3_step0()
+{
+   #pragma region
+   /*
+   LDR             R6, [SP,#0xC0+iv_xor_key]
+   AND.W           R5, R6, #0x4000
+   UXTH            R5, R5
+   */
+
+   if(r5 == 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   LDR             R7, [SP,#0xC0+iv_xor_key]
+   LSLS            R1, R7, #0x10
+   */
+
+   if(r1 < 0)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   /*
+   LDR             R6, [SP,#0xC0+ignored]
+   AND.W           R3, R6, #0x41
+   */
+
+   if(r3 == 0x41)
+   {
+      /*
+      MOVS            R3, #0
+      LDR             R5, [SP,#0xC0+crypt_ctx]
+      STR             R3, [R5,#0xC] ; set error to field 0xC
+      */
+      return;
+   }
+
+   //----------------------------
+
+   //LDR             R6, [SP,#0xC0+var_8C]
+
+   int r2 = 1;
+   int r3 = 0xC0000B03;
+   int r2 = r2 << r6;
+   int r3 = r3 & r2;
+   
+   if((r6 > 0x1F) || (r3 == 0))
+   {
+      #pragma region
+         
+      if(key == 0)
+      {
+         int r5 = crypt_ctx;
+         [R5,#0xC] = 0;
+         return;
+      }
+
+      int offset0 = 0;
+      int counter0 = 0;
+   
+      do
+      {
+         pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, unk3[0] + offset0, unk3[1] + 0, r4, r4, hmac_key + offset0, hmac_key + offset0, ignored);
+
+         counter0 = counter0 + 1;
+         offset0 = offset0 + r4;
+      }
+      while(counter0 != key)
+
+      int r5 = crypt_ctx;
+      [R5,#0xC] = 0;
+        
+      #pragma endregion
+      return;
+   }
+   else
+   {
+      #pragma region
+      if(key == 0)
+      {
+         int r5 = crypt_ctx;
+         [R5,#0xC] = 0;
+         return;
+      }
+
+      int offset1 = 0;
+      int counter1 = 0;
+      int bytes_left1 = key_id;
+   
+      do
+      {
+         pfs_decrypt_hw_219D480(r11, r9, unk3[0] + offset1, unk3[1] + 0, ((r4 < bytes_left1) ? r4 : bytes_left1), r4, hmac_key + offset1, hmac_key + offset1, ignored, unk0);
+
+         bytes_left1 = bytes_left1 - r4;
+         offset1 = offset1 + r4;
+         counter1 = counter1 + 1;
+      }
+      while(counter1 != key)
+   
+      int r5 = crypt_ctx;
+      [R5,#0xC] = 0;
+  
+      #pragma endregion
+      return;
+   }
+   #pragma endregion
+}
+
+void work_3_step1()
+{
+   #pragma region
+   /*
+   LDR             R7, [SP,#0xC0+iv_xor_key]
+   LDR.W           R3, [R10,#0x18]
+   AND.W           R6, R7, #0x4000
+   */
+
+   if(r3 == 0)
+   {
+      #pragma region
+
+      /*
+      UXTH            R6, R6
+      LDR.W           R1, [R10,#0x34]
+      */
+
+      if(r6 == 0)
+      {
+         //LSLS            R2, R7, #0x10
+         if(r2 >= 0)
+         {
+            /*
+            LDR             R7, [SP,#0xC0+ignored]
+            AND.W           R2, R7, #0x41
+            */
+
+            if(r2 != 0x41)
+            {
+               /*
+               LDR             R5, [SP,#0xC0+var_8C]
+               MUL.W           R2, R4, R1
+               MOV             R3, R6  ; ignored
+               */
+
+               int r0 = 1;
+               int r1 = 0xC0000B03;
+               int r0 = r0 << r5;
+               int r1 = r1 & r0;
+               
+               if((r5 > 0x1F) || (r1 == 0))
+               {
+                  pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, hmac_key, hmac_key, ignored);
+
+                  int r3 = [R10,#0x18];
+                  int r5 = [R10,#0x1C];
+                  int r1 = [R10,#0x34];
+
+                  //ARE CHANGED VARIABLES USED ? r2, r7
+               }
+               else
+               {
+                  pfs_decrypt_hw_219D480(r11, r9, r2, r3, r4, r4, hmac_key, hmac_key, ignored, unk0);
+
+                  int r3 = [R10,#0x18];
+                  int r5 = [R10,#0x1C];
+                  int r1 = [R10,#0x34];
+
+                  //ARE CHANGED VARIABLES USED ? r7
+               }
+            }
+         }
+      }
+
+      #pragma endregion
+   }
+   else
+   {
+      /*
+      LDR.W           R1, [R10,#0x34]
+      UXTH            R6, R6
+      */
+   }
+
+   //----------------------------
+
+   //loc_219C22E:
+
+   /*
+   LDR.W           R2, [R10,#0x2C]
+   ADDS            R0, R5, R3
+   CMP             R0, R2
+   */
+
+   if(r0 < r2)
+   {
+      #pragma region
+
+      /*
+      LDR.W           R0, [R10,#0x40]
+      */
+
+      if(r6 != 0)
+      {
+         #pragma region
+
+         /*
+         MUL.W           R3, R4, R3
+         LDR.W           R1, [R10,#0x38]
+         LDR.W           R7, [R10,#0x10]
+         LDR.W           R8, [SP,#0xC0+hmac_key]
+         MUL.W           R2, R4, R5
+         SUBS            R1, R3, R1
+         ADD             R8, R3
+         ADD             R7, R1
+         */
+
+         if(r8 != r7)
+         {
+            /*
+            MOV             R0, R7  ; destination
+            MOV             R1, R8  ; source
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+            */
+         }
+         
+         //MOVS            R3, #0
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+
+         #pragma endregion
+
+         return;
+      }
+      else
+      {
+         #pragma region
+
+         /*
+         LDR             R7, [SP,#0xC0+iv_xor_key]
+         SXTH            R7, R7
+         STR             R7, [SP,#0xC0+key]
+         */
+
+         if(r7 >= 0)
+         {
+            /*
+            LDR             R7, [SP,#0xC0+ignored]
+            AND.W           LR, R7, #0x41
+            */
+
+            if(lr != 0x41)
+            {
+               /*
+               SUBS            R5, R2, #1
+               LDR             R7, [SP,#0xC0+var_8C]
+               ADDS            R2, R1, R5
+               LDR             R1, [SP,#0xC0+hmac_key]
+               MOV             R3, R6  ; ignored
+               MUL.W           R2, R4, R2
+               MLA.W           R5, R4, R5, R1
+               */
+
+               int lr = 1;
+               int r1 = 0xC0000B03;
+               int lr = lr << r7;
+               int r1 = lr & r1;
+               
+               if((r7 > 0x1F) || (r1 == 0))
+               {
+                  pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, r5, r5, ignored);
+
+                  int r3 = [R10,#0x18];
+                  int r5 = [R10,#0x1C];
+                  int r1 = [R10,#0x34];
+   
+                  // ARE CHANGED VARIABLES USED ? r2, r7
+               }
+               else
+               {
+                  pfs_decrypt_hw_219D480(r11, r9, r2, r3, ((r0 >= r4) ? r4 : r0), r4, r5, r5, ignored, unk0);
+
+                  int r3 = [R10,#0x18];
+                  int r5 = [R10,#0x1C];
+                  int r1 = [R10,#0x34];
+
+                  // ARE CHANGED VARIABLES USED? r6
+               }
+            }
+         }
+
+         #pragma endregion
+
+         /*
+         MUL.W           R8, R4, R3
+         LDR.W           R7, [R10,#0x38]
+         LDR.W           R0, [R10,#0x10]
+         LDR             R6, [SP,#0xC0+hmac_key]
+         MUL.W           R2, R4, R5
+         SUB.W           R7, R8, R7
+         ADD             R7, R0
+         ADD             R8, R6
+         */
+      }
+
+      #pragma endregion
+   }
+   else
+   {
+      #pragma region
+
+      /*
+      MUL.W           R8, R4, R3
+      LDR.W           R7, [R10,#0x38]
+      LDR.W           LR, [R10,#0x10]
+      LDR             R0, [SP,#0xC0+hmac_key]
+      MUL.W           R2, R4, R5
+      SUB.W           R7, R8, R7
+      ADD             R7, LR
+      ADD             R8, R0
+      */
+
+      if(r6 != 0)
+      {
+         #pragma region
+
+         if(r8 != r7)
+         {
+            /*
+            MOV             R0, R7  ; destination
+            MOV             R1, R8  ; source
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+            */
+         }
+
+         //MOVS            R3, #0
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+
+         #pragma endregion
+
+         return;
+      }
+      else
+      {
+         /*
+         LDR             R6, [SP,#0xC0+iv_xor_key]
+         SXTH            R6, R6
+         STR             R6, [SP,#0xC0+key]
+         */
+      }
+
+      #pragma endregion
+   }
+
+   //----------------------------
+
+   //loc_219C582:
+
+   /*
+   LDR             R6, [SP,#0xC0+key]
+   */
+
+   if(r6 < 0)
+   {
+      #pragma region
+      if(r8 != r7)
+      {
+         /*
+         MOV             R0, R7  ; destination
+         MOV             R1, R8  ; source
+         BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+         */
+      }
+      
+      //MOVS            R3, #0
+      //LDR             R5, [SP,#0xC0+crypt_ctx]
+      //STR             R3, [R5,#0xC] ; set error to field 0xC
+
+      #pragma endregion
+      return;
+   }
+   else
+   {
+      /*
+      LDR             R6, [SP,#0xC0+ignored]
+      AND.W           R0, R6, #0x41
+      */
+
+      if(r0 == 0x41)
+      {
+         #pragma region
+
+         if(r8 != r7)
+         {
+            /*
+            MOV             R0, R7  ; destination
+            MOV             R1, R8  ; source
+            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
+            */
+         }
+         
+         //MOVS            R3, #0
+         //LDR             R5, [SP,#0xC0+crypt_ctx]
+         //STR             R3, [R5,#0xC] ; set error to field 0xC
+
+         #pragma endregion
+         return;
+      }
+      else
+      {
+         #pragma region
+
+         /*
+         ADD             R3, R1
+         LDR             R6, [SP,#0xC0+var_8C]
+         MUL.W           R3, R4, R3
+         VDUP.32         D16, R3
+         VSHR.U64        D16, D16, #0x20
+         VSTR            D16, [SP,#0xC0+key]
+         */
+
+         int r1 = 1;
+         int r3 = 0xC0000B03;
+         int r1 = r1 << r6;
+         int r3 = r3 & r1;
+
+         if((r6 > 0x1F) || (r3 == 0))
+         {
+            #pragma region
+
+            if(r5 == 0)
+            {
+               int r5 = crypt_ctx;
+               [R5,#0xC] = 0;
+               return;
+            }
+   
+            int offset2 = 0;
+            int counter2 = 0;
+   
+            do
+            {
+               pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, key[0] + offset2, key[1] + 0, r4, r4, r8 + offset2, r7 + offset2, ignored);
+
+               offset2 = offset2 + r4;
+               counter2 = counter2 + 1;
+            }
+            while(counter2 != r5);
+
+            int r5 = crypt_ctx;
+            [R5,#0xC] = 0;
+   
+            #pragma endregion
+            return;
+         }
+         else
+         {
+            #pragma region
+            if(r5 == 0)
+            {
+               int r5 = crypt_ctx;
+               [R5,#0xC] = 0;  
+               return;
+            }
+
+            int offset3 = 0;
+            int counter3 = 0;
+            int bytes_left3 = r2;
+            int block_size3 = r4;
+   
+            do
+            {
+               pfs_decrypt_hw_219D480(r11, r9, key[0] + offset3, key[1] + 0, ((block_size3 <= bytes_left3) ? block_size3 : bytes_left3), block_size3, r8 + offset3, r7 + offset3, ignored, unk0);
+
+               offset3 = offset3 + block_size3;
+               bytes_left3 = bytes_left3 - block_size3;
+               counter3 = counter3 + 1;
+            }
+            while(counter3 != r5)
+   
+            int r5 = crypt_ctx;
+            [R5,#0xC] = 0;
+
+            #pragma endregion
+            return;
+         }
+
+         #pragma endregion
+      }
+   }
+   #pragma endregion
+}
+
+void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx, CryptEngineSubctx* r10)
 {
    int r9 = [R10,#0xC];
    int r2 = [R10,#0x34];
@@ -1853,332 +2553,23 @@ void crypt_engine_work_3(CryptEngineWorkCtx * crypt_ctx, CryptEngineSubctx* r10)
       hmac_key = r5;
    }
 
-   int r5 = iv_xor_key;
-   int r5 = r5 << 0x12;
+   //==================================
 
-   //----------------------------
+   verify_step(crypt_ctx);
+   if(crypt_ctx->error < 0) //need to add this check since functionality is now split into several functions
+      return;
 
-   if(r5 >= 0)
-   {
-      int r7 = iv_xor_key;
-      int r0 = r7 << 0x10;
-
-      if(r0 >= 0)
-      {
-         short r7 = ignored;
-         short r5 = r7 & 0x20;
-         int r5 = (int)r5;
-
-         if(r5 == 0)
-         {
-            int r7 = var_8C;
-            int r0 = r9 + 0x4C;
-            unk1 = r0;
-
-            int r2 = 1;
-            r2 = r2 << r7;
-            int r3 = 0xC0000B03;
-            int r3 = r3 & r2;
-
-            if((r7 > 0x1F) || (r3 == 0))
-            {
-               //-----------------
-
-               #pragma region
-
-               short r5 = ignored;
-               int r3 = r5 & 0x41;
-
-               if(r3 != 0x41)
-               {
-                  int r5 = key;
-                  
-                  if(r5 != 0)
-                  {
-                     int r0 = ignored;
-                     int r8 = r6;
-                     var_64[0] = r10;
-                     var_64[1] = r9;
-                     int r11 = 0;
-                     int r9 = r4;
-                     int r6 = hmac_key;
-                     int r7 = r0 & 9;
-                     int r5 = &bytes14;
-                     int r4 = r7;
-                     int r10 = unk1;
-                     int r7 = key;
-                     
-                     while(true)
-                     {
-                        int r1 = r10;
-                        int r0 = r5;
-                        int r2 = r6;
-                        int r3 = r9;
-
-                        int r0 = hmac_sha1_digest_219DE7C(?);
-                        
-                        int r0 = r8;
-                        int r1 = r5;
-
-                        int r0 = proc_verify_14_bytes_219DE44();
-
-                        if((r0 != 0) || (r4 == 1))
-                        {
-                           /*
-                           ADD.W           R11, R11, #1
-                           ADD             R6, R9
-                           ADD.W           R8, R8, #0x14
-                           */
-
-                           if(r11 == r7)
-                              break;
-                        }
-                        else
-                        {
-                           //MOV             R3, 0x80140F02
-                           //LDR             R5, [SP,#0xC0+crypt_ctx]
-                           //STR             R3, [R5,#0xC] ; set error to field 0xC
-                           return;
-                        }
-                     }
-
-                     /*
-                     MOV             R4, R9
-                     LDRD.W          R10, R9, [SP,#0x5C]
-                     */
-                  }
-               }
-
-               #pragma endregion
-
-               //-----------------
-            }
-            else
-            {
-               //-----------------
-
-               #pragma region
-
-               /*
-               LDR             R7, [SP,#0xC0+ignored]
-               AND.W           R3, R7, #0x41
-               */
-
-               if(r3 != 0x41)
-               {
-                  /*
-                  LDRD.W          R0, R1, [SP,#0x48]
-                  MOV             R2, R4  ; unk2
-                  MOV             R3, R5  ; unk3
-                  BLX             ScePfsMgr.SceSysclibForDriver._imp_7554ab04
-                  STR             R0, [SP,#0xC0+data]
-                  LDR             R0, [SP,#0xC0+key]
-                  */
-
-                  if(r0 != 0)
-                  {
-                     /*
-                     LDR             R1, [SP,#0xC0+ignored]
-                     ADD.W           R12, SP, #0xC0+data
-                     MOV             R8, R6
-                     MOV             R11, R5
-                     STR.W           R9, [SP,#0xC0+var_5C]
-                     ADD             R5, SP, #0xC0+bytes14
-                     AND.W           R1, R1, #9
-                     LDR             R7, [SP,#0xC0+hmac_key]
-                     STRD.W          R1, R10, [SP,#0x5C]
-                     MOV             R10, R12
-                     LDRD.W          R6, R9, [SP,#0x54]
-                     */
-
-                     while(true)
-                     {
-                        /*
-                        MOV             R1, R9
-                        MOV             R2, R10 ; data
-                        MOVS            R3, #4  ; data_len
-                        ADD             R0, SP, #0xC0+digest ; digest
-                        BL              hmacSha1Digest_219DE68
-                        ADD             R1, SP, #0xC0+digest ; key_ctx_klicensee
-                        MOV             R0, R5  ; digest_result
-                        MOV             R2, R7  ; src
-                        CMP             R4, R6
-                        ITE CC
-                        MOVCC           R3, R4
-                        MOVCS           R3, R6  ; size
-                        BL              hmac_sha1_digest_219DE7C
-                        MOV             R0, R8  ; unk0
-                        MOV             R1, R5  ; unk1
-                        BL              proc_verify_14_bytes_219DE44
-                        */
-
-                        //LDR             R2, [SP,#0xC0+var_64]
-
-                        if((r0 != 0) || (r2 == 1))
-                        {
-                           /*
-                           LDR             R3, [SP,#0xC0+data]
-                           ADD.W           R11, R11, #1
-                           SUBS            R6, R6, R4
-                           ADD             R7, R4
-                           ADD.W           R8, R8, #0x14
-                           ADDS            R3, #1
-                           STR             R3, [SP,#0xC0+data]
-                           LDR             R3, [SP,#0xC0+key]
-                           */
-
-                           if(r11 == r3)
-                              break;
-                        }
-                        else
-                        {
-                           //MOV             R3, 0x80140F02
-                           //LDR             R5, [SP,#0xC0+crypt_ctx]
-                           //STR             R3, [R5,#0xC] ; set error to field 0xC
-                           return;
-                        }
-                     }
-
-                     //LDRD.W          R10, R9, [SP,#0x60]
-                  }
-               }
-
-               #pragma endregion
-
-               //-----------------
-            }
-         }
-      }
-   }
-
-   //-----------------
+   //==================================
    
-   /*
-   LDR.W           R5, [R10,#0x1C]
-   ADD.W           R11, R9, #0x2C
-   ADD.W           R9, R9, #0x3C
-   */
+   int r5 = [R10,#0x1C];
+   int r11 = r9 + 0x2C; // key
+   int r9 = r9 + 0x3C;  // iv_xor_key
 
    if(r5 == 0)
    {
       //----------------------------
 
-      #pragma region
-      /*
-      LDR             R6, [SP,#0xC0+iv_xor_key]
-      AND.W           R5, R6, #0x4000
-      UXTH            R5, R5
-      */
-
-      if(r5 == 0)
-      {
-         /*
-         MOVS            R3, #0
-         LDR             R5, [SP,#0xC0+crypt_ctx]
-         STR             R3, [R5,#0xC] ; set error to field 0xC
-         */
-         return;
-      }
-
-      /*
-      LDR             R7, [SP,#0xC0+iv_xor_key]
-      LSLS            R1, R7, #0x10
-      */
-
-      if(r1 < 0)
-      {
-         /*
-         MOVS            R3, #0
-         LDR             R5, [SP,#0xC0+crypt_ctx]
-         STR             R3, [R5,#0xC] ; set error to field 0xC
-         */
-         return;
-      }
-
-      /*
-      LDR             R6, [SP,#0xC0+ignored]
-      AND.W           R3, R6, #0x41
-      */
-
-      if(r3 == 0x41)
-      {
-         /*
-         MOVS            R3, #0
-         LDR             R5, [SP,#0xC0+crypt_ctx]
-         STR             R3, [R5,#0xC] ; set error to field 0xC
-         */
-         return;
-      }
-
-      //----------------------------
-
-      //LDR             R6, [SP,#0xC0+var_8C]
-
-      int r2 = 1;
-      int r3 = 0xC0000B03;
-      int r2 = r2 << r6;
-      int r3 = r3 & r2;
-   
-      if((r6 > 0x1F) || (r3 == 0))
-      {
-         #pragma region
-         
-         if(key == 0)
-         {
-            int r5 = crypt_ctx;
-            [R5,#0xC] = 0;
-            return;
-         }
-
-         int offset0 = 0;
-         int counter0 = 0;
-   
-         do
-         {
-            pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, unk3[0] + offset0, unk3[1] + 0, r4, r4, hmac_key + offset0, hmac_key + offset0, ignored);
-
-            counter0 = counter0 + 1;
-            offset0 = offset0 + r4;
-         }
-         while(counter0 != key)
-
-         int r5 = crypt_ctx;
-         [R5,#0xC] = 0;
-        
-         #pragma endregion
-         return;
-      }
-      else
-      {
-         #pragma region
-         if(key == 0)
-         {
-            int r5 = crypt_ctx;
-            [R5,#0xC] = 0;
-            return;
-         }
-
-         int offset1 = 0;
-         int counter1 = 0;
-         int bytes_left1 = key_id;
-   
-         do
-         {
-            pfs_decrypt_hw_219D480(r11, r9, unk3[0] + offset1, unk3[1] + 0, ((r4 < bytes_left1) ? r4 : bytes_left1), r4, hmac_key + offset1, hmac_key + offset1, ignored, unk0);
-
-            bytes_left1 = bytes_left1 - r4;
-            offset1 = offset1 + r4;
-            counter1 = counter1 + 1;
-         }
-         while(counter1 != key)
-   
-         int r5 = crypt_ctx;
-         [R5,#0xC] = 0;
-  
-         #pragma endregion
-         return;
-      }
-      #pragma endregion
+      work_3_step0();
 
       //----------------------------
    }
@@ -2186,387 +2577,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx * crypt_ctx, CryptEngineSubctx* r10)
    {
       //----------------------------
 
-      #pragma region
-      /*
-      LDR             R7, [SP,#0xC0+iv_xor_key]
-      LDR.W           R3, [R10,#0x18]
-      AND.W           R6, R7, #0x4000
-      */
-
-      if(r3 == 0)
-      {
-         #pragma region
-
-         /*
-         UXTH            R6, R6
-         LDR.W           R1, [R10,#0x34]
-         */
-
-         if(r6 == 0)
-         {
-            //LSLS            R2, R7, #0x10
-            if(r2 >= 0)
-            {
-               /*
-               LDR             R7, [SP,#0xC0+ignored]
-               AND.W           R2, R7, #0x41
-               */
-
-               if(r2 != 0x41)
-               {
-                  /*
-                  LDR             R5, [SP,#0xC0+var_8C]
-                  MUL.W           R2, R4, R1
-                  MOV             R3, R6  ; ignored
-                  */
-
-                  int r0 = 1;
-                  int r1 = 0xC0000B03;
-                  int r0 = r0 << r5;
-                  int r1 = r1 & r0;
-               
-                  if((r5 > 0x1F) || (r1 == 0))
-                  {
-                     pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, hmac_key, hmac_key, ignored);
-
-                     int r3 = [R10,#0x18];
-                     int r5 = [R10,#0x1C];
-                     int r1 = [R10,#0x34];
-
-                     //ARE CHANGED VARIABLES USED ? r2, r7
-                  }
-                  else
-                  {
-                     pfs_decrypt_hw_219D480(r11, r9, r2, r3, r4, r4, hmac_key, hmac_key, ignored, unk0);
-
-                     int r3 = [R10,#0x18];
-                     int r5 = [R10,#0x1C];
-                     int r1 = [R10,#0x34];
-
-                     //ARE CHANGED VARIABLES USED ? r7
-                  }
-               }
-            }
-         }
-
-         #pragma endregion
-      }
-      else
-      {
-         /*
-         LDR.W           R1, [R10,#0x34]
-         UXTH            R6, R6
-         */
-      }
-
-      //----------------------------
-
-      //loc_219C22E:
-
-      /*
-      LDR.W           R2, [R10,#0x2C]
-      ADDS            R0, R5, R3
-      CMP             R0, R2
-      */
-
-      if(r0 < r2)
-      {
-         #pragma region
-
-         /*
-         LDR.W           R0, [R10,#0x40]
-         */
-
-         if(r6 != 0)
-         {
-            #pragma region
-
-            /*
-            MUL.W           R3, R4, R3
-            LDR.W           R1, [R10,#0x38]
-            LDR.W           R7, [R10,#0x10]
-            LDR.W           R8, [SP,#0xC0+hmac_key]
-            MUL.W           R2, R4, R5
-            SUBS            R1, R3, R1
-            ADD             R8, R3
-            ADD             R7, R1
-            */
-
-            if(r8 != r7)
-            {
-               /*
-               MOV             R0, R7  ; destination
-               MOV             R1, R8  ; source
-               BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-               */
-            }
-         
-            //MOVS            R3, #0
-            //LDR             R5, [SP,#0xC0+crypt_ctx]
-            //STR             R3, [R5,#0xC] ; set error to field 0xC
-
-            #pragma endregion
-
-            return;
-         }
-         else
-         {
-            #pragma region
-
-            /*
-            LDR             R7, [SP,#0xC0+iv_xor_key]
-            SXTH            R7, R7
-            STR             R7, [SP,#0xC0+key]
-            */
-
-            if(r7 >= 0)
-            {
-               /*
-               LDR             R7, [SP,#0xC0+ignored]
-               AND.W           LR, R7, #0x41
-               */
-
-               if(lr != 0x41)
-               {
-                  /*
-                  SUBS            R5, R2, #1
-                  LDR             R7, [SP,#0xC0+var_8C]
-                  ADDS            R2, R1, R5
-                  LDR             R1, [SP,#0xC0+hmac_key]
-                  MOV             R3, R6  ; ignored
-                  MUL.W           R2, R4, R2
-                  MLA.W           R5, R4, R5, R1
-                  */
-
-                  int lr = 1;
-                  int r1 = 0xC0000B03;
-                  int lr = lr << r7;
-                  int r1 = lr & r1;
-               
-                  if((r7 > 0x1F) || (r1 == 0))
-                  {
-                     pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, r5, r5, ignored);
-
-                     int r3 = [R10,#0x18];
-                     int r5 = [R10,#0x1C];
-                     int r1 = [R10,#0x34];
-   
-                     // ARE CHANGED VARIABLES USED ? r2, r7
-                  }
-                  else
-                  {
-                     pfs_decrypt_hw_219D480(r11, r9, r2, r3, ((r0 >= r4) ? r4 : r0), r4, r5, r5, ignored, unk0);
-
-                     int r3 = [R10,#0x18];
-                     int r5 = [R10,#0x1C];
-                     int r1 = [R10,#0x34];
-
-                     // ARE CHANGED VARIABLES USED? r6
-                  }
-               }
-            }
-
-            #pragma endregion
-
-            /*
-            MUL.W           R8, R4, R3
-            LDR.W           R7, [R10,#0x38]
-            LDR.W           R0, [R10,#0x10]
-            LDR             R6, [SP,#0xC0+hmac_key]
-            MUL.W           R2, R4, R5
-            SUB.W           R7, R8, R7
-            ADD             R7, R0
-            ADD             R8, R6
-            */
-         }
-
-         #pragma endregion
-      }
-      else
-      {
-         #pragma region
-
-         /*
-         MUL.W           R8, R4, R3
-         LDR.W           R7, [R10,#0x38]
-         LDR.W           LR, [R10,#0x10]
-         LDR             R0, [SP,#0xC0+hmac_key]
-         MUL.W           R2, R4, R5
-         SUB.W           R7, R8, R7
-         ADD             R7, LR
-         ADD             R8, R0
-         */
-
-         if(r6 != 0)
-         {
-            #pragma region
-
-            if(r8 != r7)
-            {
-               /*
-               MOV             R0, R7  ; destination
-               MOV             R1, R8  ; source
-               BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-               */
-            }
-
-            //MOVS            R3, #0
-            //LDR             R5, [SP,#0xC0+crypt_ctx]
-            //STR             R3, [R5,#0xC] ; set error to field 0xC
-
-            #pragma endregion
-
-            return;
-         }
-         else
-         {
-            /*
-            LDR             R6, [SP,#0xC0+iv_xor_key]
-            SXTH            R6, R6
-            STR             R6, [SP,#0xC0+key]
-            */
-         }
-
-         #pragma endregion
-      }
-
-      //----------------------------
-
-      //loc_219C582:
-
-      /*
-      LDR             R6, [SP,#0xC0+key]
-      */
-
-      if(r6 < 0)
-      {
-         #pragma region
-         if(r8 != r7)
-         {
-            /*
-            MOV             R0, R7  ; destination
-            MOV             R1, R8  ; source
-            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-            */
-         }
-      
-         //MOVS            R3, #0
-         //LDR             R5, [SP,#0xC0+crypt_ctx]
-         //STR             R3, [R5,#0xC] ; set error to field 0xC
-
-         #pragma endregion
-         return;
-      }
-      else
-      {
-         /*
-         LDR             R6, [SP,#0xC0+ignored]
-         AND.W           R0, R6, #0x41
-         */
-
-         if(r0 == 0x41)
-         {
-            #pragma region
-
-            if(r8 != r7)
-            {
-               /*
-               MOV             R0, R7  ; destination
-               MOV             R1, R8  ; source
-               BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-               */
-            }
-         
-            //MOVS            R3, #0
-            //LDR             R5, [SP,#0xC0+crypt_ctx]
-            //STR             R3, [R5,#0xC] ; set error to field 0xC
-
-            #pragma endregion
-            return;
-         }
-         else
-         {
-            #pragma region
-
-            /*
-            ADD             R3, R1
-            LDR             R6, [SP,#0xC0+var_8C]
-            MUL.W           R3, R4, R3
-            VDUP.32         D16, R3
-            VSHR.U64        D16, D16, #0x20
-            VSTR            D16, [SP,#0xC0+key]
-            */
-
-            int r1 = 1;
-            int r3 = 0xC0000B03;
-            int r1 = r1 << r6;
-            int r3 = r3 & r1;
-
-            if((r6 > 0x1F) || (r3 == 0))
-            {
-               #pragma region
-
-               if(r5 == 0)
-               {
-                  int r5 = crypt_ctx;
-                  [R5,#0xC] = 0;
-                  return;
-               }
-   
-               int offset2 = 0;
-               int counter2 = 0;
-   
-               do
-               {
-                  pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, key[0] + offset2, key[1] + 0, r4, r4, r8 + offset2, r7 + offset2, ignored);
-
-                  offset2 = offset2 + r4;
-                  counter2 = counter2 + 1;
-               }
-               while(counter2 != r5);
-
-               int r5 = crypt_ctx;
-               [R5,#0xC] = 0;
-   
-               #pragma endregion
-               return;
-            }
-            else
-            {
-               #pragma region
-               if(r5 == 0)
-               {
-                  int r5 = crypt_ctx;
-                  [R5,#0xC] = 0;  
-                  return;
-               }
-
-               int offset3 = 0;
-               int counter3 = 0;
-               int bytes_left3 = r2;
-               int block_size3 = r4;
-   
-               do
-               {
-                  pfs_decrypt_hw_219D480(r11, r9, key[0] + offset3, key[1] + 0, ((block_size3 <= bytes_left3) ? block_size3 : bytes_left3), block_size3, r8 + offset3, r7 + offset3, ignored, unk0);
-
-                  offset3 = offset3 + block_size3;
-                  bytes_left3 = bytes_left3 - block_size3;
-                  counter3 = counter3 + 1;
-               }
-               while(counter3 != r5)
-   
-               int r5 = crypt_ctx;
-               [R5,#0xC] = 0;
-
-               #pragma endregion
-               return;
-            }
-
-            #pragma endregion
-         }
-      }
-      #pragma endregion
+      work_3_step1();
 
       //----------------------------
    }

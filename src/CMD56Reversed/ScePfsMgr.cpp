@@ -468,32 +468,6 @@ int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8
    }
 }
 
-//count leading zeroes
-#define CLZ(x) 0
-
-int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
-{
-   //from what I know - b5a4d745 returns only 0, -1 (not sure about 1) based on reversing and tests
-   //for  0 - CLZ is 32
-   //for  1 - CLZ is 31
-   //for -1 - CLZ is 0
-    
-   //for  0 - >> 5 is 1
-   //for  1 - >> 5 is 0
-   //for -1 - >> 5 is 0
-    
-   //LSRS changes flag to indicate if value is zero or not
-   //zero value is considered as error
-   //which means that original value 1 or -1 is an error and 0 is success
-   //meaning that unk0 and unk1 should be identical for this function to succeed
-   //this is some analog of strcmp or memcmp
-
-   int result = SceSysclibForDriver_b5a4d745(unk0, unk1, 0x14);
-   int leadZeroesCnt = CLZ(result); 
-   int r0 = leadZeroesCnt >> 5;
-   return r0;
-}
-
 //unk1 is ignored
 void sub_21A0E28(ctx_21A27B8_20* unk0, char unk1[0x14], int unk2, int unk3, int arg_0, int arg_4)
 {
