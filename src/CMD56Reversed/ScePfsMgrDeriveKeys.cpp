@@ -1821,13 +1821,13 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
    //------------------------------
 
    if((flag0 << 0x12) < 0)
-      return;
+      return; // this does not terminate crypto task (local exit)
    
    if((flag0 << 0x10) < 0)
-      return;
+      return; // this does not terminate crypto task (local exit)
 
    if((flag1 & 0x20) != 0)
-      return;
+      return; // this does not terminate crypto task (local exit)
 
    if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
    {
@@ -1852,7 +1852,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
                if((ver_res == 0) && ((flag1 & 9) != 1))
                {
                   crypt_ctx->error = 0x80140F02;
-                  return;
+                  return; // this should terminate crypto task (global exit)
                }
                         
                counter = counter + 1;
@@ -1897,7 +1897,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
                if((ver_res == 0) && ((flag1 & 9) != 1))
                {
                   crypt_ctx->error = 0x80140F02;
-                  return;
+                  return; // this should terminate crypto task (global exit)
                }
                         
                counter = counter + 1;
@@ -1931,25 +1931,25 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    if(((int)flag0 & 0x4000) == 0)
    {
       crypt_ctx->error = 0;
-      return;
+      return; // this should terminate crypto task (global exit)
    }
 
    if((flag0 << 0x10) < 0)
    {
       crypt_ctx->error = 0;
-      return;
+      return; // this should terminate crypto task (global exit)
    }
 
    if((flag1 & 0x41) == 0x41)
    {
       crypt_ctx->error = 0;
-      return;
+      return; // this should terminate crypto task (global exit)
    }
 
    if(nBlocks == 0)
    {
       crypt_ctx->error = 0;
-      return;
+      return; // this should terminate crypto task (global exit)
    }
 
    int offset = 0;
@@ -1983,6 +1983,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    }
 
    crypt_ctx->error = 0;
+   return; // this should terminate crypto task (global exit)
 }
 
 void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
@@ -1998,28 +1999,28 @@ void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    //-----------
 
-   if(crypt_ctx->subctx->unk_18 == 0)
-   {
-      int tweak_key0 = block_size * crypt_ctx->subctx->seed0_base;
-      int tweak_key1 = (int)flag0 & 0x4000;
+   if(crypt_ctx->subctx->unk_18 != 0)
+      return; // this does not terminate crypto task (local exit)
 
-      if(tweak_key1 == 0)
-      {
-         if((flag0 << 0x10) >= 0)
-         {
-            if((flag1 & 0x41) != 0x41)
-            {
-               if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
-               {
-                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1);
-               }
-               else
-               {
-                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1, kid);
-               }
-            }
-         }
-      }
+   int tweak_key0 = block_size * crypt_ctx->subctx->seed0_base;
+   int tweak_key1 = (int)flag0 & 0x4000;
+
+   if(tweak_key1 != 0)
+      return; // this does not terminate crypto task (local exit)
+   
+   if((flag0 << 0x10) < 0)
+      return; // this does not terminate crypto task (local exit)
+
+   if((flag1 & 0x41) == 0x41)
+      return; // this does not terminate crypto task (local exit)
+
+   if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+   {
+      pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1);
+   }
+   else
+   {
+      pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1, kid);
    }
 }
 
@@ -2054,80 +2055,64 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    //loc_219C22E:
 
-   /*
-   LDR.W           R2, [R10,#0x2C]
-   ADDS            R0, R5, R3
-   CMP             R0, R2
-   */
-
+   int r2 = [R10,#0x2C];
+   int r0 = r5 + r3;
+   
    if(r0 < r2)
    {
       #pragma region
 
-      /*
-      LDR.W           R0, [R10,#0x40]
-      */
-
+      int r0 = [R10,#0x40];
+      
       if(r6 != 0)
       {
          #pragma region
 
-         /*
-         MUL.W           R3, R4, R3
-         LDR.W           R1, [R10,#0x38]
-         LDR.W           R7, [R10,#0x10]
-         LDR.W           R8, [SP,#0xC0+hmac_key]
-         MUL.W           R2, R4, R5
-         SUBS            R1, R3, R1
-         ADD             R8, R3
-         ADD             R7, R1
-         */
+         int r3 = r4 * r3;
 
+         int r1 = [R10,#0x38]; // is reassigned in this branch
+         int r7 = [R10,#0x10];
+         int r8 = hmac_key;
+         int r2 = r4 * r5;
+         int r1 = r3 - r1;
+         int r8 = r8 + r3;
+         int r7 = r7 + r1;
+         
          if(r8 != r7)
          {
-            /*
-            MOV             R0, R7  ; destination
-            MOV             R1, R8  ; source
-            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-            */
+            int r0 = r7;
+            int r1 = r8;
+            memcpy(r0, r1, r2);
          }
          
-         //MOVS            R3, #0
-         //LDR             R5, [SP,#0xC0+crypt_ctx]
-         //STR             R3, [R5,#0xC] ; set error to field 0xC
+         crypt_ctx->error = 0;
 
          #pragma endregion
 
-         return;
+         return; // this should terminate crypto task (global exit)
       }
       else
       {
          #pragma region
 
-         /*
-         LDR             R7, [SP,#0xC0+iv_xor_key]
-         SXTH            R7, R7
-         STR             R7, [SP,#0xC0+key]
-         */
-
+         short r7 = iv_xor_key;
+         int r7 = (int)r7; // sign extend
+         key = r7; // OWERWRITES KEY
+         
          if(r7 >= 0)
          {
-            /*
-            LDR             R7, [SP,#0xC0+ignored]
-            AND.W           LR, R7, #0x41
-            */
-
+            int r7 = ignored;
+            int lr = r7 & 0x41;
+            
             if(lr != 0x41)
             {
-               /*
-               SUBS            R5, R2, #1
-               LDR             R7, [SP,#0xC0+var_8C]
-               ADDS            R2, R1, R5
-               LDR             R1, [SP,#0xC0+hmac_key]
-               MOV             R3, R6  ; ignored
-               MUL.W           R2, R4, R2
-               MLA.W           R5, R4, R5, R1
-               */
+               int r5 = r2 - 1;
+               int r7 = var_8C;
+               int r2 = r1 + r5;
+               int r1 = hmac_key;
+               int r3 = r6;
+               int r2 = r4 * r2;
+               int r5 = r4 * r5 + r1;
 
                int lr = 1;
                int r1 = 0xC0000B03;
@@ -2157,18 +2142,16 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
             }
          }
 
+         int r8 = r4 * r3;
+         int r7 = [R10,#0x38];
+         int r0 = [R10,#0x10];
+         int r6 = [SP,#0xC0+hmac_key];
+         int r2 = r4 * r5;
+         int r7 = r8 - r7;
+         int r7 = r7 + r0;
+         int r8 = r8 + r6;
+         
          #pragma endregion
-
-         /*
-         MUL.W           R8, R4, R3
-         LDR.W           R7, [R10,#0x38]
-         LDR.W           R0, [R10,#0x10]
-         LDR             R6, [SP,#0xC0+hmac_key]
-         MUL.W           R2, R4, R5
-         SUB.W           R7, R8, R7
-         ADD             R7, R0
-         ADD             R8, R6
-         */
       }
 
       #pragma endregion
@@ -2177,51 +2160,43 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    {
       #pragma region
 
-      /*
-      MUL.W           R8, R4, R3
-      LDR.W           R7, [R10,#0x38]
-      LDR.W           LR, [R10,#0x10]
-      LDR             R0, [SP,#0xC0+hmac_key]
-      MUL.W           R2, R4, R5
-      SUB.W           R7, R8, R7
-      ADD             R7, LR
-      ADD             R8, R0
-      */
-
+      int r8 = r4 * r3;
+      int r7 = [R10,#0x38];
+      int lr = [R10,#0x10];
+      int r0 = hmac_key;
+      int r2 = r4 * r5;
+      int r7 = r8 - r7;
+      int r7 = r7 + lr;
+      int r8 = r8 + r0;
+      
       if(r6 != 0)
       {
          #pragma region
 
          if(r8 != r7)
          {
-            /*
-            MOV             R0, R7  ; destination
-            MOV             R1, R8  ; source
-            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-            */
+            int r0 = r7;
+            int r1 = r8;
+            memcpy(r0, r1, r2);
          }
 
-         //MOVS            R3, #0
-         //LDR             R5, [SP,#0xC0+crypt_ctx]
-         //STR             R3, [R5,#0xC] ; set error to field 0xC
+         crypt_ctx->error = 0;
 
          #pragma endregion
 
-         return;
+         return; // this should terminate crypto task (global exit)
       }
       else
       {
-         /*
-         LDR             R6, [SP,#0xC0+iv_xor_key]
-         SXTH            R6, R6
-         STR             R6, [SP,#0xC0+key]
-         */
+         short r6 = iv_xor_key;
+         int r6 = (int)r6; // sign extend
+         key = r6; // OWERWRITES KEY
       }
 
       #pragma endregion
    }
 
-   //----------------------------
+   //###########################################################################
 
    //loc_219C582:
 
