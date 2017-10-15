@@ -1994,58 +1994,41 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx)
    }
 }
 
-void work_3_step0()
+void work_3_step0(CryptEngineWorkCtx* crypt_ctx)
 {
    #pragma region
-   /*
-   LDR             R6, [SP,#0xC0+iv_xor_key]
-   AND.W           R5, R6, #0x4000
-   UXTH            R5, R5
-   */
+
+   short r6 = iv_xor_key;
+   short r5 = r6 & 0x4000;
+   int r5 = (int)r5;
 
    if(r5 == 0)
    {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
+      crypt_ctx->error = 0;
       return;
    }
 
-   /*
-   LDR             R7, [SP,#0xC0+iv_xor_key]
-   LSLS            R1, R7, #0x10
-   */
+   int r7 = iv_xor_key;
+   int r1 = r7 << 0x10;
 
    if(r1 < 0)
    {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
+      crypt_ctx->error = 0;
       return;
    }
 
-   /*
-   LDR             R6, [SP,#0xC0+ignored]
-   AND.W           R3, R6, #0x41
-   */
+   int r6 = ignored;
+   int r3 = r6 & 0x41;
 
    if(r3 == 0x41)
    {
-      /*
-      MOVS            R3, #0
-      LDR             R5, [SP,#0xC0+crypt_ctx]
-      STR             R3, [R5,#0xC] ; set error to field 0xC
-      */
+      crypt_ctx->error = 0;
       return;
    }
 
    //----------------------------
 
-   //LDR             R6, [SP,#0xC0+var_8C]
+   int r6 = var_8C;
 
    int r2 = 1;
    int r3 = 0xC0000B03;
@@ -2569,7 +2552,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx, CryptEngineSubctx* r10)
    {
       //----------------------------
 
-      work_3_step0();
+      work_3_step0(crypt_ctx);
 
       //----------------------------
    }
