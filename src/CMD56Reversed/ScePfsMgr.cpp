@@ -3,6 +3,7 @@
 
 #include "SceIofilemgr.h"
 #include "SceSysclib.h"
+#include "ScePfsMgrDeriveKeys.h"
 
 typedef struct ctx_21A27B8_70 //size is 0x160
 {
