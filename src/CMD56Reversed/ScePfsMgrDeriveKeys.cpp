@@ -1996,105 +1996,78 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx)
 
 void work_3_step0(CryptEngineWorkCtx* crypt_ctx)
 {
-   #pragma region
+   short flag0; // = iv_xor_key;
+   short flag1; // = ignored;
+   int bitSize; // = var_8C
 
-   short r6 = iv_xor_key;
-   short r5 = r6 & 0x4000;
-   int r5 = (int)r5;
+   int nBlocks ; // = key;
+   const char* key; // = r11
+   const char* subkey_key; // = r9;
+   int tweak_key0; // = unk3_0;
+   int tweak_key1; // = unk3_1;
 
-   if(r5 == 0)
+   int block_size; // = r4;
+   char* buffer; // = hmac_key;
+   uint16_t kid; // = unk0;
+   int size; // = key_id;
+
+   //variable mapping
+
+   if(((int)flag0 & 0x4000) == 0)
    {
       crypt_ctx->error = 0;
       return;
    }
 
-   int r7 = iv_xor_key;
-   int r1 = r7 << 0x10;
-
-   if(r1 < 0)
+   if((flag0 << 0x10) < 0)
    {
       crypt_ctx->error = 0;
       return;
    }
 
-   int r6 = ignored;
-   int r3 = r6 & 0x41;
-
-   if(r3 == 0x41)
+   if((flag1 & 0x41) == 0x41)
    {
       crypt_ctx->error = 0;
       return;
    }
 
-   //----------------------------
-
-   int r6 = var_8C;
-
-   int r2 = 1;
-   int r3 = 0xC0000B03;
-   int r2 = r2 << r6;
-   int r3 = r3 & r2;
-   
-   if((r6 > 0x1F) || (r3 == 0))
+   if(nBlocks == 0)
    {
-      #pragma region
-         
-      if(key == 0)
-      {
-         int r5 = crypt_ctx;
-         [R5,#0xC] = 0;
-         return;
-      }
+      crypt_ctx->error = 0;
+      return;
+   }
 
-      int offset0 = 0;
-      int counter0 = 0;
-   
+   int offset = 0;
+   int counter = 0;
+
+   if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+   {   
       do
       {
-         pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, unk3[0] + offset0, unk3[1] + 0, r4, r4, hmac_key + offset0, hmac_key + offset0, ignored);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, block_size, block_size, buffer + offset, buffer + offset, flag1);
 
-         counter0 = counter0 + 1;
-         offset0 = offset0 + r4;
+         counter = counter + 1;
+         offset = offset + block_size;
       }
-      while(counter0 != key)
-
-      int r5 = crypt_ctx;
-      [R5,#0xC] = 0;
-        
-      #pragma endregion
-      return;
+      while(counter != nBlocks);
    }
    else
    {
-      #pragma region
-      if(key == 0)
-      {
-         int r5 = crypt_ctx;
-         [R5,#0xC] = 0;
-         return;
-      }
-
-      int offset1 = 0;
-      int counter1 = 0;
-      int bytes_left1 = key_id;
+      int bytes_left = size;
    
       do
       {
-         pfs_decrypt_hw_219D480(r11, r9, unk3[0] + offset1, unk3[1] + 0, ((r4 < bytes_left1) ? r4 : bytes_left1), r4, hmac_key + offset1, hmac_key + offset1, ignored, unk0);
+         int size_arg = ((block_size < bytes_left) ? block_size : bytes_left);
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, block_size, buffer + offset, buffer + offset, flag1, kid);
 
-         bytes_left1 = bytes_left1 - r4;
-         offset1 = offset1 + r4;
-         counter1 = counter1 + 1;
+         bytes_left = bytes_left - block_size;
+         offset = offset + block_size;
+         counter = counter + 1;
       }
-      while(counter1 != key)
-   
-      int r5 = crypt_ctx;
-      [R5,#0xC] = 0;
-  
-      #pragma endregion
-      return;
+      while(counter != nBlocks);
    }
-   #pragma endregion
+
+   crypt_ctx->error = 0;
 }
 
 void work_3_step1()
@@ -2494,7 +2467,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx, CryptEngineSubctx* r10)
    int r3 = [R10, #0x40];
    int r2 = r4 * r2;
    key = r5;
-   short r1 = r1 0 2;
+   short r1 = r1 - 2;
    short r5 = [R9,#0x10]
    int r1 = (int)r1;
    ignored = r6;
