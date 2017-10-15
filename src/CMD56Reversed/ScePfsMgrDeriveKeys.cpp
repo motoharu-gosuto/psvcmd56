@@ -1812,183 +1812,117 @@ int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t 
 
 void verify_step(CryptEngineWorkCtx* crypt_ctx)
 {
-   int r5 = iv_xor_key;
-   int r5 = r5 << 0x12;
+   //variable mapping
 
-   if(r5 >= 0)
+   short flag0; // = iv_xor_key;
+   short flag1; // = ignored;
+
+   int block_size; // = r4
+   int size; // = key_id
+   char* signatures; // = r6;
+   char* source; // = hmac_key;
+   int nBlocks; // = key
+   int tweak_key0; // = unk3[0];
+   int tweak_key1; // = unk3[1];
+
+   int bitSize; // = var_8C
+   CryptEngineData* crypt_data; // = r9
+
+   //--------------------------
+
+   if((flag0 << 0x12) < 0)
+      return;
+   
+   if((flag0 << 0x10) < 0)
+      return;
+
+   if((flag1 & 0x20) != 0)
+      return;
+
+   //r4  does not change - is restored
+   //r9 does not change - is restored
+   //r10 does not change - is restored
+
+   if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
    {
-      int r7 = iv_xor_key;
-      int r0 = r7 << 0x10;
-
-      if(r0 >= 0)
+      if((flag1 & 0x41) != 0x41)
       {
-         short r7 = ignored;
-         short r5 = r7 & 0x20;
-         int r5 = (int)r5;
-
-         if(r5 == 0)
+         if(nBlocks != 0)
          {
-            int r7 = var_8C;
-            int r0 = r9 + 0x4C; //hmac_key
-            unk1 = r0;
+            int counter = 0;
 
-            int r2 = 1;
-            r2 = r2 << r7;
-            int r3 = 0xC0000B03;
-            int r3 = r3 & r2;
-
-            if((r7 > 0x1F) || (r3 == 0))
-            {
-               //-----------------
-
-               #pragma region VERIFY 0
-
-               short r5 = ignored;
-               int r3 = r5 & 0x41;
-
-               if(r3 != 0x41)
-               {
-                  int r5 = key;
-                  
-                  if(r5 != 0)
-                  {
-                     int r0 = ignored;
-                     int r8 = r6;
-                     var_64[0] = r10;
-                     var_64[1] = r9;
-                     int r11 = 0;
-                     int r9 = r4;
-                     int r6 = hmac_key;
-                     int r7 = r0 & 9;
-                     int r5 = &bytes14;
-                     int r4 = r7;
-                     int r10 = unk1;
-                     int r7 = key;
+            char* source_base = source;
+            char* signatures_base = signatures;
                      
-                     do
-                     {
-                        int r1 = r10;
-                        int r0 = r5;
-                        int r2 = r6;
-                        int r3 = r9;
+            char bytes14[0x14] = {0};
 
-                        int r0 = hmac_sha1_digest_219DE7C(r0, r1, r2, r3);
-                        
-                        int r0 = r8;
-                        int r1 = r5;
-
-                        int r0 = proc_verify_14_bytes_219DE44(r0, r1);
-
-                        //if verify is not successful and flag is not specified
-                        if((r0 == 0) && (r4 != 1))
-                        {
-                           crypt_ctx->error = 0x80140F02;
-                           return;
-                        }
-                        
-                        int r11 = r11 + 1;
-                        int r6 = r9;
-                        int r8 = r8 + 0x14;
-                     }
-                     while(r11 != r7);
-
-                     int r4 = r9;
-                     int r10 = var_64[0];
-                     int r9 = var_64[1];
-                  }
-               }
-
-               #pragma endregion
-
-               //-----------------
-            }
-            else
+            do
             {
-               //-----------------
+               hmac_sha1_digest_219DE7C(bytes14, crypt_data->hmac_key, source_base, block_size);
+                        
+               int ver_res = proc_verify_14_bytes_219DE44(signatures_base, bytes14);
 
-               #pragma region VERIFY 1
-
-               int r7 = ignored;
-               int r3 = r7 & 0x41;
-               
-               if(r3 != 0x41)
+               //if verify is not successful and flag is not specified
+               if((ver_res == 0) && ((flag1 & 9) != 1))
                {
-                  int r0 = unk3[0];
-                  int r1 = unk3[1];
-                  int r2 = r4;
-                  int r3 = r5;
-
-                  arm_lldiv_t res (r0, r1, r2, r3) = SceSysclibForDriver__aeabi_ldivmod_7554ab04(r0, r1, r2, r3);
-
-                  data = r0;
-                  int r0 = key;
-
-                  if(r0 != 0)
-                  {
-                     int r1 = ignored;
-                     int r12 = data;
-                     int r8 = r6;
-                     int r11 = r5;
-                     var_5C = r9;
-                     int r5 = bytes14;
-                     int r1 = r1 & 9;
-                     int r7 = hmac_key;
-                     var_64[0] = r1;
-                     var_64[1] = r10;
-                     int r10 = r12;
-
-                     int r6 = key_id[0];
-                     int r9 = key_id[1];
-
-                     do
-                     {
-                        int r1 = r9;
-                        int r2 = r10;
-                        int r3 = 4;
-                        int r0 = digest;
-                        int r0 = hmacSha1Digest_219DE68(r0, r1, r2, r3);
-
-                        int r1 = digest;
-                        int r0 = r5;
-                        int r2 = r7;
-
-                        int r3 = (r4 < r6) ? r4 : r6;
-
-                        int r0 = hmac_sha1_digest_219DE7C(r0, r1, r2, r3);
-                        
-                        int r0 = r8;
-                        int r1 = r5;
-                        int r0 = proc_verify_14_bytes_219DE44(r0, r1);
-                        
-                        int r2 = var_64;
-                        
-                        //if verify is not successful and flag is not specified
-                        if((r0 == 0) && (r2 != 1))
-                        {
-                           crypt_ctx->error = 0x80140F02;
-                           return;
-                        }
-                        
-                        int r3 = data;
-                        int r11 = r11 + 1;
-                        int r6 = r6 - r4;
-                        int r7 = r7 + r4;
-                        int r8 = r8 + 0x14;
-                        int r3 = r3 + 1;
-                        data = r3;
-                        int r3 = key;
-                     }
-                     while(r11 != r3);
-
-                     int r10 = var_60[0];
-                     int r9 = var_60[1];
-                  }
+                  crypt_ctx->error = 0x80140F02;
+                  return;
                }
+                        
+               counter = counter + 1;
 
-               #pragma endregion
-
-               //-----------------
+               source_base = source_base + block_size;
+               signatures_base = signatures_base + 0x14;
             }
+            while(counter != nBlocks);
+         }
+      }
+   }
+   else
+   {
+      if((flag1 & 0x41) != 0x41)
+      {
+         int64_t tk_combo = (int64_t)tweak_key0 | ((int64_t)tweak_key1 << 32);
+         arm_lldiv_t div_res = SceSysclibForDriver__aeabi_ldivmod_7554ab04(tk_combo, block_size);
+
+         int salt = (int)div_res.q;
+                  
+         if(nBlocks != 0)
+         {
+            int counter = 0;
+            int bytes_left = size;
+
+            char* source_base = source;
+            char* signatures_base = signatures;
+
+            char digest[0x14] = {0};
+            char bytes14[0x14] = {0};
+
+            do
+            {
+               hmacSha1Digest_219DE68(digest, crypt_data->hmac_key, (char*)&salt, 4);
+
+               int size_arg = (block_size < bytes_left) ? block_size : bytes_left;
+               hmac_sha1_digest_219DE7C(bytes14, digest, source_base, size_arg);
+                        
+               int ver_res = proc_verify_14_bytes_219DE44(signatures_base, bytes14);
+                        
+               //if verify is not successful and flag is not specified
+               if((ver_res == 0) && ((flag1 & 9) != 1))
+               {
+                  crypt_ctx->error = 0x80140F02;
+                  return;
+               }
+                        
+               counter = counter + 1;
+               bytes_left = bytes_left - block_size;
+
+               source_base = source_base + block_size;
+               signatures_base = signatures_base + 0x14;
+
+               salt = salt + 1;
+            }
+            while(counter != nBlocks);
          }
       }
    }
@@ -1996,6 +1930,8 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx)
 
 void work_3_step0(CryptEngineWorkCtx* crypt_ctx)
 {
+   //variable mapping
+
    short flag0; // = iv_xor_key;
    short flag1; // = ignored;
    int bitSize; // = var_8C
@@ -2003,15 +1939,15 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx)
    int nBlocks ; // = key;
    const char* key; // = r11
    const char* subkey_key; // = r9;
-   int tweak_key0; // = unk3_0;
-   int tweak_key1; // = unk3_1;
+   int tweak_key0; // = unk3[0];
+   int tweak_key1; // = unk3[1];
 
    int block_size; // = r4;
    char* buffer; // = hmac_key;
    uint16_t kid; // = unk0;
    int size; // = key_id;
 
-   //variable mapping
+   //------------------------------
 
    if(((int)flag0 & 0x4000) == 0)
    {
@@ -2509,7 +2445,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx, CryptEngineSubctx* r10)
       hmac_key = r5;
    }
 
-   //==================================
+   //============ VERIFY ======================
 
    verify_step(crypt_ctx);
    if(crypt_ctx->error < 0) //need to add this check since functionality is now split into several functions
