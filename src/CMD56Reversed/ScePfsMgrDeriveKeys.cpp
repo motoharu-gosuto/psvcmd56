@@ -1916,8 +1916,8 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 
 void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* buffer)
 {
-   short flag0 = crypt_ctx->subctx->data->seed1_base;
-   short flag1 = crypt_ctx->subctx->data->flag;
+   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
+   uint16_t flag1 = crypt_ctx->subctx->data->flag;
    
    int nBlocks = crypt_ctx->subctx->nDigests;
    const char* key = crypt_ctx->subctx->data->key;
@@ -1985,8 +1985,52 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    crypt_ctx->error = 0;
 }
 
-void work_3_step1()
+void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
+   int block_size = crypt_ctx->subctx->data->size1;
+   
+   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
+   uint16_t flag1 = crypt_ctx->subctx->data->flag;
+   uint16_t kid = crypt_ctx->subctx->data->key_id;
+   
+   const char* key = crypt_ctx->subctx->data->key;
+   const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
+
+   //-----------
+
+   if(crypt_ctx->subctx->unk_18 == 0)
+   {
+      int tweak_key0 = block_size * crypt_ctx->subctx->seed0_base;
+      int tweak_key1 = (int)flag0 & 0x4000;
+
+      if(tweak_key1 == 0)
+      {
+         if((flag0 << 0x10) >= 0)
+         {
+            if((flag1 & 0x41) != 0x41)
+            {
+               if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+               {
+                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1);
+               }
+               else
+               {
+                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1, kid);
+               }
+            }
+         }
+      }
+   }
+}
+
+void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
+{
+   work3_substep0(crypt_ctx, bitSize, buffer);
+
+   //---------------------------
+
+   #pragma region
+
    /*
    int r4 = crypt_ctx->subctx->data->size1;
    uint16_t ignored = crypt_ctx->subctx->data->flag;
@@ -1998,81 +2042,13 @@ void work_3_step1()
    char* r11 = crypt_ctx->subctx->data->key;
    char* r9 = crypt_ctx->subctx->data->iv_xor_key;
    */
+   
+   int r6 = (int)iv_xor_key & 0x4000;
 
-   //---------------------------
+   int r3 = [R10,#0x18]; //just restore as it was
+   int r5 = [R10,#0x1C]; //just restore as it was
 
-   #pragma region
-   /*
-   LDR             R7, [SP,#0xC0+iv_xor_key]
-   LDR.W           R3, [R10,#0x18]
-   AND.W           R6, R7, #0x4000
-   */
-
-   if(r3 == 0)
-   {
-      #pragma region
-
-      /*
-      UXTH            R6, R6
-      LDR.W           R1, [R10,#0x34]
-      */
-
-      if(r6 == 0)
-      {
-         //LSLS            R2, R7, #0x10
-         if(r2 >= 0)
-         {
-            /*
-            LDR             R7, [SP,#0xC0+ignored]
-            AND.W           R2, R7, #0x41
-            */
-
-            if(r2 != 0x41)
-            {
-               /*
-               LDR             R5, [SP,#0xC0+var_8C]
-               MUL.W           R2, R4, R1
-               MOV             R3, R6  ; ignored
-               */
-
-               int r0 = 1;
-               int r1 = 0xC0000B03;
-               int r0 = r0 << r5;
-               int r1 = r1 & r0;
-               
-               if((r5 > 0x1F) || (r1 == 0))
-               {
-                  pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, hmac_key, hmac_key, ignored);
-
-                  int r3 = [R10,#0x18];
-                  int r5 = [R10,#0x1C];
-                  int r1 = [R10,#0x34];
-
-                  //ARE CHANGED VARIABLES USED ? r2, r7
-               }
-               else
-               {
-                  pfs_decrypt_hw_219D480(r11, r9, r2, r3, r4, r4, hmac_key, hmac_key, ignored, unk0);
-
-                  int r3 = [R10,#0x18];
-                  int r5 = [R10,#0x1C];
-                  int r1 = [R10,#0x34];
-
-                  //ARE CHANGED VARIABLES USED ? r7
-               }
-            }
-         }
-      }
-
-      #pragma endregion
-   }
-   else
-   {
-      /*
-      LDR.W           R1, [R10,#0x34]
-      UXTH            R6, R6
-      */
-   }
+   int r1 = [R10,#0x34]; //set as in the other scenarios
 
    //----------------------------
 
@@ -2412,7 +2388,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    }
    else
    {
-      work_3_step1();
+      work_3_step1(crypt_ctx, var_8C, hmac_key);
    }
 }
 
