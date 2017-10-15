@@ -163,17 +163,24 @@ arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d
    return arm_lldiv_t();
 }
 
+//returns 0 if data is equal
+//returns -1 if data is not equal
+int SceSysclibForDriver_b5a4d745(char* data0, char* data1, uint32_t size)
+{
+   return 0;
+}
+
 ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
 {
    return 0;
 }
 
-int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const char *source, int size, char *result)
+int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const char *source, uint32_t size, char* result)
 {
    return 0;
 }
 
-int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key, int key_len, const char* data, int data_len, char* digest)
+int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key, uint32_t key_len, const char* data, uint32_t data_len, char* digest)
 {
    return 0;
 }
@@ -1254,6 +1261,12 @@ int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint
    return 0;
 }
 
+int proc_verify_14_bytes_219DE44(char* data0, char* data1)
+{
+   int result = SceSysclibForDriver_b5a4d745(data0, data1, 0x14);
+   return (result < 0) ? 1 : 0;
+}
+
 //-------------------------------------
 
 int sub_219A29C(const derive_keys_ctx* ctx)
@@ -1758,34 +1771,71 @@ int ScePfsCryptEngineThread_219BBB0()
 
 #define IGNORE_ARG 0
 
-void crypt_engine_work_3()
+int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t size)
 {
-   /*
-   LDR.W           R9, [R10,#0xC]
-   LDR.W           R2, [R10,#0x34]
-   LDR.W           R5, [R10,#0x2C]
-   LDR.W           R4, [R9,#0x28]
-   LDRH.W          R1, [R9,#0xC]
-   LDRH.W          R6, [R9,#0xE]
-   SUBS            R7, R5, #1
-   LDR.W           R3, [R10,#0x40]
-   MUL.W           R2, R4, R2
-   STR             R5, [SP,#0xC0+key]
-   SUBS            R1, #2
-   LDRH.W          R5, [R9,#0x10]
-   UXTH            R1, R1
-   STR             R6, [SP,#0xC0+ignored]
-   LDRH.W          R6, [R9,#0x12]
-   MLA.W           R3, R4, R7, R3
-   VDUP.32         D16, R2
-   STR             R5, [SP,#0xC0+unk0]   
-   VSHR.U64        D16, D16, #0x20
-   STR             R6, [SP,#0xC0+iv_xor_key]
-   STR             R1, [SP,#0xC0+var_8C]
-   LDR.W           R6, [R10,#0x4C]
-   STR             R3, [SP,#0xC0+key_id]
-   VSTR            D16, [SP,#0xC0+unk3]
-   */
+   if(size == 0)
+   {
+      //NOT SURE WHY DATA LEN CAN BE 0 ?
+      SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(key, 0x14, src, 0, digest);
+      return 0;
+   }
+
+   char key_raw[0x14] = {0};
+   char dst_raw[0x14] = {0};
+
+   char* key_aligned = key_raw + ((0 - (int)key_raw) & 0x3F);
+   char* dst_aligned = dst_raw + ((0 - (int)dst_raw) & 0x3F);
+
+   //memset(key_aligned + 8, 0, 0x18); //NOT SURE WHAT IS THE PURPOSE OF THIS LINE ?
+
+   memcpy(key_aligned, key, 0x14);
+   
+   int result = SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(src, dst_aligned, size, key_aligned, 0, 1, 0); // IV is zero in this case - this is OK (tested)
+   if(result != 0)
+      return result;
+
+   memcpy(digest, dst_aligned, 0x14);
+
+   return 0;
+}
+
+void crypt_engine_work_3(CryptEngineWorkCtx * crypt_ctx, CryptEngineSubctx* r10)
+{
+   int r9 = [R10,#0xC];
+   int r2 = [R10,#0x34];
+   int r5 = [R10,#0x2C];
+   int r4 = [R9,#0x28];
+   short r1 = [R9,#0xC];
+   short r6 = [R9,#0xE];
+   int r7 = r5 - 1;
+   int r3 = [R10, #0x40];
+   int r2 = r4 * r2;
+   key = r5;
+   short r1 = r1 0 2;
+   short r5 = [R9,#0x10]
+   int r1 = (int)r1;
+   ignored = r6;
+   short r6 = [R9,#0x12];
+
+   int r3 = r4 * r7 + r3;
+
+   D16[0] = r2;
+   D16[1] = r2;
+
+   unk0 = r5;
+
+   D16[0] = D16[0] >> 0x20;
+   D16[1] = D16[1] >> 0x20;
+
+   iv_xor_key = r6;
+   var_8C = r1;
+
+   int r6 = [R10,#0x4C]
+
+   key_id = r3;
+   
+   unk3[0] = D16[0];
+   unk3[1] = D16[1];
 
    int r2 = 1;
    int r3 = 0xC0000B03;
@@ -1794,46 +1844,36 @@ void crypt_engine_work_3()
 
    if((r1 > 0x1F) || (r3 == 0))
    {
-      /*
-      LDR.W           R5, [R10,#0x50]
-      STR             R5, [SP,#0xC0+hmac_key]
-      */
+      int r5 = [R10,#0x50];
+      hmac_key = r5;
    }
    else
    {
-      /*
-      LDR.W           R5, [R10,#0x54] ; R10 = CryptEngineSubctx*
-      STR             R5, [SP,#0xC0+hmac_key]
-      */
+      int r5 = [R10,#0x54];
+      hmac_key = r5;
    }
 
-   /*
-   LDR             R5, [SP,#0xC0+iv_xor_key]
-   LSLS            R5, R5, #0x12
-   */
+   int r5 = iv_xor_key;
+   int r5 = r5 << 0x12;
+
+   //----------------------------
 
    if(r5 >= 0)
    {
-      /*
-      LDR             R7, [SP,#0xC0+iv_xor_key]
-      LSLS            R0, R7, #0x10
-      */
+      int r7 = iv_xor_key;
+      int r0 = r7 << 0x10;
 
       if(r0 >= 0)
       {
-         /*
-         LDR             R7, [SP,#0xC0+ignored]
-         AND.W           R5, R7, #0x20
-         UXTH            R5, R5
-         */
+         short r7 = ignored;
+         short r5 = r7 & 0x20;
+         int r5 = (int)r5;
 
          if(r5 == 0)
          {
-            /*
-            LDR             R7, [SP,#0xC0+var_8C]
-            ADD.W           R0, R9, #0x4C
-            STR             R0, [SP,#0xC0+unk1]
-            */
+            int r7 = var_8C;
+            int r0 = r9 + 0x4C;
+            unk1 = r0;
 
             int r2 = 1;
             r2 = r2 << r7;
@@ -1842,45 +1882,45 @@ void crypt_engine_work_3()
 
             if((r7 > 0x1F) || (r3 == 0))
             {
+               //-----------------
+
                #pragma region
 
-               /*
-               LDR             R5, [SP,#0xC0+ignored]
-               AND.W           R3, R5, #0x41
-               */
+               short r5 = ignored;
+               int r3 = r5 & 0x41;
 
                if(r3 != 0x41)
                {
-                  //LDR             R5, [SP,#0xC0+key]
-
+                  int r5 = key;
+                  
                   if(r5 != 0)
                   {
-                     /*
-                     LDR             R0, [SP,#0xC0+ignored]
-                     MOV             R8, R6  ; real digest for comparison
-                     STRD.W          R10, R9, [SP,#0x5C]
-                     MOV.W           R11, #0
-                     MOV             R9, R4  ; hmac_src_size
-                     LDR             R6, [SP,#0xC0+hmac_key] ; hmac_src
-                     AND.W           R7, R0, #9
-                     ADD             R5, SP, #0xC0+bytes14 ; hmac_digest
-                     MOV             R4, R7
-                     LDR.W           R10, [SP,#0xC0+unk1] ; hmac_key
-                     LDR             R7, [SP,#0xC0+key]
-                     */
-
+                     int r0 = ignored;
+                     int r8 = r6;
+                     var_64[0] = r10;
+                     var_64[1] = r9;
+                     int r11 = 0;
+                     int r9 = r4;
+                     int r6 = hmac_key;
+                     int r7 = r0 & 9;
+                     int r5 = &bytes14;
+                     int r4 = r7;
+                     int r10 = unk1;
+                     int r7 = key;
+                     
                      while(true)
                      {
-                        /*
-                        MOV             R1, R10
-                        MOV             R0, R5  ; digest_result
-                        MOV             R2, R6  ; src
-                        MOV             R3, R9  ; size
-                        BL              hmac_sha1_digest_219DE7C
-                        MOV             R0, R8  ; unk0
-                        MOV             R1, R5  ; unk1 - calculated result
-                        BL              proc_verify_14_bytes_219DE44
-                        */
+                        int r1 = r10;
+                        int r0 = r5;
+                        int r2 = r6;
+                        int r3 = r9;
+
+                        int r0 = hmac_sha1_digest_219DE7C(?);
+                        
+                        int r0 = r8;
+                        int r1 = r5;
+
+                        int r0 = proc_verify_14_bytes_219DE44();
 
                         if((r0 != 0) || (r4 == 1))
                         {
@@ -1910,9 +1950,13 @@ void crypt_engine_work_3()
                }
 
                #pragma endregion
+
+               //-----------------
             }
             else
             {
+               //-----------------
+
                #pragma region
 
                /*
@@ -2000,10 +2044,14 @@ void crypt_engine_work_3()
                }
 
                #pragma endregion
+
+               //-----------------
             }
          }
       }
    }
+
+   //-----------------
    
    /*
    LDR.W           R5, [R10,#0x1C]
@@ -2013,6 +2061,8 @@ void crypt_engine_work_3()
 
    if(r5 == 0)
    {
+      //----------------------------
+
       #pragma region
       /*
       LDR             R6, [SP,#0xC0+iv_xor_key]
@@ -2059,6 +2109,8 @@ void crypt_engine_work_3()
          */
          return;
       }
+
+      //----------------------------
 
       //LDR             R6, [SP,#0xC0+var_8C]
 
@@ -2127,9 +2179,13 @@ void crypt_engine_work_3()
          return;
       }
       #pragma endregion
+
+      //----------------------------
    }
    else
    {
+      //----------------------------
+
       #pragma region
       /*
       LDR             R7, [SP,#0xC0+iv_xor_key]
@@ -2202,6 +2258,8 @@ void crypt_engine_work_3()
          UXTH            R6, R6
          */
       }
+
+      //----------------------------
 
       //loc_219C22E:
 
@@ -2372,6 +2430,8 @@ void crypt_engine_work_3()
          #pragma endregion
       }
 
+      //----------------------------
+
       //loc_219C582:
 
       /*
@@ -2507,32 +2567,28 @@ void crypt_engine_work_3()
          }
       }
       #pragma endregion
+
+      //----------------------------
    }
 }
 
-void crypt_engine_work_2_4()
+void crypt_engine_work_2_4(CryptEngineWorkCtx * crypt_ctx, CryptEngineSubctx* r10)
 {
 
 }
 
 void ScePfsCryptEngineThread_work_219BF20(CryptEngineWorkCtx *work_ctx)
 {
-   /*
-   LDR.W           R10, [R0,#8] ; get CryptEngineSubctx*
-   LDR.W           R3, [R10,#8] ; get opt code
-   STR             R0, [SP,#0xC0+crypt_ctx]
-   */
-
-   switch(r3)
+   switch(work_ctx->subctx->opt_code)
    {
    case 2:
-      crypt_engine_work_2_4();
+      crypt_engine_work_2_4(work_ctx, work_ctx->subctx);
       break;
    case 3:
-      crypt_engine_work_3();
+      crypt_engine_work_3(work_ctx, work_ctx->subctx);
       break;
    case 4:
-      crypt_engine_work_2_4();
+      crypt_engine_work_2_4(work_ctx, work_ctx->subctx);
       break;
    default:
       break;
