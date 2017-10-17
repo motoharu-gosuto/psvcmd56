@@ -2024,9 +2024,10 @@ void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    }
 }
 
-void work3_substep1()
+#define SXTH(x) (int)x
+
+void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate)
 {
-   /*
    //there are 2 branches
    //each branch can do 2 things
    // - globally exit. memcpy some data
@@ -2035,145 +2036,101 @@ void work3_substep1()
 
    //additionaly one of the branches calls some pfs functions
 
-   int r6 = (int)iv_xor_key & 0x4000;
-
-   int r3 = [R10,#0x18]; //just restore as it was
-   int r5 = [R10,#0x1C]; //just restore as it was
-
-   int r1 = [R10,#0x34]; //set as in the other scenarios
-
    //----------------------------
 
    //loc_219C22E:
 
-   int r2 = [R10,#0x2C];
-   int r0 = r5 + r3;
+   int some_value = [R10,#0x1C] + [R10,#0x18];
    
-   if(r0 < r2)
+   if((some_value >= [R10,#0x2C]) && ((iv_xor_key & 0x4000) != 0))
    {
-      int r0 = [R10,#0x40];
-      
-      if(r6 != 0)
+      #pragma region
+      int r2 = r4 * [R10,#0x1C];
+      int r7 = ((r4 * [R10,#0x18]) - [R10,#0x38]) + [R10,#0x10];
+      int r8 = (r4 * [R10,#0x18]) + hmac_key;
+
+      if(r8 != r7)
+         memcpy(r7, r8, r2);
+
+      crypt_ctx->error = 0;
+
+      *terminate = true;
+
+      #pragma endregion
+      return; // this should terminate crypto task (global exit)
+   }
+
+   if((iv_xor_key & 0x4000) != 0) // THIS IS THE SAME CONDITION. UPPER CONDITION CAN BE OPTIMIZED
+   {
+      #pragma region
+      int r2 = r4 * [R10,#0x1C];
+      int r7 = ((r4 * [R10,#0x18]) - [R10,#0x38]) + [R10,#0x10];
+      int r8 = (r4 * [R10,#0x18]) + hmac_key;
+         
+      if(r8 != r7)
+         memcpy(r7, r8, r2);
+         
+      crypt_ctx->error = 0;
+
+      *terminate = true;
+      #pragma endregion
+      return; // this should terminate crypto task (global exit)
+   }
+   
+   if((iv_xor_key << 0x10) >= 0)
+   {   
+      if((ignored & 0x41) != 0x41)
       {
-         #pragma region
+         int r2 = [R10,#0x2C];
+         int r1 = [R10,#0x34];
 
-         int r3 = r4 * r3;
-
-         int r1 = [R10,#0x38]; // is reassigned in this branch
-         int r7 = [R10,#0x10];
-         int r8 = hmac_key;
-         int r2 = r4 * r5;
-         int r1 = r3 - r1;
-         int r8 = r8 + r3;
-         int r7 = r7 + r1;
-         
-         if(r8 != r7)
-         {
-            int r0 = r7;
-            int r1 = r8;
-            memcpy(r0, r1, r2);
-         }
-         
-         crypt_ctx->error = 0;
-
-         #pragma endregion
-
-         return; // this should terminate crypto task (global exit)
-      }
-      else
-      {
-         #pragma region
-
-         short r7 = iv_xor_key;
-         int r7 = (int)r7; // sign extend
-         key = r7; // OWERWRITES KEY
-         
-         if(r7 >= 0)
-         {
-            int r7 = ignored;
-            int lr = r7 & 0x41;
+         int r5 = r2 - 1;
             
-            if(lr != 0x41)
-            {
-               int r5 = r2 - 1;
-               int r7 = var_8C;
-               int r2 = r1 + r5;
-               int r1 = hmac_key;
-               int r3 = r6;
-               int r2 = r4 * r2;
-               int r5 = r4 * r5 + r1;
-
-               int lr = 1;
-               int r1 = 0xC0000B03;
-               int lr = lr << r7;
-               int r1 = lr & r1;
-               
-               if((r7 > 0x1F) || (r1 == 0))
-               {
-                  pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, r5, r5, ignored);
-
-                  int r3 = [R10,#0x18];
-                  int r5 = [R10,#0x1C];
-                  int r1 = [R10,#0x34];
+         int r2 = r1 + r5;
+         int r1 = hmac_key;
+         int r3 = r6;
+         int r2 = r4 * r2;
+         int r5 = r4 * r5 + r1;
    
-                  // ARE CHANGED VARIABLES USED ? r2, r7
-               }
-               else
-               {
-                  pfs_decrypt_hw_219D480(r11, r9, r2, r3, ((r0 >= r4) ? r4 : r0), r4, r5, r5, ignored, unk0);
-
-                  int r3 = [R10,#0x18];
-                  int r5 = [R10,#0x1C];
-                  int r1 = [R10,#0x34];
-
-                  // ARE CHANGED VARIABLES USED? r6
-               }
-            }
-         }
-
-         int r8 = r4 * r3;
-         int r7 = [R10,#0x38];
-         int r0 = [R10,#0x10];
-         int r6 = hmac_key
-         int r2 = r4 * r5;
-         int r7 = r8 - r7;
-         int r7 = r7 + r0;
-         int r8 = r8 + r6;
-         
-         #pragma endregion
-      }
-   }
-   else
-   {
-      int r8 = r4 * r3;
-      int r7 = [R10,#0x38];
-      int lr = [R10,#0x10];
-      int r0 = hmac_key;
-      int r2 = r4 * r5;
-      int r7 = r8 - r7;
-      int r7 = r7 + lr;
-      int r8 = r8 + r0;
-      
-      if(r6 != 0)
-      {
-         if(r8 != r7)
+         if((var_8C > 0x1F) || ((0xC0000B03 & (1 << var_8C)) == 0))
          {
-            int r0 = r7;
-            int r1 = r8;
-            memcpy(r0, r1, r2);
+            pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, r5, r5, ignored);
          }
+         else
+         {
+            int r0 = [R10,#0x40];
 
-         crypt_ctx->error = 0;
-
-         return; // this should terminate crypto task (global exit)
-      }
-      else
-      {
-         short r6 = iv_xor_key;
-         int r6 = (int)r6; // sign extend
-         key = r6; // OWERWRITES KEY
+            pfs_decrypt_hw_219D480(r11, r9, r2, r3, ((r0 >= r4) ? r4 : r0), r4, r5, r5, ignored, unk0);
+         }
       }
    }
+   
+   //------- restore vars----------
+   key = (iv_xor_key << 0x10); //testing bit 15
+
+   int r3 = [R10,#0x18];
+   int r5 = [R10,#0x1C];
+   int r1 = [R10,#0x34];
+
+   int r2 = r4 * [R10,#0x1C];
+   int r7 = ((r4 * [R10,#0x18]) - [R10,#0x38]) + [R10,#0x10];
+   int r8 = (r4 * [R10,#0x18]) + hmac_key;
+   
+   //THIS SHOULD BE THE OUTPUT
+   /*
+   // r1 - is restored in the end of procedure
+   // r3 - is restored in the end of procedure
+   // r2 - calculated in the end
+   // r4 - is not touched
+   // r5 - is restored in the end of procedure
+   // r7 - calculated in the end
+   // r8 - calculated in the end
+   // r9 - is not touched
+   // r11 - is not touched
+
+   // unk0 - is not touched
+   // key - which is rewritten
+   // ignored - is not touched
    */
 }
 
@@ -2199,7 +2156,6 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
 
    if(flag0 < 0)
    {
-      #pragma region
       if(source != dest)
          memcpy(dest, source, size);
 
@@ -2283,7 +2239,8 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    char* r9 = crypt_ctx->subctx->data->iv_xor_key;
    */
    
-   work3_substep1();
+   bool terminate = false;
+   work3_substep1(crypt_ctx, &terminate);
 
    //###########################################################################
 
