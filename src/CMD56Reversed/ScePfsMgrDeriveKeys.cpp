@@ -2024,26 +2024,17 @@ void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    }
 }
 
-void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
+void work3_substep1()
 {
-   work3_substep0(crypt_ctx, bitSize, buffer);
-
-   //---------------------------
-
-   #pragma region
-
    /*
-   int r4 = crypt_ctx->subctx->data->size1;
-   uint16_t ignored = crypt_ctx->subctx->data->flag;
-   int key = crypt_ctx->subctx->nDigests;
-   int iv_xor_key = crypt_ctx->subctx->data->seed1_base;
-   uint16_t unk0 = crypt_ctx->subctx->data->key_id;
-   const char* r6 = crypt_ctx->subctx->hmac_sha1_digest; // 0x4C - signatures table
-   CryptEngineSubctx* r10 = crypt_ctx->subctx;
-   char* r11 = crypt_ctx->subctx->data->key;
-   char* r9 = crypt_ctx->subctx->data->iv_xor_key;
-   */
-   
+   //there are 2 branches
+   //each branch can do 2 things
+   // - globally exit. memcpy some data
+   // - owerwrite key variable
+   // - also should update other registers that will be used later (seems there is some common code for this)
+
+   //additionaly one of the branches calls some pfs functions
+
    int r6 = (int)iv_xor_key & 0x4000;
 
    int r3 = [R10,#0x18]; //just restore as it was
@@ -2060,8 +2051,6 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    
    if(r0 < r2)
    {
-      #pragma region
-
       int r0 = [R10,#0x40];
       
       if(r6 != 0)
@@ -2145,7 +2134,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          int r8 = r4 * r3;
          int r7 = [R10,#0x38];
          int r0 = [R10,#0x10];
-         int r6 = [SP,#0xC0+hmac_key];
+         int r6 = hmac_key
          int r2 = r4 * r5;
          int r7 = r8 - r7;
          int r7 = r7 + r0;
@@ -2153,13 +2142,9 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          
          #pragma endregion
       }
-
-      #pragma endregion
    }
    else
    {
-      #pragma region
-
       int r8 = r4 * r3;
       int r7 = [R10,#0x38];
       int lr = [R10,#0x10];
@@ -2171,8 +2156,6 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
       
       if(r6 != 0)
       {
-         #pragma region
-
          if(r8 != r7)
          {
             int r0 = r7;
@@ -2182,8 +2165,6 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
          crypt_ctx->error = 0;
 
-         #pragma endregion
-
          return; // this should terminate crypto task (global exit)
       }
       else
@@ -2192,147 +2173,121 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          int r6 = (int)r6; // sign extend
          key = r6; // OWERWRITES KEY
       }
-
-      #pragma endregion
    }
-
-   //###########################################################################
-
-   //loc_219C582:
-
-   /*
-   LDR             R6, [SP,#0xC0+key]
    */
+}
 
-   if(r6 < 0)
+//bitSize = var_8C
+void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
+{
+   //--- variable mapping
+
+   int block_size; // = r4;
+   int size; // = r2
+   char* source; // = r8
+   char* dest; // = r7
+   uint16_t key_id; // = unk0
+   char* key; // = r11
+   char* subkey_key; // = r9
+   int nBlocks; // = r5;
+   uint16_t flag0; // = key - which is rewritten
+   uint16_t flag1; // = ignored
+   int r1;
+   int r3;
+
+   //------------
+
+   if(flag0 < 0)
    {
       #pragma region
-      if(r8 != r7)
-      {
-         /*
-         MOV             R0, R7  ; destination
-         MOV             R1, R8  ; source
-         BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-         */
-      }
-      
-      //MOVS            R3, #0
-      //LDR             R5, [SP,#0xC0+crypt_ctx]
-      //STR             R3, [R5,#0xC] ; set error to field 0xC
+      if(source != dest)
+         memcpy(dest, source, size);
 
-      #pragma endregion
-      return;
+      crypt_ctx->error = 0;
+      return; // this should terminate crypto task (global exit)
+   }
+
+   if((flag1 & 0x41) == 0x41)
+   {
+      if(source != dest)
+         memcpy(dest, source, size);
+         
+      crypt_ctx->error = 0;
+      return; // this should terminate crypto task (global exit)
+   }
+
+   int seed_root = block_size * (r3 + r1);
+   int tweak_key0 = seed_root >> 0x20;
+   int tweak_key1 = seed_root >> 0x20;
+   
+   if(nBlocks == 0)
+   {
+      crypt_ctx->error = 0;
+      return; // this should terminate crypto task (global exit)
+   }
+
+   int offset = 0;
+   int counter = 0;
+
+   if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+   {
+      do
+      {
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, block_size, block_size, source + offset, dest + offset, flag1);
+
+         offset = offset + block_size;
+         counter = counter + 1;
+      }
+      while(counter != nBlocks);
+
+      crypt_ctx->error = 0;
+   
+      return; // this should terminate crypto task (global exit)
    }
    else
    {
-      /*
-      LDR             R6, [SP,#0xC0+ignored]
-      AND.W           R0, R6, #0x41
-      */
-
-      if(r0 == 0x41)
+      int bytes_left = size;
+      
+      do
       {
-         #pragma region
+         int size_arg = (block_size <= bytes_left) ? block_size : bytes_left;
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, block_size, source + offset, dest + offset, flag1, key_id);
 
-         if(r8 != r7)
-         {
-            /*
-            MOV             R0, R7  ; destination
-            MOV             R1, R8  ; source
-            BLX             ScePfsMgr.SceSysclibForDriver._imp_memcpy_40c88316
-            */
-         }
-         
-         //MOVS            R3, #0
-         //LDR             R5, [SP,#0xC0+crypt_ctx]
-         //STR             R3, [R5,#0xC] ; set error to field 0xC
-
-         #pragma endregion
-         return;
+         offset = offset + block_size;
+         bytes_left = bytes_left - block_size;
+         counter = counter + 1;
       }
-      else
-      {
-         #pragma region
-
-         /*
-         ADD             R3, R1
-         LDR             R6, [SP,#0xC0+var_8C]
-         MUL.W           R3, R4, R3
-         VDUP.32         D16, R3
-         VSHR.U64        D16, D16, #0x20
-         VSTR            D16, [SP,#0xC0+key]
-         */
-
-         int r1 = 1;
-         int r3 = 0xC0000B03;
-         int r1 = r1 << r6;
-         int r3 = r3 & r1;
-
-         if((r6 > 0x1F) || (r3 == 0))
-         {
-            #pragma region
-
-            if(r5 == 0)
-            {
-               int r5 = crypt_ctx;
-               [R5,#0xC] = 0;
-               return;
-            }
+      while(counter != nBlocks);
    
-            int offset2 = 0;
-            int counter2 = 0;
-   
-            do
-            {
-               pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, key[0] + offset2, key[1] + 0, r4, r4, r8 + offset2, r7 + offset2, ignored);
+      crypt_ctx->error = 0;
 
-               offset2 = offset2 + r4;
-               counter2 = counter2 + 1;
-            }
-            while(counter2 != r5);
-
-            int r5 = crypt_ctx;
-            [R5,#0xC] = 0;
-   
-            #pragma endregion
-            return;
-         }
-         else
-         {
-            #pragma region
-            if(r5 == 0)
-            {
-               int r5 = crypt_ctx;
-               [R5,#0xC] = 0;  
-               return;
-            }
-
-            int offset3 = 0;
-            int counter3 = 0;
-            int bytes_left3 = r2;
-            int block_size3 = r4;
-   
-            do
-            {
-               pfs_decrypt_hw_219D480(r11, r9, key[0] + offset3, key[1] + 0, ((block_size3 <= bytes_left3) ? block_size3 : bytes_left3), block_size3, r8 + offset3, r7 + offset3, ignored, unk0);
-
-               offset3 = offset3 + block_size3;
-               bytes_left3 = bytes_left3 - block_size3;
-               counter3 = counter3 + 1;
-            }
-            while(counter3 != r5)
-   
-            int r5 = crypt_ctx;
-            [R5,#0xC] = 0;
-
-            #pragma endregion
-            return;
-         }
-
-         #pragma endregion
-      }
+      return; // this should terminate crypto task (global exit)
    }
-   #pragma endregion
+}
+
+void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
+{
+   work3_substep0(crypt_ctx, bitSize, buffer);
+
+   //---------------------------
+
+   /*
+   int r4 = crypt_ctx->subctx->data->size1;
+   uint16_t ignored = crypt_ctx->subctx->data->flag;
+   int key = crypt_ctx->subctx->nDigests;
+   int iv_xor_key = crypt_ctx->subctx->data->seed1_base;
+   uint16_t unk0 = crypt_ctx->subctx->data->key_id;
+   const char* r6 = crypt_ctx->subctx->hmac_sha1_digest; // 0x4C - signatures table
+   CryptEngineSubctx* r10 = crypt_ctx->subctx;
+   char* r11 = crypt_ctx->subctx->data->key;
+   char* r9 = crypt_ctx->subctx->data->iv_xor_key;
+   */
+   
+   work3_substep1();
+
+   //###########################################################################
+
+   work3_substep2(crypt_ctx, bitSize);
 }
 
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
