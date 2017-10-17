@@ -91,7 +91,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    
    char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
    uint32_t source; // 0x14
-   uint32_t unk_18;
+   uint32_t unk_18; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS SIZE (based on tweak key derrivation)
    uint32_t unk_1C;
    
    uint32_t unk_20;
@@ -1812,6 +1812,8 @@ int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t 
 
 void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* source)
 {
+   // variable mapping
+
    int block_size = crypt_ctx->subctx->data->size1;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    int nBlocks = crypt_ctx->subctx->nDigests;
@@ -1916,6 +1918,8 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 
 void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* buffer)
 {
+   // variable mapping
+
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    
@@ -1988,6 +1992,8 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
 
 void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
+   // variable mapping
+
    int block_size = crypt_ctx->subctx->data->size1;
    
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
@@ -2024,22 +2030,20 @@ void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    }
 }
 
-//bitSize = var_8C
-//buffer = hmac_key
-void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate, int bitSize, char* buffer)
-{
-   int block_size; // = r4;
-   uint16_t flag0; // = iv_xor_key
-   uint16_t flag1; // = ignored
-   uint16_t kid; // unk0
-   char* key; // = r11
-   char* subkey_key; // = r9
+void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate, int bitSize, char* buffer, char* output_dst, char* output_src, int output_size)
+{   
+   // variable mapping
 
-   //----------------------------
+   int block_size = crypt_ctx->subctx->data->size1;
 
-   char* output_dst = crypt_ctx->subctx->unk_10 + ((block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
-   char* output_src = buffer + (block_size * crypt_ctx->subctx->unk_18);
-   int output_size = block_size * crypt_ctx->subctx->unk_1C;
+   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
+   uint16_t flag1 = crypt_ctx->subctx->data->flag;
+   uint16_t kid = crypt_ctx->subctx->data->key_id;
+
+   char* key = crypt_ctx->subctx->data->key;
+   char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
+
+   //-----------
 
    int some_value = crypt_ctx->subctx->unk_1C + crypt_ctx->subctx->unk_18;
    
@@ -2088,30 +2092,27 @@ void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate, int bitSize,
    }
 }
 
-//bitSize = var_8C
-void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
+void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* output_dst, char* output_src, int output_size)
 {
-   //--- variable mapping
+   // variable mapping
 
-   int block_size; // = r4;
-   int size; // = r2
-   char* source; // = r8
-   char* dest; // = r7
-   uint16_t key_id; // = unk0
-   char* key; // = r11
-   char* subkey_key; // = r9
-   int nBlocks; // = r5;
-   uint16_t flag0; // = key - which is rewritten
-   uint16_t flag1; // = ignored
-   int r1;
-   int r3;
+   int block_size = crypt_ctx->subctx->data->size1;
+   
+   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
+   uint16_t flag1 = crypt_ctx->subctx->data->flag;
+   uint16_t key_id = crypt_ctx->subctx->data->key_id;
 
+   char* key = crypt_ctx->subctx->data->key;
+   char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
+
+   int nBlocks = crypt_ctx->subctx->unk_1C; // use it in work3_substep1
+   
    //------------
 
-   if(flag0 < 0)
+   if((flag0 << 0x10) < 0)
    {
-      if(source != dest)
-         memcpy(dest, source, size);
+      if(output_src != output_dst)
+         memcpy(output_dst, output_src, output_size);
 
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -2119,8 +2120,8 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
 
    if((flag1 & 0x41) == 0x41)
    {
-      if(source != dest)
-         memcpy(dest, source, size);
+      if(output_src != output_dst)
+         memcpy(output_dst, output_src, output_size);
          
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -2128,7 +2129,7 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
 
    //seed derrivation is very close to beginning. nearly same
 
-   int seed_root = block_size * (r3 + r1);
+   int seed_root = block_size * (crypt_ctx->subctx->unk_18 + crypt_ctx->subctx->seed0_base);
    int tweak_key0 = seed_root >> 0x20;
    int tweak_key1 = seed_root >> 0x20;
    
@@ -2145,7 +2146,7 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
    {
       do
       {
-         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, block_size, block_size, source + offset, dest + offset, flag1);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, block_size, block_size, output_src + offset, output_dst + offset, flag1);
 
          offset = offset + block_size;
          counter = counter + 1;
@@ -2158,12 +2159,12 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
    }
    else
    {
-      int bytes_left = size;
+      int bytes_left = output_size;
       
       do
       {
          int size_arg = (block_size <= bytes_left) ? block_size : bytes_left;
-         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, block_size, source + offset, dest + offset, flag1, key_id);
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, block_size, output_src + offset, output_dst + offset, flag1, key_id);
 
          offset = offset + block_size;
          bytes_left = bytes_left - block_size;
@@ -2181,43 +2182,18 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
    work3_substep0(crypt_ctx, bitSize, buffer);
 
-   //---------------------------
+   int block_size = crypt_ctx->subctx->data->size1;
 
-   /*
-   int r4 = crypt_ctx->subctx->data->size1;
-   uint16_t ignored = crypt_ctx->subctx->data->flag;
-   int key = crypt_ctx->subctx->nDigests;
-   int iv_xor_key = crypt_ctx->subctx->data->seed1_base;
-   uint16_t unk0 = crypt_ctx->subctx->data->key_id;
-   const char* r6 = crypt_ctx->subctx->hmac_sha1_digest; // 0x4C - signatures table
-   CryptEngineSubctx* r10 = crypt_ctx->subctx;
-   char* r11 = crypt_ctx->subctx->data->key;
-   char* r9 = crypt_ctx->subctx->data->iv_xor_key;
-   */
-   
+   char* output_dst = crypt_ctx->subctx->unk_10 + ((block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
+   char* output_src = buffer + (block_size * crypt_ctx->subctx->unk_18);
+   int output_size = block_size * crypt_ctx->subctx->unk_1C;
+
    bool terminate = false;
-   work3_substep1(crypt_ctx, &terminate, bitSize, buffer);
+   work3_substep1(crypt_ctx, &terminate, bitSize, buffer, output_dst, output_src, output_size);
+   if(terminate)
+      return;
 
-   //THIS SHOULD BE THE OUTPUT
-   /*
-   // r1 - crypt_ctx->subctx->seed0_base;
-   // r3 - crypt_ctx->subctx->unk_18;
-   // r2 - output_size
-   // r4 - is not touched
-   // r5 - crypt_ctx->subctx->unk_1C;
-   // r7 - output_dst
-   // r8 - output_src
-   // r9 - is not touched
-   // r11 - is not touched
-
-   // unk0 - is not touched
-   // key = (iv_xor_key << 0x10); //testing bit 15
-   // ignored - is not touched
-   */
-
-   //###########################################################################
-
-   work3_substep2(crypt_ctx, bitSize);
+   work3_substep2(crypt_ctx, bitSize, output_dst, output_src, output_size);
 }
 
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
