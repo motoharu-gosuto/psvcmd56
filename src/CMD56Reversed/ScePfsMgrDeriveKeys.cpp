@@ -89,7 +89,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t opt_code; // 0x8 - if 3 then decrypt, if 4 then encrypt, if 2 then encrypt
    CryptEngineData* data; // 0xC
    
-   uint32_t unk_10;
+   char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
    uint32_t source; // 0x14
    uint32_t unk_18;
    uint32_t unk_1C;
@@ -2024,114 +2024,68 @@ void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    }
 }
 
-#define SXTH(x) (int)x
-
-void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate)
+//bitSize = var_8C
+//buffer = hmac_key
+void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate, int bitSize, char* buffer)
 {
-   //there are 2 branches
-   //each branch can do 2 things
-   // - globally exit. memcpy some data
-   // - owerwrite key variable
-   // - also should update other registers that will be used later (seems there is some common code for this)
-
-   //additionaly one of the branches calls some pfs functions
+   int block_size; // = r4;
+   uint16_t flag0; // = iv_xor_key
+   uint16_t flag1; // = ignored
+   uint16_t kid; // unk0
+   char* key; // = r11
+   char* subkey_key; // = r9
 
    //----------------------------
 
-   //loc_219C22E:
+   char* output_dst = crypt_ctx->subctx->unk_10 + ((block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
+   char* output_src = buffer + (block_size * crypt_ctx->subctx->unk_18);
+   int output_size = block_size * crypt_ctx->subctx->unk_1C;
 
-   int some_value = [R10,#0x1C] + [R10,#0x18];
+   int some_value = crypt_ctx->subctx->unk_1C + crypt_ctx->subctx->unk_18;
    
-   if((some_value >= [R10,#0x2C]) && ((iv_xor_key & 0x4000) != 0))
+   if((some_value >= crypt_ctx->subctx->nDigests))
    {
-      #pragma region
-      int r2 = r4 * [R10,#0x1C];
-      int r7 = ((r4 * [R10,#0x18]) - [R10,#0x38]) + [R10,#0x10];
-      int r8 = (r4 * [R10,#0x18]) + hmac_key;
-
-      if(r8 != r7)
-         memcpy(r7, r8, r2);
+      if(output_src != output_dst)
+         memcpy(output_dst, output_src, output_size);
 
       crypt_ctx->error = 0;
 
       *terminate = true;
-
-      #pragma endregion
       return; // this should terminate crypto task (global exit)
    }
 
-   if((iv_xor_key & 0x4000) != 0) // THIS IS THE SAME CONDITION. UPPER CONDITION CAN BE OPTIMIZED
-   {
-      #pragma region
-      int r2 = r4 * [R10,#0x1C];
-      int r7 = ((r4 * [R10,#0x18]) - [R10,#0x38]) + [R10,#0x10];
-      int r8 = (r4 * [R10,#0x18]) + hmac_key;
-         
-      if(r8 != r7)
-         memcpy(r7, r8, r2);
-         
-      crypt_ctx->error = 0;
-
-      *terminate = true;
-      #pragma endregion
-      return; // this should terminate crypto task (global exit)
-   }
-   
-   if((iv_xor_key << 0x10) >= 0)
+   if(((int)flag0 & 0x4000) != 0)
    {   
-      if((ignored & 0x41) != 0x41)
-      {
-         int r2 = [R10,#0x2C];
-         int r1 = [R10,#0x34];
+      if(output_src != output_dst)
+         memcpy(output_dst, output_src, output_size);
+         
+      crypt_ctx->error = 0;
 
-         int r5 = r2 - 1;
-            
-         int r2 = r1 + r5;
-         int r1 = hmac_key;
-         int r3 = r6;
-         int r2 = r4 * r2;
-         int r5 = r4 * r5 + r1;
+      *terminate = true;
+      return; // this should terminate crypto task (global exit)
+   }
    
-         if((var_8C > 0x1F) || ((0xC0000B03 & (1 << var_8C)) == 0))
+   if((flag0 << 0x10) >= 0)
+   {   
+      if((flag1 & 0x41) != 0x41)
+      {
+         int tweak_key0 = block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nDigests - 1));
+         int tweak_key1 = (int)flag0 & 0x4000;
+
+         char* tail_buffer = buffer + block_size * (crypt_ctx->subctx->nDigests - 1);
+
+         if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
          {
-            pfs_decrypt_sw_219D174(r11, r9, 0x80, IGNORE_ARG, r2, r3, r4, r4, r5, r5, ignored);
+            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0, tweak_key1, block_size, block_size, tail_buffer, tail_buffer, flag1);
          }
          else
          {
-            int r0 = [R10,#0x40];
-
-            pfs_decrypt_hw_219D480(r11, r9, r2, r3, ((r0 >= r4) ? r4 : r0), r4, r5, r5, ignored, unk0);
+            int tail_total_size = crypt_ctx->subctx->size1;
+            int size_arg = (block_size <= tail_total_size) ? block_size : tail_total_size;
+            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0, tweak_key1, size_arg, block_size, tail_buffer, tail_buffer, flag1, kid);
          }
       }
    }
-   
-   //------- restore vars----------
-   key = (iv_xor_key << 0x10); //testing bit 15
-
-   int r3 = [R10,#0x18];
-   int r5 = [R10,#0x1C];
-   int r1 = [R10,#0x34];
-
-   int r2 = r4 * [R10,#0x1C];
-   int r7 = ((r4 * [R10,#0x18]) - [R10,#0x38]) + [R10,#0x10];
-   int r8 = (r4 * [R10,#0x18]) + hmac_key;
-   
-   //THIS SHOULD BE THE OUTPUT
-   /*
-   // r1 - is restored in the end of procedure
-   // r3 - is restored in the end of procedure
-   // r2 - calculated in the end
-   // r4 - is not touched
-   // r5 - is restored in the end of procedure
-   // r7 - calculated in the end
-   // r8 - calculated in the end
-   // r9 - is not touched
-   // r11 - is not touched
-
-   // unk0 - is not touched
-   // key - which is rewritten
-   // ignored - is not touched
-   */
 }
 
 //bitSize = var_8C
@@ -2171,6 +2125,8 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize)
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
    }
+
+   //seed derrivation is very close to beginning. nearly same
 
    int seed_root = block_size * (r3 + r1);
    int tweak_key0 = seed_root >> 0x20;
@@ -2240,7 +2196,24 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    */
    
    bool terminate = false;
-   work3_substep1(crypt_ctx, &terminate);
+   work3_substep1(crypt_ctx, &terminate, bitSize, buffer);
+
+   //THIS SHOULD BE THE OUTPUT
+   /*
+   // r1 - crypt_ctx->subctx->seed0_base;
+   // r3 - crypt_ctx->subctx->unk_18;
+   // r2 - output_size
+   // r4 - is not touched
+   // r5 - crypt_ctx->subctx->unk_1C;
+   // r7 - output_dst
+   // r8 - output_src
+   // r9 - is not touched
+   // r11 - is not touched
+
+   // unk0 - is not touched
+   // key = (iv_xor_key << 0x10); //testing bit 15
+   // ignored - is not touched
+   */
 
    //###########################################################################
 
