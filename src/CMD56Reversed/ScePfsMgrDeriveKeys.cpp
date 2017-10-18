@@ -71,7 +71,7 @@ typedef struct CryptEngineData //size is 0x60
    
    uint32_t unk_20;
    uint32_t unk_24;
-   uint32_t size1; //0x28
+   uint32_t block_size; //0x28
    char key[0x10]; //0x2C
    
    char iv_xor_key[0x10]; //0x3C
@@ -132,7 +132,7 @@ typedef int(derive_keys_sub_219A29C_cb)(const derive_keys_ctx*);
 
 typedef struct derive_keys_ctx
 {
-   derive_keys_sub_219A29C_cb* unk_14; //function pointer
+   derive_keys_sub_219A29C_cb* get_block_size_14; //function pointer
 
    uint32_t unk_40;
 
@@ -1311,7 +1311,7 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
 
    data->klicensee = pfs_pmi_bcl->klicensee;
 
-   data->size1 = drv_ctx->unk_14(drv_ctx);
+   data->block_size = drv_ctx->get_block_size_14(drv_ctx);
    
    int some_flag_base = (uint32_t)(data->flag - 2);
    int some_flag = 0xC0000B03 & (1 << some_flag_base);
@@ -1814,7 +1814,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 {
    // variable mapping
 
-   int block_size = crypt_ctx->subctx->data->size1;
+   int block_size = crypt_ctx->subctx->data->block_size;
 
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
@@ -1925,7 +1925,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
    
-   int block_size = crypt_ctx->subctx->data->size1;
+   int block_size = crypt_ctx->subctx->data->block_size;
    
    //------------------------------
 
@@ -1993,7 +1993,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
    // variable mapping
 
-   int block_size = crypt_ctx->subctx->data->size1;
+   int block_size = crypt_ctx->subctx->data->block_size;
    
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
@@ -2148,12 +2148,12 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
 {
-   int seed_root = (crypt_ctx->subctx->data->size1) * (crypt_ctx->subctx->seed0_base);
+   int seed_root = (crypt_ctx->subctx->data->block_size) * (crypt_ctx->subctx->seed0_base);
    int tweak_key0 = seed_root >> 0x20;
    int tweak_key1 = seed_root >> 0x20;
 
    int var_8C = (int)crypt_ctx->subctx->data->type - 2;
-   int key_id = (crypt_ctx->subctx->data->size1) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
+   int key_id = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
 
    char* hmac_key;
 
