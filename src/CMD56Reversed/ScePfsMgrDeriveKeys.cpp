@@ -60,7 +60,7 @@ typedef struct CryptEngineData //size is 0x60
    uint32_t salt0;
    uint32_t salt1;
    uint16_t type; // 0xC
-   uint16_t flag; // 0xE - flag that selects decryption type ?
+   uint16_t pmi_bcl_flag; // 0xE
    
    uint16_t key_id; // 0x10
    uint16_t flag0; // 0x12 iv seed
@@ -1302,7 +1302,7 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
    data->unk_1C = arg_4;
 
    data->type = pfs_pmi_bcl->type;
-   data->flag = pfs_pmi_bcl->flag;
+   data->pmi_bcl_flag = pfs_pmi_bcl->flag;
    data->key_id = pfs_pmi_bcl->key_id;
    data->flag0 = flag0;
    
@@ -1313,7 +1313,7 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
 
    data->block_size = drv_ctx->get_block_size_14(drv_ctx);
    
-   int some_flag_base = (uint32_t)(data->flag - 2);
+   int some_flag_base = (uint32_t)(data->pmi_bcl_flag - 2);
    int some_flag = 0xC0000B03 & (1 << some_flag_base);
 
    if((some_flag_base > 0x1F) || (some_flag == 0))
@@ -1814,22 +1814,18 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 {
    // variable mapping
 
-   uint16_t flag1 = crypt_ctx->subctx->data->flag;
-
-   //------------------------------
-
    if((crypt_ctx->subctx->data->flag0 << 0x12) < 0)
       return; // this does not terminate crypto task (local exit)
    
    if((crypt_ctx->subctx->data->flag0 << 0x10) < 0)
       return; // this does not terminate crypto task (local exit)
 
-   if((flag1 & 0x20) != 0)
+   if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x20) != 0)
       return; // this does not terminate crypto task (local exit)
 
    if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
    {
-      if((flag1 & 0x41) != 0x41)
+      if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x41) != 0x41)
       {
          if(crypt_ctx->subctx->nBlocks != 0)
          {
@@ -1847,7 +1843,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
                int ver_res = proc_verify_14_bytes_219DE44(signatures_base, bytes14);
 
                //if verify is not successful and flag is not specified
-               if((ver_res == 0) && ((flag1 & 9) != 1))
+               if((ver_res == 0) && ((crypt_ctx->subctx->data->pmi_bcl_flag & 9) != 1))
                {
                   crypt_ctx->error = 0x80140F02;
                   return; // this should terminate crypto task (global exit)
@@ -1864,7 +1860,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
    }
    else
    {
-      if((flag1 & 0x41) != 0x41)
+      if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x41) != 0x41)
       {
          int64_t tk_combo = (int64_t)tweak_key0 | ((int64_t)tweak_key1 << 32);
          arm_lldiv_t div_res = SceSysclibForDriver__aeabi_ldivmod_7554ab04(tk_combo, crypt_ctx->subctx->data->block_size);
@@ -1892,7 +1888,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
                int ver_res = proc_verify_14_bytes_219DE44(signatures_base, bytes14);
                         
                //if verify is not successful and flag is not specified
-               if((ver_res == 0) && ((flag1 & 9) != 1))
+               if((ver_res == 0) && ((crypt_ctx->subctx->data->pmi_bcl_flag & 9) != 1))
                {
                   crypt_ctx->error = 0x80140F02;
                   return; // this should terminate crypto task (global exit)
@@ -1916,8 +1912,6 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
 {
    // variable mapping
 
-   uint16_t flag1 = crypt_ctx->subctx->data->flag;
-   
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
    
@@ -1935,7 +1929,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
       return; // this should terminate crypto task (global exit)
    }
 
-   if((flag1 & 0x41) == 0x41)
+   if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x41) == 0x41)
    {
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -1956,7 +1950,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    {   
       do
       {
-         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer + offset, buffer + offset, flag1);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer + offset, buffer + offset, crypt_ctx->subctx->data->pmi_bcl_flag);
 
          counter = counter + 1;
          offset = offset + crypt_ctx->subctx->data->block_size;
@@ -1970,7 +1964,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
       do
       {
          int size_arg = ((crypt_ctx->subctx->data->block_size < bytes_left) ? crypt_ctx->subctx->data->block_size : bytes_left);
-         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, crypt_ctx->subctx->data->block_size, buffer + offset, buffer + offset, flag1, crypt_ctx->subctx->data->key_id);
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, crypt_ctx->subctx->data->block_size, buffer + offset, buffer + offset, crypt_ctx->subctx->data->pmi_bcl_flag, crypt_ctx->subctx->data->key_id);
 
          bytes_left = bytes_left - crypt_ctx->subctx->data->block_size;
          offset = offset + crypt_ctx->subctx->data->block_size;
@@ -1987,8 +1981,6 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
    // variable mapping
 
-   uint16_t flag1 = crypt_ctx->subctx->data->flag;
-   
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
 
@@ -2009,15 +2001,15 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
       {
          if((crypt_ctx->subctx->data->flag0 << 0x10) >= 0)
          {
-            if((flag1 & 0x41) != 0x41)
+            if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x41) != 0x41)
             {
                if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
                {
-                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_block, tweak_key1_block, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer, buffer, flag1);
+                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_block, tweak_key1_block, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer, buffer, crypt_ctx->subctx->data->pmi_bcl_flag);
                }
                else
                {
-                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_block, tweak_key1_block, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer, buffer, flag1, crypt_ctx->subctx->data->key_id);
+                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_block, tweak_key1_block, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer, buffer, crypt_ctx->subctx->data->pmi_bcl_flag, crypt_ctx->subctx->data->key_id);
                }
             }
          }
@@ -2048,7 +2040,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    
    if((crypt_ctx->subctx->data->flag0 << 0x10) >= 0)
    {   
-      if((flag1 & 0x41) != 0x41)
+      if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x41) != 0x41)
       {
          int tweak_key0_tail = crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nBlocks - 1));
          int tweak_key1_tail = (int)crypt_ctx->subctx->data->flag0 & 0x4000;
@@ -2057,13 +2049,13 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
          if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
          {
-            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_tail, tweak_key1_tail, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, flag1);
+            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_tail, tweak_key1_tail, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, crypt_ctx->subctx->data->pmi_bcl_flag);
          }
          else
          {
             int tail_total_size = crypt_ctx->subctx->size1;
             int size_arg = (crypt_ctx->subctx->data->block_size <= tail_total_size) ? crypt_ctx->subctx->data->block_size : tail_total_size;
-            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_tail, tweak_key1_tail, size_arg, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, flag1, crypt_ctx->subctx->data->key_id);
+            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_tail, tweak_key1_tail, size_arg, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, crypt_ctx->subctx->data->pmi_bcl_flag, crypt_ctx->subctx->data->key_id);
          }
       }
    }
@@ -2078,7 +2070,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
       return; // this should terminate crypto task (global exit)
    }
 
-   if((flag1 & 0x41) == 0x41)
+   if((crypt_ctx->subctx->data->pmi_bcl_flag & 0x41) == 0x41)
    {
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
@@ -2107,7 +2099,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    {
       do
       {
-         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_end + offset, tweak_key1_end + 0, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, output_src + offset, output_dst + offset, flag1);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_end + offset, tweak_key1_end + 0, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, output_src + offset, output_dst + offset, crypt_ctx->subctx->data->pmi_bcl_flag);
 
          offset = offset + crypt_ctx->subctx->data->block_size;
          counter = counter + 1;
@@ -2124,7 +2116,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
       do
       {
          int size_arg = (crypt_ctx->subctx->data->block_size <= bytes_left) ? crypt_ctx->subctx->data->block_size : bytes_left;
-         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_end + offset, tweak_key1_end + 0, size_arg, crypt_ctx->subctx->data->block_size, output_src + offset, output_dst + offset, flag1, crypt_ctx->subctx->data->key_id);
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_end + offset, tweak_key1_end + 0, size_arg, crypt_ctx->subctx->data->block_size, output_src + offset, output_dst + offset, crypt_ctx->subctx->data->pmi_bcl_flag, crypt_ctx->subctx->data->key_id);
 
          offset = offset + crypt_ctx->subctx->data->block_size;
          bytes_left = bytes_left - crypt_ctx->subctx->data->block_size;
@@ -2137,13 +2129,18 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    }
 }
 
+//TODO CHECK:
+//int var_8C = (int)crypt_ctx->subctx->data->type - 2; // this does not correlate with derive_keys_from_klicensee_219B4A0
+//int some_flag_base = (uint32_t)(data->pmi_bcl_flag - 2);
+//int some_flag = 0xC0000B03 & (1 << some_flag_base);
+
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
 {
    int seed_root = (crypt_ctx->subctx->data->block_size) * (crypt_ctx->subctx->seed0_base);
    int tweak_key0 = seed_root >> 0x20;
    int tweak_key1 = seed_root >> 0x20;
 
-   int var_8C = (int)crypt_ctx->subctx->data->type - 2;
+   int var_8C = (int)crypt_ctx->subctx->data->type - 2; // this does not correlate with derive_keys_from_klicensee_219B4A0
    int key_id = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
 
    char* hmac_key;
