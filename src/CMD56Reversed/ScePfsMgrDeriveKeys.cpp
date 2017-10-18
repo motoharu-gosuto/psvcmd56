@@ -104,7 +104,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t dest_offset; // 0x38
    uint32_t size0; // 0x3C
    
-   uint32_t size1; //0x40
+   uint32_t tail_size; //0x40
    uint32_t unk_44;
    uint32_t size3; //0x48
    char* signature_table; // 0x4C hmac sha1 digest table
@@ -2051,8 +2051,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          }
          else
          {
-            int tail_total_size = crypt_ctx->subctx->size1;
-            int size_arg = (crypt_ctx->subctx->data->block_size <= tail_total_size) ? crypt_ctx->subctx->data->block_size : tail_total_size;
+            int size_arg = (crypt_ctx->subctx->data->block_size <= crypt_ctx->subctx->tail_size) ? crypt_ctx->subctx->data->block_size : crypt_ctx->subctx->tail_size;
             pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_tail, tweak_key1_tail, size_arg, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, crypt_ctx->subctx->data->pmi_bcl_flag, crypt_ctx->subctx->data->key_id);
          }
       }
@@ -2139,7 +2138,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    int tweak_key1 = seed_root >> 0x20;
 
    int bitSize = (int)crypt_ctx->subctx->data->type - 2; // this does not correlate with derive_keys_from_klicensee_219B4A0
-   int total_size = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
+   int total_size = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->tail_size);
 
    char* work_buffer;
    if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
