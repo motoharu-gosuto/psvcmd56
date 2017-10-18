@@ -1956,6 +1956,8 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
       return; // this should terminate crypto task (global exit)
    }
 
+   //============== remove first encryption layer ? =========================
+
    int offset = 0;
    int counter = 0;
 
@@ -1990,7 +1992,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    return; // this should terminate crypto task (global exit)
 }
 
-void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
+void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
    // variable mapping
 
@@ -2003,58 +2005,47 @@ void work3_substep0(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
 
-   //-----------
+   int nBlocksTail = crypt_ctx->subctx->unk_1C; // use it in work3_substep1
 
-   if(crypt_ctx->subctx->unk_18 != 0)
-      return; // this does not terminate crypto task (local exit)
+   char* output_dst = crypt_ctx->subctx->unk_10 + ((block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
+   char* output_src = buffer + (block_size * crypt_ctx->subctx->unk_18);
+   int output_size = block_size * nBlocksTail;
 
-   int tweak_key0 = block_size * crypt_ctx->subctx->seed0_base;
-   int tweak_key1 = (int)flag0 & 0x4000;
+   //========== process block part of source buffer ? ========================
 
-   if(tweak_key1 != 0)
-      return; // this does not terminate crypto task (local exit)
-   
-   if((flag0 << 0x10) < 0)
-      return; // this does not terminate crypto task (local exit)
-
-   if((flag1 & 0x41) == 0x41)
-      return; // this does not terminate crypto task (local exit)
-
-   if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+   if(crypt_ctx->subctx->unk_18 == 0)
    {
-      pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1);
+      int tweak_key0_block = block_size * crypt_ctx->subctx->seed0_base;
+      int tweak_key1_block = (int)flag0 & 0x4000;
+
+      if(tweak_key1_block == 0)
+      {
+         if((flag0 << 0x10) >= 0)
+         {
+            if((flag1 & 0x41) != 0x41)
+            {
+               if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+               {
+                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_block, tweak_key1_block, block_size, block_size, buffer, buffer, flag1);
+               }
+               else
+               {
+                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_block, tweak_key1_block, block_size, block_size, buffer, buffer, flag1, kid);
+               }
+            }
+         }
+      }  
    }
-   else
-   {
-      pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0, tweak_key1, block_size, block_size, buffer, buffer, flag1, kid);
-   }
-}
 
-void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate, int bitSize, char* buffer, char* output_dst, char* output_src, int output_size)
-{   
-   // variable mapping
+   //========= copy result to output buffer if source buffer had no tail ? ============
 
-   int block_size = crypt_ctx->subctx->data->size1;
-
-   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
-   uint16_t flag1 = crypt_ctx->subctx->data->flag;
-   uint16_t kid = crypt_ctx->subctx->data->key_id;
-
-   char* key = crypt_ctx->subctx->data->key;
-   char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
-
-   //-----------
-
-   int some_value = crypt_ctx->subctx->unk_1C + crypt_ctx->subctx->unk_18;
+   int some_value = nBlocksTail + crypt_ctx->subctx->unk_18;
    
    if((some_value >= crypt_ctx->subctx->nDigests))
    {
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
-
       crypt_ctx->error = 0;
-
-      *terminate = true;
       return; // this should terminate crypto task (global exit)
    }
 
@@ -2062,58 +2053,40 @@ void work3_substep1(CryptEngineWorkCtx* crypt_ctx, bool* terminate, int bitSize,
    {   
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
-         
       crypt_ctx->error = 0;
-
-      *terminate = true;
       return; // this should terminate crypto task (global exit)
    }
+
+   //=========== process tail part of source buffer ? ===============================
    
    if((flag0 << 0x10) >= 0)
    {   
       if((flag1 & 0x41) != 0x41)
       {
-         int tweak_key0 = block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nDigests - 1));
-         int tweak_key1 = (int)flag0 & 0x4000;
+         int tweak_key0_tail = block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nDigests - 1));
+         int tweak_key1_tail = (int)flag0 & 0x4000;
 
          char* tail_buffer = buffer + block_size * (crypt_ctx->subctx->nDigests - 1);
 
          if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
          {
-            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0, tweak_key1, block_size, block_size, tail_buffer, tail_buffer, flag1);
+            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_tail, tweak_key1_tail, block_size, block_size, tail_buffer, tail_buffer, flag1);
          }
          else
          {
             int tail_total_size = crypt_ctx->subctx->size1;
             int size_arg = (block_size <= tail_total_size) ? block_size : tail_total_size;
-            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0, tweak_key1, size_arg, block_size, tail_buffer, tail_buffer, flag1, kid);
+            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_tail, tweak_key1_tail, size_arg, block_size, tail_buffer, tail_buffer, flag1, kid);
          }
       }
    }
-}
 
-void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* output_dst, char* output_src, int output_size)
-{
-   // variable mapping
-
-   int block_size = crypt_ctx->subctx->data->size1;
+   //========= copy tail result to output buffer ? ===========================
    
-   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
-   uint16_t flag1 = crypt_ctx->subctx->data->flag;
-   uint16_t key_id = crypt_ctx->subctx->data->key_id;
-
-   char* key = crypt_ctx->subctx->data->key;
-   char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
-
-   int nBlocks = crypt_ctx->subctx->unk_1C; // use it in work3_substep1
-   
-   //------------
-
    if((flag0 << 0x10) < 0)
    {
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
-
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
    }
@@ -2122,18 +2095,19 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* output_dst
    {
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
-         
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
    }
 
-   //seed derrivation is very close to beginning. nearly same
+   //============== remove second encryption layer ? =========================
+
+   //seed derrivation is quite same to derrivation in first layer
 
    int seed_root = block_size * (crypt_ctx->subctx->unk_18 + crypt_ctx->subctx->seed0_base);
-   int tweak_key0 = seed_root >> 0x20;
-   int tweak_key1 = seed_root >> 0x20;
+   int tweak_key0_end = seed_root >> 0x20;
+   int tweak_key1_end = seed_root >> 0x20;
    
-   if(nBlocks == 0)
+   if(nBlocksTail == 0)
    {
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -2146,15 +2120,14 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* output_dst
    {
       do
       {
-         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, block_size, block_size, output_src + offset, output_dst + offset, flag1);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_end + offset, tweak_key1_end + 0, block_size, block_size, output_src + offset, output_dst + offset, flag1);
 
          offset = offset + block_size;
          counter = counter + 1;
       }
-      while(counter != nBlocks);
+      while(counter != nBlocksTail);
 
       crypt_ctx->error = 0;
-   
       return; // this should terminate crypto task (global exit)
    }
    else
@@ -2164,36 +2137,17 @@ void work3_substep2(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* output_dst
       do
       {
          int size_arg = (block_size <= bytes_left) ? block_size : bytes_left;
-         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, block_size, output_src + offset, output_dst + offset, flag1, key_id);
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_end + offset, tweak_key1_end + 0, size_arg, block_size, output_src + offset, output_dst + offset, flag1, kid);
 
          offset = offset + block_size;
          bytes_left = bytes_left - block_size;
          counter = counter + 1;
       }
-      while(counter != nBlocks);
+      while(counter != nBlocksTail);
    
       crypt_ctx->error = 0;
-
       return; // this should terminate crypto task (global exit)
    }
-}
-
-void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
-{
-   work3_substep0(crypt_ctx, bitSize, buffer);
-
-   int block_size = crypt_ctx->subctx->data->size1;
-
-   char* output_dst = crypt_ctx->subctx->unk_10 + ((block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
-   char* output_src = buffer + (block_size * crypt_ctx->subctx->unk_18);
-   int output_size = block_size * crypt_ctx->subctx->unk_1C;
-
-   bool terminate = false;
-   work3_substep1(crypt_ctx, &terminate, bitSize, buffer, output_dst, output_src, output_size);
-   if(terminate)
-      return;
-
-   work3_substep2(crypt_ctx, bitSize, output_dst, output_src, output_size);
 }
 
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
@@ -2212,18 +2166,23 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    else
       hmac_key = crypt_ctx->subctx->buffer1;
 
+   //verifies table of hashes ?
    verify_step(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
 
    //need to add this check since dec functionality is now split into several functions
    if(crypt_ctx->error < 0)
       return;
 
-   if(crypt_ctx->subctx->unk_1C == 0)
+   if(crypt_ctx->subctx->unk_1C == 0) // this is also tail block size, right ?
    {
+      //immediately decrypts everything in while loop
       work_3_step0(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
    }
    else
    {
+      //first - decrypts block part with single call
+      //second - decrypts tail part with single call
+      //third - decrypts everything in while loop
       work_3_step1(crypt_ctx, var_8C, hmac_key);
    }
 }
