@@ -1814,8 +1814,6 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 {
    // variable mapping
 
-   int block_size = crypt_ctx->subctx->data->block_size;
-
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
 
@@ -1845,7 +1843,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 
             do
             {
-               hmac_sha1_digest_219DE7C(bytes14, crypt_ctx->subctx->data->hmac_key, source_base, block_size);
+               hmac_sha1_digest_219DE7C(bytes14, crypt_ctx->subctx->data->hmac_key, source_base, crypt_ctx->subctx->data->block_size);
                         
                int ver_res = proc_verify_14_bytes_219DE44(signatures_base, bytes14);
 
@@ -1858,7 +1856,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
                         
                counter = counter + 1;
 
-               source_base = source_base + block_size;
+               source_base = source_base + crypt_ctx->subctx->data->block_size;
                signatures_base = signatures_base + 0x14;
             }
             while(counter != crypt_ctx->subctx->nBlocks);
@@ -1870,7 +1868,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
       if((flag1 & 0x41) != 0x41)
       {
          int64_t tk_combo = (int64_t)tweak_key0 | ((int64_t)tweak_key1 << 32);
-         arm_lldiv_t div_res = SceSysclibForDriver__aeabi_ldivmod_7554ab04(tk_combo, block_size);
+         arm_lldiv_t div_res = SceSysclibForDriver__aeabi_ldivmod_7554ab04(tk_combo, crypt_ctx->subctx->data->block_size);
 
          int salt = (int)div_res.q;
                   
@@ -1889,7 +1887,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
             {
                hmacSha1Digest_219DE68(digest, crypt_ctx->subctx->data->hmac_key, (char*)&salt, 4);
 
-               int size_arg = (block_size < bytes_left) ? block_size : bytes_left;
+               int size_arg = (crypt_ctx->subctx->data->block_size < bytes_left) ? crypt_ctx->subctx->data->block_size : bytes_left;
                hmac_sha1_digest_219DE7C(bytes14, digest, source_base, size_arg);
                         
                int ver_res = proc_verify_14_bytes_219DE44(signatures_base, bytes14);
@@ -1902,9 +1900,9 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
                }
                         
                counter = counter + 1;
-               bytes_left = bytes_left - block_size;
+               bytes_left = bytes_left - crypt_ctx->subctx->data->block_size;
 
-               source_base = source_base + block_size;
+               source_base = source_base + crypt_ctx->subctx->data->block_size;
                signatures_base = signatures_base + 0x14;
 
                salt = salt + 1;
@@ -1924,8 +1922,6 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
-   
-   int block_size = crypt_ctx->subctx->data->block_size;
    
    //------------------------------
 
@@ -1962,10 +1958,10 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    {   
       do
       {
-         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, block_size, block_size, buffer + offset, buffer + offset, flag1);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0 + offset, tweak_key1 + 0, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer + offset, buffer + offset, flag1);
 
          counter = counter + 1;
-         offset = offset + block_size;
+         offset = offset + crypt_ctx->subctx->data->block_size;
       }
       while(counter != crypt_ctx->subctx->nBlocks);
    }
@@ -1975,11 +1971,11 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    
       do
       {
-         int size_arg = ((block_size < bytes_left) ? block_size : bytes_left);
-         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, block_size, buffer + offset, buffer + offset, flag1, crypt_ctx->subctx->data->key_id);
+         int size_arg = ((crypt_ctx->subctx->data->block_size < bytes_left) ? crypt_ctx->subctx->data->block_size : bytes_left);
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0 + offset, tweak_key1 + 0, size_arg, crypt_ctx->subctx->data->block_size, buffer + offset, buffer + offset, flag1, crypt_ctx->subctx->data->key_id);
 
-         bytes_left = bytes_left - block_size;
-         offset = offset + block_size;
+         bytes_left = bytes_left - crypt_ctx->subctx->data->block_size;
+         offset = offset + crypt_ctx->subctx->data->block_size;
          counter = counter + 1;
       }
       while(counter != crypt_ctx->subctx->nBlocks);
@@ -1993,8 +1989,6 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
    // variable mapping
 
-   int block_size = crypt_ctx->subctx->data->block_size;
-   
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    
@@ -2003,15 +1997,15 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    int nBlocksTail = crypt_ctx->subctx->unk_1C; // use it in work3_substep1
 
-   char* output_dst = crypt_ctx->subctx->unk_10 + ((block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
-   char* output_src = buffer + (block_size * crypt_ctx->subctx->unk_18);
-   int output_size = block_size * nBlocksTail;
+   char* output_dst = crypt_ctx->subctx->unk_10 + ((crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
+   char* output_src = buffer + (crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18);
+   int output_size = crypt_ctx->subctx->data->block_size * nBlocksTail;
 
    //========== process block part of source buffer ? ========================
 
    if(crypt_ctx->subctx->unk_18 == 0)
    {
-      int tweak_key0_block = block_size * crypt_ctx->subctx->seed0_base;
+      int tweak_key0_block = crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->seed0_base;
       int tweak_key1_block = (int)flag0 & 0x4000;
 
       if(tweak_key1_block == 0)
@@ -2022,11 +2016,11 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
             {
                if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
                {
-                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_block, tweak_key1_block, block_size, block_size, buffer, buffer, flag1);
+                  pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_block, tweak_key1_block, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer, buffer, flag1);
                }
                else
                {
-                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_block, tweak_key1_block, block_size, block_size, buffer, buffer, flag1, crypt_ctx->subctx->data->key_id);
+                  pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_block, tweak_key1_block, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, buffer, buffer, flag1, crypt_ctx->subctx->data->key_id);
                }
             }
          }
@@ -2059,20 +2053,20 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    {   
       if((flag1 & 0x41) != 0x41)
       {
-         int tweak_key0_tail = block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nBlocks - 1));
+         int tweak_key0_tail = crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nBlocks - 1));
          int tweak_key1_tail = (int)flag0 & 0x4000;
 
-         char* tail_buffer = buffer + block_size * (crypt_ctx->subctx->nBlocks - 1);
+         char* tail_buffer = buffer + crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->nBlocks - 1);
 
          if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
          {
-            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_tail, tweak_key1_tail, block_size, block_size, tail_buffer, tail_buffer, flag1);
+            pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_tail, tweak_key1_tail, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, flag1);
          }
          else
          {
             int tail_total_size = crypt_ctx->subctx->size1;
-            int size_arg = (block_size <= tail_total_size) ? block_size : tail_total_size;
-            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_tail, tweak_key1_tail, size_arg, block_size, tail_buffer, tail_buffer, flag1, crypt_ctx->subctx->data->key_id);
+            int size_arg = (crypt_ctx->subctx->data->block_size <= tail_total_size) ? crypt_ctx->subctx->data->block_size : tail_total_size;
+            pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_tail, tweak_key1_tail, size_arg, crypt_ctx->subctx->data->block_size, tail_buffer, tail_buffer, flag1, crypt_ctx->subctx->data->key_id);
          }
       }
    }
@@ -2099,7 +2093,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    //seed derrivation is quite same to derrivation in first layer
 
-   int seed_root = block_size * (crypt_ctx->subctx->unk_18 + crypt_ctx->subctx->seed0_base);
+   int seed_root = crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->unk_18 + crypt_ctx->subctx->seed0_base);
    int tweak_key0_end = seed_root >> 0x20;
    int tweak_key1_end = seed_root >> 0x20;
    
@@ -2116,9 +2110,9 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    {
       do
       {
-         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_end + offset, tweak_key1_end + 0, block_size, block_size, output_src + offset, output_dst + offset, flag1);
+         pfs_decrypt_sw_219D174(key, subkey_key, 0x80, IGNORE_ARG, tweak_key0_end + offset, tweak_key1_end + 0, crypt_ctx->subctx->data->block_size, crypt_ctx->subctx->data->block_size, output_src + offset, output_dst + offset, flag1);
 
-         offset = offset + block_size;
+         offset = offset + crypt_ctx->subctx->data->block_size;
          counter = counter + 1;
       }
       while(counter != nBlocksTail);
@@ -2132,11 +2126,11 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
       
       do
       {
-         int size_arg = (block_size <= bytes_left) ? block_size : bytes_left;
-         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_end + offset, tweak_key1_end + 0, size_arg, block_size, output_src + offset, output_dst + offset, flag1, crypt_ctx->subctx->data->key_id);
+         int size_arg = (crypt_ctx->subctx->data->block_size <= bytes_left) ? crypt_ctx->subctx->data->block_size : bytes_left;
+         pfs_decrypt_hw_219D480(key, subkey_key, tweak_key0_end + offset, tweak_key1_end + 0, size_arg, crypt_ctx->subctx->data->block_size, output_src + offset, output_dst + offset, flag1, crypt_ctx->subctx->data->key_id);
 
-         offset = offset + block_size;
-         bytes_left = bytes_left - block_size;
+         offset = offset + crypt_ctx->subctx->data->block_size;
+         bytes_left = bytes_left - crypt_ctx->subctx->data->block_size;
          counter = counter + 1;
       }
       while(counter != nBlocksTail);
