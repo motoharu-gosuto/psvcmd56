@@ -107,7 +107,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t size1; //0x40
    uint32_t unk_44;
    uint32_t size3; //0x48
-   char* hmac_sha1_digest; // 0x4C digest to verify (possibly table)
+   char* signature_table; // 0x4C hmac sha1 digest table
    
    char* buffer0; // 0x50
    char* buffer1; // 0x54
@@ -1819,8 +1819,6 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
 
-   char* signatures = crypt_ctx->subctx->hmac_sha1_digest;
-
    //------------------------------
 
    if((flag0 << 0x12) < 0)
@@ -1841,7 +1839,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
             int counter = 0;
 
             char* source_base = source;
-            char* signatures_base = signatures;
+            char* signatures_base = crypt_ctx->subctx->signature_table;
                      
             char bytes14[0x14] = {0};
 
@@ -1882,7 +1880,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
             int bytes_left = size;
 
             char* source_base = source;
-            char* signatures_base = signatures;
+            char* signatures_base = crypt_ctx->subctx->signature_table;
 
             char digest[0x14] = {0};
             char bytes14[0x14] = {0};
