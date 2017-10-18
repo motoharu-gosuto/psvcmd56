@@ -57,13 +57,13 @@ typedef struct pfs_pmi_buffer_list_ctx
 typedef struct CryptEngineData //size is 0x60
 {
    const char* klicensee;
-   uint32_t salt0;
-   uint32_t salt1;
+   uint32_t salt0; // salt that is used to derive keys
+   uint32_t salt1; // salt that is used to derive keys
    uint16_t type; // 0xC
    uint16_t pmi_bcl_flag; // 0xE
    
    uint16_t key_id; // 0x10
-   uint16_t flag0; // 0x12 iv seed
+   uint16_t flag0; // 0x12
    
    uint32_t unk_14;
    uint32_t unk_18;
@@ -90,27 +90,27 @@ typedef struct CryptEngineSubctx //size is 0x58
    CryptEngineData* data; // 0xC
    
    char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
-   uint32_t source; // 0x14
+   uint32_t unk_14; // 0x14
    uint32_t unk_18; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS SIZE (based on tweak key derrivation)
    uint32_t nBlocksTail;
    
    uint32_t unk_20;
    uint32_t unk_24;
-   uint32_t size2; //0x28
+   uint32_t unk_28; //0x28
    uint32_t nBlocks; // 0x2C - also digest table index
    
    uint32_t unk_30;
    uint32_t seed0_base; // 0x34
    uint32_t dest_offset; // 0x38
-   uint32_t size0; // 0x3C
+   uint32_t unk_3C; // 0x3C
    
    uint32_t tail_size; //0x40
    uint32_t unk_44;
-   uint32_t size3; //0x48
+   uint32_t unk_48; //0x48
    char* signature_table; // 0x4C hmac sha1 digest table
    
-   char* buffer0; // 0x50
-   char* buffer1; // 0x54
+   char* work_buffer0; // 0x50
+   char* work_buffer1; // 0x54
    
 }CryptEngineSubctx;
 
@@ -2142,9 +2142,9 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
 
    char* work_buffer;
    if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
-      work_buffer = crypt_ctx->subctx->buffer0;
+      work_buffer = crypt_ctx->subctx->work_buffer0;
    else
-      work_buffer = crypt_ctx->subctx->buffer1;
+      work_buffer = crypt_ctx->subctx->work_buffer1;
 
    //verifies table of hashes ?
    verify_step(crypt_ctx, tweak_key0, tweak_key1, bitSize, total_size, work_buffer);
