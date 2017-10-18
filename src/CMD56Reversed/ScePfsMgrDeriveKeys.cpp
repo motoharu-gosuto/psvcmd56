@@ -92,7 +92,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
    uint32_t source; // 0x14
    uint32_t unk_18; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS SIZE (based on tweak key derrivation)
-   uint32_t unk_1C;
+   uint32_t nBlocksTail;
    
    uint32_t unk_20;
    uint32_t unk_24;
@@ -1984,11 +1984,9 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
 
-   int nBlocksTail = crypt_ctx->subctx->unk_1C; // use it in work3_substep1
-
    char* output_dst = crypt_ctx->subctx->unk_10 + ((crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
    char* output_src = buffer + (crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18);
-   int output_size = crypt_ctx->subctx->data->block_size * nBlocksTail;
+   int output_size = crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->nBlocksTail;
 
    //========== process block part of source buffer ? ========================
 
@@ -2018,7 +2016,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    //========= copy result to output buffer if source buffer had no tail ? ============
 
-   int some_value = nBlocksTail + crypt_ctx->subctx->unk_18;
+   int some_value = crypt_ctx->subctx->nBlocksTail + crypt_ctx->subctx->unk_18;
    
    if((some_value >= crypt_ctx->subctx->nBlocks))
    {
@@ -2086,7 +2084,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    int tweak_key0_end = seed_root >> 0x20;
    int tweak_key1_end = seed_root >> 0x20;
    
-   if(nBlocksTail == 0)
+   if(crypt_ctx->subctx->nBlocksTail == 0)
    {
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -2104,7 +2102,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          offset = offset + crypt_ctx->subctx->data->block_size;
          counter = counter + 1;
       }
-      while(counter != nBlocksTail);
+      while(counter != crypt_ctx->subctx->nBlocksTail);
 
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -2122,7 +2120,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          bytes_left = bytes_left - crypt_ctx->subctx->data->block_size;
          counter = counter + 1;
       }
-      while(counter != nBlocksTail);
+      while(counter != crypt_ctx->subctx->nBlocksTail);
    
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -2157,7 +2155,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    if(crypt_ctx->error < 0)
       return;
 
-   if(crypt_ctx->subctx->unk_1C == 0) // this is also tail block size, right ?
+   if(crypt_ctx->subctx->nBlocksTail == 0)
    {
       //immediately decrypts everything in while loop
       work_3_step0(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
