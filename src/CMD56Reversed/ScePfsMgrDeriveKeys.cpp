@@ -2138,18 +2138,17 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    int tweak_key0 = seed_root >> 0x20;
    int tweak_key1 = seed_root >> 0x20;
 
-   int var_8C = (int)crypt_ctx->subctx->data->type - 2; // this does not correlate with derive_keys_from_klicensee_219B4A0
-   int key_id = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
+   int bitSize = (int)crypt_ctx->subctx->data->type - 2; // this does not correlate with derive_keys_from_klicensee_219B4A0
+   int total_size = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
 
-   char* hmac_key;
-
-   if((var_8C > 0x1F) || ((0xC0000B03 & (1 << var_8C)) == 0))
-      hmac_key = crypt_ctx->subctx->buffer0;
+   char* work_buffer;
+   if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
+      work_buffer = crypt_ctx->subctx->buffer0;
    else
-      hmac_key = crypt_ctx->subctx->buffer1;
+      work_buffer = crypt_ctx->subctx->buffer1;
 
    //verifies table of hashes ?
-   verify_step(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
+   verify_step(crypt_ctx, tweak_key0, tweak_key1, bitSize, total_size, work_buffer);
 
    //need to add this check since dec functionality is now split into several functions
    if(crypt_ctx->error < 0)
@@ -2158,14 +2157,14 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    if(crypt_ctx->subctx->nBlocksTail == 0)
    {
       //immediately decrypts everything in while loop
-      work_3_step0(crypt_ctx, tweak_key0, tweak_key1, var_8C, key_id, hmac_key);
+      work_3_step0(crypt_ctx, tweak_key0, tweak_key1, bitSize, total_size, work_buffer);
    }
    else
    {
       //first - decrypts block part with single call
       //second - decrypts tail part with single call
       //third - decrypts everything in while loop
-      work_3_step1(crypt_ctx, var_8C, hmac_key);
+      work_3_step1(crypt_ctx, bitSize, work_buffer);
    }
 }
 
