@@ -63,7 +63,7 @@ typedef struct CryptEngineData //size is 0x60
    uint16_t flag; // 0xE - flag that selects decryption type ?
    
    uint16_t key_id; // 0x10
-   uint16_t seed1_base; // 0x12 iv seed
+   uint16_t flag0; // 0x12 iv seed
    
    uint32_t unk_14;
    uint32_t unk_18;
@@ -1285,7 +1285,7 @@ int sub_219A29C(const derive_keys_ctx* ctx)
    return ctx->unk_68;
 }
 
-int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, int unk2, int unk3, uint16_t seed1_base, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
+int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, int unk2, int unk3, uint16_t flag0, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
 {
    ctx_12f8d58e* ctx0 = SceIofilemgrForDriver_thread_related_12f8d58e();
    data->unk_18 = 0x100;
@@ -1304,7 +1304,7 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
    data->type = pfs_pmi_bcl->type;
    data->flag = pfs_pmi_bcl->flag;
    data->key_id = pfs_pmi_bcl->key_id;
-   data->seed1_base = seed1_base;
+   data->flag0 = flag0;
    
    data->unk_20 = unk2;
    data->unk_24 = unk3;
@@ -1815,14 +1815,13 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
    // variable mapping
 
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
-   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
 
    //------------------------------
 
-   if((flag0 << 0x12) < 0)
+   if((crypt_ctx->subctx->data->flag0 << 0x12) < 0)
       return; // this does not terminate crypto task (local exit)
    
-   if((flag0 << 0x10) < 0)
+   if((crypt_ctx->subctx->data->flag0 << 0x10) < 0)
       return; // this does not terminate crypto task (local exit)
 
    if((flag1 & 0x20) != 0)
@@ -1917,7 +1916,6 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
 {
    // variable mapping
 
-   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    
    const char* key = crypt_ctx->subctx->data->key;
@@ -1925,13 +1923,13 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    
    //------------------------------
 
-   if(((int)flag0 & 0x4000) == 0)
+   if(((int)crypt_ctx->subctx->data->flag0 & 0x4000) == 0)
    {
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
    }
 
-   if((flag0 << 0x10) < 0)
+   if((crypt_ctx->subctx->data->flag0 << 0x10) < 0)
    {
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
@@ -1989,7 +1987,6 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 {
    // variable mapping
 
-   uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    
    const char* key = crypt_ctx->subctx->data->key;
@@ -2006,11 +2003,11 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    if(crypt_ctx->subctx->unk_18 == 0)
    {
       int tweak_key0_block = crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->seed0_base;
-      int tweak_key1_block = (int)flag0 & 0x4000;
+      int tweak_key1_block = (int)crypt_ctx->subctx->data->flag0 & 0x4000;
 
       if(tweak_key1_block == 0)
       {
-         if((flag0 << 0x10) >= 0)
+         if((crypt_ctx->subctx->data->flag0 << 0x10) >= 0)
          {
             if((flag1 & 0x41) != 0x41)
             {
@@ -2039,7 +2036,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
       return; // this should terminate crypto task (global exit)
    }
 
-   if(((int)flag0 & 0x4000) != 0)
+   if(((int)crypt_ctx->subctx->data->flag0 & 0x4000) != 0)
    {   
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
@@ -2049,12 +2046,12 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    //=========== process tail part of source buffer ? ===============================
    
-   if((flag0 << 0x10) >= 0)
+   if((crypt_ctx->subctx->data->flag0 << 0x10) >= 0)
    {   
       if((flag1 & 0x41) != 0x41)
       {
          int tweak_key0_tail = crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nBlocks - 1));
-         int tweak_key1_tail = (int)flag0 & 0x4000;
+         int tweak_key1_tail = (int)crypt_ctx->subctx->data->flag0 & 0x4000;
 
          char* tail_buffer = buffer + crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->nBlocks - 1);
 
@@ -2073,7 +2070,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    //========= copy tail result to output buffer ? ===========================
    
-   if((flag0 << 0x10) < 0)
+   if((crypt_ctx->subctx->data->flag0 << 0x10) < 0)
    {
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
