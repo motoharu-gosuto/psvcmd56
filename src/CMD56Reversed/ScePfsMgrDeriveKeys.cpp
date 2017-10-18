@@ -97,7 +97,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t unk_20;
    uint32_t unk_24;
    uint32_t size2; //0x28
-   uint32_t nDigests; // 0x2C - also digest table index
+   uint32_t nBlocks; // 0x2C - also digest table index
    
    uint32_t unk_30;
    uint32_t seed0_base; // 0x34
@@ -1816,7 +1816,7 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
 
    int block_size = crypt_ctx->subctx->data->size1;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
-   int nBlocks = crypt_ctx->subctx->nDigests;
+   int nBlocks = crypt_ctx->subctx->nBlocks;
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    char* signatures = crypt_ctx->subctx->hmac_sha1_digest;
 
@@ -1923,7 +1923,7 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    uint16_t flag0 = crypt_ctx->subctx->data->seed1_base;
    uint16_t flag1 = crypt_ctx->subctx->data->flag;
    
-   int nBlocks = crypt_ctx->subctx->nDigests;
+   int nBlocks = crypt_ctx->subctx->nBlocks;
    const char* key = crypt_ctx->subctx->data->key;
    const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
    
@@ -2041,7 +2041,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 
    int some_value = nBlocksTail + crypt_ctx->subctx->unk_18;
    
-   if((some_value >= crypt_ctx->subctx->nDigests))
+   if((some_value >= crypt_ctx->subctx->nBlocks))
    {
       if(output_src != output_dst)
          memcpy(output_dst, output_src, output_size);
@@ -2063,10 +2063,10 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
    {   
       if((flag1 & 0x41) != 0x41)
       {
-         int tweak_key0_tail = block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nDigests - 1));
+         int tweak_key0_tail = block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nBlocks - 1));
          int tweak_key1_tail = (int)flag0 & 0x4000;
 
-         char* tail_buffer = buffer + block_size * (crypt_ctx->subctx->nDigests - 1);
+         char* tail_buffer = buffer + block_size * (crypt_ctx->subctx->nBlocks - 1);
 
          if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
          {
@@ -2157,7 +2157,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    int tweak_key1 = seed_root >> 0x20;
 
    int var_8C = (int)crypt_ctx->subctx->data->type - 2;
-   int key_id = (crypt_ctx->subctx->data->size1) * ((crypt_ctx->subctx->nDigests) - 1) + (crypt_ctx->subctx->size1);
+   int key_id = (crypt_ctx->subctx->data->size1) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->size1);
 
    char* hmac_key;
 
