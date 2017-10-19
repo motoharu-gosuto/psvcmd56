@@ -27,9 +27,9 @@ typedef struct ctx_21A27B8_70 //size is 0x160
    uint32_t unk_A0;
    uint32_t unk_A4;
 
-   char unk_A8[0x14];
-   char unk_BC[0x14];
-   char unk_D0[0x100];
+   unsigned char unk_A8[0x14];
+   unsigned char unk_BC[0x14];
+   unsigned char unk_D0[0x100];
 
 } ctx_21A27B8_70;
 
@@ -66,7 +66,7 @@ typedef struct ctx_21A27B8_40 //size is 0x28
    uint32_t unk_44;
    uint32_t unk_48;
 
-   char unk_4C[0x14];
+   unsigned char unk_4C[0x14];
 
    uint32_t unk_60;
    uint32_t unk_64;
@@ -192,12 +192,12 @@ void sub_21A0E3C(ctx_21A27B8_20* unk0, ctx_21A27B8_18* unk1, node_holder* unk2, 
    unk0->unk_1C = arg_4;
 }
 
-void proc_copy_14_bytes_219DE1C(char unk0[0x14], char unk1[0x14])
+void proc_copy_14_bytes_219DE1C(unsigned char unk0[0x14], unsigned char unk1[0x14])
 {
    memcpy(unk0, unk1, 0x14);
 }
 
-int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_70* data_base, int size2, char bytes14[0x14])
+int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_70* data_base, int size2, unsigned char bytes14[0x14])
 {
    //this function is powered by table of function pointers that are called indirectly
 
@@ -430,7 +430,7 @@ int SceSblSsMgrForDriver_6704d985(ctx_21A27B8_70* data_base, char* dest, int siz
 
 //it looks like this procedure takes base->data0 and data_base as input
 //and produces bytes14 as output
-int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
+int proc_crypto_stuff_219DE7C(unsigned char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8_70* data_base, int size)
 {
    char buffer0[0x80]; //128
    char buffer1[0x80]; //128
@@ -470,7 +470,7 @@ int proc_crypto_stuff_219DE7C(char bytes14[0x14], ctx_21A27B8* base, ctx_21A27B8
 }
 
 //unk1 is ignored
-void sub_21A0E28(ctx_21A27B8_20* unk0, char unk1[0x14], int unk2, int unk3, int arg_0, int arg_4)
+void sub_21A0E28(ctx_21A27B8_20* unk0, unsigned char unk1[0x14], int unk2, int unk3, int arg_0, int arg_4)
 {
    unk0->unk_8 = unk2;
    unk0->unk_C = unk3;
@@ -504,7 +504,7 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
    //var_290= -0x290
    uint32_t var_28C; //read bytes value
    std::pair<uint32_t, uint32_t> result_p; //size is 0x8 bytes in total
-   char unk0[0x14]; //0x14 bytes
+   unsigned char unk0[0x14]; //0x14 bytes
    char destination[0x240]; //size is 0x100 or 0x200 aligned to 0x40 (that is why 0x240 in total). this is multipurpose buffer
    int var_2C = var_009EA004; //cookie
 

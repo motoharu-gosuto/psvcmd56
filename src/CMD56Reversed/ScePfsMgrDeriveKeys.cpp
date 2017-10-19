@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <string>
 
+#include "sha1.h"
+
 //----------------------
 
 typedef struct arm_lldiv_t
@@ -24,90 +26,105 @@ ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
    return 0;
 }
 
-int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const char *source, uint32_t size, char* result)
+int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const unsigned char *source, uint32_t size, unsigned char result[0x14])
 {
+   sha1(source, size, result);
+
    return 0;
 }
 
-int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const char* key, uint32_t key_len, const char* data, uint32_t data_len, char* digest)
+int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const unsigned char* key, uint32_t key_len, const unsigned char* data, uint32_t data_len, unsigned char digest[0x14])
 {
+   sha1_hmac(key, key_len, data, data_len, digest);
+
    return 0;
 }
 
 //----------------------
 
-int SceKernelUtilsForDriver_aes_init_2_eda97d6d(void *ctx, uint32_t blocksize, uint32_t keysize, const char *key)
+int SceKernelUtilsForDriver_aes_init_2_eda97d6d(void *ctx, uint32_t blocksize, uint32_t keysize, const unsigned char *key)
 {
    return 0;
 }
 
-int SceKernelUtilsForDriver_aes_encrypt_2_302947b6(void* ctx, const char* src, char* dst)
+int SceKernelUtilsForDriver_aes_encrypt_2_302947b6(void* ctx, const unsigned char* src, unsigned char* dst)
 {
    return 0;
 }
 
 //############## LEVEL 0 - CRYPTO PRIMITIVES ###############
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptWithKeygenForDriver_711c057a(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable)
-{
-   return 0;
-}
-
-//
-
-int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(const char* src, char* dst, int size, const char* key, int key_size, uint16_t key_id, int mask_enable)
-{
-   return 0;
-}
-
-//---------------------
-
-int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_121fa69f(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable)
-{
-   return 0;
-}
-
-int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptWithKeygenForDriver_711c057a(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
 
 //
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(const char* src, char* dst, int size, const char* key, int key_size, int mask_enable)
-{
-   return 0;
-}
-
-int SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(const char* src, char* dst, int size, const char* key, int key_size, int mask_enable)
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, uint16_t key_id, int mask_enable)
 {
    return 0;
 }
 
 //---------------------
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(const char* src, char* dst, int size, const char* key, int key_size, char* iv, int mask_enable, int command_bit)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptForDriver_121fa69f(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, int mask_enable)
 {
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(const char* src, char* dst, int size, const char* key, int key_size, char* iv, uint16_t key_id, int mask_enable, int command_bit)
+int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptForDriver_e6e1ad15(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, int mask_enable)
 {
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrSHA1ForDriver_eb3af9b5(const char* src, char* dst, int size, char* iv, int mask_enable, int command_bit)
+//
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptForDriver_c517770d(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, int mask_enable)
 {
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, char* dst, int size, const char* key, char* iv, int mask_enable, int command_bit)
+int SceSblSsMgrForDriver_sceSblSsMgrAESECBDecryptForDriver_7c978be7(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, int mask_enable)
 {
+   return 0;
+}
+
+//---------------------
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCMACForDriver_1b14658d(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, uint16_t key_id, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrSHA1ForDriver_eb3af9b5(const unsigned char* src, unsigned char* dst, int size, unsigned char* iv, int mask_enable, int command_bit)
+{
+   return 0;
+}
+
+int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, unsigned char* iv, int mask_enable, int command_bit)
+{
+   if(iv != 0)
+      throw std::runtime_error("unsupported iv");
+
+   if(mask_enable != 1)
+      throw std::runtime_error("unsupported mask_enable");
+
+   if(command_bit != 0)
+      throw std::runtime_error("unsupported command_bit");
+
+   sha1_hmac(key, 0x14, src, size, dst);
+
    return 0;
 }
 
@@ -117,7 +134,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const char* src, 
 
 //encrypt / decrypt
 
-int AESCBCEncrypt_base_219D8AC(const char* key, char* iv, uint32_t size, const char* src, char* dst)
+int AESCBCEncrypt_base_219D8AC(const unsigned char* key, unsigned char* iv, uint32_t size, const unsigned char* src, unsigned char* dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -138,8 +155,8 @@ int AESCBCEncrypt_base_219D8AC(const char* key, char* iv, uint32_t size, const c
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using key
 
@@ -153,7 +170,7 @@ int AESCBCEncrypt_base_219D8AC(const char* key, char* iv, uint32_t size, const c
    return 0;
 }
 
-int AESCBCDecrypt_base_219D950(const char* key, char* iv, uint32_t size, const char* src, char* dst)
+int AESCBCDecrypt_base_219D950(const unsigned char* key, unsigned char* iv, uint32_t size, const unsigned char* src, unsigned char* dst)
 {
    int size_tail = size & 0xF; // get size of tail
    int size_block = size & (~0xF); // get block size aligned to 0x10 boundary
@@ -174,8 +191,8 @@ int AESCBCDecrypt_base_219D950(const char* key, char* iv, uint32_t size, const c
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
    
    //encrypt iv using key
 
@@ -193,7 +210,7 @@ int AESCBCDecrypt_base_219D950(const char* key, char* iv, uint32_t size, const c
 
 //encrypt / decrypt with key_id
 
-int AESCBCDecryptWithKeygen_base_219DAAC(const char* key, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
+int AESCBCDecryptWithKeygen_base_219DAAC(const unsigned char* key, unsigned char* iv, uint32_t size, const unsigned char* src, unsigned char* dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -216,8 +233,8 @@ int AESCBCDecryptWithKeygen_base_219DAAC(const char* key, char* iv, uint32_t siz
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using key
 
@@ -233,7 +250,7 @@ int AESCBCDecryptWithKeygen_base_219DAAC(const char* key, char* iv, uint32_t siz
    return 0;
 }
 
-int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32_t size, const char* src, char* dst, uint16_t key_id)
+int AESCBCEncryptWithKeygen_base_219D9F4(const unsigned char* klicensee, unsigned char* iv, uint32_t size, const unsigned char* src, unsigned char* dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1); // ???
 
@@ -256,8 +273,8 @@ int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using klicensee
      
@@ -277,7 +294,7 @@ int AESCBCEncryptWithKeygen_base_219D9F4(const char* klicensee, char* iv, uint32
 
 // FUNCTIONS ARE SIMILAR
 
-int AESCMAC_base_1_219DC08(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst)
+int AESCMAC_base_1_219DC08(const unsigned char* cmac_key, unsigned char* iv, uint32_t size, const unsigned char* cmac_src, unsigned char* cmac_dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -298,8 +315,8 @@ int AESCMAC_base_1_219DC08(const char* cmac_key, char* iv, uint32_t size, const 
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using key
 
@@ -317,7 +334,7 @@ int AESCMAC_base_1_219DC08(const char* cmac_key, char* iv, uint32_t size, const 
    return 0;
 }
 
-int AESCMAC_base_2_219DB64(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst)
+int AESCMAC_base_2_219DB64(const unsigned char* cmac_key, unsigned char* iv, uint32_t size, const unsigned char* cmac_src, unsigned char* cmac_dst)
 {
    int size_tail = size & 0xF;
    int size_block = size & (~0xF);
@@ -338,8 +355,8 @@ int AESCMAC_base_2_219DB64(const char* cmac_key, char* iv, uint32_t size, const 
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using key
 
@@ -359,7 +376,7 @@ int AESCMAC_base_2_219DB64(const char* cmac_key, char* iv, uint32_t size, const 
 
 // FUNCTIONS ARE SIMILAR
 
-int AESCMACWithKeygen_base_1_219DCAC(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst, uint16_t key_id)
+int AESCMACWithKeygen_base_1_219DCAC(const unsigned char* cmac_key, unsigned char* iv, uint32_t size, const unsigned char* cmac_src, unsigned char* cmac_dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -382,8 +399,8 @@ int AESCMACWithKeygen_base_1_219DCAC(const char* cmac_key, char* iv, uint32_t si
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using key
 
@@ -401,7 +418,7 @@ int AESCMACWithKeygen_base_1_219DCAC(const char* cmac_key, char* iv, uint32_t si
    return 0;
 }
 
-int AESCMACWithKeygen_base_2_219DD64(const char* cmac_key, char* iv, uint32_t size, const char* cmac_src, char* cmac_dst, uint16_t key_id)
+int AESCMACWithKeygen_base_2_219DD64(const unsigned char* cmac_key, unsigned char* iv, uint32_t size, const unsigned char* cmac_src, unsigned char* cmac_dst, uint16_t key_id)
 {
    uint16_t kid = 0 - (key_id - 1) + (key_id - 1);
 
@@ -424,8 +441,8 @@ int AESCMACWithKeygen_base_2_219DD64(const char* cmac_key, char* iv, uint32_t si
 
    //align destination buffer
 
-   char iv_enc[0x10] = {0};
-   char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char iv_enc[0x10] = {0};
+   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
 
    //encrypt iv using key
    
@@ -479,10 +496,10 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
 
 //IV is a subkey base
 
-int AESCMACDecryptSw_base_219D714(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, const char* src, char* dst)
+int AESCMACDecryptSw_base_219D714(const unsigned char* subkey, const unsigned char* dst_key, const unsigned char* subkey_key, uint32_t key_size, uint32_t size, const unsigned char* src, unsigned char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char drv_subkey[0x10] = {0};
+   unsigned char drv_subkey[0x10] = {0};
 
    SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, subkey_key); //initialize aes ctx with iv_key
 
@@ -497,10 +514,10 @@ int AESCMACDecryptSw_base_219D714(const char* subkey, const char* dst_key, const
    return result0;
 }
 
-int AESCMACEncryptSw_base_219D694(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t key_size, uint32_t size, const char* src, char* dst)
+int AESCMACEncryptSw_base_219D694(const unsigned char* subkey, const unsigned char* dst_key, const unsigned char* subkey_key, uint32_t key_size, uint32_t size, const unsigned char* src, unsigned char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char drv_subkey[0x10] = {0};
+   unsigned char drv_subkey[0x10] = {0};
 
    SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, subkey_key);
 
@@ -548,11 +565,11 @@ int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
    return 0;
 }
 
-int AESCMACSw_base_1_219D794(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, const char* src, char* dst)
+int AESCMACSw_base_1_219D794(const unsigned char* subkey, const unsigned char* dst_key, const unsigned char* subkey_key, uint32_t keysize, uint32_t size, const unsigned char* src, unsigned char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char drv_subkey[0x10] = {0};
-   char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
+   unsigned char drv_subkey[0x10] = {0};
+   unsigned char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
    
    SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
 
@@ -567,11 +584,11 @@ int AESCMACSw_base_1_219D794(const char* subkey, const char* dst_key, const char
    return result0;
 }
 
-int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char* subkey_key, uint32_t keysize, uint32_t size, const char* src, char* dst)
+int AESCMACSw_base_2_219D820(const unsigned char* subkey, const unsigned char* dst_key, const unsigned char* subkey_key, uint32_t keysize, uint32_t size, const unsigned char* src, unsigned char* dst)
 {
    char aes_ctx[0x1F0] = {0};
-   char drv_subkey[0x10] = {0};
-   char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
+   unsigned char drv_subkey[0x10] = {0};
+   unsigned char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
 
    SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
 
@@ -594,11 +611,11 @@ int AESCMACSw_base_2_219D820(const char* subkey, const char* dst_key, const char
 
 //#### GROUP 1, GROUP 2 (hw dec/enc) ####
 
-char g_1771100[0x10] = {0};
+unsigned char g_1771100[0x10] = {0};
 
-int pfs_decrypt_hw_219D480(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int pfs_decrypt_hw_219D480(const unsigned char* key, const unsigned char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const unsigned char* src, unsigned char* dst, uint16_t flag, uint16_t key_id)
 {
-   char iv[0x10] = {0};
+   unsigned char iv[0x10] = {0};
 
    int tk_tmp00 = tweak_key0;
    int tk_tmp10 = tweak_key1;
@@ -680,9 +697,9 @@ int pfs_decrypt_hw_219D480(const char* key, const char* iv_xor_key, int tweak_ke
    return 0;
 }
 
-int pfs_encrypt_hw_219D2DC(const char* key, const char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag, uint16_t key_id)
+int pfs_encrypt_hw_219D2DC(const unsigned char* key, const unsigned char* iv_xor_key, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const unsigned char* src, unsigned char* dst, uint16_t flag, uint16_t key_id)
 {
-   char iv[0x10] = {0};
+   unsigned char iv[0x10] = {0};
 
    int tk_tmp00 = tweak_key0;
    int tk_tmp10 = tweak_key1;
@@ -766,9 +783,9 @@ int pfs_encrypt_hw_219D2DC(const char* key, const char* iv_xor_key, int tweak_ke
 
 //#### GROUP 3, GROUP 4 (sw dec/enc) ####
 
-int pfs_decrypt_sw_219D174(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
+int pfs_decrypt_sw_219D174(const unsigned char* key, const unsigned char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const unsigned char* src, unsigned char* dst, uint16_t flag)
 {
-   char iv[0x10] = {0};
+   unsigned char iv[0x10] = {0};
 
    if(((block_size | size) << 0x1C) != 0)
       return 0x80140609;
@@ -844,9 +861,9 @@ int pfs_decrypt_sw_219D174(const char* key, const char* subkey_key, uint32_t key
    return 0;
 }
 
-int pfs_encrypt_sw_219D00C(const char* key, const char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const char* src, char* dst, uint16_t flag)
+int pfs_encrypt_sw_219D00C(const unsigned char* key, const unsigned char* subkey_key, uint32_t keysize, int ignored, int tweak_key0, int tweak_key1, uint32_t size, uint32_t block_size, const unsigned char* src, unsigned char* dst, uint16_t flag)
 {
-   char iv[0x10] = {0};
+   unsigned char iv[0x10] = {0};
 
    if(((block_size | size) << 0x1C) != 0)
       return 0x80140609;
@@ -924,33 +941,33 @@ int pfs_encrypt_sw_219D00C(const char* key, const char* subkey_key, uint32_t key
 
 //----------------------
 
-int sha1Digest_219DE54(char *result, const char *source, int size)
+int sha1Digest_219DE54(unsigned char *result, const unsigned char *source, int size)
 {
    return SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(source, size, result);
 }
 
-int hmacSha1Digest_219DE68(char* digest, const char* key, const char* data, int data_len)
+int hmacSha1Digest_219DE68(unsigned char* digest, const unsigned char* key, const unsigned char* data, int data_len)
 {
    return SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(key, 0x14, data, data_len, digest);
 }
 
 //----------------------
 
-char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
+unsigned char hmac_key_21A93C8[0x14] = {0xE4, 0x62, 0x25, 0x8B, 0x1F, 0x31, 0x21, 0x56, 0x07, 0x45, 0xDB, 0x62, 0xB1, 0x43, 0x67, 0x23, 0xD2, 0xBF, 0x80, 0xFE}; 
 
-char hmac_key_21A93DC[0x14] = {0xAF, 0xE6, 0x56, 0xBB, 0x3C, 0x17, 0x25, 0x6A, 0x3C, 0x80, 0x9F, 0x6E, 0x9B, 0xF1, 0x9F, 0xDD, 0x5A, 0x38, 0x85, 0x43};
+unsigned char hmac_key_21A93DC[0x14] = {0xAF, 0xE6, 0x56, 0xBB, 0x3C, 0x17, 0x25, 0x6A, 0x3C, 0x80, 0x9F, 0x6E, 0x9B, 0xF1, 0x9F, 0xDD, 0x5A, 0x38, 0x85, 0x43};
 
-char iv_21A93F0[0x10] = {0x74, 0xD2, 0x0C, 0xC3, 0x98, 0x81, 0xC2, 0x13, 0xEE, 0x77, 0x0B, 0x10, 0x10, 0xE4, 0xBE, 0xA7};
+unsigned char iv_21A93F0[0x10] = {0x74, 0xD2, 0x0C, 0xC3, 0x98, 0x81, 0xC2, 0x13, 0xEE, 0x77, 0x0B, 0x10, 0x10, 0xE4, 0xBE, 0xA7};
 
 //-------------------------------------
 
-int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt1)
+int calculate_sha1_chain_219E008(unsigned char* key, unsigned char* iv_xor_key, const unsigned char* klicensee, uint32_t salt1)
 {
    int saltin[2] = {0};
-   char base0[0x14] = {0};
-   char base1[0x14] = {0};
-   char combo[0x28] = {0};
-   char drvkey[0x14] = {0};
+   unsigned char base0[0x14] = {0};
+   unsigned char base1[0x14] = {0};
+   unsigned char combo[0x28] = {0};
+   unsigned char drvkey[0x14] = {0};
 
    saltin[0] = salt1;
 
@@ -960,7 +977,7 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
 
    saltin[1] = 1;
    
-   sha1Digest_219DE54(base1, (char*)saltin, 8); //calculate hash of salt 0
+   sha1Digest_219DE54(base1, (unsigned char*)saltin, 8); //calculate hash of salt 0
 
    memcpy(combo, base0, 0x14);
    memcpy(combo + 0x14, base1, 0x14);
@@ -973,7 +990,7 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
    
    saltin[1] = 2;
 
-   sha1Digest_219DE54(base1, (char*)saltin, 8); //calculate hash of salt 1
+   sha1Digest_219DE54(base1, (unsigned char*)saltin, 8); //calculate hash of salt 1
 
    memcpy(combo, base0, 0x14);
    memcpy(combo + 0x14, base1, 0x14);
@@ -985,12 +1002,12 @@ int calculate_sha1_chain_219E008(char* key, char* iv_xor_key, const char* klicen
    return 0;
 }
 
-int calculate_sha1_chain_219E1CC(char* key, char* iv_xor_key, const char* klicensee, uint32_t ignored_salt0, uint32_t salt1)
+int calculate_sha1_chain_219E1CC(unsigned char* key, unsigned char* iv_xor_key, const unsigned char* klicensee, uint32_t ignored_salt0, uint32_t salt1)
 {
    return calculate_sha1_chain_219E008(key, iv_xor_key, klicensee, salt1);
 }
 
-int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t ignored_key_id)
+int hmac1_sha1_or_sha1_chain_219E0DC(unsigned char* key, unsigned char* iv_xor_key, const unsigned char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t ignored_key_id)
 {
    if((flag & 2) == 0)
    {
@@ -1000,20 +1017,20 @@ int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* kl
 
    int saltin0[1] = {0};
    int saltin1[2] = {0};
-   char drvkey[0x14] = {0};
+   unsigned char drvkey[0x14] = {0};
 
    memcpy(key, klicensee, 0x10);
 
    if(salt0 == 0)
    {
       saltin0[0x00] = salt1;
-      hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (char*)saltin0, 4); // derive key with one salt
+      hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (unsigned char*)saltin0, 4); // derive key with one salt
    }
    else
    {
       saltin1[0] = salt0;
       saltin1[1] = salt1;
-      hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (char*)saltin1, 8); // derive key with two salts
+      hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, (unsigned char*)saltin1, 8); // derive key with two salts
    }
 
    memcpy(iv_xor_key, drvkey, 0x10); //copy derived key
@@ -1021,9 +1038,9 @@ int hmac1_sha1_or_sha1_chain_219E0DC(char* key, char* iv_xor_key, const char* kl
    return 0;
 }
 
-int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16_t ignored_flag, uint16_t ignored_key_id, const char* base_key, uint32_t base_key_len)
+int hmac_sha1_219E164(unsigned char* key, unsigned char* iv_xor_key, const unsigned char* klicensee, uint16_t ignored_flag, uint16_t ignored_key_id, const unsigned char* base_key, uint32_t base_key_len)
 {
-   char drvkey[0x14] = {0};
+   unsigned char drvkey[0x14] = {0};
 
    hmacSha1Digest_219DE68(drvkey, hmac_key_21A93C8, base_key, base_key_len);
 
@@ -1034,32 +1051,32 @@ int hmac_sha1_219E164(char* key, char* iv_xor_key, const char* klicensee, uint16
    return 0;
 }
 
-int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
+int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
 {
-   char drvkey[0x14] = {0};
-   char iv[0x10] = {0};
-   char combo[0x14] = {0};
+   unsigned char drvkey[0x14] = {0};
+   unsigned char iv[0x10] = {0};
+   unsigned char combo[0x14] = {0};
 
    //align buffers
 
-   char* drvkey_aligned = drvkey + ((0 - (int)drvkey) & 0x3F);
-   char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
-   char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
+   unsigned char* drvkey_aligned = drvkey + ((0 - (int)drvkey) & 0x3F);
+   unsigned char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
+   unsigned char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
 
    int saltin0[1] = {0};
    int saltin1[2] = {0};
-   char base[0x14] = {0};
+   unsigned char base[0x14] = {0};
 
    if(salt0 == 0)
    {
       saltin0[0] = salt1;
-      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, (char*)saltin0, 4); // derive base with one salt
+      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, (unsigned char*)saltin0, 4); // derive base with one salt
    }
    else
    {
       saltin1[0] = salt0;
       saltin1[1] = salt1;
-      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, (char*)saltin1, 8); // derive base with two salts
+      hmacSha1Digest_219DE68(base, hmac_key_21A93DC, (unsigned char*)saltin1, 8); // derive base with two salts
    }
 
    memcpy(combo_aligned, base, 0x14); // calculated digest will be src data
@@ -1073,7 +1090,7 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(char* hmac_key, const c
    return 0;
 }
 
-int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
+int combine_klicensee_digest_219E1D8(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
 {
    if((flag << 0x1F) < 0) // check bit 0
    {
@@ -1088,17 +1105,17 @@ int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint
    }
 
    int saltin[2] = {0};
-   char base0[0x14] = {0};
-   char base1[0x14] = {0};
-   char combo[0x28] = {0};
-   char drvkey[0x14] = {0};
+   unsigned char base0[0x14] = {0};
+   unsigned char base1[0x14] = {0};
+   unsigned char combo[0x28] = {0};
+   unsigned char drvkey[0x14] = {0};
 
    sha1Digest_219DE54(base0, klicensee, 0x10); // calculate digest of klicensee
 
    saltin[0] = 0xA;
    saltin[1] = salt1;
 
-   sha1Digest_219DE54(base1, (char*)saltin, 8); // calculate digest of salt
+   sha1Digest_219DE54(base1, (unsigned char*)saltin, 8); // calculate digest of salt
 
    memcpy(combo, base0, 0x14);
    memcpy(combo + 0x14, base1, 0x14);
@@ -1112,7 +1129,7 @@ int combine_klicensee_digest_219E1D8(char* hmac_key, const char* klicensee, uint
 
 //return 0 - error
 //return 1 - success
-int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14])
+int proc_verify_14_bytes_219DE44(unsigned char unk0[0x14], unsigned char unk1[0x14])
 {
    //from what I know - b5a4d745 returns only 0, -1 (not sure about 1) based on reversing and tests
    //for  0 - CLZ is 32
@@ -1651,7 +1668,7 @@ int ScePfsCryptEngineThread_219BBB0()
 
 #define IGNORE_ARG 0
 
-int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t size)
+int hmac_sha1_digest_219DE7C(unsigned char digest[0x14], unsigned char* key, const unsigned char* src, uint32_t size)
 {
    if(size == 0)
    {
@@ -1660,11 +1677,11 @@ int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t 
       return 0;
    }
 
-   char key_raw[0x14] = {0};
-   char dst_raw[0x14] = {0};
+   unsigned char key_raw[0x14] = {0};
+   unsigned char dst_raw[0x14] = {0};
 
-   char* key_aligned = key_raw + ((0 - (int)key_raw) & 0x3F);
-   char* dst_aligned = dst_raw + ((0 - (int)dst_raw) & 0x3F);
+   unsigned char* key_aligned = key_raw + ((0 - (int)key_raw) & 0x3F);
+   unsigned char* dst_aligned = dst_raw + ((0 - (int)dst_raw) & 0x3F);
 
    //memset(key_aligned + 8, 0, 0x18); //NOT SURE WHAT IS THE PURPOSE OF THIS LINE ?
 
@@ -1679,7 +1696,7 @@ int hmac_sha1_digest_219DE7C(char* digest, char* key, const char* src, uint32_t 
    return 0;
 }
 
-void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* source)
+void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, unsigned char* source)
 {
    // variable mapping
 
@@ -1700,10 +1717,10 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
          {
             int counter = 0;
 
-            char* source_base = source;
-            char* signatures_base = crypt_ctx->subctx->signature_table;
+            unsigned char* source_base = source;
+            unsigned char* signatures_base = crypt_ctx->subctx->signature_table;
                      
-            char bytes14[0x14] = {0};
+            unsigned char bytes14[0x14] = {0};
 
             do
             {
@@ -1741,15 +1758,15 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
             int counter = 0;
             int bytes_left = size;
 
-            char* source_base = source;
-            char* signatures_base = crypt_ctx->subctx->signature_table;
+            unsigned char* source_base = source;
+            unsigned char* signatures_base = crypt_ctx->subctx->signature_table;
 
-            char digest[0x14] = {0};
-            char bytes14[0x14] = {0};
+            unsigned char digest[0x14] = {0};
+            unsigned char bytes14[0x14] = {0};
 
             do
             {
-               hmacSha1Digest_219DE68(digest, crypt_ctx->subctx->data->hmac_key, (char*)&salt, 4);
+               hmacSha1Digest_219DE68(digest, crypt_ctx->subctx->data->hmac_key, (unsigned char*)&salt, 4);
 
                int size_arg = (crypt_ctx->subctx->data->block_size < bytes_left) ? crypt_ctx->subctx->data->block_size : bytes_left;
                hmac_sha1_digest_219DE7C(bytes14, digest, source_base, size_arg);
@@ -1777,12 +1794,12 @@ void verify_step(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, 
    }
 }
 
-void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, char* buffer)
+void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1, int bitSize, int size, unsigned char* buffer)
 {
    // variable mapping
 
-   const char* key = crypt_ctx->subctx->data->key;
-   const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
+   unsigned const char* key = crypt_ctx->subctx->data->key;
+   unsigned const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
    
    //------------------------------
 
@@ -1846,15 +1863,15 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    return; // this should terminate crypto task (global exit)
 }
 
-void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
+void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, unsigned char* buffer)
 {
    // variable mapping
 
-   const char* key = crypt_ctx->subctx->data->key;
-   const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
+   unsigned const char* key = crypt_ctx->subctx->data->key;
+   unsigned const char* subkey_key = crypt_ctx->subctx->data->iv_xor_key;
 
-   char* output_dst = crypt_ctx->subctx->unk_10 + ((crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
-   char* output_src = buffer + (crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18);
+   unsigned char* output_dst = crypt_ctx->subctx->unk_10 + ((crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18) - crypt_ctx->subctx->dest_offset);
+   unsigned char* output_src = buffer + (crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->unk_18);
    int output_size = crypt_ctx->subctx->data->block_size * crypt_ctx->subctx->nBlocksTail;
 
    //========== process block part of source buffer ? ========================
@@ -1912,7 +1929,7 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
          int tweak_key0_tail = crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->seed0_base + (crypt_ctx->subctx->nBlocks - 1));
          int tweak_key1_tail = (int)crypt_ctx->subctx->data->flag0 & 0x4000;
 
-         char* tail_buffer = buffer + crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->nBlocks - 1);
+         unsigned char* tail_buffer = buffer + crypt_ctx->subctx->data->block_size * (crypt_ctx->subctx->nBlocks - 1);
 
          if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
          {
@@ -2000,6 +2017,8 @@ void work_3_step1(CryptEngineWorkCtx* crypt_ctx, int bitSize, char* buffer)
 //int some_flag_base = (uint32_t)(data->pmi_bcl_flag - 2);
 //int some_flag = 0xC0000B03 & (1 << some_flag_base);
 
+//however i have double checked the code and it is correct in both places
+
 void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
 {
    int seed_root = (crypt_ctx->subctx->data->block_size) * (crypt_ctx->subctx->seed0_base);
@@ -2009,7 +2028,7 @@ void crypt_engine_work_3(CryptEngineWorkCtx* crypt_ctx)
    int bitSize = (int)crypt_ctx->subctx->data->type - 2; // this does not correlate with derive_keys_from_klicensee_219B4A0
    int total_size = (crypt_ctx->subctx->data->block_size) * ((crypt_ctx->subctx->nBlocks) - 1) + (crypt_ctx->subctx->tail_size);
 
-   char* work_buffer;
+   unsigned char* work_buffer;
    if((bitSize > 0x1F) || ((0xC0000B03 & (1 << bitSize)) == 0))
       work_buffer = crypt_ctx->subctx->work_buffer0;
    else

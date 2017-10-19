@@ -20,7 +20,7 @@ int SceSysclibForDriver_cdf7f155()
 
 //analog of memcmp or str cmp or strcoll, smth like that
 //returns -1, 0
-int SceSysclibForDriver_b5a4d745(char* char0, char* char1, int len)
+int SceSysclibForDriver_b5a4d745(unsigned char* char0, unsigned char* char1, int len)
 {
    return 0;
 }

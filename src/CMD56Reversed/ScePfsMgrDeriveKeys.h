@@ -28,7 +28,7 @@ typedef struct pfs_pmi_buffer_list_ctx
     uint16_t type;   //0x92
     uint16_t flag; //0x94 = 0
     
-    char klicensee[0x10]; //0x96
+    unsigned char klicensee[0x10]; //0x96
     
     uint16_t key_id; // = 0
     uint32_t salt0; // 0xA8 = 0
@@ -53,7 +53,7 @@ typedef struct pfs_pmi_buffer_list_ctx
 
 typedef struct CryptEngineData //size is 0x60
 {
-   const char* klicensee;
+   unsigned const char* klicensee;
    uint32_t salt0; // salt that is used to derive keys
    uint32_t salt1; // salt that is used to derive keys
    uint16_t type; // 0xC
@@ -69,11 +69,11 @@ typedef struct CryptEngineData //size is 0x60
    uint32_t unk_20;
    uint32_t unk_24;
    uint32_t block_size; //0x28
-   char key[0x10]; //0x2C
+   unsigned char key[0x10]; //0x2C
    
-   char iv_xor_key[0x10]; //0x3C
+   unsigned char iv_xor_key[0x10]; //0x3C
    
-   char hmac_key[0x14]; //0x4C
+   unsigned char hmac_key[0x14]; //0x4C
 
 }CryptEngineData;
 
@@ -84,7 +84,7 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t opt_code; // 0x8 - if 3 then decrypt, if 4 then encrypt, if 2 then encrypt
    CryptEngineData* data; // 0xC
    
-   char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
+   unsigned char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
    uint32_t unk_14; // 0x14
    uint32_t unk_18; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS SIZE (based on tweak key derrivation)
    uint32_t nBlocksTail;
@@ -102,10 +102,10 @@ typedef struct CryptEngineSubctx //size is 0x58
    uint32_t tail_size; //0x40
    uint32_t unk_44;
    uint32_t unk_48; //0x48
-   char* signature_table; // 0x4C hmac sha1 digest table
+   unsigned char* signature_table; // 0x4C hmac sha1 digest table
    
-   char* work_buffer0; // 0x50
-   char* work_buffer1; // 0x54
+   unsigned char* work_buffer0; // 0x50
+   unsigned char* work_buffer1; // 0x54
    
 }CryptEngineSubctx;
 
@@ -135,7 +135,7 @@ typedef struct derive_keys_ctx
    uint32_t unk_58;
    uint32_t unk_68;
 
-   char base_key[0x14]; // 0x84
+   unsigned char base_key[0x14]; // 0x84
 
 }derive_keys_ctx;
 
@@ -146,5 +146,6 @@ typedef struct ctx_12f8d58e
 
 }ctx_12f8d58e;
 
-int proc_verify_14_bytes_219DE44(char unk0[0x14], char unk1[0x14]);
+int proc_verify_14_bytes_219DE44(unsigned char unk0[0x14], unsigned char unk1[0x14]);
 
+int derive_data_ctx_keys(CryptEngineData* data, const derive_keys_ctx* drv_ctx);
