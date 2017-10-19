@@ -1,155 +1,10 @@
+#include "ScePfsMgrDeriveKeys.h"
+
 #include "Constants.h"
-#include "SceIofilemgr.h"
 #include "SceSysclib.h"
 
 #include <stdint.h>
 #include <string>
-
-typedef struct buffer_list
-{
-    SceUID mutex_id;
-    uint32_t unk_4;
-    uint32_t unk_8;
-    uint32_t unk_C;
-    uint32_t unk_10;
-    void* bcl; //0x14 - one of versions is pfs_pmi_buffer_list_ctx
-}buffer_list;
-
-typedef struct pfs_pmi_buffer_list_ctx
-{
-    buffer_list* blist;
-    uint32_t unk_4;
-    SceUID ScePfsPmi_mutex_id; // 0x08
-    char original_path[0x3F];  // 0xC
-    
-    char mount_point1[0x22]; // 0x4C - /%s
-    
-    char mount_point2[0x23];  // 0x6E - %s0:
-    
-    char unk_91;
-    
-    uint16_t type;   //0x92
-    uint16_t flag; //0x94 = 0
-    
-    char klicensee[0x10]; //0x96
-    
-    uint16_t key_id; // = 0
-    uint32_t salt0; // 0xA8 = 0
-    uint32_t unk_AC; // = 0
-    
-    SceUID ScePfsFilesDb_mutex_id; // 0xB0
-    
-    char unk_data1[0xBC]; // 0xB4
-    
-    pfs_pmi_buffer_list_ctx *bcl; //0x170
-    uint32_t unk_174;
-    SceUInt64 auth_id;
-    
-    char unk_data2[0x78]; // 0x180
-
-    vfs_block_dev_info block_dev; // 0x1F8
-
-    uint32_t unk_20C;
-    
-    //further fields are unknown
-} pfs_pmi_buffer_list_ctx;
-
-typedef struct CryptEngineData //size is 0x60
-{
-   const char* klicensee;
-   uint32_t salt0; // salt that is used to derive keys
-   uint32_t salt1; // salt that is used to derive keys
-   uint16_t type; // 0xC
-   uint16_t pmi_bcl_flag; // 0xE
-   
-   uint16_t key_id; // 0x10
-   uint16_t flag0; // 0x12
-   
-   uint32_t unk_14;
-   uint32_t unk_18;
-   uint32_t unk_1C;
-   
-   uint32_t unk_20;
-   uint32_t unk_24;
-   uint32_t block_size; //0x28
-   char key[0x10]; //0x2C
-   
-   char iv_xor_key[0x10]; //0x3C
-   
-   char hmac_key[0x14]; //0x4C
-
-   uint32_t unk_5C;
-
-}CryptEngineData;
-
-typedef struct CryptEngineSubctx //size is 0x58
-{
-   uint32_t unk_0;
-   uint32_t unk_4;
-   uint32_t opt_code; // 0x8 - if 3 then decrypt, if 4 then encrypt, if 2 then encrypt
-   CryptEngineData* data; // 0xC
-   
-   char* unk_10; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS POINTER
-   uint32_t unk_14; // 0x14
-   uint32_t unk_18; // I DONT KNOW BUT I AM ASSUMING THAT THIS IS SIZE (based on tweak key derrivation)
-   uint32_t nBlocksTail;
-   
-   uint32_t unk_20;
-   uint32_t unk_24;
-   uint32_t unk_28; //0x28
-   uint32_t nBlocks; // 0x2C - also digest table index
-   
-   uint32_t unk_30;
-   uint32_t seed0_base; // 0x34
-   uint32_t dest_offset; // 0x38
-   uint32_t unk_3C; // 0x3C
-   
-   uint32_t tail_size; //0x40
-   uint32_t unk_44;
-   uint32_t unk_48; //0x48
-   char* signature_table; // 0x4C hmac sha1 digest table
-   
-   char* work_buffer0; // 0x50
-   char* work_buffer1; // 0x54
-   
-}CryptEngineSubctx;
-
-typedef struct CryptEngineWorkCtx //size is 0x18
-{
-   void* unk_0; // pointer to data 0x140 + 0x18 ?
-   void* unk_4; // pointer to data 0x140 + 0x18 ?
-   CryptEngineSubctx* subctx; // 0x8
-   uint32_t error; // 0xC set to 0 or error code after executing crypto task
-   
-   SceUID threadId; // = set with sceKernelGetThreadIdForDriver. used with ksceKernelSignalCondTo
-   uint32_t unk_14;
-   
-}CryptEngineWorkCtx;
-
-struct derive_keys_ctx;
-
-typedef int(derive_keys_sub_219A29C_cb)(const derive_keys_ctx*);
-
-typedef struct derive_keys_ctx
-{
-   derive_keys_sub_219A29C_cb* get_block_size_14; //function pointer
-
-   uint32_t unk_40;
-
-
-   uint32_t unk_58;
-   uint32_t unk_68;
-
-   char base_key[0x14]; // 0x84
-
-}derive_keys_ctx;
-
-typedef struct ctx_12f8d58e
-{
-   uint32_t unk_28;
-   uint32_t unk_2C;
-
-}ctx_12f8d58e;
 
 //----------------------
 
@@ -1285,7 +1140,7 @@ int sub_219A29C(const derive_keys_ctx* ctx)
    return ctx->unk_68;
 }
 
-int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, int unk2, int unk3, uint16_t flag0, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
+int initialize_data_ctx(CryptEngineData* data, uint32_t salt1, int unk2, int unk3, uint16_t flag0, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
 {
    ctx_12f8d58e* ctx0 = SceIofilemgrForDriver_thread_related_12f8d58e();
    data->unk_18 = 0x100;
@@ -1312,36 +1167,50 @@ int derive_keys_from_klicensee_219B4A0(CryptEngineData *data, uint32_t salt1, in
    data->klicensee = pfs_pmi_bcl->klicensee;
 
    data->block_size = drv_ctx->get_block_size_14(drv_ctx);
-   
+
+   return 0;
+}
+
+int derive_data_ctx_keys(CryptEngineData* data, const char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t flag, uint16_t key_id, const derive_keys_ctx* drv_ctx)
+{
    int some_flag_base = (uint32_t)(data->pmi_bcl_flag - 2);
    int some_flag = 0xC0000B03 & (1 << some_flag_base);
 
    if((some_flag_base > 0x1F) || (some_flag == 0))
    {
-      calculate_sha1_chain_219E1CC(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, salt1);
-      return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
+      calculate_sha1_chain_219E1CC(data->key, data->iv_xor_key, klicensee, salt0, salt1);
+      return combine_klicensee_digest_219E1D8(data->hmac_key, klicensee, salt0, flag, salt1, key_id);
    }
    else
    {
       if((drv_ctx->unk_40 != 0 && drv_ctx->unk_40 != 3) || (drv_ctx->unk_58 <= 1))
       {    
-         hmac1_sha1_or_sha1_chain_219E0DC(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
-         return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
+         hmac1_sha1_or_sha1_chain_219E0DC(data->key, data->iv_xor_key, klicensee, salt0, flag, salt1, key_id);
+         return combine_klicensee_digest_219E1D8(data->hmac_key, klicensee, salt0, flag, salt1, key_id);
       }
       else
       {
          if(drv_ctx->unk_40 == 0 || drv_ctx->unk_40 == 3)
          {
-            hmac_sha1_219E164(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, drv_ctx->base_key, 0x14);
-            return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
+            hmac_sha1_219E164(data->key, data->iv_xor_key, klicensee, flag, key_id, drv_ctx->base_key, 0x14);
+            return combine_klicensee_digest_219E1D8(data->hmac_key, klicensee, salt0, flag, salt1, key_id);
          }
          else
          {
-            hmac_sha1_219E164(data->key, data->iv_xor_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, 0, 0x14);
-            return combine_klicensee_digest_219E1D8(data->hmac_key, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, pfs_pmi_bcl->flag, salt1, pfs_pmi_bcl->key_id);
+            hmac_sha1_219E164(data->key, data->iv_xor_key, klicensee, flag, key_id, 0, 0x14);
+            return combine_klicensee_digest_219E1D8(data->hmac_key, klicensee, salt0, flag, salt1, key_id);
          }
       }
    }
+}
+
+// I have separated this into two functions for easy testing
+
+int derive_keys_from_klicensee_219B4A0(CryptEngineData* data, uint32_t salt1, int unk2, int unk3, uint16_t flag0, int arg_4, const derive_keys_ctx* drv_ctx, const pfs_pmi_buffer_list_ctx *pfs_pmi_bcl)
+{
+   initialize_data_ctx(data, salt1, unk2, unk3, flag0, arg_4, drv_ctx, pfs_pmi_bcl);
+   
+   return derive_data_ctx_keys(data, pfs_pmi_bcl->klicensee, pfs_pmi_bcl->salt0, salt1, pfs_pmi_bcl->flag, pfs_pmi_bcl->key_id, drv_ctx);
 }
 
 //-------------------------------------

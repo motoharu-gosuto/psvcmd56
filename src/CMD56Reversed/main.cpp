@@ -12,7 +12,9 @@
 #include "SceSysroot.h"
 #include "SceSdif.h"
 
-int main(int argc, char* argv[])
+#include "initialize_crypt_engine.h"
+
+int test_cmd56()
 {
    SceSdif_module_start_935cd196();
 
@@ -28,4 +30,23 @@ int main(int argc, char* argv[])
       std::cout << "Initialization failed: " << std::hex << std::setfill('0') << std::setw(8) << res << std::endl;
    
 	return 0;
+}
+
+int test_pfs()
+{
+   CryptEngineWorkCtx work_ctx;
+   crypt_engine_init(&work_ctx);
+
+
+
+   return 0;
+}
+
+int main(int argc, char* argv[])
+{
+   //test_cmd56();
+
+   test_pfs();
+
+   return 0;
 }
