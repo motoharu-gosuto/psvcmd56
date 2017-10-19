@@ -149,3 +149,5 @@ typedef struct ctx_12f8d58e
 int proc_verify_14_bytes_219DE44(unsigned char unk0[0x14], unsigned char unk1[0x14]);
 
 int derive_data_ctx_keys(CryptEngineData* data, const derive_keys_ctx* drv_ctx);
+
+void ScePfsCryptEngineThread_work_219BF20(CryptEngineWorkCtx* work_ctx);

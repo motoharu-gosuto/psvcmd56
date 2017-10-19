@@ -22,5 +22,6 @@ int SceSysclibForDriver_cdf7f155()
 //returns -1, 0
 int SceSysclibForDriver_b5a4d745(unsigned char* char0, unsigned char* char1, int len)
 {
-   return 0;
+   int res = memcmp(char0, char1, len);
+   return (res != 0) ? -1 : 0;
 }

@@ -20,7 +20,13 @@ typedef struct arm_lldiv_t
 
 arm_lldiv_t SceSysclibForDriver__aeabi_ldivmod_7554ab04(long long n, long long d)
 {
-   return arm_lldiv_t();
+   lldiv_t res_native = lldiv(n, d);
+
+   arm_lldiv_t res;
+   res.q = res_native.quot;
+   res.r = res_native.rem;
+
+   return res;
 }
 
 ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
@@ -1610,8 +1616,12 @@ int hmac_sha1_digest_219DE7C(unsigned char digest[0x14], unsigned char* key, con
    unsigned char key_raw[0x14] = {0};
    unsigned char dst_raw[0x14] = {0};
 
+   /*
    unsigned char* key_aligned = key_raw + ((0 - (int)key_raw) & 0x3F);
    unsigned char* dst_aligned = dst_raw + ((0 - (int)dst_raw) & 0x3F);
+   */
+   unsigned char* key_aligned = key_raw;
+   unsigned char* dst_aligned = dst_raw;
 
    //memset(key_aligned + 8, 0, 0x18); //NOT SURE WHAT IS THE PURPOSE OF THIS LINE ?
 
