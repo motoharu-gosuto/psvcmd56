@@ -2,9 +2,13 @@
 
 #include <stdint.h>
 
+#ifdef USE_PSVDMAC5
 int initialize_dmac5_context();
+#endif
 
+#ifdef USE_PSVDMAC5
 int deinitialize_dmac5_context();
+#endif
 
 int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size, unsigned char* iv, uint16_t key_id, int mask_enable);
 

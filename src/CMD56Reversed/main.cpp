@@ -36,8 +36,10 @@ int test_cmd56()
 
 int test_pfs()
 {
+   #ifdef USE_PSVDMAC5
    if(initialize_dmac5_context() < 0)
       return -1;
+   #endif
 
    CryptEngineWorkCtx work_ctx;
    crypt_engine_init(&work_ctx);
@@ -48,7 +50,9 @@ int test_pfs()
    out.write((char*)work_ctx.subctx->work_buffer1, work_ctx.subctx->tail_size);
    out.close();
 
+   #ifdef USE_PSVDMAC5
    deinitialize_dmac5_context();
+   #endif
 
    return 0;
 }
