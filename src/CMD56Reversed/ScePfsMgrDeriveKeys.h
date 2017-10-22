@@ -125,16 +125,55 @@ struct derive_keys_ctx;
 
 typedef int(derive_keys_sub_219A29C_cb)(const derive_keys_ctx*);
 
+struct read_op_ctx
+{
+  vfs_node *node;
+  void *objectBase;
+};
+
 typedef struct derive_keys_ctx
 {
+   uint32_t unk_0;
+   uint32_t unk_4;
+   uint32_t unk_8;
+   uint32_t unk_C;
+
+   uint32_t unk_10;
    derive_keys_sub_219A29C_cb* get_block_size_14; //function pointer
+   uint32_t unk_18;
+   uint32_t unk_1C;
 
-   uint32_t unk_40;
+   uint32_t unk_20;
+   uint32_t unk_24;
+   uint32_t unk_28;
+   uint32_t unk_2C;
 
+   uint32_t unk_30;
+   uint32_t unk_34;
+   uint32_t unk_38;
+   uint32_t unk_3C;
 
-   uint32_t unk_58;
-   uint32_t unk_68;
+   uint32_t unk_40; //
+   uint32_t unk_44;
+   uint32_t unk_48;
+   uint32_t unk_4C;
 
+   uint32_t unk_50; // here starts SCEIFTBL data - most likely
+   uint32_t unk_54;
+   uint32_t unk_58; //
+   struct read_op_ctx rd_opt_5C;
+
+   uint32_t unk_60;
+   uint32_t unk_64;
+   uint32_t unk_68; //
+   uint32_t unk_6C;
+
+   uint32_t unk_70;
+   uint32_t unk_74;
+   uint32_t unk_78;
+   uint32_t unk_7C;
+
+   uint32_t unk_80;
    unsigned char base_key[0x14]; // 0x84
 
 }derive_keys_ctx;

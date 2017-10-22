@@ -14,6 +14,8 @@
 
 #include "initialize_crypt_engine.h"
 
+#include "SceSblSsMgrDmac5Layer.h"
+
 int test_cmd56()
 {
    SceSdif_module_start_935cd196();
@@ -34,19 +36,19 @@ int test_cmd56()
 
 int test_pfs()
 {
+   if(initialize_dmac5_context() < 0)
+      return -1;
+
    CryptEngineWorkCtx work_ctx;
    crypt_engine_init(&work_ctx);
 
-   derive_keys_ctx drv_ctx;
-   memset(&drv_ctx, 0, sizeof(derive_keys_ctx));
-
-   //dont know real values
-   drv_ctx.unk_40 = 3;
-   drv_ctx.unk_58 = 2;
-
-   //derive_data_ctx_keys(work_ctx.subctx->data, &drv_ctx);
-
    ScePfsCryptEngineThread_work_219BF20(&work_ctx);
+
+   std::ofstream out("icon0.png", std::ios::out | std::ios::binary);
+   out.write((char*)work_ctx.subctx->work_buffer1, work_ctx.subctx->tail_size);
+   out.close();
+
+   deinitialize_dmac5_context();
 
    return 0;
 }

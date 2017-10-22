@@ -170,7 +170,8 @@ int AESCBCDecryptWithKeygen_base_219DAAC(const unsigned char* key, unsigned char
    //align destination buffer
 
    unsigned char iv_enc[0x10] = {0};
-   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   //unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char* iv_enc_aligned = iv_enc;
 
    //encrypt iv using key
 
@@ -210,7 +211,8 @@ int AESCBCEncryptWithKeygen_base_219D9F4(const unsigned char* klicensee, unsigne
    //align destination buffer
 
    unsigned char iv_enc[0x10] = {0};
-   unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   //unsigned char* iv_enc_aligned = iv_enc + ((0 - (int)iv_enc) & 0x3F);
+   unsigned char* iv_enc_aligned = iv_enc;
 
    //encrypt iv using klicensee
      
@@ -553,8 +555,11 @@ int pfs_decrypt_hw_219D480(const unsigned char* key, const unsigned char* iv_xor
 {
    unsigned char iv[0x10] = {0};
 
-   int tk_tmp00 = tweak_key0;
-   int tk_tmp10 = tweak_key1;
+   //this piece of code unwraps 64 bit sector number into byte array
+   //like here https://github.com/libtom/libtomcrypt/blob/c14bcf4d302f954979f0de43f7544cf30873f5a6/src/headers/tomcrypt_macros.h#L23
+
+   int tk_tmp00 = tweak_key0; //sector_number_hi
+   int tk_tmp10 = tweak_key1; //sector_number_lo
    
    for(int i = 0; i < 8; i++)
    {
@@ -995,9 +1000,15 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key
 
    //align buffers
 
+   /*
    unsigned char* drvkey_aligned = drvkey + ((0 - (int)drvkey) & 0x3F);
    unsigned char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
    unsigned char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
+   */
+
+   unsigned char* drvkey_aligned = drvkey;
+   unsigned char* iv_aligned = iv;
+   unsigned char* combo_aligned = combo;
 
    int saltin0[1] = {0};
    int saltin1[2] = {0};
@@ -1028,13 +1039,13 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key
 
 int combine_klicensee_digest_219E1D8(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
 {
-   if((flag << 0x1F) < 0) // check bit 0
+   if((flag & 1) > 0) // check bit 0
    {
       memset(hmac_key, 0, 0x14);
       return 0;
    }
 
-   if((flag << 0x1E) < 0) // check bit 1
+   if((flag & 2) > 0) // check bit 1
    {
       calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(hmac_key, klicensee, salt0, salt1, key_id);
       return 0;
@@ -1743,11 +1754,14 @@ void work_3_step0(CryptEngineWorkCtx* crypt_ctx, int tweak_key0, int tweak_key1,
    
    //------------------------------
 
+   //conflicts with decryption
+   /*
    if(((int)crypt_ctx->subctx->data->flag0 & 0x4000) == 0)
    {
       crypt_ctx->error = 0;
       return; // this should terminate crypto task (global exit)
    }
+   */
 
    if((crypt_ctx->subctx->data->flag0 << 0x10) < 0)
    {
