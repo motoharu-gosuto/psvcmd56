@@ -108,3 +108,11 @@ int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, co
 int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits);
 
 int SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540();
+
+int SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(SceUID mutexid, int lockCount, unsigned int *timeout);
+
+int SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceUID mutexid, int unlockCount);
+
+SceUID SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
+
+int SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(int value);

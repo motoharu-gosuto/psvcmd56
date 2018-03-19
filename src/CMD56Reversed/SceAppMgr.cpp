@@ -1,5 +1,10 @@
 #include "Constants.h"
 
+#include "SceThreadmgr.h"
+#include "SceSysmem.h"
+#include "SceSysmemGlobalVariables.h"
+
+#include <string>
 
 int loc_23D5220()
 {
@@ -364,3 +369,243 @@ int proc_parse_param_sfo_23D5028(SceUID pid, int unk1, int unk2, int unk3)
    return 0;
 }
 
+
+struct global_22D470C
+{
+  int unk0;
+  char path[0x124];
+  char buffer[0x10];
+  int unk138;
+  int unk13C;
+  int unk140;
+  int unk144;
+  int unk148;
+  int unk14C;
+  int unk150;
+  int unk154;
+  int unk158;
+  int unk15C;
+  int unk160;
+  int unk164;
+  int unk168;
+  int unk16C;
+  int unk170;
+  int unk174;
+  int unk178;
+  int unk17C;
+  int unk180;
+  int unk184;
+  int unk188;
+  int unk18C;
+  int unk190;
+  int unk194;
+  int unk198;
+  int unk19C;
+  int unk1A0;
+  int unk1A4;
+  int unk1A8;
+  int unk1AC;
+  int unk1B0;
+  int unk1B4;
+  int unk1B8;
+  int unk1BC;
+  int unk1C0;
+  int unk1C4;
+  int unk1C8;
+  global_22D470C *next;
+};
+
+SceUID mutex_22A000C;
+
+SceUID pool_22A0008;
+
+char* PD_str_2404BBC = "PD";
+
+global_22D470C* var_22D470C;
+
+int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(SceUID pid, int resolveFlag, const char *pInPath, char *pOutPath, size_t maxPath)
+{
+   return 0;
+}
+
+//this function tries to OverlayResolveSync input path
+//then checks that it is not a PD path (temp mount point aquired by PFS)
+//then takes beginning of path until symbol ":"
+//then tries to do a lookup by that path beginning in var_22D470C item array
+//if item is found then other path from var_22D470C item is copied to result
+//in any other case OverlayResolveSync result path is copied to result
+
+int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_path, int size)
+{
+   int result = 0;
+
+   int cookie = var_009EA004;
+  
+   //clear path copy
+
+   char path_copy[33];
+   memset(path_copy,0, 0x21); 
+ 
+   int mutex_res = SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(mutex_22A000C, 1, 0);
+
+   if (mutex_res >= 0)
+   {
+      //allocate buffer for overlay path
+
+      ctx_49D4DD9B alloc_ctx;
+      alloc_ctx.unk4 = 0;
+      alloc_ctx.unkC = 0;
+      alloc_ctx.unk10 = 0;
+      alloc_ctx.unk0 = 0x14;
+      alloc_ctx.unk8 = 0x20;
+
+      char* overlay_resolve_sync_path = (char*)SceSysmemForDriver_sceKernelAllocHeapMemory3ForDriver_49D4DD9B(pool_22A0008, 0x124u, &alloc_ctx);
+    
+      if ( overlay_resolve_sync_path )
+      {
+         //get pid if not specified
+
+         SceUID pid_local = pid;
+         if (!pid_local)
+            pid_local = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
+
+         //overlay resolve sync - input path
+
+         int prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80); //set permission
+         int overlay_res = SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(pid_local, 0, path, overlay_resolve_sync_path, 0x124);
+         SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm); //restore permission
+
+         if (overlay_res >= 0 )
+         {
+            //limit max size
+
+            unsigned int size_local = size;
+            if (size >= 0x124 )
+               size_local = 0x124;
+
+            //compare to PD string (PFS temp mount point)
+
+            int pd_cmp_result = strncmp(overlay_resolve_sync_path,PD_str_2404BBC, 2u);
+            if (pd_cmp_result)
+            {
+               // copy path from heap to result path
+
+               strncpy(result_path, overlay_resolve_sync_path, size_local);
+               result_path[size_local - 1] = 0;// terminate with 0
+
+               //cleanup
+
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(pool_22A0008, overlay_resolve_sync_path);
+
+               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(mutex_22A000C, 1);
+
+               if(var_009EA004 == cookie)
+                  return 0;
+               else
+                  return STACK_CHECK_FAIL;
+            }
+
+            //clear path copy
+
+            memset(path_copy, 0x21, 0);
+
+            int str_index = 0;
+
+            //copy path till ":"
+            while ( 1 )
+            {
+               char str_symbol = overlay_resolve_sync_path[str_index];
+               path_copy[str_index] = str_symbol;
+               
+               //check end symbol
+               if ( str_symbol == ':' )
+                  break;
+
+               //check max length
+               if (++str_index == 0x21 )
+               {
+                  // copy path from heap to result path
+
+                  strncpy(result_path, overlay_resolve_sync_path, size_local);
+                  result_path[size_local - 1] = 0;// terminate with 0
+
+                  //cleanup
+
+                  SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(pool_22A0008, overlay_resolve_sync_path);
+
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(mutex_22A000C, 1);
+
+                  if(var_009EA004 == cookie)
+                     return 0;
+                  else
+                     return STACK_CHECK_FAIL;
+               }
+            }
+
+            //terminate path with 0
+            path_copy[15] = 0;
+
+            global_22D470C *global_buffer = var_22D470C;
+
+            // if global item is set
+            if (global_buffer)
+            {
+               // do path lookup while strings are not equal
+               while (strncmp(global_buffer->buffer, path_copy, 0x10u) )
+               {
+                  global_buffer = global_buffer->next; // get pointer to next item
+                  if (!global_buffer)
+                  {
+                     //when there is no next item
+
+                     // copy path from heap to result path
+
+                     strncpy(result_path, overlay_resolve_sync_path, size_local);
+                     result_path[size_local - 1] = 0;// terminate with 0
+
+                     //cleanup
+
+                     SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(pool_22A0008, overlay_resolve_sync_path);
+
+                     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(mutex_22A000C, 1);
+
+                     if(var_009EA004 == cookie)
+                        return 0;
+                     else
+                        return STACK_CHECK_FAIL;
+                  }
+               }
+
+               // copy path from global to result path
+
+               strncpy(result_path, global_buffer->path, size_local);
+               result = 0;
+               result_path[size_local - 1] = 0;// terminate with 0
+            }
+            else
+            {
+               // copy path from heap to result path
+
+               strncpy(result_path, overlay_resolve_sync_path, size_local);
+               result = 0;
+               result_path[size_local - 1] = 0;// terminate with 0
+            }
+         }
+         
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(pool_22A0008, overlay_resolve_sync_path);
+      }
+      else
+      {
+         result = 0x80801006;
+      }
+
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(mutex_22A000C, 1);
+   }
+  
+   //check cookie and return result
+
+   if(var_009EA004 == cookie)
+      return result;
+   else
+      return STACK_CHECK_FAIL;
+}

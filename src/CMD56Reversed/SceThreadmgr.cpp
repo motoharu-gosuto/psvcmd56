@@ -113,3 +113,23 @@ int SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540()
 {
    return 0;
 }
+
+int SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(SceUID mutexid, int lockCount, unsigned int *timeout)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceUID mutexid, int unlockCount)
+{
+   return 0;
+}
+
+SceUID SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a()
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(int value)
+{
+   return 0;
+}

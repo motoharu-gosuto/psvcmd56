@@ -354,3 +354,14 @@ int SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(void *vaddr, void **result);
 void* SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize size);
 
 void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, void *ptr);
+
+struct ctx_49D4DD9B
+{
+   int unk0;
+   int unk4;
+   int unk8;
+   int unkC;
+   int unk10;
+};
+
+void* SceSysmemForDriver_sceKernelAllocHeapMemory3ForDriver_49D4DD9B(SceUID uid, SceSize size, ctx_49D4DD9B* unk2);
