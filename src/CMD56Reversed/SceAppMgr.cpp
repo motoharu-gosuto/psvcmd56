@@ -370,49 +370,15 @@ int proc_parse_param_sfo_23D5028(SceUID pid, int unk1, int unk2, int unk3)
 }
 
 
-struct global_22D470C
+struct mount_point_data_entry
 {
-  int unk0;
+  int some_mount_id;
   char path[0x124];
-  char buffer[0x10];
-  int unk138;
-  int unk13C;
-  int unk140;
-  int unk144;
-  int unk148;
-  int unk14C;
-  int unk150;
-  int unk154;
-  int unk158;
-  int unk15C;
-  int unk160;
-  int unk164;
-  int unk168;
-  int unk16C;
-  int unk170;
-  int unk174;
-  int unk178;
-  int unk17C;
-  int unk180;
-  int unk184;
-  int unk188;
-  int unk18C;
-  int unk190;
-  int unk194;
-  int unk198;
-  int unk19C;
-  int unk1A0;
-  int unk1A4;
-  int unk1A8;
-  int unk1AC;
-  int unk1B0;
-  int unk1B4;
-  int unk1B8;
-  int unk1BC;
-  int unk1C0;
-  int unk1C4;
+  char mount_point[0x10];
+  char title_id[0x10];
+  SceUInt64 auth_ids[0x10];
   int unk1C8;
-  global_22D470C *next;
+  mount_point_data_entry *next;
 };
 
 SceUID mutex_22A000C;
@@ -421,7 +387,7 @@ SceUID pool_22A0008;
 
 char* PD_str_2404BBC = "PD";
 
-global_22D470C* var_22D470C;
+mount_point_data_entry* var_22D470C;
 
 int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(SceUID pid, int resolveFlag, const char *pInPath, char *pOutPath, size_t maxPath)
 {
@@ -429,7 +395,7 @@ int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(Sc
 }
 
 //this function tries to OverlayResolveSync input path
-//then checks that it is not a PD path (temp mount point aquired by PFS)
+//then checks that it is not a PD path (temp mount point probably aquired by PFS)
 //then takes beginning of path until symbol ":"
 //then tries to do a lookup by that path beginning in var_22D470C item array
 //if item is found then other path from var_22D470C item is copied to result
@@ -545,13 +511,13 @@ int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_p
             //terminate path with 0
             path_copy[15] = 0;
 
-            global_22D470C *global_buffer = var_22D470C;
+            mount_point_data_entry *global_buffer = var_22D470C;
 
             // if global item is set
             if (global_buffer)
             {
                // do path lookup while strings are not equal
-               while (strncmp(global_buffer->buffer, path_copy, 0x10u) )
+               while (strncmp(global_buffer->mount_point, path_copy, 0x10u) )
                {
                   global_buffer = global_buffer->next; // get pointer to next item
                   if (!global_buffer)
