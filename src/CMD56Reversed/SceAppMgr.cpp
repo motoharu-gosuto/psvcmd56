@@ -638,20 +638,135 @@ int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
    return 0;
 }
 
-int SceSysrootForKernel_4f0a4066(int unk0, std::uint64_t* authid)
+typedef struct SceSelfAuthInfo // size is 0x90
 {
-   return 0;
+   SceUInt64 auth_id;
+   
+   uint32_t unk_10[20];
+   
+   uint32_t unk_60;
+   uint32_t unk_64;
+   char klicensee[0x10]; // offset 0x68
+   
+   uint32_t unk_78;
+   uint32_t unk_7C;
+   
+   uint32_t unk_80;
+   uint32_t unk_84;
+   uint32_t unk_88;
+   uint32_t unk_8C;
+   
+   uint32_t unk_90;
+   uint32_t unk_94;
+} SceSelfAuthInfo;
+
+struct callback_holder1
+{
+  int unk0;
+  int (*unk4)(void);
+  int (*unk8)(void);
+  int (*unkC)(void);
+  int unk10;
+  int unk14;
+  int unk18;
+  int unk1C;
+  int (*unk20)(void);
+  int unk24;
+  int unk28;
+  int unk2C;
+  int unk30;
+  int unk34;
+  int unk38;
+  int (*unk3C)(void);
+};
+
+struct callback_holder2
+{
+  int unk0;
+  int unk4;
+  int unk8;
+  int (__fastcall *unkC)(int, int *);
+  int (__fastcall *unk10)(int);
+  int (*GetProcessTitleId)(void);
+  int (*unk18)(void);
+  int (*unk1c)(void);
+};
+
+struct callback_holder3
+{
+  int unk0;
+  int (*unk4)(void);
+  int (*unk8)(void);
+  int (__fastcall *unkC)(int);
+  int (__fastcall *unk10)(int);
+  int (*unk14)(void);
+};
+
+struct sysbase_t
+{
+  int unk0;
+  char unk[104];
+  char *sysroot_buffer;
+  int unk70;
+  char unk74[616];
+  char unk2dc[52];
+  char unk310[60];
+  int (*unk34C_some_callback1)(void);
+  callback_holder3 *unk350;
+  int unk354;
+  callback_holder1 *unk358;
+  callback_holder2 *unk35C;
+  int (*unk360)(void);
+  int (*unk364)(void);
+  char unk368[24];
+  int start_callback;
+  int unk384;
+  int unk388;
+  int unk38C;
+  int end_callback;
+  int unk394;
+  int unk398;
+  int unk39C;
+};
+
+sysbase_t** var_008BF5F8;
+
+SceSelfAuthInfo default_self_info_9EB060 = {0x2808000000000001, //auth_id
+                                            {0, 0, 0x80, 0xF000C0, 0, 0xFFFFFFFF, 0, 0, 0, 0, 0x3800980, 0xC30000, 0x9800000, 0x80, 0, 0, 0, 0xFFFFFFFF, 0, 0 }, //unk_10
+                                             0, //unk_60
+                                             0, //unk_64
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //klicensee
+                                             0, //unk_78
+                                             0, //unk_7C
+                                             0, //unk_80
+                                             0, //unk_84
+                                             0, //unk_88
+                                             0, //unk_8C
+                                             0, //unk_90
+                                             0, //unk_94
+};
+
+int SceSysrootForKernel_4f0a4066(int unk0, SceSelfAuthInfo *self_info)
+{
+  callback_holder2* callback = (*var_008BF5F8)->unk35C;
+  if (callback)
+    return callback->unk10(unk0);
+
+  memcpy(self_info, &default_self_info_9EB060, 0x90u);
+  return 0;
 }
 
 int SceSblACMgrForDriver_96af69bd_SceSblACMgrForKernel_7c2af978(int unk0, std::uint64_t* authid)
 {   
-   int result;
-   
    if ( !authid)
       return 0x800F0916;
+
+   SceSelfAuthInfo self_info;
    
-   if (SceSysrootForKernel_4f0a4066(unk0, authid) != 0)
+   if (SceSysrootForKernel_4f0a4066(unk0, &self_info) != 0)
       return 0x800F0916;
+
+   *authid = self_info.auth_id;
    
    return 0;
 }
