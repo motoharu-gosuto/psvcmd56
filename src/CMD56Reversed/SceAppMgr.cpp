@@ -372,12 +372,12 @@ int proc_parse_param_sfo_23D5028(SceUID pid, int unk1, int unk2, int unk3)
 
 struct mount_point_data_entry
 {
-  int some_mount_id;
+  int mount_id;
   char path[0x124];
   char mount_point[0x10];
   char title_id[0x10];
   SceUInt64 auth_ids[0x10];
-  int unk1C8;
+  mount_point_data_entry *prev;
   mount_point_data_entry *next;
 };
 
@@ -577,16 +577,7 @@ int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_p
 }
 
 
-struct mount_point_data_entry
-{
-  int mount_id;
-  char path[292];
-  char mount_point[16];
-  char title_id[16];
-  SceUInt64 auth_ids[16];
-  mount_point_data_entry *prev;
-  mount_point_data_entry *next;
-};
+
 
 struct mount_ctx_t
 {
@@ -646,6 +637,11 @@ int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
       return result;
 
    _snprintf(result_path, 0x10u, "%s%02x%02x%02x%02x%02x%02xd", prefix, random_buffer[0], random_buffer[1], random_buffer[2], random_buffer[3], random_buffer[4], random_buffer[5]);
+   return 0;
+}
+
+int SceSblACMgrForDriver_0b6e6cd7(int unk)
+{
    return 0;
 }
 
@@ -774,7 +770,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
       {
          #pragma region
 
-         result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
+         result1 = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
          if (result1)
             return result1;
          
@@ -793,13 +789,13 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
          {
             if ((unsigned int)some_numeric_id > 0xC9)
             {
-               if (SceAppMgr_SceSblACMgrForDriver__imp_0b6e6cd7(0))
+               if (SceSblACMgrForDriver_0b6e6cd7(0))
                {
                   strcpy(random_path_buffer, "ms0:");
                   goto LABEL_4;
                }
 
-               v57 = proc_generate_random_path_23D4FBC(ms_string_2404C54, random_path_buffer);
+               v57 = proc_generate_random_path_23D4FBC("ms", random_path_buffer);
                if (v57)
                   return v57;
 
@@ -813,7 +809,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
                if ((unsigned int)(some_numeric_id - 100) > 0xC)
                   return 0x80800001;
 
-               result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
+               result1 = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
                if (result1)
                   return result1;
 
@@ -858,7 +854,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
          #pragma endregion
       }
 
-      result1 = proc_generate_random_path_23D4FBC(td_string_2404C44, random_path_buffer);
+      result1 = proc_generate_random_path_23D4FBC("td", random_path_buffer);
       if (result1)
          return result1;
 
@@ -875,14 +871,14 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
          if ((unsigned int)some_numeric_id > 0x3EC)
          {
-            SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(random_path_buffer, 0x10u, aSavedata1u, 0);
+            _snprintf(random_path_buffer, 0x10u, "savedata%1u:", 0);
          }
          else
          {
             if ((unsigned int)some_numeric_id >= 0x3EC)
                return 0x80800001;
 
-            SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(random_path_buffer, 0x10u, aAddcont1u, 0);
+            _snprintf(random_path_buffer, 0x10u, "addcont%1u:", 0);
          }
 
          goto LABEL_4;
@@ -894,7 +890,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
       {
          #pragma region
 
-         v58 = proc_generate_random_path_23D4FBC(sd_string_2404AAC, random_path_buffer);
+         v58 = proc_generate_random_path_23D4FBC("sd", random_path_buffer);
          if (v58)
             return v58;
 
@@ -907,7 +903,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
          if (some_numeric_id != 1009)
             return 0x80800001;
 
-         result1 = proc_generate_random_path_23D4FBC(ud_string_2404C40, random_path_buffer);
+         result1 = proc_generate_random_path_23D4FBC("ud", random_path_buffer);
          if (result1)
             return result1;
 
@@ -921,7 +917,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
    if ((unsigned int)some_numeric_id >= 0x3E8)
    {
-      SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(random_path_buffer, 0x10u, aApp1u, 0);
+      _snprintf(random_path_buffer, 0x10u, "app%1u:", 0);
       goto LABEL_4;
    }
 
@@ -936,7 +932,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
       if ((unsigned int)(some_numeric_id - 500) > 1)
          return 0x80800001;
 
-      result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
+      result1 = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
       if (result1)
          return result1;
 
@@ -952,7 +948,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
       #pragma region
 
-      result1 = proc_generate_random_path_23D4FBC(lm_string_2404C50, random_path_buffer);
+      result1 = proc_generate_random_path_23D4FBC("lm", random_path_buffer);
       if (result1 )
          return result1;
 
@@ -966,10 +962,8 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
    strcpy(random_path_buffer, "sdimport_tmp0:");
 
 
-
-
-
 LABEL_4:
+/*
   mount_ctx_local = mount_ctx_holder_local->mount;
   if ( mount_ctx_local )
   {
@@ -1928,7 +1922,7 @@ LABEL_123:
   *((_DWORD *)mount_point + 1) = v40;
   *((_DWORD *)mount_point + 2) = v41;
   *((_DWORD *)mount_point + 3) = v42;
-
+  */
 
    if(var_009EA004 == cookie)
    {
