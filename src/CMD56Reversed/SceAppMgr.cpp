@@ -638,8 +638,21 @@ int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
    return 0;
 }
 
-int SceSblACMgrForDriver_96af69bd_SceSblACMgrForKernel_7c2af978(int unk0, std::uint64_t* authid)
+int SceSysrootForKernel_4f0a4066(int unk0, std::uint64_t* authid)
 {
+   return 0;
+}
+
+int SceSblACMgrForDriver_96af69bd_SceSblACMgrForKernel_7c2af978(int unk0, std::uint64_t* authid)
+{   
+   int result;
+   
+   if ( !authid)
+      return 0x800F0916;
+   
+   if (SceSysrootForKernel_4f0a4066(unk0, authid) != 0)
+      return 0x800F0916;
+   
    return 0;
 }
 
