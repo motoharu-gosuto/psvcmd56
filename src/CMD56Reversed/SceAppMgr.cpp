@@ -741,20 +741,8 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
    memset(random_path_buffer, 0, 16);
 
-   if ( !mount_point )
-   {
-      result2 = 0x80800001;
-
-      if(var_009EA004 == cookie)
-      {
-         result = result2;
-         return result2;
-      }
-      else
-      {
-         return STACK_CHECK_FAIL;
-      }
-   }
+   if (!mount_point)
+      return 0x80800001;
 
    if (random_path_init)
    {
@@ -770,26 +758,12 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
          result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
          if (result1)
-         {
-            result2 = result1;
+            return result1;
          
-            if(var_009EA004 == cookie)
-            {
-               result = result2;
-               return result2;
-            }
-            else
-            {
-               return STACK_CHECK_FAIL;
-            }
-         }
-         else
-         {
-            random_path_buffer[15] = result1;
-            random_path_buffer[14] = 58;
-            goto LABEL_4;
-         }
-
+         random_path_buffer[15] = result1;
+         random_path_buffer[14] = 58;
+         goto LABEL_4;
+         
          #pragma endregion
       }
 
@@ -809,20 +783,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
                v57 = proc_generate_random_path_23D4FBC(ms_string_2404C54, random_path_buffer);
                if (v57)
-               {
-                  result2 = v57;
-            
-                  if(var_009EA004 == cookie)
-                  {
-                     result = result2;
-                     return result2;
-                  }
-                  else
-                  {
-                     return STACK_CHECK_FAIL;
-                  }
-
-               }
+                  return v57;
 
                random_path_buffer[15] = 0;
                random_path_buffer[14] = 58;
@@ -832,41 +793,15 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
             if ((unsigned int)some_numeric_id < 0xC8)
             {
                if ((unsigned int)(some_numeric_id - 100) > 0xC)
-               {
-                  result2 = 0x80800001;
-                  if(var_009EA004 == cookie)
-                  {
-                     result = result2;
-                     return result2;
-                  }
-                  else
-                  {
-                     return STACK_CHECK_FAIL;
-                  }
-               }
-               else
-               {
-                  result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
-                  if (result1)
-                  {
-                     result2 = result1;
-                     if(var_009EA004 == cookie)
-                     {
-                        result = result2;
-                        return result2;
-                     }
-                     else
-                     {
-                        return STACK_CHECK_FAIL;
-                     }
-                  }
-                  else
-                  {
-                     random_path_buffer[15] = result1;
-                     random_path_buffer[14] = 58;
-                     goto LABEL_4;
-                  }
-               }
+                  return 0x80800001;
+
+               result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
+               if (result1)
+                  return result1;
+
+               random_path_buffer[15] = result1;
+               random_path_buffer[14] = 58;
+               goto LABEL_4;
             }
          }
 
@@ -890,18 +825,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
                strcpy(random_path_buffer, "trophy_sys0:");
                break;
             default:
-               {
-                  result2 = 0x80800001;
-                  if(var_009EA004 == cookie)
-                  {
-                     result = result2;
-                     return result2;
-                  }
-                  else
-                  {
-                     return STACK_CHECK_FAIL;
-                  }
-               }
+               return 0x80800001;
             }
 
             goto LABEL_4;
@@ -917,19 +841,8 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
       }
 
       result1 = proc_generate_random_path_23D4FBC(td_string_2404C44, random_path_buffer);
-      if ( result1 )
-      {
-         result2 = result1;
-         if(var_009EA004 == cookie)
-         {
-            result = result2;
-            return result2;
-         }
-         else
-         {
-            return STACK_CHECK_FAIL;
-         }
-      }
+      if (result1)
+         return result1;
 
       random_path_buffer[15] = result1;
       random_path_buffer[14] = 58;
@@ -949,18 +862,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
          else
          {
             if ((unsigned int)some_numeric_id >= 0x3EC)
-            {
-               result2 = 0x80800001;
-               if(var_009EA004 == cookie)
-               {
-                  result = result2;
-                  return result2;
-               }
-               else
-               {
-                  return STACK_CHECK_FAIL;
-               }
-            }
+               return 0x80800001;
 
             SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(random_path_buffer, 0x10u, aAddcont1u, 0);
          }
@@ -976,18 +878,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
 
          v58 = proc_generate_random_path_23D4FBC(sd_string_2404AAC, random_path_buffer);
          if (v58)
-         {
-            result2 = v58;
-            if(var_009EA004 == cookie)
-            {
-               result = result2;
-               return result2;
-            }
-            else
-            {
-               return STACK_CHECK_FAIL;
-            }
-         }
+            return v58;
 
          #pragma endregion
       }
@@ -995,34 +886,12 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
       {
          #pragma region
 
-         if ( some_numeric_id != 1009 )
-         {
-            result2 = 0x80800001;
-            if(var_009EA004 == cookie)
-            {
-               result = result2;
-               return result2;
-            }
-            else
-            {
-               return STACK_CHECK_FAIL;
-            }
-         }
+         if (some_numeric_id != 1009)
+            return 0x80800001;
 
          result1 = proc_generate_random_path_23D4FBC(ud_string_2404C40, random_path_buffer);
          if (result1)
-         {
-            result2 = result1;
-            if(var_009EA004 == cookie)
-            {
-               result = result2;
-               return result2;
-            }
-            else
-            {
-               return STACK_CHECK_FAIL;
-            }
-         }
+            return result1;
 
          #pragma endregion
       }
@@ -1047,89 +916,33 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
    if ((unsigned int)some_numeric_id <= 0x1F8)
    {
       if ((unsigned int)(some_numeric_id - 500) > 1)
-      {
-         #pragma region
+         return 0x80800001;
 
-         result2 = 0x80800001;
-         if(var_009EA004 == cookie)
-         {
-            result = result2;
-            return result2;
-         }
-         else
-         {
-            return STACK_CHECK_FAIL;
-         }
+      result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
+      if (result1)
+         return result1;
 
-         #pragma endregion
-      }
-      else
-      {
-         #pragma region
-
-         result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, random_path_buffer);
-         if ( result1 )
-         {
-            result2 = result1;
-            if(var_009EA004 == cookie)
-            {
-               result = result2;
-               return result2;
-            }
-            else
-            {
-               return STACK_CHECK_FAIL;
-            }
-         }
-         else
-         {
-            random_path_buffer[15] = result1;
-            random_path_buffer[14] = 58;
-            goto LABEL_4;
-         }
-
-         #pragma endregion
-      }
+      random_path_buffer[15] = result1;
+      random_path_buffer[14] = 58;
+      goto LABEL_4;
    }
 
    if (some_numeric_id != 505)
    {
-      if (some_numeric_id == 600)
-      {
-         #pragma region
+      if (some_numeric_id != 600)
+         return 0x80800001;
 
-         result1 = proc_generate_random_path_23D4FBC(lm_string_2404C50, random_path_buffer);
-         if ( !result1 )
-         {
-            random_path_buffer[14] = 58;
-            random_path_buffer[15] = 0;
-            goto LABEL_4;
-         }
+      #pragma region
 
-         result2 = result1;
-         if(var_009EA004 == cookie)
-         {
-            result = result2;
-            return result2;
-         }
-         else
-         {
-            return STACK_CHECK_FAIL;
-         }
+      result1 = proc_generate_random_path_23D4FBC(lm_string_2404C50, random_path_buffer);
+      if (result1 )
+         return result1;
 
-         #pragma endregion
-      }
-
-      result2 = 0x80800001;
-      if(var_009EA004 == cookie)
-      {
-         result = result2;
-         return result2;
-      }
-      else
-      {
-         return STACK_CHECK_FAIL;
-      }
+      random_path_buffer[14] = 58;
+      random_path_buffer[15] = 0;
+      goto LABEL_4;
+         
+      #pragma endregion
    }
 
    strcpy(random_path_buffer, "sdimport_tmp0:");
