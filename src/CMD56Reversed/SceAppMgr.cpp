@@ -631,6 +631,24 @@ struct process_auth_id_ctx
   uint32_t unk_94;
 };
 
+int SceSblSsMgrForDriver_sceKernelGetRandomNumberForDriver_4f9bfbe5(char* result, int size)
+{
+   return 0;
+}
+
+int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
+{   
+   int result;
+   char random_buffer[8]; // [sp+18h] [bp-28h]
+
+   result = SceSblSsMgrForDriver_sceKernelGetRandomNumberForDriver_4f9bfbe5(random_buffer, 8);
+   if(result < 0)
+      return result;
+
+   _snprintf(result_path, 0x10u, "%s%02x%02x%02x%02x%02x%02xd", prefix, random_buffer[0], random_buffer[1], random_buffer[2], random_buffer[3], random_buffer[4], random_buffer[5]);
+   return 0;
+}
+
 int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_holder, int some_numeric_id, int *title_id, int arg_0, char *random_path_init, void *klicensee, const char *mount_point)
 {
    int *title_id_local; // r10
