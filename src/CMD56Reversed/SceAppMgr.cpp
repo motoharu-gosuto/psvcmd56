@@ -5,6 +5,7 @@
 #include "SceSysmemGlobalVariables.h"
 
 #include <string>
+#include <cstdint>
 
 int loc_23D5220()
 {
@@ -576,9 +577,6 @@ int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_p
       return STACK_CHECK_FAIL;
 }
 
-
-
-
 struct mount_ctx_t
 {
   mount_point_data_entry *unk0;
@@ -640,8 +638,39 @@ int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
    return 0;
 }
 
-int SceSblACMgrForDriver_0b6e6cd7(int unk)
+int SceSblACMgrForDriver_96af69bd_SceSblACMgrForKernel_7c2af978(int unk0, std::uint64_t* authid)
 {
+   return 0;
+}
+
+int SceSblACMgrForDriver_0b6e6cd7_SceSblACMgrForKernel_f5ad56e4(int unk0)
+{
+  std::uint64_t authid = 0;
+  
+   if (SceSblACMgrForDriver_96af69bd_SceSblACMgrForKernel_7c2af978(unk0, &authid) != 0)
+      return 0;
+    
+   if (authid == 0x2800000000000013)
+      return 1;
+
+   if (authid == 0x2800000000007009)
+      return 1;
+
+   if (authid == 0x2800000000000010)
+      return 1;
+
+   if (authid == 0x280000000000002D)
+      return 1;
+    
+   if (authid == 0x2800000000000022)
+      return 1;
+
+   if (authid == 0x2800000000000039)
+      return 1;
+    
+   if (authid == 0x2800000000000001)
+      return 1;
+
    return 0;
 }
 
@@ -789,7 +818,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
          {
             if ((unsigned int)some_numeric_id > 0xC9)
             {
-               if (SceSblACMgrForDriver_0b6e6cd7(0))
+               if (SceSblACMgrForDriver_0b6e6cd7_SceSblACMgrForKernel_f5ad56e4(0))
                {
                   strcpy(random_path_buffer, "ms0:");
                   goto LABEL_4;
