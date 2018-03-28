@@ -711,6 +711,204 @@ int SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7_SceSblACMgrFor
    return 0;
 }
 
+int get_random_path(int mount_id, const char *random_path_init, char* random_path_buffer)
+{
+   if (random_path_init)
+   {
+      memcpy(random_path_buffer, random_path_init, 16);
+      return 0;
+   }
+   else if (mount_id <= 0x192)
+   {
+      if (mount_id >= 0x190)
+      {
+         int ad_res = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
+         if (ad_res)
+            return ad_res;
+         
+         random_path_buffer[14] = ':';
+         random_path_buffer[15] = 0;
+         return 0;
+      }
+      else if (mount_id <= 0xCC)
+      {
+         if (mount_id < 0xCB)
+         {
+            if (mount_id > 0xC9)
+            {
+               if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7_SceSblACMgrForKernel_sceSblACMgrCheckAuthIdForKernel_f5ad56e4(0))
+               {
+                  strcpy(random_path_buffer, "ms0:");
+                  return 0;
+               }
+               else
+               {
+                  int res_ms = proc_generate_random_path_23D4FBC("ms", random_path_buffer);
+                  if (res_ms)
+                     return res_ms;
+
+                  random_path_buffer[14] = ':';
+                  random_path_buffer[15] = 0;
+                  return 0;
+               }
+            }
+            else if (mount_id < 0xC8)
+            {
+               if ((mount_id - 100) > 0xC)
+               {
+                  return 0x80800001;
+               }
+               else
+               {
+                  int ad_res = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
+                  if (ad_res)
+                     return ad_res;
+
+                  random_path_buffer[14] = ':';
+                  random_path_buffer[15] = 0;
+                  return 0;
+               }
+            }
+         }
+      }
+      else
+      {
+         if (mount_id > 0xCF)
+         {
+            switch (mount_id)
+            {
+            case 0x12F:
+               {
+                  strcpy(random_path_buffer, "trophy_dat0:");
+                  return 0;
+               }
+            case 0x130:
+               {
+                  strcpy(random_path_buffer, "trophy_dbk0:");
+                  return 0;
+               }
+            case 0x12E:
+               {
+                  strcpy(random_path_buffer, "trophy_sys0:");
+                  return 0;
+               }
+            default:
+               return 0x80800001;
+            }
+         }
+         else if (mount_id < 0xCE )
+         {
+            strcpy(random_path_buffer, "cache0:");
+            return 0;
+         }
+      }
+
+      int td_res = proc_generate_random_path_23D4FBC("td", random_path_buffer);
+      if (td_res)
+         return td_res;
+
+      random_path_buffer[14] = ':';
+      random_path_buffer[15] = 0;
+      return 0;
+   }
+   else if (mount_id > 0x3E9)
+   {
+      if (mount_id <= 0x3EE)
+      {
+         if (mount_id > 0x3EC)
+         {
+            _snprintf(random_path_buffer, 0x10u, "savedata%1u:", 0);
+            return 0;
+         }
+         else
+         {
+            if (mount_id >= 0x3EC)
+            {
+               return 0x80800001;
+            }
+            else
+            {
+               _snprintf(random_path_buffer, 0x10u, "addcont%1u:", 0);
+               return 0;
+            }
+         }
+      }
+      else if (mount_id <= 0x3F0)
+      {
+         int res_sd = proc_generate_random_path_23D4FBC("sd", random_path_buffer);
+         if (res_sd)
+            return res_sd;
+
+         random_path_buffer[14] = ':';
+         random_path_buffer[15] = 0;
+         return 0;
+      }
+      else if(mount_id == 0x3F1)
+      {
+         int res_ud = proc_generate_random_path_23D4FBC("ud", random_path_buffer);
+         if (res_ud)
+            return res_ud;
+
+         random_path_buffer[14] = ':';
+         random_path_buffer[15] = 0;
+         return 0;
+      }
+      else
+      {
+         return 0x80800001;
+      }
+   }
+   else if (mount_id >= 0x3E8)
+   {
+      _snprintf(random_path_buffer, 0x10u, "app%1u:", 0);
+      return 0;
+   }
+   else if (mount_id == 0x1F8)
+   {
+      strcpy(random_path_buffer, "sdimport0:");
+      return 0;
+   }
+   else if (mount_id <= 0x1F8)
+   {
+      if ((mount_id - 0x1F4) > 1)
+      {
+         return 0x80800001;
+      }
+      else
+      {
+         int res_ad = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
+         if (res_ad)
+            return res_ad;
+
+         random_path_buffer[14] = ':';
+         random_path_buffer[15] = 0;
+         return 0;
+      }
+   }
+   else if (mount_id != 0x1F9)
+   {
+      if (mount_id == 0x258)
+      {
+         int res_lm = proc_generate_random_path_23D4FBC("lm", random_path_buffer);
+         if (res_lm)
+            return res_lm;
+
+         random_path_buffer[14] = ':';
+         random_path_buffer[15] = 0;
+         return 0;
+      }
+      else
+      {
+         return 0x80800001;
+      }
+   }
+   else
+   {
+      strcpy(random_path_buffer, "sdimport_tmp0:");
+      return 0;
+   }
+}
+
 int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_holder, unsigned int some_numeric_id, int *title_id, int arg_0, char *random_path_init, void *klicensee, const char *mount_point)
 {
    int *title_id_local; // r10
@@ -824,200 +1022,9 @@ int __cdecl proc_mount_PDrnd0_23D9B50(int unk0, mount_ctx_holder_t *mount_ctx_ho
    if (!mount_point)
       return 0x80800001;
 
-   if (random_path_init)
-   {
-      memcpy(random_path_buffer, random_path_init, 16);
-      goto LABEL_4;
-   }
-   else if (some_numeric_id <= 0x192)
-   {
-      if (some_numeric_id >= 0x190)
-      {
-         int ad_res = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
-         if (ad_res)
-            return ad_res;
-         
-         random_path_buffer[14] = ':';
-         random_path_buffer[15] = 0;
-         goto LABEL_4;
-      }
-      else if (some_numeric_id <= 0xCC)
-      {
-         if (some_numeric_id < 0xCB)
-         {
-            if (some_numeric_id > 0xC9)
-            {
-               if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7_SceSblACMgrForKernel_sceSblACMgrCheckAuthIdForKernel_f5ad56e4(0))
-               {
-                  strcpy(random_path_buffer, "ms0:");
-                  goto LABEL_4;
-               }
-               else
-               {
-                  int res_ms = proc_generate_random_path_23D4FBC("ms", random_path_buffer);
-                  if (res_ms)
-                     return res_ms;
-
-                  random_path_buffer[14] = ':';
-                  random_path_buffer[15] = 0;
-                  goto LABEL_4;
-               }
-            }
-            else if (some_numeric_id < 0xC8)
-            {
-               if ((some_numeric_id - 100) > 0xC)
-               {
-                  return 0x80800001;
-               }
-               else
-               {
-                  result1 = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
-                  if (result1)
-                     return result1;
-
-                  random_path_buffer[14] = ':';
-                  random_path_buffer[15] = 0;
-                  goto LABEL_4;
-               }
-            }
-         }
-      }
-      else
-      {
-         if (some_numeric_id > 0xCF)
-         {
-            switch (some_numeric_id)
-            {
-            case 0x12F:
-               {
-                  strcpy(random_path_buffer, "trophy_dat0:");
-                  goto LABEL_4;
-               }
-            case 0x130:
-               {
-                  strcpy(random_path_buffer, "trophy_dbk0:");
-                  goto LABEL_4;
-               }
-            case 0x12E:
-               {
-                  strcpy(random_path_buffer, "trophy_sys0:");
-                  goto LABEL_4;
-               }
-            default:
-               return 0x80800001;
-            }
-         }
-         else if (some_numeric_id < 0xCE )
-         {
-            strcpy(random_path_buffer, "cache0:");
-            goto LABEL_4;
-         }
-      }
-
-      result1 = proc_generate_random_path_23D4FBC("td", random_path_buffer);
-      if (result1)
-         return result1;
-
-      random_path_buffer[14] = ':';
-      random_path_buffer[15] = 0;
-      goto LABEL_4;
-   }
-   else if (some_numeric_id > 0x3E9)
-   {
-      if (some_numeric_id <= 0x3EE)
-      {
-         if (some_numeric_id > 0x3EC)
-         {
-            _snprintf(random_path_buffer, 0x10u, "savedata%1u:", 0);
-            goto LABEL_4;
-         }
-         else
-         {
-            if (some_numeric_id >= 0x3EC)
-            {
-               return 0x80800001;
-            }
-            else
-            {
-               _snprintf(random_path_buffer, 0x10u, "addcont%1u:", 0);
-               goto LABEL_4;
-            }
-         }
-      }
-      else if (some_numeric_id <= 0x3F0)
-      {
-         int res_sd = proc_generate_random_path_23D4FBC("sd", random_path_buffer);
-         if (res_sd)
-            return res_sd;
-
-         random_path_buffer[14] = ':';
-         random_path_buffer[15] = 0;
-         goto LABEL_4;
-      }
-      else if(some_numeric_id == 0x3F1)
-      {
-         int res_ud = proc_generate_random_path_23D4FBC("ud", random_path_buffer);
-         if (res_ud)
-            return res_ud;
-
-         random_path_buffer[14] = ':';
-         random_path_buffer[15] = 0;
-         goto LABEL_4;
-      }
-      else
-      {
-         return 0x80800001;
-      }
-   }
-   else if (some_numeric_id >= 0x3E8)
-   {
-      _snprintf(random_path_buffer, 0x10u, "app%1u:", 0);
-      goto LABEL_4;
-   }
-   else if (some_numeric_id == 0x1F8)
-   {
-      strcpy(random_path_buffer, "sdimport0:");
-      goto LABEL_4;
-   }
-   else if (some_numeric_id <= 0x1F8)
-   {
-      if ((some_numeric_id - 0x1F4) > 1)
-      {
-         return 0x80800001;
-      }
-      else
-      {
-         int res_ad = proc_generate_random_path_23D4FBC("ad", random_path_buffer);
-         if (res_ad)
-            return res_ad;
-
-         random_path_buffer[14] = ':';
-         random_path_buffer[15] = 0;
-         goto LABEL_4;
-      }
-   }
-   else if (some_numeric_id != 0x1F9)
-   {
-      if (some_numeric_id == 0x258)
-      {
-         int res_lm = proc_generate_random_path_23D4FBC("lm", random_path_buffer);
-         if (res_lm)
-            return res_lm;
-
-         random_path_buffer[14] = ':';
-         random_path_buffer[15] = 0;
-         goto LABEL_4;
-      }
-      else
-      {
-         return 0x80800001;
-      }
-   }
-   else
-   {
-      strcpy(random_path_buffer, "sdimport_tmp0:");
-      goto LABEL_4;
-   }
+   int grp_res = get_random_path(some_numeric_id, random_path_init, random_path_buffer);
+   if(grp_res < 0)
+      return grp_res;
 
 LABEL_4:
 /*
