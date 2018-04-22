@@ -103,7 +103,7 @@ struct process_param
   int unk20;
   int unk24;
   int unk28;
-  local_8708FC60_ctx_holder *hldr_2C;
+  local_8708FC60_ctx_holder *hldr_2C; // SceLibcparam
 };
 
 int SceLibKernel_sceKernelCreateLwMutex_da6ec8ef(SceKernelLwMutexWork *pWork, const char *pName, unsigned int attr, int initCount, const SceKernelLwMutexOptParam *pOptParam)
