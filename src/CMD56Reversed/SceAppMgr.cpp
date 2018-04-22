@@ -1,3 +1,5 @@
+#include "SceAppMgr.h"
+
 #include "Constants.h"
 
 #include "SceThreadmgr.h"
@@ -7,53 +9,10 @@
 #include "SceSblACMgr.h"
 #include "SceSblSsMgr.h"
 #include "SceFios2Kernel.h"
+#include "SceNpDrm.h"
 
 #include <string>
 #include <cstdint>
-
-struct mount_point_data_entry
-{
-  int mount_id;
-  char path[0x124];
-  char mount_point[0x10];
-  char title_id[0x10];
-  SceUInt64 auth_ids[0x10];
-  mount_point_data_entry *prev;
-  mount_point_data_entry *next;
-};
-
-struct mount_ctx_t
-{
-  mount_point_data_entry *unk0;
-  int unk4;
-  char gen_mount_point[16];
-  int unk18;
-  int unk1C;
-  mount_ctx_t *next;
-};
-
-struct mount_ctx_holder_t
-{
-  int unk0;
-  mount_ctx_t *mount;
-};
-
-struct process_auth_id_ctx
-{
-  uint64_t auth_id;
-  uint32_t unk_10[20];
-  uint32_t unk_60;
-  uint32_t unk_64;
-  char klicensee[16];
-  uint32_t unk_78;
-  uint32_t unk_7C;
-  uint32_t unk_80;
-  uint32_t unk_84;
-  uint32_t unk_88;
-  uint32_t unk_8C;
-  uint32_t unk_90;
-  uint32_t unk_94;
-};
 
 //==============================
 
@@ -920,7 +879,7 @@ int proc_mount_PDrnd0_23D9B50_old(int unk0, mount_ctx_holder_t *mount_ctx_holder
    int v102; // [sp+6Ch] [bp-CCh]
    int v103; // [sp+70h] [bp-C8h]
    int v104; // [sp+74h] [bp-C4h]
-   process_auth_id_ctx auth_ctx; // [sp+78h] [bp-C0h]
+   SceSelfAuthInfo auth_ctx; // [sp+78h] [bp-C0h]
    int cookie; // [sp+10Ch] [bp-2Ch]
 
    title_id_local = title_id;
@@ -1034,7 +993,7 @@ LABEL_12:
       }
     }
     if ( !mount_item_var->gen_mount_point[0]
-      || (result1 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid, &auth_ctx),
+      || (result1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx),
           result1 >= 0)
       && ((HIDWORD(auth_id1) = auth_ctx.auth_id,
            result1 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(mount_item_var->gen_mount_point, auth_id1),
@@ -1150,7 +1109,7 @@ LABEL_21:
     result2 = -2139095039;
     goto LABEL_21;
   }
-  result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid, &auth_ctx);
+  result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
   if ( result2 < 0 )
   {
 LABEL_111:
@@ -1284,7 +1243,7 @@ LABEL_111:
     }
     global_mount_path_item_ptr->auth_ids[initialized_global_item_index] = auth_id;
     if ( !global_mount_path_item_ptr->gen_mount_point[0]
-      || (result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid, &auth_ctx),
+      || (result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx),
           result2 >= 0)
       && ((HIDWORD(auth_id2) = auth_ctx.auth_id,
            v37 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(global_mount_path_item_ptr->gen_mount_point, auth_id2),
@@ -1444,7 +1403,7 @@ LABEL_135:
           if ( !allocated_mount_path_item_ptr->gen_mount_point[0] )
             goto LABEL_136;
           v70 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
-          result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid, &auth_ctx);
+          result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
           if ( result2 < 0 )
             goto LABEL_213;
           if ( secret[0]
@@ -1957,7 +1916,6 @@ int AppMgr_decrypt_str_constant_23D5998(char *input, char *output)
   return 0;
 }
 
-
 /*
 global_ctx_item *__cdecl get_global_ctx_item_23C2DE0(ctx_23C2960 *ctx, SceUID pid)
 {
@@ -2010,6 +1968,7 @@ int w_unmount_23D8E80(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, char *ge
    return 0;
 }
 
+/*
 int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, char *patch_path, char *rif_file_path, char *mount_point)
 {
   char *mount_point_local; // r9
@@ -2413,3 +2372,4 @@ LABEL_16:
 
   return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
 }
+*/

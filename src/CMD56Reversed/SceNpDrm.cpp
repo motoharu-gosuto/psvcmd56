@@ -1,3 +1,5 @@
+#include "SceNpDrm.h"
+
 #include <string>
 #include <stdint.h>
 
