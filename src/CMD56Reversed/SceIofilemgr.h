@@ -289,3 +289,27 @@ int SceIofilemgrForDriver_unk_aa253b68(vfs_node *node, char *dest, int length, i
 int SceIofilemgrForDriver_vfs_node_func15_50a63acf(vfs_node *node, vfs_node_func15_arg1* unk0, vfs_node_func15_arg2* unk1);
 
 int SceIofilemgrForDriver_vfs_node_func5_or_19_abbc80e3(vfs_node *n0, int unk1, char *buffer, SceSize size, int offsetLo, int offsetHi, int* readBytes);
+
+typedef int SceMode;
+
+typedef struct SceDateTime {
+    unsigned short year;
+    unsigned short month;
+    unsigned short day;
+    unsigned short hour;
+    unsigned short minute;
+    unsigned short second;
+    unsigned int microsecond;
+} SceDateTime;
+
+typedef struct SceIoStat {
+	SceMode st_mode;             //!< One or more ::SceIoAccessMode
+	unsigned int st_attr;        //!< One or more ::SceIoFileMode
+	SceOff st_size;              //!< Size of the file in bytes
+	SceDateTime st_ctime;        //!< Creation time
+	SceDateTime st_atime;        //!< Last access time
+	SceDateTime st_mtime;        //!< Last modification time
+	unsigned int st_private[6];  //!< Device-specific data
+} SceIoStat;
+
+int SceIofilemgrForDriver_sceIoGetstatForDriver_75c96d25(const char *file, SceIoStat *stat);

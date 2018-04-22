@@ -1550,3 +1550,8 @@ int sub_BFB2A8(io_context *ioctx, param_BFB2A8* param)
          return STACK_CHECK_FAIL;
    }
 }
+
+int SceIofilemgrForDriver_sceIoGetstatForDriver_75c96d25(const char *file, SceIoStat *stat)
+{
+   return 0;
+}
