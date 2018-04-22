@@ -2114,24 +2114,14 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
 
   if ( v7 )
   {
-    v33 = 0x80800001;
-    
-     __mcr(15, 0, v6, 13, 0, 3);
-     result = v33;
-     if ( cookie != MEMORY[0x9EA004] )
-       SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-     return result;
+     return var_009EA004 == cookie ? 0x80800001 : STACK_CHECK_FAIL;
   }
 
   v8 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelLockMutex_089_16ac80c5(MEMORY[0x22A000C], 1, 0);
   v33 = v8;
   if ( v8 < 0 )
   {
-     __mcr(15, 0, v6, 13, 0, 3);
-     result = v33;
-     if ( cookie != MEMORY[0x9EA004] )
-       SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-     return result;
+     return var_009EA004 == cookie ? v8 : STACK_CHECK_FAIL;
   }
 
   pid = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
@@ -2139,15 +2129,9 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
 
   if ( !gctxi )
   {
-    v33 = 0x80801002;
-    
      SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
 
-     __mcr(15, 0, v6, 13, 0, 3);
-     result = v33;
-     if ( cookie != MEMORY[0x9EA004] )
-       SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-     return result;
+     return var_009EA004 == cookie ? 0x80801002 : STACK_CHECK_FAIL;
   }
 
   alloc_ctx.unk0 = 0x14;
@@ -2366,23 +2350,12 @@ LABEL_39:
                 SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], gdat_ctx_copy);
                 SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
     
-                 __mcr(15, 0, v6, 13, 0, 3);
-                 result = v33;
-                 if ( cookie != MEMORY[0x9EA004] )
-                   SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-                 return result;
+                 return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
               }
 
               SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
 
-              __mcr(15, 0, v6, 13, 0, 3);
-              result = v33;
-              if ( cookie != MEMORY[0x9EA004] )
-                SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-              return result;
-
-
-
+              return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
           }
 
           v36 = SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(param_sfo_path2, aInvalid, 9u);// invalid:
@@ -2425,22 +2398,12 @@ LABEL_39:
             SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], gdat_ctx_copy);
             SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
     
-            __mcr(15, 0, v6, 13, 0, 3);
-            result = v33;
-            if ( cookie != MEMORY[0x9EA004] )
-               SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-            return result;
+            return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
          }
 
          SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
 
-         __mcr(15, 0, v6, 13, 0, 3);
-         result = v33;
-         if ( cookie != MEMORY[0x9EA004] )
-            SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-         return result;
-
-
+         return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
       }
     }
   }
@@ -2464,20 +2427,12 @@ LABEL_16:
          SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], gdat_ctx_copy);
          SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
     
-         __mcr(15, 0, v6, 13, 0, 3);
-         result = v33;
-         if ( cookie != MEMORY[0x9EA004] )
-            SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-         return result;
+         return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
       }
 
       SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
 
-      __mcr(15, 0, v6, 13, 0, 3);
-      result = v33;
-      if ( cookie != MEMORY[0x9EA004] )
-         SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-      return result;
+      return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
   }
 
   if ( gdat_ctx_copy )
@@ -2485,19 +2440,10 @@ LABEL_16:
     SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], gdat_ctx_copy);
     SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
     
-    
-     __mcr(15, 0, v6, 13, 0, 3);
-     result = v33;
-     if ( cookie != MEMORY[0x9EA004] )
-       SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-     return result;
+     return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
   }
 
   SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
 
-  __mcr(15, 0, v6, 13, 0, 3);
-  result = v33;
-  if ( cookie != MEMORY[0x9EA004] )
-    SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(v33);
-  return result;
+  return var_009EA004 == cookie ? v33 : STACK_CHECK_FAIL;
 }
