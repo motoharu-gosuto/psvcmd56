@@ -330,3 +330,8 @@ int SceSysrootForDriver_check_sysroot_buffer_84_8aa268d6()
 {
    return 0;
 }
+
+int SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(SceUID pid, SceSelfAuthInfo *self_info)
+{
+   return 0;
+}

@@ -446,3 +446,22 @@ int SceSblSsMgrForDriver_ac57f4f0(char* buffer)
 {
    return SceSblSsMgrForDriver_4dd1b2e5(buffer, 0x40, 0x01);
 }
+
+void SceSblSsMgrForDriver_cd98cc92(char* dest, char value, int size)
+{
+   if(size == 0)
+      return;
+
+   char* current = dest;
+   
+   while(current != (dest + size))
+   {
+      *current = value;
+      current++;
+   }
+}
+
+int SceSblSsMgrForDriver_sceKernelGetRandomNumberForDriver_4f9bfbe5(char* result, int size)
+{
+   return 0;
+}

@@ -4,9 +4,58 @@
 #include "SceSysmem.h"
 #include "SceSysmemGlobalVariables.h"
 #include "SceIofilemgr.h"
+#include "SceSblACMgr.h"
+#include "SceSblSsMgr.h"
+#include "SceFios2Kernel.h"
 
 #include <string>
 #include <cstdint>
+
+struct mount_point_data_entry
+{
+  int mount_id;
+  char path[0x124];
+  char mount_point[0x10];
+  char title_id[0x10];
+  SceUInt64 auth_ids[0x10];
+  mount_point_data_entry *prev;
+  mount_point_data_entry *next;
+};
+
+struct mount_ctx_t
+{
+  mount_point_data_entry *unk0;
+  int unk4;
+  char gen_mount_point[16];
+  int unk18;
+  int unk1C;
+  mount_ctx_t *next;
+};
+
+struct mount_ctx_holder_t
+{
+  int unk0;
+  mount_ctx_t *mount;
+};
+
+struct process_auth_id_ctx
+{
+  uint64_t auth_id;
+  uint32_t unk_10[20];
+  uint32_t unk_60;
+  uint32_t unk_64;
+  char klicensee[16];
+  uint32_t unk_78;
+  uint32_t unk_7C;
+  uint32_t unk_80;
+  uint32_t unk_84;
+  uint32_t unk_88;
+  uint32_t unk_8C;
+  uint32_t unk_90;
+  uint32_t unk_94;
+};
+
+//==============================
 
 int loc_23D5220()
 {
@@ -371,18 +420,6 @@ int proc_parse_param_sfo_23D5028(SceUID pid, int unk1, int unk2, int unk3)
    return 0;
 }
 
-
-struct mount_point_data_entry
-{
-  int mount_id;
-  char path[0x124];
-  char mount_point[0x10];
-  char title_id[0x10];
-  SceUInt64 auth_ids[0x10];
-  mount_point_data_entry *prev;
-  mount_point_data_entry *next;
-};
-
 SceUID mutex_22A000C;
 
 SceUID pool_22A0008;
@@ -390,11 +427,6 @@ SceUID pool_22A0008;
 char* PD_str_2404BBC = "PD";
 
 mount_point_data_entry* var_22D470C;
-
-int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(SceUID pid, int resolveFlag, const char *pInPath, char *pOutPath, size_t maxPath)
-{
-   return 0;
-}
 
 //this function tries to OverlayResolveSync input path
 //then checks that it is not a PD path (temp mount point probably aquired by PFS)
@@ -578,53 +610,6 @@ int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_p
       return STACK_CHECK_FAIL;
 }
 
-struct mount_ctx_t
-{
-  mount_point_data_entry *unk0;
-  int unk4;
-  char gen_mount_point[16];
-  int unk18;
-  int unk1C;
-  mount_ctx_t *next;
-};
-
-struct mount_ctx_holder_t
-{
-  int unk0;
-  mount_ctx_t *mount;
-};
-
-struct ctx_49d4dd9b
-{
-  int unk0;
-  int unk4;
-  int unk8;
-  int unkC;
-  int unk10;
-};
-
-struct process_auth_id_ctx
-{
-  uint64_t auth_id;
-  uint32_t unk_10[20];
-  uint32_t unk_60;
-  uint32_t unk_64;
-  char klicensee[16];
-  uint32_t unk_78;
-  uint32_t unk_7C;
-  uint32_t unk_80;
-  uint32_t unk_84;
-  uint32_t unk_88;
-  uint32_t unk_8C;
-  uint32_t unk_90;
-  uint32_t unk_94;
-};
-
-int SceSblSsMgrForDriver_sceKernelGetRandomNumberForDriver_4f9bfbe5(char* result, int size)
-{
-   return 0;
-}
-
 int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
 {   
    int result;
@@ -635,79 +620,6 @@ int proc_generate_random_path_23D4FBC(char *prefix, char *result_path)
       return result;
 
    _snprintf(result_path, 0x10u, "%s%02x%02x%02x%02x%02x%02xd", prefix, random_buffer[0], random_buffer[1], random_buffer[2], random_buffer[3], random_buffer[4], random_buffer[5]);
-   return 0;
-}
-
-typedef struct SceSelfAuthInfo // size is 0x90
-{
-   SceUInt64 auth_id;
-   
-   uint32_t unk_10[20];
-   
-   uint32_t unk_60;
-   uint32_t unk_64;
-   char klicensee[0x10]; // offset 0x68
-   
-   uint32_t unk_78;
-   uint32_t unk_7C;
-   
-   uint32_t unk_80;
-   uint32_t unk_84;
-   uint32_t unk_88;
-   uint32_t unk_8C;
-   
-   uint32_t unk_90;
-   uint32_t unk_94;
-} SceSelfAuthInfo;
-
-int SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(SceUID pid, SceSelfAuthInfo *self_info)
-{
-   return 0;
-}
-
-int SceSblACMgrForDriver_sceSblACMgrGetSelfAuthInfoOrDefaultForDriver_96af69bd_SceSblACMgrForKernel_sceSblACMgrGetSelfAuthInfoOrDefaultForKernel_7c2af978(SceUID pid, std::uint64_t* authid)
-{   
-   if ( !authid)
-      return 0x800F0916;
-
-   SceSelfAuthInfo self_info;
-   
-   if (SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(pid, &self_info) != 0)
-      return 0x800F0916;
-
-   *authid = self_info.auth_id;
-   
-   return 0;
-}
-
-int SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7_SceSblACMgrForKernel_sceSblACMgrCheckAuthIdForKernel_f5ad56e4(SceUID pid)
-{
-  std::uint64_t authid = 0;
-  
-   if (SceSblACMgrForDriver_sceSblACMgrGetSelfAuthInfoOrDefaultForDriver_96af69bd_SceSblACMgrForKernel_sceSblACMgrGetSelfAuthInfoOrDefaultForKernel_7c2af978(pid, &authid) != 0)
-      return 0;
-    
-   if (authid == 0x2800000000000013)
-      return 1;
-
-   if (authid == 0x2800000000007009)
-      return 1;
-
-   if (authid == 0x2800000000000010)
-      return 1;
-
-   if (authid == 0x280000000000002D)
-      return 1;
-    
-   if (authid == 0x2800000000000022)
-      return 1;
-
-   if (authid == 0x2800000000000039)
-      return 1;
-    
-   if (authid == 0x2800000000000001)
-      return 1;
-
    return 0;
 }
 
@@ -909,7 +821,7 @@ int get_random_path(int mount_id, const char *mount_drive, char* random_path_buf
    }
 }
 
-int __cdecl proc_mount_PDrnd0_23D9B50_old(int unk0, mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, int *title_id, char *physical_path, char *mount_drive, void *klicensee, const char *gen_mount_point)
+int proc_mount_PDrnd0_23D9B50_old(int unk0, mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, int *title_id, char *physical_path, char *mount_drive, void *klicensee, const char *gen_mount_point)
 {
    int *title_id_local; // r10
    unsigned int some_numeric_id_copy; // r4
@@ -1002,7 +914,7 @@ int __cdecl proc_mount_PDrnd0_23D9B50_old(int unk0, mount_ctx_holder_t *mount_ct
    char *buffer_124_copy; // [sp+2Ch] [bp-10Ch]
    uint64_t auth_id; // [sp+30h] [bp-108h]
    char *mountpoint; // [sp+38h] [bp-100h]
-   ctx_49d4dd9b ctx; // [sp+44h] [bp-F4h]
+   ctx_49D4DD9B ctx; // [sp+44h] [bp-F4h]
    char random_path_buffer[16]; // [sp+58h] [bp-E0h]
    char secret[4]; // [sp+68h] [bp-D0h]
    int v102; // [sp+6Ch] [bp-CCh]
@@ -2142,7 +2054,7 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
   char *physical_path_copy; // [sp+18h] [bp-D0h]
   char *rif_file_path_local; // [sp+1Ch] [bp-CCh]
   const char *patch_path_local; // [sp+20h] [bp-C8h]
-  ctx_49d4dd9b alloc_ctx; // [sp+28h] [bp-C0h]
+  ctx_49D4DD9B alloc_ctx; // [sp+28h] [bp-C0h]
   gd_mount_drive_mount_local mount_drive; // [sp+40h] [bp-A8h]
   SceIoStat stat; // [sp+60h] [bp-88h]
   int cookie; // [sp+BCh] [bp-2Ch]
