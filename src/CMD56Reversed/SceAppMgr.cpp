@@ -9,7 +9,6 @@
 #include "SceSblACMgr.h"
 #include "SceSblSsMgr.h"
 #include "SceFios2Kernel.h"
-#include "SceNpDrm.h"
 
 #include <string>
 #include <cstdint>
@@ -510,7 +509,7 @@ int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_p
             if (global_buffer)
             {
                // do path lookup while strings are not equal
-               while (strncmp(global_buffer->mount_point, path_copy, 0x10u) )
+               while (strncmp(global_buffer->gen_mount_point, path_copy, 0x10u) )
                {
                   global_buffer = global_buffer->next; // get pointer to next item
                   if (!global_buffer)
@@ -1916,12 +1915,10 @@ int AppMgr_decrypt_str_constant_23D5998(char *input, char *output)
   return 0;
 }
 
-/*
 global_ctx_item *__cdecl get_global_ctx_item_23C2DE0(ctx_23C2960 *ctx, SceUID pid)
 {
    return 0;
 }
-*/
 
 int verify_copy_23D5A10(char *src, char *dst)
 {
