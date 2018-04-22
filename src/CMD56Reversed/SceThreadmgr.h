@@ -4,6 +4,8 @@
 
 #include "Constants.h"
 
+#include "SceLibKernel.h"
+
 //------------------------------------------------
 
 int SceThreadmgrForDriver_af8e1266(uint32_t* unk, char* name, int num0, int num1);
@@ -116,3 +118,7 @@ int SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceUID mutexid, int unl
 SceUID SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
 
 int SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(int value);
+
+int SceThreadmgr_sceKernelUnlockLwMutex_2abc41df(SceKernelLwMutexWork *work, int unlockCount);
+
+int SceThreadmgrCoredumpTime_sceKernelExitThread_0c8a38e1(int status);

@@ -1,35 +1,10 @@
 #include <cstdint>
 
-struct SceKernelLwMutexWork
-{
-  int unk0;
-  int unk4;
-  int lockCount;
-  int unkC;
-  int unk10;
-  int unk14;
-  int unk18;
-  int unk1C;
-};
+#include "SceLibKernel.h"
+#include "SceThreadmgr.h"
+#include "Utils.h"
 
-int SceThreadmgr_sceKernelUnlockLwMutex_2abc41df(SceKernelLwMutexWork *work, int unlockCount)
-{
-   return 0;
-}
-
-int ATOMIC_LOAD(int* var1, int* var2, int* var1_res, int* var2_res)
-{
-   return 0;
-}
-
-int ATOMIC_STORE(int* var1, int* var2, int* var1_res, int* var2_res)
-{
-   return 0;
-}
-
-#define MRC(a0,a1,a2,a3,a4,a5)
-
-int SceLibKernel_SceLibKernel__exp_sceKernelUnlockLwMutex_120afc8c(SceKernelLwMutexWork *work, int unlockCount)
+int SceLibKernel_sceKernelUnlockLwMutex_120afc8c(SceKernelLwMutexWork *work, int unlockCount)
 {
    int v2[2];
    
@@ -93,7 +68,7 @@ int SceLibKernel_SceLibKernel__exp_sceKernelUnlockLwMutex_120afc8c(SceKernelLwMu
    return 0; 
 }
 
-int SceLibKernel_SceLibKernel__exp_sceKernelUnlockSomeLwMutex_91fa6614(SceKernelLwMutexWork *work, int unlockCount)
+int SceLibKernel_sceKernelUnlockLwMutex_91fa6614(SceKernelLwMutexWork *work, int unlockCount)
 {
    int v2[2];
     
@@ -152,5 +127,40 @@ int SceLibKernel_SceLibKernel__exp_sceKernelUnlockSomeLwMutex_91fa6614(SceKernel
          break;
    }
 
+   return 0;
+}
+
+int SceLibKernel_sceKernelCreateLwCond_48c7eae6(SceKernelLwCondWork *pWork, const char *pName, unsigned int attr, SceKernelLwMutexWork *pLwMutex, const SceKernelLwCondOptParam *pOptParam)
+{
+   return 0;
+}
+
+int SceLibKernel_sceKernelDeleteLwMutex_244e76d2(SceKernelLwMutexWork *work)
+{
+   return 0;
+}
+
+int SceLibKernel_sceKernelDeleteLwCond_721f6cb3(SceKernelLwCondWork *pWork)
+{
+   return 0;
+}
+
+int SceLibKernel_sceKernelCreateLwMutex_da6ec8ef(SceKernelLwMutexWork *pWork, const char *pName, unsigned int attr, int initCount, const SceKernelLwMutexOptParam *pOptParam)
+{
+   return 0;
+}
+
+int SceLibKernel_sceKernelLockLwMutex_46e7be7b(SceKernelLwMutexWork *pWork, int lockCount, unsigned int *pTimeout)
+{
+   return 0;
+}
+
+int SceLibKernel_sceKernelCallModuleExit_15e2a45d(int)
+{
+   return 0;
+}
+
+void* SceLibKernel_sceKernelGetTLSAddr_b295eb61(int key)
+{
    return 0;
 }

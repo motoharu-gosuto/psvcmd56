@@ -133,3 +133,13 @@ int SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(int value)
 {
    return 0;
 }
+
+int SceThreadmgr_sceKernelUnlockLwMutex_2abc41df(SceKernelLwMutexWork *work, int unlockCount)
+{
+   return 0;
+}
+
+int SceThreadmgrCoredumpTime_sceKernelExitThread_0c8a38e1(int status)
+{
+   return 0;
+}
