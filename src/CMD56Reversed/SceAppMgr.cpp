@@ -1976,16 +1976,11 @@ ctx_23C2960 global_contexts_22A0500[20];
 int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, char *patch_path, char *rif_file_path, char *mount_point)
 { 
    int result; // r0
-   phys_ctx_t *gdat_ctx; // r0
-   
    int stat_res0; // r8
    char *physical_path2; // ST10_4
-   
    int stat_res1; // r8
-   char *param_sfo_path; // [sp+10h] [bp-D8h]
    char *alloc_buffer_copy2; // [sp+10h] [bp-D8h]
    char *param_sfo_path2; // [sp+10h] [bp-D8h]
-
    SceIoStat stat; // [sp+60h] [bp-88h]
   
    //=====================
@@ -2096,39 +2091,54 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
       return var_009EA004 == cookie ? 0x80801006 : STACK_CHECK_FAIL;
    }
 
-   #pragma region
-
-   param_sfo_path = alloc_buffer;
-   gdat_ctx = (phys_ctx_t *)alloc_mem_23DDFF8(0x508u);
-   alloc_buffer = param_sfo_path;
+   char *param_sfo_path = alloc_buffer;
+   phys_ctx_t *gdat_ctx = (phys_ctx_t *)alloc_mem_23DDFF8(0x508u);
    phys_ctx_t *gdat_ctx_copy = gdat_ctx;
   
-   if ( !gdat_ctx )
+   if(!gdat_ctx)
    {
       last_error = 0x80801006;
-      goto LABEL_16;
+      
+      if (alloc_buffer)
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
+
+      if (gdat_ctx_copy)
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx_copy);
+
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return var_009EA004 == cookie ? last_error : STACK_CHECK_FAIL;
    }
 
    memset(gdat_ctx, 0, 0x508u);
-   _snprintf(param_sfo_path, 0x124u, "%s/%s", physical_path, "sce_sys/param.sfo");// %s/%s (sce_sys/param.sfo)
+   _snprintf(param_sfo_path, 0x124u, "%s/%s", physical_path, "sce_sys/param.sfo");
+   
+   // read and parse param sfo
    int prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
-
-   last_error = proc_parse_param_sfo_23D5028(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), param_sfo_path, 1, gdat_ctx_copy);// read and parse param sfo
+   last_error = proc_parse_param_sfo_23D5028(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), param_sfo_path, 1, gdat_ctx_copy);
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm);
+
    alloc_buffer = param_sfo_path;
 
    if (last_error < 0)
    {
       if (last_error == 0x80010002)
          last_error = 0x8080000D;
-      goto LABEL_16;
+
+      if (alloc_buffer)
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
+
+      if (gdat_ctx_copy)
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx_copy);
+
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return var_009EA004 == cookie ? last_error : STACK_CHECK_FAIL;
    }
 
-   int prev_perm2 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
-
    // check if clearsign exists
+   int prev_perm2 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
    int clearsign_exists = clearsign_exists_23D9A4C(physical_path);
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm2);
+
    alloc_buffer = param_sfo_path;
 
    // retrieve klicensee if clearsign exists
@@ -2139,35 +2149,63 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
          last_error = get_klicensee_23D642C(rif_file_path_local, &gdat_ctx_copy->rif);
          alloc_buffer = param_sfo_path;
          if (last_error < 0)
-            goto LABEL_16;
+         {
+            if (alloc_buffer)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
+
+            if (gdat_ctx_copy)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx_copy);
+
+            SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+            return var_009EA004 == cookie ? last_error : STACK_CHECK_FAIL;
+         }
       }
       else
       {
          last_error = sceAppMgrCheckRifGD_base_23D9704(physical_path, gdat_ctx_copy->titleId_378, &gdat_ctx_copy->rif);
          alloc_buffer = param_sfo_path;
          if (last_error < 0)
-            goto LABEL_16;
+         {
+            if (alloc_buffer)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
+
+            if (gdat_ctx_copy)
+               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx_copy);
+
+            SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+            return var_009EA004 == cookie ? last_error : STACK_CHECK_FAIL;
+         }
       }
 
       alloc_buffer_copy2 = alloc_buffer;
 
-      ctx_49D4DD9B alloc_ctx; //wrong usage maybe?
-      alloc_ctx.unk0 = 1;
+      int package_check_flag = 1;
 
       int prev_perm3 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
-      last_error = check_package_bin_and_clearsign_23D6314(physical_path, &alloc_ctx.unk0);
+      last_error = check_package_bin_and_clearsign_23D6314(physical_path, &package_check_flag);
       SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm3);
       alloc_buffer = alloc_buffer_copy2;
 
-      if (last_error < 0)
-         goto LABEL_16;
+      if(last_error < 0)
+      {
+         if(alloc_buffer)
+            SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
 
-      if (alloc_ctx.unk0)
+         if(gdat_ctx_copy)
+            SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx_copy);
+
+         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+         return var_009EA004 == cookie ? last_error : STACK_CHECK_FAIL;
+      }
+
+      if(package_check_flag)
       {
          memset(gdat_ctx_copy->rif.dec_rif_key, 0, 0x10u);
          alloc_buffer = alloc_buffer_copy2;
       }
    }
+
+   #pragma region
 
    param_sfo_path2 = alloc_buffer;
    // generate random mount drive
