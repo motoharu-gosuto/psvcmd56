@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "SceNpDrm.h"
 
+//size is 0x1D0 (known)
 struct mount_point_data_entry
 {
   int mount_id;
@@ -14,11 +15,14 @@ struct mount_point_data_entry
   mount_point_data_entry *next;
 };
 
+typedef int SceFiosOverlayID;
+
+//size is 0x24 (known)
 struct mount_ctx_t
 {
   mount_point_data_entry *mnt_entry;
-  int unk4;
-  char mountDrive[0x10];
+  SceFiosOverlayID overlay_id;
+  char mountDrive[16];
   int unk18;
   int unk1C;
   mount_ctx_t *next;
@@ -35,6 +39,7 @@ struct titleId_item
   char titleId[16];
 };
 
+//size is 0x508 (known)
 struct phys_ctx_t
 {
   int unk0[88];
@@ -169,6 +174,7 @@ struct sub_ctx_23C2960_2400
   char unkC[4];
 };
 
+//size is 0x2410 (known)
 struct ctx_23C2960
 {
   int appid;
