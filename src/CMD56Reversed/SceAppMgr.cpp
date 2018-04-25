@@ -9,6 +9,8 @@
 #include "SceSblACMgr.h"
 #include "SceSblSsMgr.h"
 #include "SceFios2Kernel.h"
+#include "SceProcessmgr.h"
+#include "ScePfsMgr.h"
 
 #include <string>
 #include <cstdint>
@@ -1000,7 +1002,9 @@ LABEL_12:
       || (result1 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx),
           result1 >= 0)
       && ((HIDWORD(auth_id1) = auth_ctx.auth_id,
-           result1 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(mpd_entry0->gen_mount_point, auth_id1),
+           result1 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(
+                       mpd_entry0->gen_mount_point,
+                       auth_id1),
            result1 == 0x80010011)
        || result1 >= 0) )
     {
@@ -1211,7 +1215,9 @@ LABEL_111:
       || (result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx),
           result2 >= 0)
       && ((HIDWORD(auth_id2) = auth_ctx.auth_id,
-           pfs_mount_res = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(glb_mpd_entry0->gen_mount_point, auth_id2),
+           pfs_mount_res = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(
+                             glb_mpd_entry0->gen_mount_point,
+                             auth_id2),
            result2 = pfs_mount_res,
            pfs_mount_res == 0x80010011)
        || pfs_mount_res >= 0) )
@@ -1318,7 +1324,13 @@ LABEL_124:
   {
     mpd_entry_alloc2->gen_mount_point[0] = 0;
     prev_perm1 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
-    result2 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMountForDriver_d070bc48(0x10000);
+    result2 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMountForDriver_d070bc48(
+                0x10000,
+                physical_path_copy2,
+                0,
+                0,
+                0,
+                0);
     if ( result2 < 0
       || ((mkdir_res0 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMkdirForDriver_7f710b25(
                           aLma0Mpe_root,
@@ -1398,7 +1410,7 @@ LABEL_135:
           if ( result2 )
             goto LABEL_213;
           HIDWORD(auth_id3) = 1;
-          pfs_mount_res0 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive0, auth_id3);
+          pfs_mount_res0 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id3);
           pfs_mount_res1 = pfs_mount_res0 >> 31;
           result2 = pfs_mount_res0;
           if ( pfs_mount_res0 == 0x80010011 )
@@ -1409,7 +1421,7 @@ LABEL_135:
           if ( pfs_mount_res2 )
             goto LABEL_310;
           HIDWORD(auth_id4) = 0x7001;
-          pfs_mount_res30 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive0, auth_id4);
+          pfs_mount_res30 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id4);
           pfs_mount_res31 = pfs_mount_res30 >> 31;
           result2 = pfs_mount_res30;
           pfs_mount_res32 = pfs_mount_res30 == 0x80010011 ? 0 : pfs_mount_res31 & 1;
@@ -1417,7 +1429,7 @@ LABEL_135:
           if ( pfs_mount_res32 )
             goto LABEL_310;
           HIDWORD(auth_id5) = 0x2D;
-          pfs_mount_res40 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive0, auth_id5);
+          pfs_mount_res40 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id5);
           result2 = pfs_mount_res40;
           if ( pfs_mount_res40 == 0x80010011 )
             pfs_mount_res41 = 0;
@@ -1443,7 +1455,7 @@ LABEL_310:
             gen_pfs_drive2 = mpd_entry_alloc2->gen_mount_point;
             HIDWORD(auth_id6) = 0x39;
           }
-          pfs_mount_res50 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive2, auth_id6);
+          pfs_mount_res50 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive2, auth_id6);
           result2 = pfs_mount_res50;
           if ( pfs_mount_res50 == 0x80010011 )
             pfs_mount_res51 = 0;
