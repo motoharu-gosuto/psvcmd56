@@ -1339,3 +1339,18 @@ int crypto_ioctl_219C9E8(SceUID fd, int unk1, int unk2, SceOff offset, int dispa
       }
    }
 }
+
+int ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(char *mount_point, SceUInt64 authid)
+{
+   return 0;
+}
+
+int ScePfsMgrForKernel_mount_a772209c(char* original_path, char* mount_point, SceUInt64 authid, void *klicensee, unsigned int type)
+{
+   return 0;
+}
+
+int ScePfsMgrForKernel_unmount_680bc384(char* mount_point)
+{
+   return 0;
+}

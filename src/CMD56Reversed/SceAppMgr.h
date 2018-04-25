@@ -15,8 +15,6 @@ struct mount_point_data_entry
   mount_point_data_entry *next;
 };
 
-typedef int SceFiosOverlayID;
-
 //size is 0x24 (known)
 struct mount_ctx_t
 {

@@ -1555,3 +1555,18 @@ int SceIofilemgrForDriver_sceIoGetstatForDriver_75c96d25(const char *file, SceIo
 {
    return 0;
 }
+
+int SceIofilemgrForDriver_sceIoMountForDriver_d070bc48(int vshMountId, const char *path, int permission, int unk3, int arg_0, int arg_4)
+{
+   return 0;
+}
+
+int SceIofilemgrForDriver_sceIoMkdirForDriver_7f710b25(const char *dir, SceMode mode)
+{
+   return 0;
+}
+
+int SceIofilemgrForDriver_sceIoUmountForDriver_20574100(int vshMountId, int unk1, int unk2, int unk3)
+{
+   return 0;
+}

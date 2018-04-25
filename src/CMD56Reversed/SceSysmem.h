@@ -365,3 +365,5 @@ struct ctx_49D4DD9B
 };
 
 void* SceSysmemForDriver_sceKernelAllocHeapMemory3ForDriver_49D4DD9B(SceUID uid, SceSize size, ctx_49D4DD9B* unk2);
+
+void* SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceUID uid, SceSize size, ctx_49D4DD9B* unk2);
