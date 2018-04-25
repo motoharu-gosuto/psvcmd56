@@ -641,7 +641,1195 @@ int verify_copy_23D5A10(char *src, char *dst)
 
 int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, void *klicensee, const char *gen_mount_point)
 {
-   return 0;
+  char *title_id_local; // r10
+  unsigned int mount_id_local; // r4
+  int mount_drive_chunk1; // r1
+  int mount_drive_chunk2; // r2
+  int mount_drive_chunk3; // r3
+  mount_ctx_t *mount_ctx_local0; // r7
+  char *gen_mount_point1; // r8
+  int gen_mount_point_chunk11; // r1
+  int gen_mount_point_chunk12; // r2
+  int gen_mount_point_chunk13; // r3
+  mount_ctx_t *mount_ctx_local1; // r7
+  int result2; // r8
+  int result; // r0
+  mount_ctx_t *mctx_alloc0; // r0
+  int mount_drive_local_chunk11; // r1
+  int mount_drive_local_chunk12; // r2
+  int mount_drive_local_chunk13; // r3
+  SceUID mount_mutex; // r0
+  char *physical_path_copy; // r0
+  SceFiosOverlayID overlay_id; // r4
+  mount_point_data_entry *mpd_entry0; // r6
+  mount_ctx_t *mount_ctx_local2; // r3
+  int result1; // r0
+  __int64 auth_id1; // r1
+  SceUID pid0; // r5
+  int prev_perm0; // r7
+  mount_point_data_entry *glb_mpd_entry0; // r6
+  signed int initialized_global_item_index; // r3
+  __int64 auth_id2; // r1
+  int pfs_mount_res; // r0
+  bool check0; // r10
+  mount_ctx_t *mount_ctx_local3; // r3
+  int gen_mount_point_chunk21; // r1
+  int gen_mount_point_chunk22; // r2
+  int gen_mount_point_chunk23; // r3
+  mount_point_data_entry *mpd_entry_alloc0; // r0
+  mount_point_data_entry *mpd_entry_alloc1; // r6
+  int title_id_chunk1; // r2
+  int title_id_chunk2; // r3
+  int title_id_chunk3; // lr
+  char *gen_pfs_drive0; // r10
+  unsigned int mount_id0; // r3
+  int klicensee_chunk1; // r1
+  unsigned int pfs_mount_type; // r7
+  int klicensee_chunk2; // r2
+  int klicensee_chunk3; // r3
+  signed int initialized_allocated_item_index; // r3
+  int prev_perm3; // r9
+  mount_point_data_entry *mpd_entry1; // r1
+  int rnd_path_gen_res0; // r0
+  int rnd_path_gen_res1; // r0
+  mount_ctx_t *mount_ctx_local4; // r4
+  mount_point_data_entry *mpd_entry2; // r6
+  int prev_perm1; // r9
+  unsigned int mkdir_res0; // r0
+  unsigned int mkdir_res1; // r2
+  int mkdir_res2; // r3
+  mount_point_data_entry *mpd_entry3; // r6
+  mount_point_data_entry *glb_mpd_entry1; // r2
+  int klicensee_chunk1_1; // r1
+  int klicensee_chunk1_2; // r2
+  int klicensee_chunk1_3; // r3
+  int prev_perm2; // r6
+  char *klicensee1; // r1
+  __int64 auth_id3; // r1
+  unsigned int pfs_mount_res0; // r0
+  __int64 auth_id4; // r1
+  unsigned int pfs_mount_res1; // r3
+  int pfs_mount_res2; // r3
+  char *gen_pfs_drive1; // r0
+  unsigned int pfs_mount_res30; // r0
+  __int64 auth_id5; // r1
+  unsigned int pfs_mount_res31; // r3
+  signed int pfs_mount_res32; // r3
+  int pfs_mount_res40; // r0
+  __int64 auth_id6; // r1
+  bool pfs_mount_res41; // r3
+  char *gen_pfs_drive2; // r0
+  unsigned int pfs_mount_res50; // r0
+  unsigned int pfs_mount_res51; // r3
+  int klicensee_chunk10; // r1
+  int klicensee_chunk20; // r2
+  int klicensee_chunk30; // r3
+  mount_ctx_holder_t *mount_ctx_holder_local; // [sp+14h] [bp-124h]
+  mount_point_data_entry *mpd_entry_alloc2; // [sp+18h] [bp-120h]
+  mount_ctx_t *mctx_alloc1; // [sp+1Ch] [bp-11Ch]
+  SceUID pid_local; // [sp+20h] [bp-118h]
+  char *gen_mount_point_local2; // [sp+28h] [bp-110h]
+  char *physical_path_copy2; // [sp+2Ch] [bp-10Ch]
+  uint64_t auth_id; // [sp+30h] [bp-108h]
+  char *mountpoint; // [sp+38h] [bp-100h]
+  ctx_49d4dd9b alloc_ctx0; // [sp+44h] [bp-F4h]
+  char mount_drive_local[16]; // [sp+58h] [bp-E0h]
+  char klicensee0[4]; // [sp+68h] [bp-D0h]
+  int klicensee_chunk11; // [sp+6Ch] [bp-CCh]
+  int klicensee_chunk22; // [sp+70h] [bp-C8h]
+  int klicensee_chunk33; // [sp+74h] [bp-C4h]
+  process_auth_id_ctx auth_ctx; // [sp+78h] [bp-C0h]
+  int cookie; // [sp+10Ch] [bp-2Ch]
+
+  title_id_local = title_id;
+  mount_id_local = mount_id;
+  cookie = MEMORY[0x9EA004];
+  pid_local = pid;
+  mount_ctx_holder_local = mount_ctx_holder;
+  *(_DWORD *)mount_drive_local = 0;
+  *(_DWORD *)&mount_drive_local[4] = 0;
+  *(_DWORD *)&mount_drive_local[8] = 0;
+  *(_DWORD *)&mount_drive_local[12] = 0;
+  if ( !gen_mount_point )
+    goto LABEL_58;
+  if ( mount_drive )
+  {
+    mount_drive_chunk1 = *((_DWORD *)mount_drive + 1);
+    mount_drive_chunk2 = *((_DWORD *)mount_drive + 2);
+    mount_drive_chunk3 = *((_DWORD *)mount_drive + 3);
+    *(_DWORD *)mount_drive_local = *(_DWORD *)mount_drive;
+    *(_DWORD *)&mount_drive_local[4] = mount_drive_chunk1;
+    *(_DWORD *)&mount_drive_local[8] = mount_drive_chunk2;
+    *(_DWORD *)&mount_drive_local[12] = mount_drive_chunk3;
+    goto LABEL_4;
+  }
+  if ( (unsigned int)mount_id <= 0x192 )
+  {
+    if ( (unsigned int)mount_id >= 0x190 )
+    {
+LABEL_163:
+      result1 = proc_generate_random_path_23D4FBC(ad_string_2404C3C, mount_drive_local);
+      if ( result1 )
+        goto LABEL_41;
+      goto LABEL_164;
+    }
+    if ( (unsigned int)mount_id <= 0xCC )
+    {
+      if ( (unsigned int)mount_id < 0xCB )
+      {
+        if ( (unsigned int)mount_id > 0xC9 )
+        {
+          if ( SceAppMgr_SceSblACMgrForDriver__imp_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0) )
+          {
+            strcpy(mount_drive_local, "ms0:");
+            goto LABEL_4;
+          }
+          rnd_path_gen_res0 = proc_generate_random_path_23D4FBC(ms_string_2404C54, mount_drive_local);
+          if ( rnd_path_gen_res0 )
+          {
+            result2 = rnd_path_gen_res0;
+            goto LABEL_13;
+          }
+          goto LABEL_168;
+        }
+        if ( (unsigned int)mount_id < 0xC8 )
+        {
+          if ( (unsigned int)(mount_id - 100) > 0xC )
+            goto LABEL_58;
+          goto LABEL_163;
+        }
+      }
+    }
+    else
+    {
+      if ( (unsigned int)mount_id > 0xCF )
+      {
+        switch ( mount_id )
+        {
+          case 0x12F:
+            strcpy(mount_drive_local, "trophy_dat0:");
+            break;
+          case 0x130:
+            strcpy(mount_drive_local, "trophy_dbk0:");
+            break;
+          case 0x12E:
+            strcpy(mount_drive_local, "trophy_sys0:");
+            break;
+          default:
+            goto LABEL_58;
+        }
+        goto LABEL_4;
+      }
+      if ( (unsigned int)mount_id < 0xCE )
+      {
+        strcpy(mount_drive_local, "cache0:");
+        goto LABEL_4;
+      }
+    }
+    result1 = proc_generate_random_path_23D4FBC(td_string_2404C44, mount_drive_local);
+    if ( result1 )
+    {
+      result2 = result1;
+      goto LABEL_13;
+    }
+LABEL_164:
+    mount_drive_local[15] = result1;
+    mount_drive_local[14] = 0x3A;
+    goto LABEL_4;
+  }
+  if ( (unsigned int)mount_id > 0x3E9 )
+  {
+    if ( (unsigned int)mount_id <= 0x3EE )
+    {
+      if ( (unsigned int)mount_id > 0x3EC )
+      {
+        SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(mount_drive_local, 0x10u, aSavedata1u, 0);
+      }
+      else
+      {
+        if ( (unsigned int)mount_id >= 0x3EC )
+          goto LABEL_58;
+        SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(mount_drive_local, 0x10u, aAddcont1u, 0);
+      }
+      goto LABEL_4;
+    }
+    if ( (unsigned int)mount_id <= 0x3F0 )
+    {
+      rnd_path_gen_res1 = proc_generate_random_path_23D4FBC(sd_string_2404AAC, mount_drive_local);
+      if ( rnd_path_gen_res1 )
+      {
+        result2 = rnd_path_gen_res1;
+        goto LABEL_13;
+      }
+    }
+    else
+    {
+      if ( mount_id != 0x3F1 )
+        goto LABEL_58;
+      result1 = proc_generate_random_path_23D4FBC(ud_string_2404C40, mount_drive_local);
+      if ( result1 )
+        goto LABEL_41;
+    }
+LABEL_168:
+    mount_drive_local[15] = 0;
+    mount_drive_local[14] = 0x3A;
+    goto LABEL_4;
+  }
+  if ( (unsigned int)mount_id >= 0x3E8 )
+  {
+    SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(mount_drive_local, 0x10u, aApp1u, 0);
+    goto LABEL_4;
+  }
+  if ( mount_id == 0x1F8 )
+  {
+    strcpy(mount_drive_local, "sdimport0:");
+    goto LABEL_4;
+  }
+  if ( (unsigned int)mount_id <= 0x1F8 )
+  {
+    if ( (unsigned int)(mount_id - 0x1F4) > 1 )
+      goto LABEL_58;
+    goto LABEL_163;
+  }
+  if ( mount_id != 0x1F9 )
+  {
+    if ( mount_id == 0x258 )
+    {
+      result1 = proc_generate_random_path_23D4FBC(lm_string_2404C50, mount_drive_local);
+      if ( !result1 )
+      {
+        mount_drive_local[14] = 0x3A;
+        mount_drive_local[15] = 0;
+        goto LABEL_4;
+      }
+LABEL_41:
+      result2 = result1;
+      goto LABEL_13;
+    }
+LABEL_58:
+    result2 = 0x80800001;
+    goto LABEL_13;
+  }
+  strcpy(mount_drive_local, "sdimport_tmp0:");
+LABEL_4:
+  mount_ctx_local0 = mount_ctx_holder_local->mount;
+  if ( mount_ctx_local0 )
+  {
+    if ( mount_id_local >= 0x3E8 )
+    {
+      while ( 1 )
+      {
+        if ( mount_id_local == mount_ctx_local0->mnt_entry->mount_id )
+        {
+          gen_mount_point1 = mount_ctx_local0->mountDrive;
+          if ( !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(
+                  mount_ctx_local0->mountDrive,
+                  mount_drive_local,
+                  0x10u) )
+            break;
+        }
+        mount_ctx_local0 = mount_ctx_local0->next;
+        if ( !mount_ctx_local0 )
+          goto LABEL_18;
+      }
+    }
+    else
+    {
+      while ( mount_id_local != mount_ctx_local0->mnt_entry->mount_id )
+      {
+        mount_ctx_local0 = mount_ctx_local0->next;
+        if ( !mount_ctx_local0 )
+          goto LABEL_18;
+      }
+      gen_mount_point1 = mount_ctx_local0->mountDrive;
+    }
+    gen_mount_point_chunk11 = *((_DWORD *)gen_mount_point1 + 1);
+    gen_mount_point_chunk12 = *((_DWORD *)gen_mount_point1 + 2);
+    gen_mount_point_chunk13 = *((_DWORD *)gen_mount_point1 + 3);
+    *(_DWORD *)gen_mount_point = *(_DWORD *)gen_mount_point1;
+    *((_DWORD *)gen_mount_point + 1) = gen_mount_point_chunk11;
+    *((_DWORD *)gen_mount_point + 2) = gen_mount_point_chunk12;
+    *((_DWORD *)gen_mount_point + 3) = gen_mount_point_chunk13;
+    if ( mount_drive )
+    {
+      mount_ctx_local1 = mount_ctx_holder_local->mount;
+      if ( !mount_ctx_local1 )
+      {
+LABEL_12:
+        result2 = 0x80800002;
+        goto LABEL_13;
+      }
+      while ( 1 )
+      {
+        mpd_entry0 = mount_ctx_local1->mnt_entry;
+        if ( mount_ctx_local1->mnt_entry )
+        {
+          if ( mount_id_local == mpd_entry0->mount_id
+            && !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(
+                  mount_ctx_local1->mountDrive,
+                  mount_drive_local,
+                  0x10u) )
+          {
+            break;
+          }
+        }
+        mount_ctx_local1 = mount_ctx_local1->next;
+        if ( !mount_ctx_local1 )
+          goto LABEL_12;
+      }
+    }
+    else
+    {
+      mount_ctx_local2 = mount_ctx_holder_local->mount;
+      if ( !mount_ctx_local2 )
+        goto LABEL_12;
+      while ( 1 )
+      {
+        mpd_entry0 = mount_ctx_local2->mnt_entry;
+        if ( mount_ctx_local2->mnt_entry )
+        {
+          if ( mount_id_local == mpd_entry0->mount_id )
+            break;
+        }
+        mount_ctx_local2 = mount_ctx_local2->next;
+        if ( !mount_ctx_local2 )
+          goto LABEL_12;
+      }
+    }
+    if ( !mpd_entry0->gen_mount_point[0]
+      || (result1 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx),
+          result1 >= 0)
+      && ((HIDWORD(auth_id1) = auth_ctx.auth_id,
+           result1 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(mpd_entry0->gen_mount_point, auth_id1),
+           result1 == 0x80010011)
+       || result1 >= 0) )
+    {
+      result2 = 0x80800003;
+      goto LABEL_13;
+    }
+    goto LABEL_41;
+  }
+LABEL_18:
+  alloc_ctx0.unk4 = 0;
+  alloc_ctx0.unkC = 0;
+  alloc_ctx0.unk10 = 0;
+  alloc_ctx0.unk0 = 0x14;
+  alloc_ctx0.unk8 = 0x20;
+  mctx_alloc0 = (mount_ctx_t *)SceAppMgr_SceSysmemForDriver__imp_sceKernelAllocHeapMemory3ForKernel_49d4dd9b(
+                                 MEMORY[0x22A0008],
+                                 0x24u,
+                                 &alloc_ctx0);
+  mctx_alloc1 = mctx_alloc0;
+  if ( !mctx_alloc0 )
+  {
+    result2 = 0x80801006;
+    goto LABEL_13;
+  }
+  SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(mctx_alloc0, 0, 0x24u);
+  alloc_ctx0.unk4 = 0;
+  mount_drive_local_chunk11 = *(_DWORD *)&mount_drive_local[4];
+  mount_drive_local_chunk12 = *(_DWORD *)&mount_drive_local[8];
+  mount_drive_local_chunk13 = *(_DWORD *)&mount_drive_local[12];
+  gen_mount_point_local2 = mctx_alloc1->mountDrive;
+  alloc_ctx0.unkC = 0;
+  alloc_ctx0.unk10 = 0;
+  *(_DWORD *)mctx_alloc1->mountDrive = *(_DWORD *)mount_drive_local;
+  mount_mutex = MEMORY[0x22A0008];
+  alloc_ctx0.unk0 = 0x14;
+  *((_DWORD *)gen_mount_point_local2 + 1) = mount_drive_local_chunk11;
+  *((_DWORD *)gen_mount_point_local2 + 2) = mount_drive_local_chunk12;
+  *((_DWORD *)gen_mount_point_local2 + 3) = mount_drive_local_chunk13;
+  alloc_ctx0.unk8 = 0x20;
+  physical_path_copy = (char *)SceAppMgr_SceSysmemForDriver__imp_sceKernelAllocHeapMemory3ForKernel_49d4dd9b(
+                                 mount_mutex,
+                                 0x124u,
+                                 &alloc_ctx0);
+  physical_path_copy2 = physical_path_copy;
+  if ( !physical_path_copy )
+  {
+    result2 = 0x80801006;
+    goto LABEL_21;
+  }
+  SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(physical_path_copy, 0, 0x124u);
+  result2 = verify_copy_23D5A10(physical_path, physical_path_copy2);
+  if ( result2 > 0 )
+  {
+LABEL_21:
+    overlay_id = mctx_alloc1->overlay_id;
+    if ( overlay_id )
+    {
+      pid0 = pid_local;
+      if ( !pid_local )
+        pid0 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
+      prev_perm0 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
+      SceAppMgr_SceFios2KernelForDriver__imp_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(pid0, overlay_id);
+      SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm0);
+    }
+    if ( mctx_alloc1->mnt_entry )
+      w_unmount_23D5F44(pid_local, mctx_alloc1->mnt_entry, 1);
+    SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], mctx_alloc1);
+    if ( physical_path_copy2 )
+      SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], physical_path_copy2);
+    goto LABEL_13;
+  }
+  if ( (unsigned int)SceAppMgr_SceSysclibForDriver__imp_strnlen_cd4bd884(physical_path_copy2, 0x124) >= 0x124 )
+  {
+    result2 = 0x80800001;
+    goto LABEL_21;
+  }
+  result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx);
+  if ( result2 < 0 )
+  {
+LABEL_111:
+    check0 = result2 != 0x80800003;
+    goto LABEL_112;
+  }
+  auth_id = auth_ctx.auth_id;
+  if ( MEMORY[0x22D470C] )
+  {
+    glb_mpd_entry0 = (mount_point_data_entry *)MEMORY[0x22D470C];
+    while ( mount_id_local != glb_mpd_entry0->mount_id
+         || SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(glb_mpd_entry0->path, physical_path_copy2, 0x124u) )
+    {
+      glb_mpd_entry0 = glb_mpd_entry0->next;
+      if ( !glb_mpd_entry0 )
+        goto LABEL_124;
+    }
+    if ( glb_mpd_entry0->auth_ids[0] )
+    {
+      if ( glb_mpd_entry0->auth_ids[1] )
+      {
+        if ( glb_mpd_entry0->auth_ids[2] )
+        {
+          if ( glb_mpd_entry0->auth_ids[3] )
+          {
+            if ( glb_mpd_entry0->auth_ids[4] )
+            {
+              if ( glb_mpd_entry0->auth_ids[5] )
+              {
+                if ( glb_mpd_entry0->auth_ids[6] )
+                {
+                  if ( glb_mpd_entry0->auth_ids[7] )
+                  {
+                    if ( glb_mpd_entry0->auth_ids[8] )
+                    {
+                      if ( glb_mpd_entry0->auth_ids[9] )
+                      {
+                        if ( glb_mpd_entry0->auth_ids[10] )
+                        {
+                          if ( glb_mpd_entry0->auth_ids[11] )
+                          {
+                            if ( glb_mpd_entry0->auth_ids[12] )
+                            {
+                              if ( glb_mpd_entry0->auth_ids[13] )
+                              {
+                                if ( glb_mpd_entry0->auth_ids[14] )
+                                {
+                                  if ( glb_mpd_entry0->auth_ids[15] )
+                                  {
+                                    result2 = 0x8080001E;
+                                    goto LABEL_21;
+                                  }
+                                  initialized_global_item_index = 15;
+                                }
+                                else
+                                {
+                                  initialized_global_item_index = 14;
+                                }
+                              }
+                              else
+                              {
+                                initialized_global_item_index = 13;
+                              }
+                            }
+                            else
+                            {
+                              initialized_global_item_index = 12;
+                            }
+                          }
+                          else
+                          {
+                            initialized_global_item_index = 11;
+                          }
+                        }
+                        else
+                        {
+                          initialized_global_item_index = 10;
+                        }
+                      }
+                      else
+                      {
+                        initialized_global_item_index = 9;
+                      }
+                    }
+                    else
+                    {
+                      initialized_global_item_index = 8;
+                    }
+                  }
+                  else
+                  {
+                    initialized_global_item_index = 7;
+                  }
+                }
+                else
+                {
+                  initialized_global_item_index = 6;
+                }
+              }
+              else
+              {
+                initialized_global_item_index = 5;
+              }
+            }
+            else
+            {
+              initialized_global_item_index = 4;
+            }
+          }
+          else
+          {
+            initialized_global_item_index = 3;
+          }
+        }
+        else
+        {
+          initialized_global_item_index = 2;
+        }
+      }
+      else
+      {
+        initialized_global_item_index = 1;
+      }
+    }
+    else
+    {
+      initialized_global_item_index = 0;
+    }
+    glb_mpd_entry0->auth_ids[initialized_global_item_index] = auth_id;
+    if ( !glb_mpd_entry0->gen_mount_point[0]
+      || (result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx),
+          result2 >= 0)
+      && ((HIDWORD(auth_id2) = auth_ctx.auth_id,
+           pfs_mount_res = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(glb_mpd_entry0->gen_mount_point, auth_id2),
+           result2 = pfs_mount_res,
+           pfs_mount_res == 0x80010011)
+       || pfs_mount_res >= 0) )
+    {
+      mctx_alloc1->mnt_entry = glb_mpd_entry0;
+      goto LABEL_113;
+    }
+    if ( auth_id == glb_mpd_entry0->auth_ids[0] )
+    {
+      glb_mpd_entry0->auth_ids[0] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[1] )
+    {
+      glb_mpd_entry0->auth_ids[1] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[2] )
+    {
+      glb_mpd_entry0->auth_ids[2] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[3] )
+    {
+      glb_mpd_entry0->auth_ids[3] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[4] )
+    {
+      glb_mpd_entry0->auth_ids[4] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[5] )
+    {
+      glb_mpd_entry0->auth_ids[5] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[6] )
+    {
+      glb_mpd_entry0->auth_ids[6] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[7] )
+    {
+      glb_mpd_entry0->auth_ids[7] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[8] )
+    {
+      glb_mpd_entry0->auth_ids[8] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[9] )
+    {
+      glb_mpd_entry0->auth_ids[9] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[10] )
+    {
+      glb_mpd_entry0->auth_ids[10] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[11] )
+    {
+      glb_mpd_entry0->auth_ids[11] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[12] )
+    {
+      glb_mpd_entry0->auth_ids[12] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[13] )
+    {
+      glb_mpd_entry0->auth_ids[13] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[14] )
+    {
+      glb_mpd_entry0->auth_ids[14] = 0LL;
+    }
+    else if ( auth_id == glb_mpd_entry0->auth_ids[15] )
+    {
+      glb_mpd_entry0->auth_ids[15] = 0LL;
+    }
+    goto LABEL_111;
+  }
+LABEL_124:
+  alloc_ctx0.unk4 = 0;
+  alloc_ctx0.unkC = 0;
+  alloc_ctx0.unk10 = 0;
+  alloc_ctx0.unk0 = 20;
+  alloc_ctx0.unk8 = 32;
+  mpd_entry_alloc0 = (mount_point_data_entry *)SceAppMgr_SceSysmemForDriver__imp_sceKernelAllocHeapMemory3ForKernel_49d4dd9b(
+                                                 MEMORY[0x22A0008],
+                                                 0x1D0u,
+                                                 &alloc_ctx0);
+  mpd_entry_alloc2 = mpd_entry_alloc0;
+  if ( !mpd_entry_alloc0 )
+  {
+    result2 = 0x80801006;
+    check0 = 1;
+    goto LABEL_158;
+  }
+  mpd_entry_alloc1 = mpd_entry_alloc0;
+  SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(mpd_entry_alloc0, 0, 0x1D0u);
+  mpd_entry_alloc1->mount_id = mount_id_local;
+  mountpoint = mpd_entry_alloc1->path;
+  SceAppMgr_SceSysclibForDriver__imp_strncpy_6d286146(mpd_entry_alloc1->path, physical_path_copy2, 0x123u);
+  title_id_chunk1 = *((_DWORD *)title_id_local + 1);
+  title_id_chunk2 = *((_DWORD *)title_id_local + 2);
+  title_id_chunk3 = *((_DWORD *)title_id_local + 3);
+  *(_DWORD *)mpd_entry_alloc2->title_id = *(_DWORD *)title_id_local;
+  *(_DWORD *)&mpd_entry_alloc2->title_id[4] = title_id_chunk1;
+  *(_DWORD *)&mpd_entry_alloc2->title_id[8] = title_id_chunk2;
+  *(_DWORD *)&mpd_entry_alloc2->title_id[12] = title_id_chunk3;
+  if ( mount_id_local == 0x258 )
+  {
+    mpd_entry_alloc2->gen_mount_point[0] = 0;
+    prev_perm1 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
+    result2 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMountForDriver_d070bc48(0x10000);
+    if ( result2 < 0
+      || ((mkdir_res0 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMkdirForDriver_7f710b25(
+                          aLma0Mpe_root,
+                          0x186),               // lma0:MPE_ROOT
+           mkdir_res1 = mkdir_res0 >> 31,
+           mkdir_res0 != 0x80010011) ? (mkdir_res2 = mkdir_res1 & 1) : (mkdir_res2 = 0),
+          result2 = mkdir_res0,
+          mkdir_res2) )
+    {
+      SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm1);
+      check0 = result2 != 0x80800003;
+      goto LABEL_157;
+    }
+    SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm1);
+    goto LABEL_136;
+  }
+  gen_pfs_drive0 = mpd_entry_alloc2->gen_mount_point;
+  result2 = proc_generate_random_path_23D4FBC(PD_str_2404BBC, mpd_entry_alloc2->gen_mount_point);// PD string
+  if ( result2 < 0 )
+    goto LABEL_213;
+  if ( !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(mountpoint, aHost0, 6u) )
+    mpd_entry_alloc2->gen_mount_point[0] = 0;
+  *(_DWORD *)klicensee0 = 0;
+  klicensee_chunk33 = 0;
+  mount_id0 = mpd_entry_alloc2->mount_id;
+  klicensee_chunk11 = 0;
+  klicensee_chunk22 = 0;
+  if ( mount_id0 > 0x192 )
+  {
+    if ( mount_id0 >= 0x3EC )
+    {
+      if ( mount_id0 == 0x3EE )
+        goto LABEL_319;
+      if ( mount_id0 <= 0x3EE )
+      {
+        if ( mount_id0 == 0x3EC )
+        {
+          klicensee_chunk1 = *((_DWORD *)klicensee + 1);
+          pfs_mount_type = 0xD;
+          klicensee_chunk2 = *((_DWORD *)klicensee + 2);
+          klicensee_chunk3 = *((_DWORD *)klicensee + 3);
+          *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
+          klicensee_chunk11 = klicensee_chunk1;
+          klicensee_chunk22 = klicensee_chunk2;
+          klicensee_chunk33 = klicensee_chunk3;
+LABEL_135:
+          if ( !mpd_entry_alloc2->gen_mount_point[0] )
+            goto LABEL_136;
+          prev_perm2 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
+          result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx);
+          if ( result2 < 0 )
+            goto LABEL_213;
+          if ( klicensee0[0]
+            || klicensee0[1]
+            || klicensee0[2]
+            || klicensee0[3]
+            || (_BYTE)klicensee_chunk11
+            || __PAIR__(BYTE1(klicensee_chunk11), 0) != BYTE2(klicensee_chunk11)
+            || __PAIR__(HIBYTE(klicensee_chunk11), 0) != (unsigned __int8)klicensee_chunk22
+            || __PAIR__(BYTE1(klicensee_chunk22), 0) != BYTE2(klicensee_chunk22)
+            || __PAIR__(HIBYTE(klicensee_chunk22), 0) != (unsigned __int8)klicensee_chunk33
+            || __PAIR__(BYTE1(klicensee_chunk33), 0) != BYTE2(klicensee_chunk33) )
+          {
+            klicensee1 = klicensee0;
+          }
+          else
+          {
+            klicensee1 = HIBYTE(klicensee_chunk33) ? klicensee0 : 0;
+          }
+          result2 = SceAppMgr_ScePfsMgrForKernel__imp_mount_a772209c(
+                      mountpoint,
+                      gen_pfs_drive0,
+                      auth_ctx.auth_id,
+                      klicensee1,
+                      pfs_mount_type);
+          SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm2);
+          if ( result2 )
+            goto LABEL_213;
+          HIDWORD(auth_id3) = 1;
+          pfs_mount_res0 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive0, auth_id3);
+          pfs_mount_res1 = pfs_mount_res0 >> 31;
+          result2 = pfs_mount_res0;
+          if ( pfs_mount_res0 == 0x80010011 )
+            pfs_mount_res2 = 0;
+          else
+            pfs_mount_res2 = pfs_mount_res1 & 1;
+          gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
+          if ( pfs_mount_res2 )
+            goto LABEL_310;
+          HIDWORD(auth_id4) = 0x7001;
+          pfs_mount_res30 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive0, auth_id4);
+          pfs_mount_res31 = pfs_mount_res30 >> 31;
+          result2 = pfs_mount_res30;
+          pfs_mount_res32 = pfs_mount_res30 == 0x80010011 ? 0 : pfs_mount_res31 & 1;
+          gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
+          if ( pfs_mount_res32 )
+            goto LABEL_310;
+          HIDWORD(auth_id5) = 0x2D;
+          pfs_mount_res40 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive0, auth_id5);
+          result2 = pfs_mount_res40;
+          if ( pfs_mount_res40 == 0x80010011 )
+            pfs_mount_res41 = 0;
+          else
+            pfs_mount_res41 = pfs_mount_res40 < 0;
+          if ( pfs_mount_res41 )
+          {
+LABEL_309:
+            gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
+LABEL_310:
+            SceAppMgr_ScePfsMgrForKernel__imp_unmount_680bc384(gen_pfs_drive1);
+            goto LABEL_213;
+          }
+          if ( pfs_mount_type == 4 )
+          {
+            gen_pfs_drive2 = mpd_entry_alloc2->gen_mount_point;
+            HIDWORD(auth_id6) = 0x10;
+          }
+          else
+          {
+            if ( pfs_mount_type != 5 )
+              goto LABEL_136;
+            gen_pfs_drive2 = mpd_entry_alloc2->gen_mount_point;
+            HIDWORD(auth_id6) = 0x39;
+          }
+          pfs_mount_res50 = SceAppMgr_ScePfsMgrForKernel__imp_mount_d8d0fee5(gen_pfs_drive2, auth_id6);
+          result2 = pfs_mount_res50;
+          if ( pfs_mount_res50 == 0x80010011 )
+            pfs_mount_res51 = 0;
+          else
+            pfs_mount_res51 = pfs_mount_res50 >> 31;
+          if ( pfs_mount_res51 )
+            goto LABEL_309;
+LABEL_136:
+          if ( mpd_entry_alloc2->auth_ids[0] )
+          {
+            if ( mpd_entry_alloc2->auth_ids[1] )
+            {
+              if ( mpd_entry_alloc2->auth_ids[2] )
+              {
+                if ( mpd_entry_alloc2->auth_ids[3] )
+                {
+                  if ( mpd_entry_alloc2->auth_ids[4] )
+                  {
+                    if ( mpd_entry_alloc2->auth_ids[5] )
+                    {
+                      if ( mpd_entry_alloc2->auth_ids[6] )
+                      {
+                        if ( mpd_entry_alloc2->auth_ids[7] )
+                        {
+                          if ( mpd_entry_alloc2->auth_ids[8] )
+                          {
+                            if ( mpd_entry_alloc2->auth_ids[9] )
+                            {
+                              if ( mpd_entry_alloc2->auth_ids[10] )
+                              {
+                                if ( mpd_entry_alloc2->auth_ids[11] )
+                                {
+                                  if ( mpd_entry_alloc2->auth_ids[12] )
+                                  {
+                                    if ( mpd_entry_alloc2->auth_ids[13] )
+                                    {
+                                      if ( mpd_entry_alloc2->auth_ids[14] )
+                                      {
+                                        if ( mpd_entry_alloc2->auth_ids[15] )
+                                        {
+                                          result2 = 0x8080001E;
+                                          check0 = 1;
+LABEL_154:
+                                          prev_perm3 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(128);
+                                          if ( mount_id_local == 0x258 )
+                                            SceAppMgr_SceIofilemgrForDriver__imp_sceIoUmountForDriver_20574100(
+                                              0x10000,
+                                              0,
+                                              0,
+                                              0);
+                                          else
+                                            SceAppMgr_ScePfsMgrForKernel__imp_unmount_680bc384(mpd_entry_alloc2->gen_mount_point);
+                                          SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm3);
+                                          goto LABEL_157;
+                                        }
+                                        initialized_allocated_item_index = 15;
+                                      }
+                                      else
+                                      {
+                                        initialized_allocated_item_index = 14;
+                                      }
+                                    }
+                                    else
+                                    {
+                                      initialized_allocated_item_index = 13;
+                                    }
+                                  }
+                                  else
+                                  {
+                                    initialized_allocated_item_index = 12;
+                                  }
+                                }
+                                else
+                                {
+                                  initialized_allocated_item_index = 11;
+                                }
+                              }
+                              else
+                              {
+                                initialized_allocated_item_index = 10;
+                              }
+                            }
+                            else
+                            {
+                              initialized_allocated_item_index = 9;
+                            }
+                          }
+                          else
+                          {
+                            initialized_allocated_item_index = 8;
+                          }
+                        }
+                        else
+                        {
+                          initialized_allocated_item_index = 7;
+                        }
+                      }
+                      else
+                      {
+                        initialized_allocated_item_index = 6;
+                      }
+                    }
+                    else
+                    {
+                      initialized_allocated_item_index = 5;
+                    }
+                  }
+                  else
+                  {
+                    initialized_allocated_item_index = 4;
+                  }
+                }
+                else
+                {
+                  initialized_allocated_item_index = 3;
+                }
+              }
+              else
+              {
+                initialized_allocated_item_index = 2;
+              }
+            }
+            else
+            {
+              initialized_allocated_item_index = 1;
+            }
+          }
+          else
+          {
+            initialized_allocated_item_index = 0;
+          }
+          glb_mpd_entry1 = (mount_point_data_entry *)MEMORY[0x22D470C];
+          mpd_entry_alloc2->auth_ids[initialized_allocated_item_index] = auth_id;
+          if ( glb_mpd_entry1 )
+          {
+            if ( mpd_entry_alloc2 == glb_mpd_entry1 )
+            {
+LABEL_252:
+              result2 = 0x80800003;
+              check0 = 0;
+              goto LABEL_154;
+            }
+            while ( glb_mpd_entry1->next )
+            {
+              if ( mpd_entry_alloc2 == glb_mpd_entry1 )
+                goto LABEL_252;
+              glb_mpd_entry1 = glb_mpd_entry1->next;
+            }
+            glb_mpd_entry1->next = mpd_entry_alloc2;
+            *(_QWORD *)&mpd_entry_alloc2->prev = (unsigned int)glb_mpd_entry1;
+          }
+          else
+          {
+            MEMORY[0x22D470C] = mpd_entry_alloc2;
+            mpd_entry_alloc2->prev = 0;
+            mpd_entry_alloc2->next = 0;
+          }
+          check0 = 0;
+          result2 = 0;
+          goto LABEL_158;
+        }
+        if ( mount_id0 == 0x3ED )
+          goto LABEL_313;
+LABEL_262:
+        result2 = 0x80800001;
+        check0 = 1;
+        goto LABEL_157;
+      }
+      if ( mount_id0 > 0x3F0 )
+      {
+        if ( mount_id0 != 0x3F1 )
+          goto LABEL_262;
+LABEL_319:
+        pfs_mount_type = 0x15;
+        goto LABEL_135;
+      }
+LABEL_267:
+      pfs_mount_type = 0x14;
+      goto LABEL_135;
+    }
+    if ( mount_id0 >= 0x3EA )
+    {
+      if ( SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(mountpoint, aGro0_0, 5u) )// gro0:
+        pfs_mount_type = 4;
+      else
+        pfs_mount_type = 0xC;
+      result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+      goto LABEL_212;
+    }
+    if ( mount_id0 >= 0x1FA )
+    {
+      if ( mount_id0 < 0x3E8 )
+        goto LABEL_262;
+      if ( clearsign_exists_23D9A4C(mountpoint) )
+      {
+        pfs_mount_type = 2;
+        klicensee_chunk1_1 = *((_DWORD *)klicensee + 1);
+        klicensee_chunk1_2 = *((_DWORD *)klicensee + 2);
+        klicensee_chunk1_3 = *((_DWORD *)klicensee + 3);
+        *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
+        klicensee_chunk11 = klicensee_chunk1_1;
+        klicensee_chunk22 = klicensee_chunk1_2;
+        klicensee_chunk33 = klicensee_chunk1_3;
+        goto LABEL_135;
+      }
+      goto LABEL_267;
+    }
+    if ( mount_id0 < 0x1F8 )
+    {
+      if ( mount_id0 - 0x1F4 <= 1 )
+      {
+        pfs_mount_type = 4;
+        result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+        goto LABEL_212;
+      }
+      goto LABEL_262;
+    }
+LABEL_264:
+    pfs_mount_type = 6;
+    result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+    goto LABEL_212;
+  }
+  if ( mount_id0 >= 0x190 )
+  {
+LABEL_324:
+    pfs_mount_type = 0x16;
+    goto LABEL_135;
+  }
+  if ( mount_id0 != 0x6E )
+  {
+    if ( mount_id0 > 0x6E )
+    {
+      if ( mount_id0 <= 0xCF )
+      {
+        if ( mount_id0 < 0xC8 && mount_id0 > 0x70 )
+          goto LABEL_262;
+        goto LABEL_319;
+      }
+      if ( mount_id0 - 0x12E > 2 )
+        goto LABEL_262;
+      goto LABEL_264;
+    }
+    if ( mount_id0 <= 0x6C )
+    {
+      if ( mount_id0 >= 0x6B )
+        goto LABEL_319;
+      if ( mount_id0 < 0x64 )
+        goto LABEL_262;
+    }
+    goto LABEL_324;
+  }
+LABEL_313:
+  if ( klicensee )
+  {
+    klicensee_chunk10 = *((_DWORD *)klicensee + 1);
+    klicensee_chunk20 = *((_DWORD *)klicensee + 2);
+    pfs_mount_type = 5;
+    klicensee_chunk30 = *((_DWORD *)klicensee + 3);
+    *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
+    klicensee_chunk11 = klicensee_chunk10;
+    klicensee_chunk22 = klicensee_chunk20;
+    klicensee_chunk33 = klicensee_chunk30;
+    goto LABEL_135;
+  }
+  pfs_mount_type = 5;
+  result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+LABEL_212:
+  if ( !result2 )
+    goto LABEL_135;
+LABEL_213:
+  check0 = result2 != 0x80800003;
+LABEL_157:
+  mpd_entry1 = mpd_entry_alloc2;
+  mpd_entry_alloc2 = 0;
+  SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], mpd_entry1);
+LABEL_158:
+  mctx_alloc1->mnt_entry = mpd_entry_alloc2;
+LABEL_112:
+  if ( check0 )
+    goto LABEL_21;
+LABEL_113:
+  SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], physical_path_copy2);
+  if ( mount_id_local != 0x3E9 )
+  {
+    if ( mount_id_local != 0x3EB )
+      goto LABEL_115;
+    mount_ctx_local4 = mount_ctx_holder_local->mount;
+    if ( mount_ctx_local4 )
+    {
+      while ( 1 )
+      {
+        mpd_entry2 = mount_ctx_local4->mnt_entry;
+        if ( mount_ctx_local4->mnt_entry )
+        {
+          if ( mpd_entry2->mount_id == 0x3EA
+            && !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(
+                  mount_ctx_local4->mountDrive,
+                  mount_drive_local,
+                  0x10u) )
+          {
+            break;
+          }
+        }
+        mount_ctx_local4 = mount_ctx_local4->next;
+        if ( !mount_ctx_local4 )
+          goto LABEL_225;
+      }
+      mctx_alloc1->unk18 = (int)mpd_entry2;
+      goto LABEL_115;
+    }
+LABEL_225:
+    result2 = 0x80800002;
+    physical_path_copy2 = (char *)mount_ctx_local4;
+    goto LABEL_21;
+  }
+  mount_ctx_local4 = mount_ctx_holder_local->mount;
+  if ( !mount_ctx_local4 )
+    goto LABEL_225;
+  while ( 1 )
+  {
+    mpd_entry3 = mount_ctx_local4->mnt_entry;
+    if ( mount_ctx_local4->mnt_entry )
+    {
+      if ( mpd_entry3->mount_id == 0x3E8
+        && !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(mount_ctx_local4->mountDrive, mount_drive_local, 0x10u) )
+      {
+        break;
+      }
+    }
+    mount_ctx_local4 = mount_ctx_local4->next;
+    if ( !mount_ctx_local4 )
+      goto LABEL_225;
+  }
+  mctx_alloc1->unk18 = (int)mpd_entry3;
+LABEL_115:
+  result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid_local, mctx_alloc1);
+  if ( result2 )
+  {
+    physical_path_copy2 = 0;
+    goto LABEL_21;
+  }
+  mount_ctx_local3 = mount_ctx_holder_local->mount;
+  if ( mount_ctx_local3 )
+  {
+    if ( mctx_alloc1 == mount_ctx_local3 )
+    {
+      result2 = 0x80800003;
+      physical_path_copy2 = 0;
+    }
+    else
+    {
+      while ( 1 )
+      {
+        if ( !mount_ctx_local3->next )
+        {
+          mount_ctx_local3->next = mctx_alloc1;
+          mctx_alloc1->unk1C = (int)mount_ctx_local3;
+          mctx_alloc1->next = 0;
+          goto LABEL_123;
+        }
+        if ( mctx_alloc1 == mount_ctx_local3 )
+          break;
+        mount_ctx_local3 = mount_ctx_local3->next;
+      }
+      result2 = 0x80800003;
+      physical_path_copy2 = 0;
+    }
+    goto LABEL_21;
+  }
+  mount_ctx_holder_local->mount = mctx_alloc1;
+  mctx_alloc1->unk1C = 0;
+  mctx_alloc1->next = 0;
+LABEL_123:
+  result2 = 0;
+  gen_mount_point_chunk21 = *(_DWORD *)&mctx_alloc1->mountDrive[4];
+  gen_mount_point_chunk22 = *(_DWORD *)&mctx_alloc1->mountDrive[8];
+  gen_mount_point_chunk23 = *(_DWORD *)&mctx_alloc1->mountDrive[12];
+  *(_DWORD *)gen_mount_point = *(_DWORD *)gen_mount_point_local2;
+  *((_DWORD *)gen_mount_point + 1) = gen_mount_point_chunk21;
+  *((_DWORD *)gen_mount_point + 2) = gen_mount_point_chunk22;
+  *((_DWORD *)gen_mount_point + 3) = gen_mount_point_chunk23;
+LABEL_13:
+  result = result2;
+  if ( cookie != MEMORY[0x9EA004] )
+    SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result2);
+  return result;
 }
 
 //----------------
