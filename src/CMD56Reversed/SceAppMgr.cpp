@@ -734,13 +734,13 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
   char *physical_path_copy2; // [sp+2Ch] [bp-10Ch]
   uint64_t auth_id; // [sp+30h] [bp-108h]
   char *mountpoint; // [sp+38h] [bp-100h]
-  ctx_49d4dd9b alloc_ctx0; // [sp+44h] [bp-F4h]
+  ctx_49D4DD9B alloc_ctx0; // [sp+44h] [bp-F4h]
   char mount_drive_local[16]; // [sp+58h] [bp-E0h]
   char klicensee0[4]; // [sp+68h] [bp-D0h]
   int klicensee_chunk11; // [sp+6Ch] [bp-CCh]
   int klicensee_chunk22; // [sp+70h] [bp-C8h]
   int klicensee_chunk33; // [sp+74h] [bp-C4h]
-  process_auth_id_ctx auth_ctx; // [sp+78h] [bp-C0h]
+  SceSelfAuthInfo auth_ctx; // [sp+78h] [bp-C0h]
   int cookie; // [sp+10Ch] [bp-2Ch]
 
   title_id_local = title_id;
@@ -781,7 +781,7 @@ LABEL_163:
       {
         if ( (unsigned int)mount_id > 0xC9 )
         {
-          if ( SceAppMgr_SceSblACMgrForDriver__imp_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0) )
+          if ( SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0) )
           {
             strcpy(mount_drive_local, "ms0:");
             goto LABEL_4;
@@ -845,13 +845,13 @@ LABEL_164:
     {
       if ( (unsigned int)mount_id > 0x3EC )
       {
-        SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(mount_drive_local, 0x10u, aSavedata1u, 0);
+        _snprintf(mount_drive_local, 0x10u, aSavedata1u, 0);
       }
       else
       {
         if ( (unsigned int)mount_id >= 0x3EC )
           goto LABEL_58;
-        SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(mount_drive_local, 0x10u, aAddcont1u, 0);
+        _snprintf(mount_drive_local, 0x10u, aAddcont1u, 0);
       }
       goto LABEL_4;
     }
@@ -879,7 +879,7 @@ LABEL_168:
   }
   if ( (unsigned int)mount_id >= 0x3E8 )
   {
-    SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(mount_drive_local, 0x10u, aApp1u, 0);
+    _snprintf(mount_drive_local, 0x10u, aApp1u, 0);
     goto LABEL_4;
   }
   if ( mount_id == 0x1F8 )
@@ -924,7 +924,7 @@ LABEL_4:
         if ( mount_id_local == mount_ctx_local0->mnt_entry->mount_id )
         {
           gen_mount_point1 = mount_ctx_local0->mountDrive;
-          if ( !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(
+          if ( !strncmp(
                   mount_ctx_local0->mountDrive,
                   mount_drive_local,
                   0x10u) )
@@ -967,7 +967,7 @@ LABEL_12:
         if ( mount_ctx_local1->mnt_entry )
         {
           if ( mount_id_local == mpd_entry0->mount_id
-            && !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(
+            && !strncmp(
                   mount_ctx_local1->mountDrive,
                   mount_drive_local,
                   0x10u) )
@@ -999,10 +999,10 @@ LABEL_12:
       }
     }
     if ( !mpd_entry0->gen_mount_point[0]
-      || (result1 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx),
+      || (result1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx),
           result1 >= 0)
       && ((HIDWORD(auth_id1) = auth_ctx.auth_id,
-           result1 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(
+           result1 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(
                        mpd_entry0->gen_mount_point,
                        auth_id1),
            result1 == 0x80010011)
@@ -1019,7 +1019,7 @@ LABEL_18:
   alloc_ctx0.unk10 = 0;
   alloc_ctx0.unk0 = 0x14;
   alloc_ctx0.unk8 = 0x20;
-  mctx_alloc0 = (mount_ctx_t *)SceAppMgr_SceSysmemForDriver__imp_sceKernelAllocHeapMemory3ForKernel_49d4dd9b(
+  mctx_alloc0 = (mount_ctx_t *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(
                                  MEMORY[0x22A0008],
                                  0x24u,
                                  &alloc_ctx0);
@@ -1029,7 +1029,7 @@ LABEL_18:
     result2 = 0x80801006;
     goto LABEL_13;
   }
-  SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(mctx_alloc0, 0, 0x24u);
+  memset(mctx_alloc0, 0, 0x24u);
   alloc_ctx0.unk4 = 0;
   mount_drive_local_chunk11 = *(_DWORD *)&mount_drive_local[4];
   mount_drive_local_chunk12 = *(_DWORD *)&mount_drive_local[8];
@@ -1044,7 +1044,7 @@ LABEL_18:
   *((_DWORD *)gen_mount_point_local2 + 2) = mount_drive_local_chunk12;
   *((_DWORD *)gen_mount_point_local2 + 3) = mount_drive_local_chunk13;
   alloc_ctx0.unk8 = 0x20;
-  physical_path_copy = (char *)SceAppMgr_SceSysmemForDriver__imp_sceKernelAllocHeapMemory3ForKernel_49d4dd9b(
+  physical_path_copy = (char *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(
                                  mount_mutex,
                                  0x124u,
                                  &alloc_ctx0);
@@ -1054,7 +1054,7 @@ LABEL_18:
     result2 = 0x80801006;
     goto LABEL_21;
   }
-  SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(physical_path_copy, 0, 0x124u);
+  memset(physical_path_copy, 0, 0x124u);
   result2 = verify_copy_23D5A10(physical_path, physical_path_copy2);
   if ( result2 > 0 )
   {
@@ -1064,24 +1064,24 @@ LABEL_21:
     {
       pid0 = pid_local;
       if ( !pid_local )
-        pid0 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
-      prev_perm0 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
-      SceAppMgr_SceFios2KernelForDriver__imp_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(pid0, overlay_id);
-      SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm0);
+        pid0 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
+      prev_perm0 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
+      SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(pid0, overlay_id);
+      SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm0);
     }
     if ( mctx_alloc1->mnt_entry )
       w_unmount_23D5F44(pid_local, mctx_alloc1->mnt_entry, 1);
-    SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], mctx_alloc1);
+    SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], mctx_alloc1);
     if ( physical_path_copy2 )
-      SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], physical_path_copy2);
+      SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], physical_path_copy2);
     goto LABEL_13;
   }
-  if ( (unsigned int)SceAppMgr_SceSysclibForDriver__imp_strnlen_cd4bd884(physical_path_copy2, 0x124) >= 0x124 )
+  if ( (unsigned int)strnlen(physical_path_copy2, 0x124) >= 0x124 )
   {
     result2 = 0x80800001;
     goto LABEL_21;
   }
-  result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx);
+  result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx);
   if ( result2 < 0 )
   {
 LABEL_111:
@@ -1093,7 +1093,7 @@ LABEL_111:
   {
     glb_mpd_entry0 = (mount_point_data_entry *)MEMORY[0x22D470C];
     while ( mount_id_local != glb_mpd_entry0->mount_id
-         || SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(glb_mpd_entry0->path, physical_path_copy2, 0x124u) )
+         || strncmp(glb_mpd_entry0->path, physical_path_copy2, 0x124u) )
     {
       glb_mpd_entry0 = glb_mpd_entry0->next;
       if ( !glb_mpd_entry0 )
@@ -1212,10 +1212,10 @@ LABEL_111:
     }
     glb_mpd_entry0->auth_ids[initialized_global_item_index] = auth_id;
     if ( !glb_mpd_entry0->gen_mount_point[0]
-      || (result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx),
+      || (result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx),
           result2 >= 0)
       && ((HIDWORD(auth_id2) = auth_ctx.auth_id,
-           pfs_mount_res = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(
+           pfs_mount_res = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(
                              glb_mpd_entry0->gen_mount_point,
                              auth_id2),
            result2 = pfs_mount_res,
@@ -1297,7 +1297,7 @@ LABEL_124:
   alloc_ctx0.unk10 = 0;
   alloc_ctx0.unk0 = 20;
   alloc_ctx0.unk8 = 32;
-  mpd_entry_alloc0 = (mount_point_data_entry *)SceAppMgr_SceSysmemForDriver__imp_sceKernelAllocHeapMemory3ForKernel_49d4dd9b(
+  mpd_entry_alloc0 = (mount_point_data_entry *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(
                                                  MEMORY[0x22A0008],
                                                  0x1D0u,
                                                  &alloc_ctx0);
@@ -1309,10 +1309,10 @@ LABEL_124:
     goto LABEL_158;
   }
   mpd_entry_alloc1 = mpd_entry_alloc0;
-  SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(mpd_entry_alloc0, 0, 0x1D0u);
+  memset(mpd_entry_alloc0, 0, 0x1D0u);
   mpd_entry_alloc1->mount_id = mount_id_local;
   mountpoint = mpd_entry_alloc1->path;
-  SceAppMgr_SceSysclibForDriver__imp_strncpy_6d286146(mpd_entry_alloc1->path, physical_path_copy2, 0x123u);
+  strncpy(mpd_entry_alloc1->path, physical_path_copy2, 0x123u);
   title_id_chunk1 = *((_DWORD *)title_id_local + 1);
   title_id_chunk2 = *((_DWORD *)title_id_local + 2);
   title_id_chunk3 = *((_DWORD *)title_id_local + 3);
@@ -1323,8 +1323,8 @@ LABEL_124:
   if ( mount_id_local == 0x258 )
   {
     mpd_entry_alloc2->gen_mount_point[0] = 0;
-    prev_perm1 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
-    result2 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMountForDriver_d070bc48(
+    prev_perm1 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
+    result2 = SceIofilemgrForDriver_sceIoMountForDriver_d070bc48(
                 0x10000,
                 physical_path_copy2,
                 0,
@@ -1332,7 +1332,7 @@ LABEL_124:
                 0,
                 0);
     if ( result2 < 0
-      || ((mkdir_res0 = SceAppMgr_SceIofilemgrForDriver__imp_sceIoMkdirForDriver_7f710b25(
+      || ((mkdir_res0 = SceIofilemgrForDriver_sceIoMkdirForDriver_7f710b25(
                           aLma0Mpe_root,
                           0x186),               // lma0:MPE_ROOT
            mkdir_res1 = mkdir_res0 >> 31,
@@ -1340,18 +1340,18 @@ LABEL_124:
           result2 = mkdir_res0,
           mkdir_res2) )
     {
-      SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm1);
+      SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm1);
       check0 = result2 != 0x80800003;
       goto LABEL_157;
     }
-    SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm1);
+    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm1);
     goto LABEL_136;
   }
   gen_pfs_drive0 = mpd_entry_alloc2->gen_mount_point;
   result2 = proc_generate_random_path_23D4FBC(PD_str_2404BBC, mpd_entry_alloc2->gen_mount_point);// PD string
   if ( result2 < 0 )
     goto LABEL_213;
-  if ( !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(mountpoint, aHost0, 6u) )
+  if ( !strncmp(mountpoint, aHost0, 6u) )
     mpd_entry_alloc2->gen_mount_point[0] = 0;
   *(_DWORD *)klicensee0 = 0;
   klicensee_chunk33 = 0;
@@ -1379,8 +1379,8 @@ LABEL_124:
 LABEL_135:
           if ( !mpd_entry_alloc2->gen_mount_point[0] )
             goto LABEL_136;
-          prev_perm2 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(0x80);
-          result2 = SceAppMgr_SceProcessmgrForKernel__imp_ksceKernelGetProcessAuthid_e4c83b0d(pid_local, &auth_ctx);
+          prev_perm2 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
+          result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx);
           if ( result2 < 0 )
             goto LABEL_213;
           if ( klicensee0[0]
@@ -1400,17 +1400,17 @@ LABEL_135:
           {
             klicensee1 = HIBYTE(klicensee_chunk33) ? klicensee0 : 0;
           }
-          result2 = SceAppMgr_ScePfsMgrForKernel__imp_mount_a772209c(
+          result2 = ScePfsMgrForKernel_mount_a772209c(
                       mountpoint,
                       gen_pfs_drive0,
                       auth_ctx.auth_id,
                       klicensee1,
                       pfs_mount_type);
-          SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm2);
+          SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm2);
           if ( result2 )
             goto LABEL_213;
           HIDWORD(auth_id3) = 1;
-          pfs_mount_res0 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id3);
+          pfs_mount_res0 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id3);
           pfs_mount_res1 = pfs_mount_res0 >> 31;
           result2 = pfs_mount_res0;
           if ( pfs_mount_res0 == 0x80010011 )
@@ -1421,7 +1421,7 @@ LABEL_135:
           if ( pfs_mount_res2 )
             goto LABEL_310;
           HIDWORD(auth_id4) = 0x7001;
-          pfs_mount_res30 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id4);
+          pfs_mount_res30 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id4);
           pfs_mount_res31 = pfs_mount_res30 >> 31;
           result2 = pfs_mount_res30;
           pfs_mount_res32 = pfs_mount_res30 == 0x80010011 ? 0 : pfs_mount_res31 & 1;
@@ -1429,7 +1429,7 @@ LABEL_135:
           if ( pfs_mount_res32 )
             goto LABEL_310;
           HIDWORD(auth_id5) = 0x2D;
-          pfs_mount_res40 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id5);
+          pfs_mount_res40 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id5);
           result2 = pfs_mount_res40;
           if ( pfs_mount_res40 == 0x80010011 )
             pfs_mount_res41 = 0;
@@ -1440,7 +1440,7 @@ LABEL_135:
 LABEL_309:
             gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
 LABEL_310:
-            SceAppMgr_ScePfsMgrForKernel__imp_unmount_680bc384(gen_pfs_drive1);
+            ScePfsMgrForKernel_unmount_680bc384(gen_pfs_drive1);
             goto LABEL_213;
           }
           if ( pfs_mount_type == 4 )
@@ -1455,7 +1455,7 @@ LABEL_310:
             gen_pfs_drive2 = mpd_entry_alloc2->gen_mount_point;
             HIDWORD(auth_id6) = 0x39;
           }
-          pfs_mount_res50 = SceAppMgr_ScePfsMgrForKernel__imp_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive2, auth_id6);
+          pfs_mount_res50 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive2, auth_id6);
           result2 = pfs_mount_res50;
           if ( pfs_mount_res50 == 0x80010011 )
             pfs_mount_res51 = 0;
@@ -1499,16 +1499,16 @@ LABEL_136:
                                           result2 = 0x8080001E;
                                           check0 = 1;
 LABEL_154:
-                                          prev_perm3 = SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(128);
+                                          prev_perm3 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
                                           if ( mount_id_local == 0x258 )
-                                            SceAppMgr_SceIofilemgrForDriver__imp_sceIoUmountForDriver_20574100(
+                                            SceIofilemgrForDriver_sceIoUmountForDriver_20574100(
                                               0x10000,
                                               0,
                                               0,
                                               0);
                                           else
-                                            SceAppMgr_ScePfsMgrForKernel__imp_unmount_680bc384(mpd_entry_alloc2->gen_mount_point);
-                                          SceAppMgr_SceThreadmgrForDriver__imp_ksceKernelSetPermission_02eedf17(prev_perm3);
+                                            ScePfsMgrForKernel_unmount_680bc384(mpd_entry_alloc2->gen_mount_point);
+                                          SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm3);
                                           goto LABEL_157;
                                         }
                                         initialized_allocated_item_index = 15;
@@ -1638,7 +1638,7 @@ LABEL_267:
     }
     if ( mount_id0 >= 0x3EA )
     {
-      if ( SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(mountpoint, aGro0_0, 5u) )// gro0:
+      if ( strncmp(mountpoint, aGro0_0, 5u) )// gro0:
         pfs_mount_type = 4;
       else
         pfs_mount_type = 0xC;
@@ -1730,14 +1730,14 @@ LABEL_213:
 LABEL_157:
   mpd_entry1 = mpd_entry_alloc2;
   mpd_entry_alloc2 = 0;
-  SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], mpd_entry1);
+  SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], mpd_entry1);
 LABEL_158:
   mctx_alloc1->mnt_entry = mpd_entry_alloc2;
 LABEL_112:
   if ( check0 )
     goto LABEL_21;
 LABEL_113:
-  SceAppMgr_SceSysmemForDriver__imp_sceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], physical_path_copy2);
+  SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(MEMORY[0x22A0008], physical_path_copy2);
   if ( mount_id_local != 0x3E9 )
   {
     if ( mount_id_local != 0x3EB )
@@ -1751,7 +1751,7 @@ LABEL_113:
         if ( mount_ctx_local4->mnt_entry )
         {
           if ( mpd_entry2->mount_id == 0x3EA
-            && !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(
+            && !strncmp(
                   mount_ctx_local4->mountDrive,
                   mount_drive_local,
                   0x10u) )
@@ -1780,7 +1780,7 @@ LABEL_225:
     if ( mount_ctx_local4->mnt_entry )
     {
       if ( mpd_entry3->mount_id == 0x3E8
-        && !SceAppMgr_SceSysclibForDriver__imp_strncmp_12cee649(mount_ctx_local4->mountDrive, mount_drive_local, 0x10u) )
+        && !strncmp(mount_ctx_local4->mountDrive, mount_drive_local, 0x10u) )
       {
         break;
       }
@@ -1839,9 +1839,8 @@ LABEL_123:
   *((_DWORD *)gen_mount_point + 3) = gen_mount_point_chunk23;
 LABEL_13:
   result = result2;
-  if ( cookie != MEMORY[0x9EA004] )
-    SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result2);
-  return result;
+
+  return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
 }
 
 //----------------
