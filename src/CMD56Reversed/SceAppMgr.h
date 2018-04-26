@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include "SceNpDrm.h"
+#include "SceFios2Kernel.h"
 
 //size is 0x1D0 (known)
 struct mount_point_data_entry

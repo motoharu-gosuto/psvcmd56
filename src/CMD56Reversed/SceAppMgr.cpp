@@ -8,7 +8,6 @@
 #include "SceIofilemgr.h"
 #include "SceSblACMgr.h"
 #include "SceSblSsMgr.h"
-#include "SceFios2Kernel.h"
 #include "SceProcessmgr.h"
 #include "ScePfsMgr.h"
 
@@ -656,256 +655,283 @@ int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, mount_ctx_t *mc
    return 0;
 }
 
-int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, char *klicensee, char *gen_mount_point)
+int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* mount_drive_local)
 {
-  char *title_id_local; // r10
-  unsigned int mount_id_local; // r4
-  
-  mount_ctx_t *mount_ctx_local0; // r7
-  char *gen_mount_point1; // r8
-  
-  mount_ctx_t *mount_ctx_local1; // r7
-  int result2; // r8
-  int result; // r0
-  mount_ctx_t *mctx_alloc0; // r0
-  
-  SceUID mount_pool; // r0
-  char *physical_path_copy; // r0
-  SceFiosOverlayID overlay_id; // r4
-  mount_point_data_entry *mpd_entry0; // r6
-  mount_ctx_t *mount_ctx_local2; // r3
-  int result1; // r0
-  __int64 auth_id1; // r1
-  SceUID pid0; // r5
-  int prev_perm0; // r7
-  mount_point_data_entry *glb_mpd_entry0; // r6
-  signed int initialized_global_item_index; // r3
-  __int64 auth_id2; // r1
-  int pfs_mount_res; // r0
-  bool check0; // r10
-  mount_ctx_t *mount_ctx_local3; // r3
-  
-  mount_point_data_entry *mpd_entry_alloc0; // r0
-  mount_point_data_entry *mpd_entry_alloc1; // r6
-  
-  char *gen_pfs_drive0; // r10
-  unsigned int mount_id0; // r3
-  
-  unsigned int pfs_mount_type; // r7
-  
-  signed int initialized_allocated_item_index; // r3
-  int prev_perm3; // r9
-  mount_point_data_entry *mpd_entry1; // r1
-  int rnd_path_gen_res0; // r0
-  int rnd_path_gen_res1; // r0
-  mount_ctx_t *mount_ctx_local4; // r4
-  mount_point_data_entry *mpd_entry2; // r6
-  int prev_perm1; // r9
-  unsigned int mkdir_res0; // r0
-  unsigned int mkdir_res1; // r2
-  int mkdir_res2; // r3
-  mount_point_data_entry *mpd_entry3; // r6
-  mount_point_data_entry *glb_mpd_entry1; // r2
-  
-  int prev_perm2; // r6
-  char *klicensee1; // r1
-  __int64 auth_id3; // r1
-  unsigned int pfs_mount_res0; // r0
-  __int64 auth_id4; // r1
-  unsigned int pfs_mount_res1; // r3
-  int pfs_mount_res2; // r3
-  char *gen_pfs_drive1; // r0
-  unsigned int pfs_mount_res30; // r0
-  __int64 auth_id5; // r1
-  unsigned int pfs_mount_res31; // r3
-  signed int pfs_mount_res32; // r3
-  int pfs_mount_res40; // r0
-  __int64 auth_id6; // r1
-  bool pfs_mount_res41; // r3
-  char *gen_pfs_drive2; // r0
-  unsigned int pfs_mount_res50; // r0
-  unsigned int pfs_mount_res51; // r3
-  
-  mount_ctx_holder_t *mount_ctx_holder_local; // [sp+14h] [bp-124h]
-  mount_point_data_entry *mpd_entry_alloc2; // [sp+18h] [bp-120h]
-  mount_ctx_t *mctx_alloc1; // [sp+1Ch] [bp-11Ch]
-  SceUID pid_local; // [sp+20h] [bp-118h]
-  
-  char *physical_path_copy2; // [sp+2Ch] [bp-10Ch]
-  SceUInt64 auth_id; // [sp+30h] [bp-108h]
-  char *mountpoint; // [sp+38h] [bp-100h]
-  ctx_49D4DD9B alloc_ctx0; // [sp+44h] [bp-F4h]
-  char mount_drive_local[16]; // [sp+58h] [bp-E0h]
-  char klicensee0[16]; // [sp+68h] [bp-D0h]
-  SceSelfAuthInfo auth_ctx; // [sp+78h] [bp-C0h]
-  int cookie; // [sp+10Ch] [bp-2Ch]
+   if (mount_drive)
+   {
+      memcpy(mount_drive_local, mount_drive, 0x10);
+      return 0;
+   }
 
-  title_id_local = title_id;
-  mount_id_local = mount_id;
-  cookie = var_009EA004;
-  pid_local = pid;
-  mount_ctx_holder_local = mount_ctx_holder;
-
-  memset(mount_drive_local, 0, 0x10);
-
-  if ( !gen_mount_point )
-    goto LABEL_58;
-
-  if ( mount_drive )
-  {
-    memcpy(mount_drive_local, mount_drive, 0x10);
-
-    goto LABEL_4;
-  }
-  if ( (unsigned int)mount_id <= 0x192 )
-  {
-    if ( (unsigned int)mount_id >= 0x190 )
-    {
-LABEL_163:
-      result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
-      if ( result1 )
-        goto LABEL_41;
-      goto LABEL_164;
-    }
-    if ( (unsigned int)mount_id <= 0xCC )
-    {
-      if ( (unsigned int)mount_id < 0xCB )
+   if (mount_id <= 0x192)
+   {
+      if (mount_id >= 0x190)
       {
-        if ( (unsigned int)mount_id > 0xC9 )
-        {
-          if ( SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0) )
-          {
-            strcpy(mount_drive_local, "ms0:");
-            goto LABEL_4;
-          }
-          rnd_path_gen_res0 = proc_generate_random_path_23D4FBC("ms", mount_drive_local);
-          if ( rnd_path_gen_res0 )
-          {
-            result2 = rnd_path_gen_res0;
-            goto LABEL_13;
-          }
-          goto LABEL_168;
-        }
-        if ( (unsigned int)mount_id < 0xC8 )
-        {
-          if ( (unsigned int)(mount_id - 100) > 0xC )
-            goto LABEL_58;
-          goto LABEL_163;
-        }
+         int result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+         if (result1)
+            return result1;
+
+         mount_drive_local[14] = 0x3A;
+         mount_drive_local[15] = 0;
+
+         return 0;
       }
-    }
-    else
-    {
-      if ( (unsigned int)mount_id > 0xCF )
+
+      if (mount_id <= 0xCC)
       {
-        switch ( mount_id )
-        {
-          case 0x12F:
-            strcpy(mount_drive_local, "trophy_dat0:");
-            break;
-          case 0x130:
-            strcpy(mount_drive_local, "trophy_dbk0:");
-            break;
-          case 0x12E:
-            strcpy(mount_drive_local, "trophy_sys0:");
-            break;
-          default:
-            goto LABEL_58;
-        }
-        goto LABEL_4;
-      }
-      if ( (unsigned int)mount_id < 0xCE )
-      {
-        strcpy(mount_drive_local, "cache0:");
-        goto LABEL_4;
-      }
-    }
-    result1 = proc_generate_random_path_23D4FBC("td", mount_drive_local);
-    if ( result1 )
-    {
-      result2 = result1;
-      goto LABEL_13;
-    }
-LABEL_164:
-    mount_drive_local[15] = result1;
-    mount_drive_local[14] = 0x3A;
-    goto LABEL_4;
-  }
-  if ( (unsigned int)mount_id > 0x3E9 )
-  {
-    if ( (unsigned int)mount_id <= 0x3EE )
-    {
-      if ( (unsigned int)mount_id > 0x3EC )
-      {
-        _snprintf(mount_drive_local, 0x10u, "savedata%1u:", 0);
+         if (mount_id < 0xCB)
+         {
+            if (mount_id > 0xC9)
+            {
+               if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0))
+               {
+                  strcpy(mount_drive_local, "ms0:");
+                  return 0;
+               }
+
+               int rnd_path_gen_res0 = proc_generate_random_path_23D4FBC("ms", mount_drive_local);
+               if (rnd_path_gen_res0)
+                  return rnd_path_gen_res0;
+
+               mount_drive_local[14] = 0x3A;
+               mount_drive_local[15] = 0;
+               
+               return 0;
+            }
+
+            if (mount_id < 0xC8)
+            {
+               if ((mount_id - 100) > 0xC)
+                  return 0x80800001;
+
+               int result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+               if (result1)
+                  return result1;
+
+               mount_drive_local[14] = 0x3A;
+               mount_drive_local[15] = 0;
+               return 0;
+            }
+         }
       }
       else
       {
-        if ( (unsigned int)mount_id >= 0x3EC )
-          goto LABEL_58;
-        _snprintf(mount_drive_local, 0x10u, "addcont%1u:", 0);
+         if (mount_id > 0xCF)
+         {
+            switch (mount_id)
+            {
+            case 0x12F:
+               strcpy(mount_drive_local, "trophy_dat0:");
+               break;
+            case 0x130:
+               strcpy(mount_drive_local, "trophy_dbk0:");
+               break;
+            case 0x12E:
+               strcpy(mount_drive_local, "trophy_sys0:");
+               break;
+            default:
+               return 0x80800001;
+            }
+
+            return 0;
+         }
+
+         if (mount_id < 0xCE)
+         {
+            strcpy(mount_drive_local, "cache0:");
+            return 0;
+         }
       }
-      goto LABEL_4;
-    }
-    if ( (unsigned int)mount_id <= 0x3F0 )
-    {
-      rnd_path_gen_res1 = proc_generate_random_path_23D4FBC("sd", mount_drive_local);
-      if ( rnd_path_gen_res1 )
+
+      int result1 = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+      if (result1)
+         return result1;
+
+      mount_drive_local[14] = 0x3A;
+      mount_drive_local[15] = 0;
+      
+      return 0;
+   }
+
+   if (mount_id > 0x3E9)
+   {
+      if (mount_id <= 0x3EE)
       {
-        result2 = rnd_path_gen_res1;
-        goto LABEL_13;
+         if (mount_id > 0x3EC)
+         {
+            _snprintf(mount_drive_local, 0x10u, "savedata%1u:", 0);
+         }
+         else
+         {
+            if (mount_id >= 0x3EC)
+               return 0x80800001;
+
+            _snprintf(mount_drive_local, 0x10u, "addcont%1u:", 0);
+         }
+
+         return 0;
       }
-    }
-    else
-    {
-      if ( mount_id != 0x3F1 )
-        goto LABEL_58;
-      result1 = proc_generate_random_path_23D4FBC("ud", mount_drive_local);
-      if ( result1 )
-        goto LABEL_41;
-    }
-LABEL_168:
-    mount_drive_local[15] = 0;
-    mount_drive_local[14] = 0x3A;
-    goto LABEL_4;
-  }
-  if ( (unsigned int)mount_id >= 0x3E8 )
-  {
-    _snprintf(mount_drive_local, 0x10u, "app%1u:", 0);
-    goto LABEL_4;
-  }
-  if ( mount_id == 0x1F8 )
-  {
-    strcpy(mount_drive_local, "sdimport0:");
-    goto LABEL_4;
-  }
-  if ( (unsigned int)mount_id <= 0x1F8 )
-  {
-    if ( (unsigned int)(mount_id - 0x1F4) > 1 )
-      goto LABEL_58;
-    goto LABEL_163;
-  }
-  if ( mount_id != 0x1F9 )
-  {
-    if ( mount_id == 0x258 )
-    {
-      result1 = proc_generate_random_path_23D4FBC("lm", mount_drive_local);
-      if ( !result1 )
+
+      if (mount_id <= 0x3F0)
       {
-        mount_drive_local[14] = 0x3A;
-        mount_drive_local[15] = 0;
-        goto LABEL_4;
+         int rnd_path_gen_res1 = proc_generate_random_path_23D4FBC("sd", mount_drive_local);
+         if (rnd_path_gen_res1)
+            return rnd_path_gen_res1;
       }
-LABEL_41:
-      result2 = result1;
-      goto LABEL_13;
-    }
-LABEL_58:
-    result2 = 0x80800001;
-    goto LABEL_13;
-  }
-  strcpy(mount_drive_local, "sdimport_tmp0:");
-LABEL_4:
+      else
+      {
+         if (mount_id != 0x3F1)
+            return 0x80800001;
+
+         int result1 = proc_generate_random_path_23D4FBC("ud", mount_drive_local);
+         if (result1)
+            return result1;
+      }
+
+      mount_drive_local[14] = 0x3A;
+      mount_drive_local[15] = 0;
+
+      return 0;
+   }
+
+   if (mount_id >= 0x3E8)
+   {
+      _snprintf(mount_drive_local, 0x10u, "app%1u:", 0);
+      return 0;
+   }
+
+   if (mount_id == 0x1F8)
+   {
+      strcpy(mount_drive_local, "sdimport0:");
+      return 0;
+   }
+
+   if (mount_id <= 0x1F8)
+   {
+      if ((mount_id - 0x1F4) > 1)
+         return 0x80800001;
+
+      int result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+      if (result1)
+         return result1;
+
+      mount_drive_local[14] = 0x3A;
+      mount_drive_local[15] = 0;
+      
+      return 0;
+   }
+
+   if (mount_id != 0x1F9)
+   {
+      if (mount_id == 0x258)
+      {
+         int result1 = proc_generate_random_path_23D4FBC("lm", mount_drive_local);
+         if (result1)
+            return result1;
+
+         mount_drive_local[14] = 0x3A;
+         mount_drive_local[15] = 0;
+
+         return 0;
+      }
+
+      return 0x80800001;
+   }
+
+   strcpy(mount_drive_local, "sdimport_tmp0:");
+
+   return 0;
+}
+
+int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, char *title_id, char *physical_path, char *mount_drive, char *klicensee, char *gen_mount_point)
+{
+   mount_ctx_t *mount_ctx_local0;
+   char *gen_mount_point1;
+   mount_ctx_t *mount_ctx_local1;
+   int result2;
+   int result;
+   mount_ctx_t *mctx_alloc0;
+   SceUID mount_pool;
+   char *physical_path_copy;
+   SceFiosOverlayID overlay_id;
+   mount_point_data_entry *mpd_entry0;
+   mount_ctx_t *mount_ctx_local2;
+   int result1;
+   __int64 auth_id1;
+   SceUID pid0;
+   int prev_perm0;
+   mount_point_data_entry *glb_mpd_entry0;
+   signed int initialized_global_item_index;
+   __int64 auth_id2;
+   int pfs_mount_res;
+   bool check0;
+   mount_ctx_t *mount_ctx_local3;
+   mount_point_data_entry *mpd_entry_alloc0;
+   mount_point_data_entry *mpd_entry_alloc1;
+   char *gen_pfs_drive0;
+   unsigned int mount_id0;
+   unsigned int pfs_mount_type;
+   signed int initialized_allocated_item_index;
+   int prev_perm3;
+   mount_point_data_entry *mpd_entry1;
+   int rnd_path_gen_res0;
+   int rnd_path_gen_res1;
+   mount_ctx_t *mount_ctx_local4;
+   mount_point_data_entry *mpd_entry2;
+   int prev_perm1;
+   unsigned int mkdir_res0;
+   unsigned int mkdir_res1;
+   int mkdir_res2;
+   mount_point_data_entry *mpd_entry3;
+   mount_point_data_entry *glb_mpd_entry1;
+   int prev_perm2;
+   char *klicensee1;
+   __int64 auth_id3;
+   unsigned int pfs_mount_res0;
+   __int64 auth_id4;
+   unsigned int pfs_mount_res1;
+   int pfs_mount_res2;
+   char *gen_pfs_drive1;
+   unsigned int pfs_mount_res30;
+   __int64 auth_id5;
+   unsigned int pfs_mount_res31;
+   signed int pfs_mount_res32;
+   int pfs_mount_res40;
+   __int64 auth_id6;
+   bool pfs_mount_res41;
+   char *gen_pfs_drive2;
+   unsigned int pfs_mount_res50;
+   unsigned int pfs_mount_res51;
+   mount_point_data_entry *mpd_entry_alloc2;
+   mount_ctx_t *mctx_alloc1;
+   char *physical_path_copy2;
+   SceUInt64 auth_id;
+   char *mountpoint;
+   ctx_49D4DD9B alloc_ctx0;
+   char klicensee0[16];
+   SceSelfAuthInfo auth_ctx;
+
+   int cookie = var_009EA004;
+
+   char *title_id_local = title_id;
+   unsigned int mount_id_local = mount_id;
+   SceUID pid_local = pid;
+   mount_ctx_holder_t *mount_ctx_holder_local = mount_ctx_holder;
+
+   if (!gen_mount_point)
+      return (cookie == var_009EA004) ? 0x80800001 : STACK_CHECK_FAIL;
+
+   char mount_drive_local[16];
+   memset(mount_drive_local, 0, 0x10);
+
+   int gen_res = generate_mount_drive(mount_id, mount_drive, mount_drive_local);
+   if(gen_res)
+      return (cookie == var_009EA004) ? gen_res : STACK_CHECK_FAIL;
+
+
+
+
+   /*
   mount_ctx_local0 = mount_ctx_holder_local->mount;
   if ( mount_ctx_local0 )
   {
@@ -947,7 +973,8 @@ LABEL_4:
       {
 LABEL_12:
         result2 = 0x80800002;
-        goto LABEL_13;
+        result = result2;
+        return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
       }
       while ( 1 )
       {
@@ -997,9 +1024,13 @@ LABEL_12:
        || result1 >= 0) )
     {
       result2 = 0x80800003;
-      goto LABEL_13;
+      result = result2;
+      return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
     }
-    goto LABEL_41;
+    
+   result2 = result1;
+   result = result2;
+   return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
   }
 LABEL_18:
   alloc_ctx0.unk4 = 0;
@@ -1015,7 +1046,8 @@ LABEL_18:
   if ( !mctx_alloc0 )
   {
     result2 = 0x80801006;
-    goto LABEL_13;
+    result = result2;
+    return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
   }
 
   memset(mctx_alloc0, 0, 0x24u);
@@ -1059,8 +1091,12 @@ LABEL_21:
       w_unmount_23D5F44(pid_local, mctx_alloc1->mnt_entry, 1);
     SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, mctx_alloc1);
     if ( physical_path_copy2 )
+    {
       SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy2);
-    goto LABEL_13;
+    }
+
+    result = result2;
+    return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
   }
   if ( (unsigned int)strnlen(physical_path_copy2, 0x124) >= 0x124 )
   {
@@ -1813,9 +1849,8 @@ LABEL_123:
 
   memcpy(gen_mount_point, mctx_alloc1->mountDrive, 0x10);
 
-LABEL_13:
   result = result2;
-
+  */
   return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
 }
 
