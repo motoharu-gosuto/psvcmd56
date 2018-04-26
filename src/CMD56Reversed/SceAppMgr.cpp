@@ -641,25 +641,19 @@ int verify_copy_23D5A10(char *src, char *dst)
 
 //----------------
 
-int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, void *klicensee, char *gen_mount_point)
+int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, char *klicensee, char *gen_mount_point)
 {
   char *title_id_local; // r10
   unsigned int mount_id_local; // r4
-  int mount_drive_chunk1; // r1
-  int mount_drive_chunk2; // r2
-  int mount_drive_chunk3; // r3
+  
   mount_ctx_t *mount_ctx_local0; // r7
   char *gen_mount_point1; // r8
-  int gen_mount_point_chunk11; // r1
-  int gen_mount_point_chunk12; // r2
-  int gen_mount_point_chunk13; // r3
+  
   mount_ctx_t *mount_ctx_local1; // r7
   int result2; // r8
   int result; // r0
   mount_ctx_t *mctx_alloc0; // r0
-  int mount_drive_local_chunk11; // r1
-  int mount_drive_local_chunk12; // r2
-  int mount_drive_local_chunk13; // r3
+  
   SceUID mount_pool; // r0
   char *physical_path_copy; // r0
   SceFiosOverlayID overlay_id; // r4
@@ -675,20 +669,15 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
   int pfs_mount_res; // r0
   bool check0; // r10
   mount_ctx_t *mount_ctx_local3; // r3
-  int gen_mount_point_chunk21; // r1
-  int gen_mount_point_chunk22; // r2
-  int gen_mount_point_chunk23; // r3
+  
   mount_point_data_entry *mpd_entry_alloc0; // r0
   mount_point_data_entry *mpd_entry_alloc1; // r6
-  int title_id_chunk1; // r2
-  int title_id_chunk2; // r3
-  int title_id_chunk3; // lr
+  
   char *gen_pfs_drive0; // r10
   unsigned int mount_id0; // r3
-  int klicensee_chunk1; // r1
+  
   unsigned int pfs_mount_type; // r7
-  int klicensee_chunk2; // r2
-  int klicensee_chunk3; // r3
+  
   signed int initialized_allocated_item_index; // r3
   int prev_perm3; // r9
   mount_point_data_entry *mpd_entry1; // r1
@@ -702,9 +691,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
   int mkdir_res2; // r3
   mount_point_data_entry *mpd_entry3; // r6
   mount_point_data_entry *glb_mpd_entry1; // r2
-  int klicensee_chunk1_1; // r1
-  int klicensee_chunk1_2; // r2
-  int klicensee_chunk1_3; // r3
+  
   int prev_perm2; // r6
   char *klicensee1; // r1
   __int64 auth_id3; // r1
@@ -723,14 +710,12 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
   char *gen_pfs_drive2; // r0
   unsigned int pfs_mount_res50; // r0
   unsigned int pfs_mount_res51; // r3
-  int klicensee_chunk10; // r1
-  int klicensee_chunk20; // r2
-  int klicensee_chunk30; // r3
+  
   mount_ctx_holder_t *mount_ctx_holder_local; // [sp+14h] [bp-124h]
   mount_point_data_entry *mpd_entry_alloc2; // [sp+18h] [bp-120h]
   mount_ctx_t *mctx_alloc1; // [sp+1Ch] [bp-11Ch]
   SceUID pid_local; // [sp+20h] [bp-118h]
-  char *gen_mount_point_local2; // [sp+28h] [bp-110h]
+  
   char *physical_path_copy2; // [sp+2Ch] [bp-10Ch]
   SceUInt64 auth_id; // [sp+30h] [bp-108h]
   char *mountpoint; // [sp+38h] [bp-100h]
@@ -745,21 +730,16 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
   cookie = var_009EA004;
   pid_local = pid;
   mount_ctx_holder_local = mount_ctx_holder;
-  *(_DWORD *)mount_drive_local = 0;
-  *(_DWORD *)&mount_drive_local[4] = 0;
-  *(_DWORD *)&mount_drive_local[8] = 0;
-  *(_DWORD *)&mount_drive_local[12] = 0;
+
+  memset(mount_drive_local, 0, 0x10);
+
   if ( !gen_mount_point )
     goto LABEL_58;
+
   if ( mount_drive )
   {
-    mount_drive_chunk1 = *((_DWORD *)mount_drive + 1);
-    mount_drive_chunk2 = *((_DWORD *)mount_drive + 2);
-    mount_drive_chunk3 = *((_DWORD *)mount_drive + 3);
-    *(_DWORD *)mount_drive_local = *(_DWORD *)mount_drive;
-    *(_DWORD *)&mount_drive_local[4] = mount_drive_chunk1;
-    *(_DWORD *)&mount_drive_local[8] = mount_drive_chunk2;
-    *(_DWORD *)&mount_drive_local[12] = mount_drive_chunk3;
+    memcpy(mount_drive_local, mount_drive, 0x10);
+
     goto LABEL_4;
   }
   if ( (unsigned int)mount_id <= 0x192 )
@@ -942,13 +922,9 @@ LABEL_4:
       }
       gen_mount_point1 = mount_ctx_local0->mountDrive;
     }
-    gen_mount_point_chunk11 = *((_DWORD *)gen_mount_point1 + 1);
-    gen_mount_point_chunk12 = *((_DWORD *)gen_mount_point1 + 2);
-    gen_mount_point_chunk13 = *((_DWORD *)gen_mount_point1 + 3);
-    *(_DWORD *)gen_mount_point = *(_DWORD *)gen_mount_point1;
-    *((_DWORD *)gen_mount_point + 1) = gen_mount_point_chunk11;
-    *((_DWORD *)gen_mount_point + 2) = gen_mount_point_chunk12;
-    *((_DWORD *)gen_mount_point + 3) = gen_mount_point_chunk13;
+
+    memcpy(gen_mount_point, gen_mount_point1, 0x10);
+
     if ( mount_drive )
     {
       mount_ctx_local1 = mount_ctx_holder_local->mount;
@@ -1026,21 +1002,19 @@ LABEL_18:
     result2 = 0x80801006;
     goto LABEL_13;
   }
+
   memset(mctx_alloc0, 0, 0x24u);
+  
+  memcpy(mctx_alloc1->mountDrive, mount_drive_local, 0x10);
+
+  mount_pool = SceAppMgrMount_pool_22A0008;
+
+  alloc_ctx0.unk0 = 0x14;
   alloc_ctx0.unk4 = 0;
-  mount_drive_local_chunk11 = *(_DWORD *)&mount_drive_local[4];
-  mount_drive_local_chunk12 = *(_DWORD *)&mount_drive_local[8];
-  mount_drive_local_chunk13 = *(_DWORD *)&mount_drive_local[12];
-  gen_mount_point_local2 = mctx_alloc1->mountDrive;
+  alloc_ctx0.unk8 = 0x20;
   alloc_ctx0.unkC = 0;
   alloc_ctx0.unk10 = 0;
-  *(_DWORD *)mctx_alloc1->mountDrive = *(_DWORD *)mount_drive_local;
-  mount_pool = SceAppMgrMount_pool_22A0008;
-  alloc_ctx0.unk0 = 0x14;
-  *((_DWORD *)gen_mount_point_local2 + 1) = mount_drive_local_chunk11;
-  *((_DWORD *)gen_mount_point_local2 + 2) = mount_drive_local_chunk12;
-  *((_DWORD *)gen_mount_point_local2 + 3) = mount_drive_local_chunk13;
-  alloc_ctx0.unk8 = 0x20;
+  
   physical_path_copy = (char *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(
                                  mount_pool,
                                  0x124u,
@@ -1310,13 +1284,9 @@ LABEL_124:
   mpd_entry_alloc1->mount_id = mount_id_local;
   mountpoint = mpd_entry_alloc1->path;
   strncpy(mpd_entry_alloc1->path, physical_path_copy2, 0x123u);
-  title_id_chunk1 = *((_DWORD *)title_id_local + 1);
-  title_id_chunk2 = *((_DWORD *)title_id_local + 2);
-  title_id_chunk3 = *((_DWORD *)title_id_local + 3);
-  *(_DWORD *)mpd_entry_alloc2->title_id = *(_DWORD *)title_id_local;
-  *(_DWORD *)&mpd_entry_alloc2->title_id[4] = title_id_chunk1;
-  *(_DWORD *)&mpd_entry_alloc2->title_id[8] = title_id_chunk2;
-  *(_DWORD *)&mpd_entry_alloc2->title_id[12] = title_id_chunk3;
+
+  memcpy(mpd_entry_alloc2->title_id, title_id_local, 0x10);
+
   if ( mount_id_local == 0x258 )
   {
     mpd_entry_alloc2->gen_mount_point[0] = 0;
@@ -1350,11 +1320,11 @@ LABEL_124:
     goto LABEL_213;
   if ( !strncmp(mountpoint, "host0:", 6u) )
     mpd_entry_alloc2->gen_mount_point[0] = 0;
-  *(_DWORD *)klicensee0 = 0;
-  *(_DWORD *)&klicensee0[12] = 0;
+ 
   mount_id0 = mpd_entry_alloc2->mount_id;
-  *(_DWORD *)&klicensee0[4] = 0;
-  *(_DWORD *)&klicensee0[8] = 0;
+
+  memset(klicensee0, 0, 0x10);
+  
   if ( mount_id0 > 0x192 )
   {
     if ( mount_id0 >= 0x3EC )
@@ -1365,14 +1335,10 @@ LABEL_124:
       {
         if ( mount_id0 == 0x3EC )
         {
-          klicensee_chunk1 = *((_DWORD *)klicensee + 1);
-          pfs_mount_type = 0xD;
-          klicensee_chunk2 = *((_DWORD *)klicensee + 2);
-          klicensee_chunk3 = *((_DWORD *)klicensee + 3);
-          *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
-          *(_DWORD *)&klicensee0[4] = klicensee_chunk1;
-          *(_DWORD *)&klicensee0[8] = klicensee_chunk2;
-          *(_DWORD *)&klicensee0[12] = klicensee_chunk3;
+           pfs_mount_type = 0xD;
+
+          memcpy(klicensee0, klicensee, 0x10);
+
 LABEL_135:
           if ( !mpd_entry_alloc2->gen_mount_point[0] )
             goto LABEL_136;
@@ -1409,16 +1375,20 @@ LABEL_135:
                       klicensee1,
                       pfs_mount_type);
           SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm2);
+          
           if ( result2 )
             goto LABEL_213;
+
           HIDWORD(auth_id3) = 1;
           pfs_mount_res0 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id3);
           pfs_mount_res1 = pfs_mount_res0 >> 31;
           result2 = pfs_mount_res0;
+
           if ( pfs_mount_res0 == 0x80010011 )
             pfs_mount_res2 = 0;
           else
             pfs_mount_res2 = pfs_mount_res1 & 1;
+
           gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
           if ( pfs_mount_res2 )
             goto LABEL_315;
@@ -1651,16 +1621,13 @@ LABEL_267:
     {
       if ( mount_id0 < 0x3E8 )
         goto LABEL_262;
+
       if ( clearsign_exists_23D9A4C(mountpoint) )
       {
         pfs_mount_type = 2;
-        klicensee_chunk1_1 = *((_DWORD *)klicensee + 1);
-        klicensee_chunk1_2 = *((_DWORD *)klicensee + 2);
-        klicensee_chunk1_3 = *((_DWORD *)klicensee + 3);
-        *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
-        *(_DWORD *)&klicensee0[4] = klicensee_chunk1_1;
-        *(_DWORD *)&klicensee0[8] = klicensee_chunk1_2;
-        *(_DWORD *)&klicensee0[12] = klicensee_chunk1_3;
+
+        memcpy(klicensee0, klicensee, 0x10);
+
         goto LABEL_135;
       }
       goto LABEL_267;
@@ -1712,14 +1679,10 @@ LABEL_329:
 LABEL_318:
   if ( klicensee )
   {
-    klicensee_chunk10 = *((_DWORD *)klicensee + 1);
-    klicensee_chunk20 = *((_DWORD *)klicensee + 2);
-    pfs_mount_type = 5;
-    klicensee_chunk30 = *((_DWORD *)klicensee + 3);
-    *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
-    *(_DWORD *)&klicensee0[4] = klicensee_chunk10;
-    *(_DWORD *)&klicensee0[8] = klicensee_chunk20;
-    *(_DWORD *)&klicensee0[12] = klicensee_chunk30;
+     pfs_mount_type = 5;
+
+    memcpy(klicensee0, klicensee, 0x10);
+
     goto LABEL_135;
   }
   pfs_mount_type = 5;
@@ -1832,13 +1795,9 @@ LABEL_115:
   mctx_alloc1->next = 0;
 LABEL_123:
   result2 = 0;
-  gen_mount_point_chunk21 = *(_DWORD *)&mctx_alloc1->mountDrive[4];
-  gen_mount_point_chunk22 = *(_DWORD *)&mctx_alloc1->mountDrive[8];
-  gen_mount_point_chunk23 = *(_DWORD *)&mctx_alloc1->mountDrive[12];
-  *(_DWORD *)gen_mount_point = *(_DWORD *)gen_mount_point_local2;
-  *((_DWORD *)gen_mount_point + 1) = gen_mount_point_chunk21;
-  *((_DWORD *)gen_mount_point + 2) = gen_mount_point_chunk22;
-  *((_DWORD *)gen_mount_point + 3) = gen_mount_point_chunk23;
+
+  memcpy(gen_mount_point, mctx_alloc1->mountDrive, 0x10);
+
 LABEL_13:
   result = result2;
 
