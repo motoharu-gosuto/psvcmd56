@@ -641,7 +641,7 @@ int verify_copy_23D5A10(char *src, char *dst)
 
 //----------------
 
-int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, void *klicensee, const char *gen_mount_point)
+int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, void *klicensee, char *gen_mount_point)
 {
   char *title_id_local; // r10
   unsigned int mount_id_local; // r4
@@ -732,14 +732,11 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
   SceUID pid_local; // [sp+20h] [bp-118h]
   char *gen_mount_point_local2; // [sp+28h] [bp-110h]
   char *physical_path_copy2; // [sp+2Ch] [bp-10Ch]
-  uint64_t auth_id; // [sp+30h] [bp-108h]
+  SceUInt64 auth_id; // [sp+30h] [bp-108h]
   char *mountpoint; // [sp+38h] [bp-100h]
   ctx_49D4DD9B alloc_ctx0; // [sp+44h] [bp-F4h]
   char mount_drive_local[16]; // [sp+58h] [bp-E0h]
-  char klicensee0[4]; // [sp+68h] [bp-D0h]
-  int klicensee_chunk11; // [sp+6Ch] [bp-CCh]
-  int klicensee_chunk22; // [sp+70h] [bp-C8h]
-  int klicensee_chunk33; // [sp+74h] [bp-C4h]
+  char klicensee0[16]; // [sp+68h] [bp-D0h]
   SceSelfAuthInfo auth_ctx; // [sp+78h] [bp-C0h]
   int cookie; // [sp+10Ch] [bp-2Ch]
 
@@ -770,7 +767,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
     if ( (unsigned int)mount_id >= 0x190 )
     {
 LABEL_163:
-      result1 = proc_generate_random_path_23D4FBC("ad" , mount_drive_local);
+      result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
       if ( result1 )
         goto LABEL_41;
       goto LABEL_164;
@@ -1354,16 +1351,16 @@ LABEL_124:
   if ( !strncmp(mountpoint, "host0:", 6u) )
     mpd_entry_alloc2->gen_mount_point[0] = 0;
   *(_DWORD *)klicensee0 = 0;
-  klicensee_chunk33 = 0;
+  *(_DWORD *)&klicensee0[12] = 0;
   mount_id0 = mpd_entry_alloc2->mount_id;
-  klicensee_chunk11 = 0;
-  klicensee_chunk22 = 0;
+  *(_DWORD *)&klicensee0[4] = 0;
+  *(_DWORD *)&klicensee0[8] = 0;
   if ( mount_id0 > 0x192 )
   {
     if ( mount_id0 >= 0x3EC )
     {
       if ( mount_id0 == 0x3EE )
-        goto LABEL_319;
+        goto LABEL_324;
       if ( mount_id0 <= 0x3EE )
       {
         if ( mount_id0 == 0x3EC )
@@ -1373,9 +1370,9 @@ LABEL_124:
           klicensee_chunk2 = *((_DWORD *)klicensee + 2);
           klicensee_chunk3 = *((_DWORD *)klicensee + 3);
           *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
-          klicensee_chunk11 = klicensee_chunk1;
-          klicensee_chunk22 = klicensee_chunk2;
-          klicensee_chunk33 = klicensee_chunk3;
+          *(_DWORD *)&klicensee0[4] = klicensee_chunk1;
+          *(_DWORD *)&klicensee0[8] = klicensee_chunk2;
+          *(_DWORD *)&klicensee0[12] = klicensee_chunk3;
 LABEL_135:
           if ( !mpd_entry_alloc2->gen_mount_point[0] )
             goto LABEL_136;
@@ -1387,18 +1384,23 @@ LABEL_135:
             || klicensee0[1]
             || klicensee0[2]
             || klicensee0[3]
-            || (_BYTE)klicensee_chunk11
-            || __PAIR__(BYTE1(klicensee_chunk11), 0) != BYTE2(klicensee_chunk11)
-            || __PAIR__(HIBYTE(klicensee_chunk11), 0) != (unsigned __int8)klicensee_chunk22
-            || __PAIR__(BYTE1(klicensee_chunk22), 0) != BYTE2(klicensee_chunk22)
-            || __PAIR__(HIBYTE(klicensee_chunk22), 0) != (unsigned __int8)klicensee_chunk33
-            || __PAIR__(BYTE1(klicensee_chunk33), 0) != BYTE2(klicensee_chunk33) )
+            || klicensee0[4]
+            || klicensee0[5]
+            || klicensee0[6]
+            || klicensee0[7]
+            || klicensee0[8]
+            || klicensee0[9]
+            || klicensee0[10]
+            || klicensee0[11]
+            || klicensee0[12]
+            || klicensee0[13]
+            || klicensee0[14] )
           {
             klicensee1 = klicensee0;
           }
           else
           {
-            klicensee1 = HIBYTE(klicensee_chunk33) ? klicensee0 : 0;
+            klicensee1 = klicensee0[15] ? klicensee0 : 0;
           }
           result2 = ScePfsMgrForKernel_mount_a772209c(
                       mountpoint,
@@ -1419,7 +1421,7 @@ LABEL_135:
             pfs_mount_res2 = pfs_mount_res1 & 1;
           gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
           if ( pfs_mount_res2 )
-            goto LABEL_310;
+            goto LABEL_315;
           HIDWORD(auth_id4) = 0x7001;
           pfs_mount_res30 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id4);
           pfs_mount_res31 = pfs_mount_res30 >> 31;
@@ -1427,7 +1429,7 @@ LABEL_135:
           pfs_mount_res32 = pfs_mount_res30 == 0x80010011 ? 0 : pfs_mount_res31 & 1;
           gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
           if ( pfs_mount_res32 )
-            goto LABEL_310;
+            goto LABEL_315;
           HIDWORD(auth_id5) = 0x2D;
           pfs_mount_res40 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, auth_id5);
           result2 = pfs_mount_res40;
@@ -1437,9 +1439,9 @@ LABEL_135:
             pfs_mount_res41 = pfs_mount_res40 < 0;
           if ( pfs_mount_res41 )
           {
-LABEL_309:
+LABEL_314:
             gen_pfs_drive1 = mpd_entry_alloc2->gen_mount_point;
-LABEL_310:
+LABEL_315:
             ScePfsMgrForKernel_unmount_680bc384(gen_pfs_drive1);
             goto LABEL_213;
           }
@@ -1462,7 +1464,7 @@ LABEL_310:
           else
             pfs_mount_res51 = pfs_mount_res50 >> 31;
           if ( pfs_mount_res51 )
-            goto LABEL_309;
+            goto LABEL_314;
 LABEL_136:
           if ( mpd_entry_alloc2->auth_ids[0] )
           {
@@ -1618,7 +1620,7 @@ LABEL_252:
           goto LABEL_158;
         }
         if ( mount_id0 == 0x3ED )
-          goto LABEL_313;
+          goto LABEL_318;
 LABEL_262:
         result2 = 0x80800001;
         check0 = 1;
@@ -1628,7 +1630,7 @@ LABEL_262:
       {
         if ( mount_id0 != 0x3F1 )
           goto LABEL_262;
-LABEL_319:
+LABEL_324:
         pfs_mount_type = 0x15;
         goto LABEL_135;
       }
@@ -1656,9 +1658,9 @@ LABEL_267:
         klicensee_chunk1_2 = *((_DWORD *)klicensee + 2);
         klicensee_chunk1_3 = *((_DWORD *)klicensee + 3);
         *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
-        klicensee_chunk11 = klicensee_chunk1_1;
-        klicensee_chunk22 = klicensee_chunk1_2;
-        klicensee_chunk33 = klicensee_chunk1_3;
+        *(_DWORD *)&klicensee0[4] = klicensee_chunk1_1;
+        *(_DWORD *)&klicensee0[8] = klicensee_chunk1_2;
+        *(_DWORD *)&klicensee0[12] = klicensee_chunk1_3;
         goto LABEL_135;
       }
       goto LABEL_267;
@@ -1680,7 +1682,7 @@ LABEL_264:
   }
   if ( mount_id0 >= 0x190 )
   {
-LABEL_324:
+LABEL_329:
     pfs_mount_type = 0x16;
     goto LABEL_135;
   }
@@ -1692,7 +1694,7 @@ LABEL_324:
       {
         if ( mount_id0 < 0xC8 && mount_id0 > 0x70 )
           goto LABEL_262;
-        goto LABEL_319;
+        goto LABEL_324;
       }
       if ( mount_id0 - 0x12E > 2 )
         goto LABEL_262;
@@ -1701,13 +1703,13 @@ LABEL_324:
     if ( mount_id0 <= 0x6C )
     {
       if ( mount_id0 >= 0x6B )
-        goto LABEL_319;
+        goto LABEL_324;
       if ( mount_id0 < 0x64 )
         goto LABEL_262;
     }
-    goto LABEL_324;
+    goto LABEL_329;
   }
-LABEL_313:
+LABEL_318:
   if ( klicensee )
   {
     klicensee_chunk10 = *((_DWORD *)klicensee + 1);
@@ -1715,9 +1717,9 @@ LABEL_313:
     pfs_mount_type = 5;
     klicensee_chunk30 = *((_DWORD *)klicensee + 3);
     *(_DWORD *)klicensee0 = *(_DWORD *)klicensee;
-    klicensee_chunk11 = klicensee_chunk10;
-    klicensee_chunk22 = klicensee_chunk20;
-    klicensee_chunk33 = klicensee_chunk30;
+    *(_DWORD *)&klicensee0[4] = klicensee_chunk10;
+    *(_DWORD *)&klicensee0[8] = klicensee_chunk20;
+    *(_DWORD *)&klicensee0[12] = klicensee_chunk30;
     goto LABEL_135;
   }
   pfs_mount_type = 5;
