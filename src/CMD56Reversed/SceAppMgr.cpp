@@ -641,6 +641,21 @@ int verify_copy_23D5A10(char *src, char *dst)
 
 //----------------
 
+int w_unmount_23D5F44(SceUID pid, mount_point_data_entry *mnt_entry, int umountArg)
+{
+   return 0;
+}
+
+int read_sealedkey_23D6EA0(char *mountpoint, char *secret)
+{
+   return 0;
+}
+
+int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, mount_ctx_t *mctx)
+{
+   return 0;
+}
+
 int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, int mount_id, char *title_id, char *physical_path, char *mount_drive, char *klicensee, char *gen_mount_point)
 {
   char *title_id_local; // r10
