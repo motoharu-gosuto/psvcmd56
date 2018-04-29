@@ -4,3 +4,8 @@ int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(Sc
 {
    return 0;
 }
+
+int SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(SceUID pid, SceFiosOverlayID id)
+{
+   return 0;
+}

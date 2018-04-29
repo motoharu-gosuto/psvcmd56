@@ -22,9 +22,9 @@ struct mount_ctx_t
   mount_point_data_entry *mnt_entry;
   SceFiosOverlayID overlay_id;
   char mountDrive[16];
-  int unk18;
-  int unk1C;
-  mount_ctx_t *next;
+  mount_point_data_entry* entry_18;
+  mount_ctx_t* unk1C;
+  mount_ctx_t* next;
 };
 
 struct mount_ctx_holder_t

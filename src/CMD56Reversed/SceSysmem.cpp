@@ -136,7 +136,7 @@ void* SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize si
    return 0;
 }
 
-void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, void *ptr)
+void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, const void *ptr)
 {
 }
 
