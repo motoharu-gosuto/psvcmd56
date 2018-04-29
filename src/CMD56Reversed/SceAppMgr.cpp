@@ -666,17 +666,14 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
    if(mount_id <= 0x70)
    {
       #pragma region
-      int result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
-      if (result1)
-      {
-         return result1;
-      }
-      else
-      {
-         mount_drive_local[14] = 0x3A;
-         mount_drive_local[15] = 0;
-         return 0;
-      }
+      int res = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+      if (res)
+         return res;
+
+      mount_drive_local[14] = ':';
+      mount_drive_local[15] = 0;
+      return 0;
+      
       #pragma endregion
    }
    else if((mount_id > 0x70) && (mount_id < 0xC8))
@@ -691,17 +688,13 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0xC8:
       case 0xC9:
          {
-            int result1 = proc_generate_random_path_23D4FBC("td", mount_drive_local);
-            if (result1)
-            {
-               return result1;
-            }
-            else
-            {
-               mount_drive_local[14] = 0x3A;
-               mount_drive_local[15] = 0;
-               return 0;
-            }
+            int res = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+            if (res)
+               return res;
+
+            mount_drive_local[14] = ':';
+            mount_drive_local[15] = 0;
+            return 0;
          }
       case 0xCA:
          {
@@ -712,35 +705,25 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
             }
             else
             {
-               #pragma region no fall through
-               int rnd_path_gen_res0 = proc_generate_random_path_23D4FBC("ms", mount_drive_local);
-               if (rnd_path_gen_res0)
-               {
-                  return rnd_path_gen_res0;
-               }
-               else
-               {
-                  mount_drive_local[14] = 0x3A;
-                  mount_drive_local[15] = 0;
-                  return 0;
-               }
-               #pragma endregion
+               int res = proc_generate_random_path_23D4FBC("ms", mount_drive_local);
+               if (res)
+                  return res;
+               
+               mount_drive_local[14] = ':';
+               mount_drive_local[15] = 0;
+               return 0;
             }
          }
       case 0xCB:
       case 0xCC:
          {
-            int result1 = proc_generate_random_path_23D4FBC("td", mount_drive_local);
-            if (result1)
-            {
-               return result1;
-            }
-            else
-            {
-               mount_drive_local[14] = 0x3A;
-               mount_drive_local[15] = 0;
-               return 0;
-            }
+            int res = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+            if (res)
+               return res;
+            
+            mount_drive_local[14] = ':';
+            mount_drive_local[15] = 0;
+            return 0;
          }
       case 0xCD:
          strcpy(mount_drive_local, "cache0:");
@@ -748,17 +731,13 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0xCE:
       case 0xCF:
          {
-            int result1 = proc_generate_random_path_23D4FBC("td", mount_drive_local);
-            if (result1)
-            {
-               return result1;
-            }
-            else
-            {
-               mount_drive_local[14] = 0x3A;
-               mount_drive_local[15] = 0;
-               return 0;
-            }
+            int res = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+            if (res)
+               return res;
+
+            mount_drive_local[14] = ':';
+            mount_drive_local[15] = 0;
+            return 0;
          }
       }
       #pragma endregion
@@ -797,46 +776,38 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0x191:
       case 0x192:
          {
-            int result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
-            if (result1)
-            {
-               return result1;
-            }
-            else
-            {
-               mount_drive_local[14] = 0x3A;
-               mount_drive_local[15] = 0;
-               return 0;
-            }
+            int res = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+            if (res)
+               return res;
+            
+            mount_drive_local[14] = ':';
+            mount_drive_local[15] = 0;
+            return 0;
          }
       }
       #pragma endregion
    }
-   else if((mount_id > 0x192) && (mount_id < 0x1F5))
+   else if((mount_id >= 0x193) && (mount_id <= 0x1F4))
    {
       #pragma region
-      int result1 = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
-      if (result1)
-      {
-         return result1;
-      }
-      else
-      {
-         mount_drive_local[14] = 0x3A;
-         mount_drive_local[15] = 0;
-         return 0;
-      }
+      int res = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+      if (res)
+         return res;
+
+      mount_drive_local[14] = ':';
+      mount_drive_local[15] = 0;
+      return 0;
       #pragma endregion
    }
-   else if((mount_id >= 0x1F5) && (mount_id <= 0x1F9))
+   else if((mount_id > 0x1F4) && (mount_id < 0x1F8))
+   {
+      return 0x80800001;
+   }
+   else if((mount_id >= 0x1F8) && (mount_id <= 0x1F9))
    {
       #pragma region
       switch(mount_id)
       {
-      case 0x1F5:
-      case 0x1F6:
-      case 0x1F7:
-         return 0x80800001;
       case 0x1F8:
          strcpy(mount_drive_local, "sdimport0:");
          return 0;
@@ -853,24 +824,20 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
    else if(mount_id == 0x258)
    {
       #pragma region
-      int result1 = proc_generate_random_path_23D4FBC("lm", mount_drive_local);
-      if (result1)
-      {
-         return result1;
-      }
-      else
-      {
-         mount_drive_local[14] = 0x3A;
-         mount_drive_local[15] = 0;
-         return 0;
-      }
+      int res = proc_generate_random_path_23D4FBC("lm", mount_drive_local);
+      if (res)
+         return res;
+      
+      mount_drive_local[14] = ':';
+      mount_drive_local[15] = 0;
+      return 0;
       #pragma endregion
    }
    else if ((mount_id > 0x258) && (mount_id < 0x3E8))
    {
       return 0x80800001;
    }
-   else if((mount_id >= 0x3E8) && (mount_id <= 0x3F1))
+   else if((mount_id >= 0x3E8) && (mount_id <= 0x3EB))
    {
       #pragma region
       switch(mount_id)
@@ -883,8 +850,18 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0x3EB:
          _snprintf(mount_drive_local, 0x10u, "addcont%1u:", 0);
          return 0;
-      case 0x3EC:
-         return 0x80800001;
+      }
+      #pragma endregion
+   }
+   else if(mount_id == 0x3EC)
+   {
+      return 0x80800001;
+   }
+   else if((mount_id >= 0x3ED) && (mount_id <= 0x3F1))
+   {
+      #pragma region
+      switch(mount_id)
+      { 
       case 0x3ED:
       case 0x3EE:
          _snprintf(mount_drive_local, 0x10u, "savedata%1u:", 0);
@@ -892,31 +869,23 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0x3EF:
       case 0x3F0:
          {
-            int rnd_path_gen_res1 = proc_generate_random_path_23D4FBC("sd", mount_drive_local);
-            if (rnd_path_gen_res1)
-            {
-               return rnd_path_gen_res1;
-            }
-            else
-            {
-               mount_drive_local[14] = 0x3A;
-               mount_drive_local[15] = 0;
-               return 0;
-            }
+            int res = proc_generate_random_path_23D4FBC("sd", mount_drive_local);
+            if (res)
+               return res;
+            
+            mount_drive_local[14] = ':';
+            mount_drive_local[15] = 0;
+            return 0;
          }
       case 0x3F1:
          {
-            int result1 = proc_generate_random_path_23D4FBC("ud", mount_drive_local);
-            if (result1)
-            {
-               return result1;
-            }
-            else
-            {
-               mount_drive_local[14] = 0x3A;
-               mount_drive_local[15] = 0;
-               return 0;
-            }
+            int res = proc_generate_random_path_23D4FBC("ud", mount_drive_local);
+            if (res)
+               return res;
+
+            mount_drive_local[14] = ':';
+            mount_drive_local[15] = 0;
+            return 0;
          }
       }
       #pragma endregion
