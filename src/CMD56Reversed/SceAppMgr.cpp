@@ -889,6 +889,162 @@ int generate_mount_drive(unsigned int mount_id, char* mount_drive)
    }
 }
 
+bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, const char *mount_drive, const char* mount_drive_input, char *gen_mount_point, int& error_code)
+{  
+   //try to find mount ctx with mount_id and copy current_mount->mountDrive to gen_mount_point
+
+   if (mount_id >= 0x3E8)
+   {
+      #pragma region
+      mount_ctx_t* current_mount = mount_ctx_holder->mount;
+
+      while (1)
+      {
+         if (mount_id == current_mount->mnt_entry->mount_id)
+         {
+            if (strncmp(current_mount->mountDrive, mount_drive_input, 0x10u) == 0)
+               break;
+         }
+
+         current_mount = current_mount->next;
+
+         if (current_mount == 0)
+         {
+            error_code = 0;
+            return true;
+         }
+      }
+
+      memcpy(gen_mount_point, current_mount->mountDrive, 0x10);
+      #pragma endregion
+   }
+   else
+   {
+      #pragma region
+      mount_ctx_t* current_mount = mount_ctx_holder->mount;
+
+      while (1)
+      {
+         if(mount_id == current_mount->mnt_entry->mount_id)
+            break;
+
+         current_mount = current_mount->next;
+
+         if (current_mount == 0)
+         {
+            error_code = 0;
+            return true;
+         }
+      }
+
+      memcpy(gen_mount_point, current_mount->mountDrive, 0x10);
+      #pragma endregion
+   }
+
+   //----
+
+   mount_point_data_entry *mpd_entry0;
+
+   if (mount_drive)
+   {
+      #pragma region
+
+      mount_ctx_t *mount_ctx_local1 = mount_ctx_holder->mount;
+
+      if (!mount_ctx_local1)
+      {
+         error_code = 0x80800002; 
+         return false;
+      }
+
+      while (1)
+      {
+         mpd_entry0 = mount_ctx_local1->mnt_entry;
+
+         if ( mount_ctx_local1->mnt_entry )
+         {
+            if ( mount_id == mpd_entry0->mount_id && !strncmp(mount_ctx_local1->mountDrive, mount_drive_input, 0x10u))
+               break;
+         }
+
+         mount_ctx_local1 = mount_ctx_local1->next;
+
+         if (mount_ctx_local1 == 0)
+         {
+            error_code = 0x80800002;
+            return false;
+         }
+      }
+
+      #pragma endregion
+   }
+   else
+   {
+      #pragma region
+
+      mount_ctx_t *mount_ctx_local2 = mount_ctx_holder->mount;
+
+      if (!mount_ctx_local2)
+      {
+         error_code = 0x80800002;
+         return false;
+      }
+
+      while (1)
+      {
+         mpd_entry0 = mount_ctx_local2->mnt_entry;
+
+         if (mount_ctx_local2->mnt_entry)
+         {
+            if (mount_id == mpd_entry0->mount_id)
+               break;
+         }
+
+         mount_ctx_local2 = mount_ctx_local2->next;
+
+         if (mount_ctx_local2 == 0)
+         {
+            error_code = 0x80800002;
+            return false;
+         }
+      }
+
+      #pragma endregion
+   }
+
+   if(!mpd_entry0->gen_mount_point[0])
+   {
+      error_code = 0x80800003;
+      return false;
+   }
+
+   SceSelfAuthInfo auth_ctx0;
+
+   int res1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx0);
+   if(res1 < 0)
+   {
+      error_code = res1;
+      return false;
+   }
+
+   int res2 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(mpd_entry0->gen_mount_point, auth_ctx0.auth_id);
+   if(res2 == 0x80010011)
+   {
+      error_code = 0x80800003;
+      return false;
+   }
+   else if(res2 >= 0)
+   {
+      error_code = 0x80800003;
+      return false;
+   }
+   else
+   {
+      error_code = res2;
+      return false;
+   }   
+}
+
 int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, char *title_id, char *physical_path, char *mount_drive, char *klicensee, char *gen_mount_point)
 {
    int cookie = var_009EA004;
@@ -910,20 +1066,25 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
          return (cookie == var_009EA004) ? gen_res : STACK_CHECK_FAIL;
    }
 
+   //====
+
+   if (mount_ctx_holder->mount)
+   {
+      int error_code = 0;
+      if(!maybe_find_mount(pid, mount_ctx_holder, mount_id, mount_drive, mount_drive_input, gen_mount_point, error_code))
+         return (cookie == var_009EA004) ? error_code : STACK_CHECK_FAIL;
+   }
+
+   //====
+
    #pragma region vars
-   mount_ctx_t *mount_ctx_local0;
-   char *gen_mount_point1;
-   mount_ctx_t *mount_ctx_local1;
    int result2;
    int result;
    mount_ctx_t *mctx_alloc0;
    SceUID mount_pool;
    char *physical_path_copy;
    SceFiosOverlayID overlay_id;
-   mount_point_data_entry *mpd_entry0;
-   mount_ctx_t *mount_ctx_local2;
    int result1;
-   
    SceUID pid0;
    int prev_perm0;
    mount_point_data_entry *glb_mpd_entry0;
@@ -975,141 +1136,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    char *mountpoint;
    ctx_49D4DD9B alloc_ctx0;
    char klicensee0[16];
-   SceSelfAuthInfo auth_ctx;
    #pragma endregion
-
-
-   mount_ctx_local0 = mount_ctx_holder->mount;
-
-   if (mount_ctx_local0)
-   {
-      if (mount_id >= 0x3E8)
-      {
-         while (1)
-         {
-            if (mount_id == mount_ctx_local0->mnt_entry->mount_id)
-            {
-               gen_mount_point1 = mount_ctx_local0->mountDrive;
-               if (!strncmp(mount_ctx_local0->mountDrive, mount_drive_input, 0x10u))
-                  break;
-            }
-
-            mount_ctx_local0 = mount_ctx_local0->next;
-
-            if (!mount_ctx_local0)
-            {
-               goto LABEL_18;
-            }
-         }
-      }
-      else
-      {
-         while (mount_id != mount_ctx_local0->mnt_entry->mount_id)
-         {
-            mount_ctx_local0 = mount_ctx_local0->next;
-            if (!mount_ctx_local0)
-            {
-               goto LABEL_18;
-            }
-         }
-
-         gen_mount_point1 = mount_ctx_local0->mountDrive;
-      }
-
-      memcpy(gen_mount_point, gen_mount_point1, 0x10);
-
-      if (mount_drive)
-      {
-         mount_ctx_local1 = mount_ctx_holder->mount;
-
-         if (!mount_ctx_local1)
-         {
-            result2 = 0x80800002;
-            result = result2;
-            return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-         }
-
-         while (1)
-         {
-            mpd_entry0 = mount_ctx_local1->mnt_entry;
-
-            if ( mount_ctx_local1->mnt_entry )
-            {
-               if ( mount_id == mpd_entry0->mount_id && !strncmp(mount_ctx_local1->mountDrive, mount_drive_input, 0x10u))
-                  break;
-            }
-
-            mount_ctx_local1 = mount_ctx_local1->next;
-
-            if (!mount_ctx_local1)
-            {
-               result2 = 0x80800002;
-               result = result2;
-               return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-            }
-         }
-      }
-      else
-      {
-         mount_ctx_local2 = mount_ctx_holder->mount;
-
-         if (!mount_ctx_local2)
-         {
-            result2 = 0x80800002;
-            result = result2;
-            return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-         }
-
-         while (1)
-         {
-            mpd_entry0 = mount_ctx_local2->mnt_entry;
-
-            if (mount_ctx_local2->mnt_entry)
-            {
-               if ( mount_id == mpd_entry0->mount_id )
-                  break;
-            }
-
-            mount_ctx_local2 = mount_ctx_local2->next;
-
-            if (!mount_ctx_local2)
-            {
-               result2 = 0x80800002;
-               result = result2;
-               return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-            }
-         }
-      }
-
-      if(!mpd_entry0->gen_mount_point[0])
-      {
-         result2 = 0x80800003;
-         result = result2;
-         return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-      }
-
-      result1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
-      if(result1 < 0)
-      {
-         result2 = result1;
-         result = result2;
-         return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-      }
-
-      result1 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(mpd_entry0->gen_mount_point, auth_ctx.auth_id);
-      if(result1 == 0x80010011  || result1 >= 0)
-      {
-         result2 = 0x80800003;
-         result = result2;
-         return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-      }
-
-      result2 = result1;
-      result = result2;
-      return (cookie == var_009EA004) ? result : STACK_CHECK_FAIL;
-   }
-
-
 
 //===========================================
 
