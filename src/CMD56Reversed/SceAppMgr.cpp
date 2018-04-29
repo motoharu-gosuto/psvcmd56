@@ -394,7 +394,7 @@ mount_point_data_entry* mount_point_entries_22D470C;
 //if item is found then path from mount_point_entries_22D470C item is copied to result
 //in any other case OverlayResolveSync result path is copied to result
 
-int iofilemgr_1914_callback_23DDE64(const char *path, SceUID pid, char *result_path, int size)
+int iofilemgr_path_mapping_callback_23DDE64(const char *path, SceUID pid, char *result_path, int size)
 {
    int result = 0;
 
@@ -655,25 +655,18 @@ int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, mount_ctx_t *mc
    return 0;
 }
 
-int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* mount_drive_local)
+int generate_mount_drive(unsigned int mount_id, char* mount_drive)
 {
-   if (mount_drive)
-   {
-      memcpy(mount_drive_local, mount_drive, 0x10);
-      return 0;
-   }
-   
    if(mount_id <= 0x70)
    {
       #pragma region
-      int res = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+      int res = proc_generate_random_path_23D4FBC("ad", mount_drive);
       if (res)
          return res;
 
-      mount_drive_local[14] = ':';
-      mount_drive_local[15] = 0;
+      mount_drive[14] = ':';
+      mount_drive[15] = 0;
       return 0;
-      
       #pragma endregion
    }
    else if((mount_id > 0x70) && (mount_id < 0xC8))
@@ -688,55 +681,55 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0xC8:
       case 0xC9:
          {
-            int res = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+            int res = proc_generate_random_path_23D4FBC("td", mount_drive);
             if (res)
                return res;
 
-            mount_drive_local[14] = ':';
-            mount_drive_local[15] = 0;
+            mount_drive[14] = ':';
+            mount_drive[15] = 0;
             return 0;
          }
       case 0xCA:
          {
             if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0))
             {
-               strcpy(mount_drive_local, "ms0:");
+               strcpy(mount_drive, "ms0:");
                return 0;
             }
             else
             {
-               int res = proc_generate_random_path_23D4FBC("ms", mount_drive_local);
+               int res = proc_generate_random_path_23D4FBC("ms", mount_drive);
                if (res)
                   return res;
                
-               mount_drive_local[14] = ':';
-               mount_drive_local[15] = 0;
+               mount_drive[14] = ':';
+               mount_drive[15] = 0;
                return 0;
             }
          }
       case 0xCB:
       case 0xCC:
          {
-            int res = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+            int res = proc_generate_random_path_23D4FBC("td", mount_drive);
             if (res)
                return res;
             
-            mount_drive_local[14] = ':';
-            mount_drive_local[15] = 0;
+            mount_drive[14] = ':';
+            mount_drive[15] = 0;
             return 0;
          }
       case 0xCD:
-         strcpy(mount_drive_local, "cache0:");
+         strcpy(mount_drive, "cache0:");
          return 0;
       case 0xCE:
       case 0xCF:
          {
-            int res = proc_generate_random_path_23D4FBC("td", mount_drive_local);
+            int res = proc_generate_random_path_23D4FBC("td", mount_drive);
             if (res)
                return res;
 
-            mount_drive_local[14] = ':';
-            mount_drive_local[15] = 0;
+            mount_drive[14] = ':';
+            mount_drive[15] = 0;
             return 0;
          }
       }
@@ -752,13 +745,13 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       switch(mount_id)
       {
       case 0x12E:
-         strcpy(mount_drive_local, "trophy_sys0:");
+         strcpy(mount_drive, "trophy_sys0:");
          return 0;
       case 0x12F:
-         strcpy(mount_drive_local, "trophy_dat0:");
+         strcpy(mount_drive, "trophy_dat0:");
          return 0;
       case 0x130:
-         strcpy(mount_drive_local, "trophy_dbk0:");
+         strcpy(mount_drive, "trophy_dbk0:");
          return 0;
       }
       #pragma endregion
@@ -776,12 +769,12 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       case 0x191:
       case 0x192:
          {
-            int res = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+            int res = proc_generate_random_path_23D4FBC("ad", mount_drive);
             if (res)
                return res;
             
-            mount_drive_local[14] = ':';
-            mount_drive_local[15] = 0;
+            mount_drive[14] = ':';
+            mount_drive[15] = 0;
             return 0;
          }
       }
@@ -790,12 +783,12 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
    else if((mount_id >= 0x193) && (mount_id <= 0x1F4))
    {
       #pragma region
-      int res = proc_generate_random_path_23D4FBC("ad", mount_drive_local);
+      int res = proc_generate_random_path_23D4FBC("ad", mount_drive);
       if (res)
          return res;
 
-      mount_drive_local[14] = ':';
-      mount_drive_local[15] = 0;
+      mount_drive[14] = ':';
+      mount_drive[15] = 0;
       return 0;
       #pragma endregion
    }
@@ -809,10 +802,10 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       switch(mount_id)
       {
       case 0x1F8:
-         strcpy(mount_drive_local, "sdimport0:");
+         strcpy(mount_drive, "sdimport0:");
          return 0;
       case 0x1F9:
-         strcpy(mount_drive_local, "sdimport_tmp0:");
+         strcpy(mount_drive, "sdimport_tmp0:");
          return 0;
       }
       #pragma endregion
@@ -824,12 +817,12 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
    else if(mount_id == 0x258)
    {
       #pragma region
-      int res = proc_generate_random_path_23D4FBC("lm", mount_drive_local);
+      int res = proc_generate_random_path_23D4FBC("lm", mount_drive);
       if (res)
          return res;
       
-      mount_drive_local[14] = ':';
-      mount_drive_local[15] = 0;
+      mount_drive[14] = ':';
+      mount_drive[15] = 0;
       return 0;
       #pragma endregion
    }
@@ -844,11 +837,11 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       {
       case 0x3E8:
       case 0x3E9:
-         _snprintf(mount_drive_local, 0x10u, "app%1u:", 0);
+         _snprintf(mount_drive, 0x10u, "app%1u:", 0);
          return 0;
       case 0x3EA:
       case 0x3EB:
-         _snprintf(mount_drive_local, 0x10u, "addcont%1u:", 0);
+         _snprintf(mount_drive, 0x10u, "addcont%1u:", 0);
          return 0;
       }
       #pragma endregion
@@ -864,27 +857,27 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
       { 
       case 0x3ED:
       case 0x3EE:
-         _snprintf(mount_drive_local, 0x10u, "savedata%1u:", 0);
+         _snprintf(mount_drive, 0x10u, "savedata%1u:", 0);
          return 0;
       case 0x3EF:
       case 0x3F0:
          {
-            int res = proc_generate_random_path_23D4FBC("sd", mount_drive_local);
+            int res = proc_generate_random_path_23D4FBC("sd", mount_drive);
             if (res)
                return res;
             
-            mount_drive_local[14] = ':';
-            mount_drive_local[15] = 0;
+            mount_drive[14] = ':';
+            mount_drive[15] = 0;
             return 0;
          }
       case 0x3F1:
          {
-            int res = proc_generate_random_path_23D4FBC("ud", mount_drive_local);
+            int res = proc_generate_random_path_23D4FBC("ud", mount_drive);
             if (res)
                return res;
 
-            mount_drive_local[14] = ':';
-            mount_drive_local[15] = 0;
+            mount_drive[14] = ':';
+            mount_drive[15] = 0;
             return 0;
          }
       }
@@ -898,6 +891,26 @@ int generate_mount_drive(unsigned int mount_id, const char *mount_drive, char* m
 
 int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, char *title_id, char *physical_path, char *mount_drive, char *klicensee, char *gen_mount_point)
 {
+   int cookie = var_009EA004;
+
+   if (!gen_mount_point)
+      return (cookie == var_009EA004) ? 0x80800001 : STACK_CHECK_FAIL;
+
+   char mount_drive_input[16];
+   memset(mount_drive_input, 0, 0x10);
+
+   if (mount_drive)
+   {
+      memcpy(mount_drive_input, mount_drive, 0x10);
+   }
+   else
+   {
+      int gen_res = generate_mount_drive(mount_id, mount_drive_input);
+      if(gen_res)
+         return (cookie == var_009EA004) ? gen_res : STACK_CHECK_FAIL;
+   }
+
+   #pragma region vars
    mount_ctx_t *mount_ctx_local0;
    char *gen_mount_point1;
    mount_ctx_t *mount_ctx_local1;
@@ -963,41 +976,23 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    ctx_49D4DD9B alloc_ctx0;
    char klicensee0[16];
    SceSelfAuthInfo auth_ctx;
-
-   int cookie = var_009EA004;
-
-   char *title_id_local = title_id;
-   unsigned int mount_id_local = mount_id;
-   SceUID pid_local = pid;
-   mount_ctx_holder_t *mount_ctx_holder_local = mount_ctx_holder;
-
-   if (!gen_mount_point)
-      return (cookie == var_009EA004) ? 0x80800001 : STACK_CHECK_FAIL;
-
-   char mount_drive_local[16];
-   memset(mount_drive_local, 0, 0x10);
-
-   int gen_res = generate_mount_drive(mount_id, mount_drive, mount_drive_local);
-   if(gen_res)
-      return (cookie == var_009EA004) ? gen_res : STACK_CHECK_FAIL;
-
-
+   #pragma endregion
 
 
    /*
-  mount_ctx_local0 = mount_ctx_holder_local->mount;
+  mount_ctx_local0 = mount_ctx_holder->mount;
   if ( mount_ctx_local0 )
   {
-    if ( mount_id_local >= 0x3E8 )
+    if ( mount_id >= 0x3E8 )
     {
       while ( 1 )
       {
-        if ( mount_id_local == mount_ctx_local0->mnt_entry->mount_id )
+        if ( mount_id == mount_ctx_local0->mnt_entry->mount_id )
         {
           gen_mount_point1 = mount_ctx_local0->mountDrive;
           if ( !strncmp(
                   mount_ctx_local0->mountDrive,
-                  mount_drive_local,
+                  mount_drive_input,
                   0x10u) )
             break;
         }
@@ -1008,7 +1003,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
     }
     else
     {
-      while ( mount_id_local != mount_ctx_local0->mnt_entry->mount_id )
+      while ( mount_id != mount_ctx_local0->mnt_entry->mount_id )
       {
         mount_ctx_local0 = mount_ctx_local0->next;
         if ( !mount_ctx_local0 )
@@ -1021,7 +1016,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
     if ( mount_drive )
     {
-      mount_ctx_local1 = mount_ctx_holder_local->mount;
+      mount_ctx_local1 = mount_ctx_holder->mount;
       if ( !mount_ctx_local1 )
       {
 LABEL_12:
@@ -1034,10 +1029,10 @@ LABEL_12:
         mpd_entry0 = mount_ctx_local1->mnt_entry;
         if ( mount_ctx_local1->mnt_entry )
         {
-          if ( mount_id_local == mpd_entry0->mount_id
+          if ( mount_id == mpd_entry0->mount_id
             && !strncmp(
                   mount_ctx_local1->mountDrive,
-                  mount_drive_local,
+                  mount_drive_input,
                   0x10u) )
           {
             break;
@@ -1050,7 +1045,7 @@ LABEL_12:
     }
     else
     {
-      mount_ctx_local2 = mount_ctx_holder_local->mount;
+      mount_ctx_local2 = mount_ctx_holder->mount;
       if ( !mount_ctx_local2 )
         goto LABEL_12;
       while ( 1 )
@@ -1058,7 +1053,7 @@ LABEL_12:
         mpd_entry0 = mount_ctx_local2->mnt_entry;
         if ( mount_ctx_local2->mnt_entry )
         {
-          if ( mount_id_local == mpd_entry0->mount_id )
+          if ( mount_id == mpd_entry0->mount_id )
             break;
         }
         mount_ctx_local2 = mount_ctx_local2->next;
@@ -1067,7 +1062,7 @@ LABEL_12:
       }
     }
     if ( !mpd_entry0->gen_mount_point[0]
-      || (result1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx),
+      || (result1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx),
           result1 >= 0)
       && ((HIDWORD(auth_id1) = auth_ctx.auth_id,
            result1 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(
@@ -1105,7 +1100,7 @@ LABEL_18:
 
   memset(mctx_alloc0, 0, 0x24u);
   
-  memcpy(mctx_alloc1->mountDrive, mount_drive_local, 0x10);
+  memcpy(mctx_alloc1->mountDrive, mount_drive_input, 0x10);
 
   mount_pool = SceAppMgrMount_pool_22A0008;
 
@@ -1133,15 +1128,15 @@ LABEL_21:
     overlay_id = mctx_alloc1->overlay_id;
     if ( overlay_id )
     {
-      pid0 = pid_local;
-      if ( !pid_local )
+      pid0 = pid;
+      if ( !pid )
         pid0 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
       prev_perm0 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
       SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(pid0, overlay_id);
       SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm0);
     }
     if ( mctx_alloc1->mnt_entry )
-      w_unmount_23D5F44(pid_local, mctx_alloc1->mnt_entry, 1);
+      w_unmount_23D5F44(pid, mctx_alloc1->mnt_entry, 1);
     SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, mctx_alloc1);
     if ( physical_path_copy2 )
     {
@@ -1156,7 +1151,7 @@ LABEL_21:
     result2 = 0x80800001;
     goto LABEL_21;
   }
-  result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx);
+  result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
   if ( result2 < 0 )
   {
 LABEL_111:
@@ -1167,7 +1162,7 @@ LABEL_111:
   if ( mount_point_entries_22D470C )
   {
     glb_mpd_entry0 = (mount_point_data_entry *)mount_point_entries_22D470C;
-    while ( mount_id_local != glb_mpd_entry0->mount_id
+    while ( mount_id != glb_mpd_entry0->mount_id
          || strncmp(glb_mpd_entry0->path, physical_path_copy2, 0x124u) )
     {
       glb_mpd_entry0 = glb_mpd_entry0->next;
@@ -1287,7 +1282,7 @@ LABEL_111:
     }
     glb_mpd_entry0->auth_ids[initialized_global_item_index] = auth_id;
     if ( !glb_mpd_entry0->gen_mount_point[0]
-      || (result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx),
+      || (result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx),
           result2 >= 0)
       && ((HIDWORD(auth_id2) = auth_ctx.auth_id,
            pfs_mount_res = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(
@@ -1385,13 +1380,13 @@ LABEL_124:
   }
   mpd_entry_alloc1 = mpd_entry_alloc0;
   memset(mpd_entry_alloc0, 0, 0x1D0u);
-  mpd_entry_alloc1->mount_id = mount_id_local;
+  mpd_entry_alloc1->mount_id = mount_id;
   mountpoint = mpd_entry_alloc1->path;
   strncpy(mpd_entry_alloc1->path, physical_path_copy2, 0x123u);
 
-  memcpy(mpd_entry_alloc2->title_id, title_id_local, 0x10);
+  memcpy(mpd_entry_alloc2->title_id, title_id, 0x10);
 
-  if ( mount_id_local == 0x258 )
+  if ( mount_id == 0x258 )
   {
     mpd_entry_alloc2->gen_mount_point[0] = 0;
     prev_perm1 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
@@ -1447,7 +1442,7 @@ LABEL_135:
           if ( !mpd_entry_alloc2->gen_mount_point[0] )
             goto LABEL_136;
           prev_perm2 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
-          result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid_local, &auth_ctx);
+          result2 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
           if ( result2 < 0 )
             goto LABEL_213;
           if ( klicensee0[0]
@@ -1576,7 +1571,7 @@ LABEL_136:
                                           check0 = 1;
 LABEL_154:
                                           prev_perm3 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
-                                          if ( mount_id_local == 0x258 )
+                                          if ( mount_id == 0x258 )
                                             SceIofilemgrForDriver_sceIoUmountForDriver_20574100(
                                               0x10000,
                                               0,
@@ -1807,11 +1802,11 @@ LABEL_112:
     goto LABEL_21;
 LABEL_113:
   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy2);
-  if ( mount_id_local != 0x3E9 )
+  if ( mount_id != 0x3E9 )
   {
-    if ( mount_id_local != 0x3EB )
+    if ( mount_id != 0x3EB )
       goto LABEL_115;
-    mount_ctx_local4 = mount_ctx_holder_local->mount;
+    mount_ctx_local4 = mount_ctx_holder->mount;
     if ( mount_ctx_local4 )
     {
       while ( 1 )
@@ -1822,7 +1817,7 @@ LABEL_113:
           if ( mpd_entry2->mount_id == 0x3EA
             && !strncmp(
                   mount_ctx_local4->mountDrive,
-                  mount_drive_local,
+                  mount_drive_input,
                   0x10u) )
           {
             break;
@@ -1840,7 +1835,7 @@ LABEL_225:
     physical_path_copy2 = (char *)mount_ctx_local4;
     goto LABEL_21;
   }
-  mount_ctx_local4 = mount_ctx_holder_local->mount;
+  mount_ctx_local4 = mount_ctx_holder->mount;
   if ( !mount_ctx_local4 )
     goto LABEL_225;
   while ( 1 )
@@ -1849,7 +1844,7 @@ LABEL_225:
     if ( mount_ctx_local4->mnt_entry )
     {
       if ( mpd_entry3->mount_id == 0x3E8
-        && !strncmp(mount_ctx_local4->mountDrive, mount_drive_local, 0x10u) )
+        && !strncmp(mount_ctx_local4->mountDrive, mount_drive_input, 0x10u) )
       {
         break;
       }
@@ -1860,13 +1855,13 @@ LABEL_225:
   }
   mctx_alloc1->unk18 = (int)mpd_entry3;
 LABEL_115:
-  result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid_local, mctx_alloc1);
+  result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid, mctx_alloc1);
   if ( result2 )
   {
     physical_path_copy2 = 0;
     goto LABEL_21;
   }
-  mount_ctx_local3 = mount_ctx_holder_local->mount;
+  mount_ctx_local3 = mount_ctx_holder->mount;
   if ( mount_ctx_local3 )
   {
     if ( mctx_alloc1 == mount_ctx_local3 )
@@ -1894,7 +1889,7 @@ LABEL_115:
     }
     goto LABEL_21;
   }
-  mount_ctx_holder_local->mount = mctx_alloc1;
+  mount_ctx_holder->mount = mctx_alloc1;
   mctx_alloc1->unk1C = 0;
   mctx_alloc1->next = 0;
 LABEL_123:
