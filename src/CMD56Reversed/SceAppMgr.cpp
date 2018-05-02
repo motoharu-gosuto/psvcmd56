@@ -1471,6 +1471,47 @@ int handle_mount_id_258(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_all
 
 int label_135()
 {
+   #pragma region vars
+   /*
+   int result2;
+   int result;
+   int result1;
+   SceSelfAuthInfo auth_ctx;
+   bool check0;
+   mount_ctx_t *mount_ctx_local3;
+   
+   signed int initialized_allocated_item_index;
+   int prev_perm3;
+   mount_point_data_entry *mpd_entry1;
+   int rnd_path_gen_res0;
+   int rnd_path_gen_res1;
+   mount_ctx_t *mount_ctx_local4;
+   mount_point_data_entry *mpd_entry2;
+   mount_point_data_entry *mpd_entry3;
+   
+   int prev_perm2;
+   char *klicensee1;
+   __int64 auth_id3;
+   unsigned int pfs_mount_res0;
+   __int64 auth_id4;
+   unsigned int pfs_mount_res1;
+   int pfs_mount_res2;
+   char *gen_pfs_drive1;
+   unsigned int pfs_mount_res30;
+   __int64 auth_id5;
+   unsigned int pfs_mount_res31;
+   signed int pfs_mount_res32;
+   int pfs_mount_res40;
+   __int64 auth_id6;
+   bool pfs_mount_res41;
+   char *gen_pfs_drive2;
+   unsigned int pfs_mount_res50;
+   unsigned int pfs_mount_res51;
+   
+   char *mountpoint;
+   */
+   #pragma endregion
+
    return 0;
 
    /*
@@ -2039,56 +2080,13 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    
    //===========================================
 
-   #pragma region vars
-   int result2;
-   int result;
-   int result1;
-   SceSelfAuthInfo auth_ctx;
-   bool check0;
-   mount_ctx_t *mount_ctx_local3;
-   unsigned int pfs_mount_type;
-   signed int initialized_allocated_item_index;
-   int prev_perm3;
-   mount_point_data_entry *mpd_entry1;
-   int rnd_path_gen_res0;
-   int rnd_path_gen_res1;
-   mount_ctx_t *mount_ctx_local4;
-   mount_point_data_entry *mpd_entry2;
-   mount_point_data_entry *mpd_entry3;
-   
-   int prev_perm2;
-   char *klicensee1;
-   __int64 auth_id3;
-   unsigned int pfs_mount_res0;
-   __int64 auth_id4;
-   unsigned int pfs_mount_res1;
-   int pfs_mount_res2;
-   char *gen_pfs_drive1;
-   unsigned int pfs_mount_res30;
-   __int64 auth_id5;
-   unsigned int pfs_mount_res31;
-   signed int pfs_mount_res32;
-   int pfs_mount_res40;
-   __int64 auth_id6;
-   bool pfs_mount_res41;
-   char *gen_pfs_drive2;
-   unsigned int pfs_mount_res50;
-   unsigned int pfs_mount_res51;
-   
-   char *mountpoint;
-   
-   #pragma endregion
-
-   //===========================================
-
-   mountpoint = mpd_entry_alloc1->path;
+   char * mountpoint = mpd_entry_alloc1->path;
 
    char *gen_pfs_drive0 = mpd_entry_alloc2->gen_mount_point;
-   result2 = proc_generate_random_path_23D4FBC(PD_str_2404BBC, mpd_entry_alloc2->gen_mount_point);
+   int result2 = proc_generate_random_path_23D4FBC(PD_str_2404BBC, mpd_entry_alloc2->gen_mount_point);
    if (result2 < 0)
    {
-      check0 = result2 != 0x80800003;
-      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, result2 != 0x80800003, result2);
    }
 
    if (strncmp(mountpoint, "host0:", 6u) == 0)
