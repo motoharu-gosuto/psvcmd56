@@ -896,6 +896,8 @@ int generate_mount_drive(unsigned int mount_id, char* mount_drive)
    }
 }
 
+//======================
+
 bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, unsigned int mount_id, const char *mount_drive, const char* mount_drive_input, char *gen_mount_point, int& error_code)
 {  
    //try to find mount ctx with mount_id and copy current_mount->mountDrive to gen_mount_point
@@ -1448,7 +1450,9 @@ int label_136_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc
    }
 }
 
-int handle_mount_id_258(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id)
+//======================
+
+int create_loopback_mount(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id)
 {
    mpd_entry_alloc2->gen_mount_point[0] = 0;
    int prev_perm1 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
@@ -1880,7 +1884,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
    if (mount_id == 0x258)
    {
-      return handle_mount_id_258(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id);
+      return create_loopback_mount(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id);
    }
    
    //===========================================
