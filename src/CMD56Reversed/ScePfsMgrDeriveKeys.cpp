@@ -424,7 +424,7 @@ int xor_219D624(int* src, int* iv, int* dst, uint32_t size)
       iv_cpy[3] += iv_cpy[3];
 
       if(true) // this condition should check carry bit after one of the 4 add operations
-         iv_cpy[0] = iv_cpy[0] + 0x87;
+         iv_cpy[0] = iv_cpy[0] ^ 0x87;
       
       size = size - 0x10;
    }
@@ -486,8 +486,8 @@ int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
       dst[2] = src[2] ^ iv_cpy[2];
       dst[3] = src[3] ^ iv_cpy[3];
 
-      src += 4;
-      dst += 4;
+      //src += 4;
+      //dst += 4;
 
       iv_cpy[0] += iv_cpy[0];
       iv_cpy[1] += iv_cpy[1];
@@ -495,7 +495,7 @@ int xor_219D65C(int* src, int* iv, int* dst, uint32_t size)
       iv_cpy[3] += iv_cpy[3];
 
       if(true) // this condition should check carry bit after one of the 4 add operations
-         iv_cpy[0] = iv_cpy[0] + 0x87;
+         iv_cpy[0] = iv_cpy[0] ^ 0x87;
       
       size = size - 0x10;
    }
@@ -992,24 +992,8 @@ int hmac_sha1_219E164(unsigned char* key, unsigned char* iv_xor_key, const unsig
    return 0;
 }
 
-int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
+int _gen_secret(unsigned char* combo_aligned, uint32_t salt0, uint32_t salt1)
 {
-   unsigned char drvkey[0x14] = {0};
-   unsigned char iv[0x10] = {0};
-   unsigned char combo[0x14] = {0};
-
-   //align buffers
-
-   /*
-   unsigned char* drvkey_aligned = drvkey + ((0 - (int)drvkey) & 0x3F);
-   unsigned char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
-   unsigned char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
-   */
-
-   unsigned char* drvkey_aligned = drvkey;
-   unsigned char* iv_aligned = iv;
-   unsigned char* combo_aligned = combo;
-
    int saltin0[1] = {0};
    int saltin1[2] = {0};
    unsigned char base[0x14] = {0};
@@ -1028,6 +1012,30 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key
 
    memcpy(combo_aligned, base, 0x14); // calculated digest will be src data
 
+   return 0;
+}
+
+//_generate_secret_np
+int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint32_t salt1, uint16_t key_id)
+{
+   unsigned char drvkey[0x14] = {0};
+   unsigned char iv[0x10] = {0};
+   unsigned char combo[0x14] = {0};
+
+   //align buffers
+
+   /*
+   unsigned char* drvkey_aligned = drvkey + ((0 - (int)drvkey) & 0x3F);
+   unsigned char* iv_aligned = iv + ((0 - (int)iv) & 0x3F);
+   unsigned char* combo_aligned = combo + ((0 - (int)combo) & 0x3F);
+   */
+
+   unsigned char* drvkey_aligned = drvkey;
+   unsigned char* iv_aligned = iv;
+   unsigned char* combo_aligned = combo;
+
+   _gen_secret(combo_aligned, salt0, salt1);
+
    memcpy(iv_aligned, iv_21A93F0, 0x10); //initialize iv
 
    AESCBCEncryptWithKeygen_base_219D9F4(klicensee, iv_aligned, 0x14, combo_aligned, drvkey_aligned, key_id);
@@ -1037,20 +1045,8 @@ int calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(unsigned char* hmac_key
    return 0;
 }
 
-int combine_klicensee_digest_219E1D8(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
+int _generate_secret(unsigned char* hmac_key, const unsigned char* klicensee,  uint32_t salt1)
 {
-   if((flag & 1) > 0) // check bit 0
-   {
-      memset(hmac_key, 0, 0x14);
-      return 0;
-   }
-
-   if((flag & 2) > 0) // check bit 1
-   {
-      calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(hmac_key, klicensee, salt0, salt1, key_id);
-      return 0;
-   }
-
    int saltin[2] = {0};
    unsigned char base0[0x14] = {0};
    unsigned char base1[0x14] = {0};
@@ -1072,6 +1068,24 @@ int combine_klicensee_digest_219E1D8(unsigned char* hmac_key, const unsigned cha
    memcpy(hmac_key, drvkey, 0x14); // copy derived key
 
    return 0;
+}
+
+//matches to scePfsUtilGetSecret
+int combine_klicensee_digest_219E1D8(unsigned char* hmac_key, const unsigned char* klicensee, uint32_t salt0, uint16_t flag, uint32_t salt1, uint16_t key_id)
+{
+   if((flag & 1) > 0) // check bit 0
+   {
+      memset(hmac_key, 0, 0x14);
+      return 0;
+   }
+
+   if((flag & 2) > 0) // check bit 1
+   {
+      calculate_aes_cbc_encrypted_hmac_sha1_digest_219DF38(hmac_key, klicensee, salt0, salt1, key_id);
+      return 0;
+   }
+
+   return _generate_secret(hmac_key, klicensee, salt1);
 }
 
 //return 0 - error
