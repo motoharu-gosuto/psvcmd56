@@ -787,7 +787,7 @@ int generate_mount_drive(unsigned int mount_id, char* mount_drive)
       }
       #pragma endregion
    }
-   else if((mount_id >= 0x193) && (mount_id <= 0x1F4))
+   else if((mount_id >= 0x193) && (mount_id <= 0x1F5))
    {
       #pragma region
       int res = proc_generate_random_path_23D4FBC("ad", mount_drive);
@@ -799,7 +799,7 @@ int generate_mount_drive(unsigned int mount_id, char* mount_drive)
       return 0;
       #pragma endregion
    }
-   else if((mount_id > 0x1F4) && (mount_id < 0x1F8))
+   else if((mount_id > 0x1F5) && (mount_id < 0x1F8))
    {
       return 0x80800001;
    }
@@ -1154,6 +1154,7 @@ int clear_authid(mount_point_data_entry* glb_mpd_entry0, SceUInt64 auth_id)
    return 0;
 }
 
+//this function adds an overlay
 int label_115_cleanup(SceUID pid,  mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, char *gen_mount_point)
 {
    int result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid, mctx_alloc1);
@@ -1477,6 +1478,8 @@ int label_135(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount
 
    //===============
 
+   //pfs mount
+
    SceSelfAuthInfo auth_ctx0;
 
    int prev_perm2 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
@@ -1503,6 +1506,8 @@ int label_135(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount
 
    //===============
 
+   //check authid
+
    int check_res0 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, 0x2800000000000001); // SceShell
    if (check_res0 != 0x80010011)
    {
@@ -1514,6 +1519,8 @@ int label_135(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount
    }
 
    //===============
+
+   //check authid
    
    int check_res1 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, 0x2800000000007001);
    if(check_res1 != 0x80010011)
@@ -1526,6 +1533,8 @@ int label_135(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount
    }
    
    //===============
+
+   //check authid
    
    int check_res2 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(gen_pfs_drive0, 0x280000000000002D); // SceContentManager
    if (check_res2 != 0x80010011)
@@ -1538,6 +1547,8 @@ int label_135(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount
    }
    
    //===============
+
+   //check authid
 
    if (pfs_mount_type == 0x04)
    {
@@ -1572,233 +1583,341 @@ int label_135(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount
    return label_136_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id);
 }
 
-int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
-                           int mount_id0, const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+
+//fix klicensee argument and memsets
+
+int create_mount_0x3EC(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                       const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
 {
    char klicensee0[16];
-   
    memset(klicensee0, 0, 0x10);
 
-   if (mount_id0 > 0x192)
+   memcpy(klicensee0, klicensee, 0x10);
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x0D, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x3ED(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                       const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   if (klicensee)
    {
-      #pragma region
-      if (mount_id0 >= 0x3EC)
-      {
-         #pragma region
-         if (mount_id0 == 0x3EE)
-         {
-            return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
-         }
-         else
-         {
-            #pragma region
-            if (mount_id0 <= 0x3EE)
-            {
-               #pragma region
-               if (mount_id0 == 0x3EC)
-               {
-                  memcpy(klicensee0, klicensee, 0x10);
-                  return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x0D, mountpoint, gen_pfs_drive0);
-               }
-               else
-               {
-                  if (mount_id0 == 0x3ED)
-                  {
-                     if (klicensee)
-                     {
-                        memcpy(klicensee0, klicensee, 0x10);
-                        return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
-                     }
-                     else
-                     {
-                        int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-                        if (!sk_read_res)
-                        {
-                           return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
-                        }
-                        else
-                        {
-                           return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
-                        }
-                     }
-                  }
-                  else
-                  {
-                     return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-                  }
-               }
-               #pragma endregion
-            }
-            else
-            {
-               if (mount_id0 > 0x3F0)
-               {
-                  if (mount_id0 != 0x3F1)
-                  {
-                     return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-                  }
-                  else
-                  {
-                     return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
-                  }
-               }
-               else
-               {
-                  return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x14, mountpoint, gen_pfs_drive0);
-               }
-            }
-            #pragma endregion
-         }
-         #pragma endregion
-      }
-      else if (mount_id0 >= 0x3EA)
-      {
-         int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-         if (!sk_read_res)
-         {
-            if(strncmp(mountpoint, "gro0:", 5u))
-            {
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x04, mountpoint, gen_pfs_drive0);
-            }
-            else
-            {
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x0C, mountpoint, gen_pfs_drive0);
-            }
-         }
-         else
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
-         }
-      }
-      else if (mount_id0 >= 0x1FA)
-      {
-         if (mount_id0 < 0x3E8)
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-         }
-         else
-         {
-            if (clearsign_exists_23D9A4C(mountpoint))
-            {
-               memcpy(klicensee0, klicensee, 0x10);
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x02, mountpoint, gen_pfs_drive0);
-            }
-            else
-            {
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x14, mountpoint, gen_pfs_drive0);
-            }
-         }
-      }
-      else if (mount_id0 < 0x1F8)
-      {
-         #pragma region
-         if (mount_id0 - 0x1F4 <= 1)
-         {
-            int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-            if (!sk_read_res)
-            {
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x04, mountpoint, gen_pfs_drive0);
-            }
-            else
-            {
-               return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
-            }
-         }
-         else
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-         }
-         #pragma endregion
-      }
-      else
-      {
-         int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-         if (!sk_read_res)
-         {
-            return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x06, mountpoint, gen_pfs_drive0);
-         }
-         else
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
-         }
-      }
-      #pragma endregion
-   }
-   else if (mount_id0 >= 0x190)
-   {
-      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x16, mountpoint, gen_pfs_drive0);
-   }
-   else if (mount_id0 != 0x6E)
-   {
-      #pragma region
-      if (mount_id0 > 0x6E)
-      {
-         #pragma region
-         if (mount_id0 <= 0xCF)
-         {
-            if (mount_id0 < 0xC8 && mount_id0 > 0x70)
-            {
-               return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-            }
-            else
-            {
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
-            }
-         }
-         else if (mount_id0 - 0x12E > 2)
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-         }
-         else
-         {
-            int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-            if (!sk_read_res)
-            {
-               return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x06, mountpoint, gen_pfs_drive0);
-            }
-            else
-            {
-               return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
-            }
-         }
-         #pragma endregion
-      }
-      else if (mount_id0 <= 0x6C)
-      {
-         if (mount_id0 >= 0x6B)
-         {
-            return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
-         }
-         else if (mount_id0 < 0x64)
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
-         }
-      }
-      else
-      {
-         return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x16, mountpoint, gen_pfs_drive0);
-      }
-      #pragma endregion
+      memcpy(klicensee0, klicensee, 0x10);
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
    }
    else
    {
-      #pragma region
-      if (klicensee)
+      int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+      if (!sk_read_res)
       {
-         memcpy(klicensee0, klicensee, 0x10);
          return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
       }
       else
       {
-         int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-         if (!sk_read_res)
-         {
-            return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
-         }
-         else
-         {
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
-         }
+         return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
+      }
+   }
+}
+
+int create_mount_0x3EE(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                       const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x3EF(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                       const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x14, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x3F0(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                       const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x14, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x3F1(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                       const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x3EA_0x3EB(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                             const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+   if (!sk_read_res)
+   {
+      if(strncmp(mountpoint, "gro0:", 5u))
+      {
+         return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x04, mountpoint, gen_pfs_drive0);
+      }
+      else
+      {
+         return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x0C, mountpoint, gen_pfs_drive0);
+      }
+   }
+   else
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
+   }
+}
+
+int create_mount_0x3E8_0x3E9(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                             const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   if (clearsign_exists_23D9A4C(mountpoint))
+   {
+      memcpy(klicensee0, klicensee, 0x10);
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x02, mountpoint, gen_pfs_drive0);
+   }
+   else
+   {
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x14, mountpoint, gen_pfs_drive0);
+   }
+}
+
+int create_mount_0x1F8_0x1F9(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                             const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+   if (!sk_read_res)
+   {
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x06, mountpoint, gen_pfs_drive0);
+   }
+   else
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
+   }
+}
+
+int create_mount_0x193_to_0x1F5(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                                const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+   if (!sk_read_res)
+   {
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x04, mountpoint, gen_pfs_drive0);
+   }
+   else
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
+   }
+}
+
+int create_mount_0x190_to_0x192(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                                const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x16, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x6E(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                      const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   if (klicensee)
+   {
+      memcpy(klicensee0, klicensee, 0x10);
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
+   }
+   else
+   {
+      int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+      if (!sk_read_res)
+      {
+         return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x05, mountpoint, gen_pfs_drive0);
+      }
+      else
+      {
+         return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
+      }
+   }
+}
+
+int create_mount_0x6D(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                      const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x16, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x6B_0x6C(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                           const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0x64_to_0x6A(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                              const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x16, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0xD0_to_0x130(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                               const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+   if (!sk_read_res)
+   {
+      return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x06, mountpoint, gen_pfs_drive0);
+   }
+   else
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, sk_read_res != 0x80800003, sk_read_res);
+   }
+}
+
+int create_mount_0x6F_0x70(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                           const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
+}
+
+int create_mount_0xC8_0xCF(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                           const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{
+   char klicensee0[16];
+   memset(klicensee0, 0, 0x10);
+
+   return label_135(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, 0x15, mountpoint, gen_pfs_drive0);
+}
+
+//check all conditions
+
+int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
+                           int mount_id0, const char* klicensee, const char *mountpoint, char *gen_pfs_drive0)
+{   
+   if ((mount_id0 < 0x64))
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
+   }
+   else if((mount_id0 >= 0x64) && (mount_id0 <= 0x6A))
+   {
+      return create_mount_0x64_to_0x6A(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if ((mount_id0 >= 0x6B) && (mount_id0 <= 0x6C))
+   {
+      return create_mount_0x6B_0x6C(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if (mount_id0 == 0x6D)
+   {
+      return create_mount_0x6D(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if (mount_id0 == 0x6E)
+   {
+      return create_mount_0x6E(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if((mount_id0 >= 0x6F) && (mount_id0 <= 0x70))
+   {
+      return create_mount_0x6F_0x70(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if((mount_id0 > 0x70) && (mount_id0 < 0xC8))
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
+   }
+   else if((mount_id0 >= 0xC8) && (mount_id0 <= 0xCF))
+   {
+      return create_mount_0xC8_0xCF(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if((mount_id0 > 0xCF) && (mount_id0 <= 0x130)) //????????????
+   {
+      return create_mount_0xD0_to_0x130(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if ((mount_id0) > 0x130 && (mount_id0 < 0x190))
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
+   }
+   else if ((mount_id0 >= 0x190) && (mount_id0 <= 0x192))
+   {
+      return create_mount_0x190_to_0x192(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if ((mount_id0 >= 0x193) && (mount_id0 <= 0x1F5))
+   {
+      return create_mount_0x193_to_0x1F5(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if((mount_id0 > 0x1F5) && (mount_id0 < 0x1F8))
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
+   }
+   else if((mount_id0 >= 0x1F8) && (mount_id0 <= 0x1F9))
+   {
+      return create_mount_0x1F8_0x1F9(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+   }
+   else if ((mount_id0 >= 0x1FA) && (mount_id0 < 0x3E8))
+   {
+      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
+   }
+   else if (mount_id0 >= 0x3E8)
+   {
+      #pragma region
+      switch(mount_id0)
+      {
+      case 0x3E8:
+      case 0x3E9:
+         return create_mount_0x3E8_0x3E9(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3EA:
+      case 0x3EB:
+         return create_mount_0x3EA_0x3EB(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3EC:
+         return create_mount_0x3EC(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3ED:
+         return create_mount_0x3ED(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3EE:
+         return create_mount_0x3EE(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3EF:
+         return create_mount_0x3EF(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3F0:
+         return create_mount_0x3F0(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      case 0x3F1:
+         return create_mount_0x3F1(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0);
+      default:
+         return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
       }
       #pragma endregion
    }
