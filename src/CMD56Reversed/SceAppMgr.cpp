@@ -1799,189 +1799,225 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
    memset(klicensee0, 0, 0x10);
 
-
-  /*
+   //===========================================
   
-  if ( mount_id0 > 0x192 )
-  {
-    if ( mount_id0 >= 0x3EC )
-    {
-      if ( mount_id0 == 0x3EE )
+   if (mount_id0 > 0x192)
+   {
+      #pragma region no fall through
+      if (mount_id0 >= 0x3EC)
       {
-        pfs_mount_type = 0x15;
-        return label_135();
-      }
-
-      if ( mount_id0 <= 0x3EE )
-      {
-        if ( mount_id0 == 0x3EC )
-        {
-           pfs_mount_type = 0xD;
-
-          memcpy(klicensee0, klicensee, 0x10);
-
-         return label_135();
-
-
-        }
-
-            #pragma region
-            if (mount_id0 == 0x3ED)
+         #pragma region no fall through
+         if (mount_id0 == 0x3EE)
+         {
+            pfs_mount_type = 0x15;
+            return label_135();
+         }
+         else
+         {
+            #pragma region no fall through
+            if (mount_id0 <= 0x3EE)
             {
-               if (klicensee)
+               #pragma region no fall through
+               if (mount_id0 == 0x3EC)
                {
-                  pfs_mount_type = 5;
+                  pfs_mount_type = 0xD;
                   memcpy(klicensee0, klicensee, 0x10);
                   return label_135();
                }
                else
                {
-                  pfs_mount_type = 5;
-                  result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-
-                  if (!result2)
+                  #pragma region no fall through
+                  if (mount_id0 == 0x3ED)
                   {
-                     return label_135();
+                     #pragma region no fall through
+                     if (klicensee)
+                     {
+                        pfs_mount_type = 5;
+                        memcpy(klicensee0, klicensee, 0x10);
+                        return label_135();
+                     }
+                     else
+                     {
+                        #pragma region no fall through
+                        pfs_mount_type = 5;
+                        result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+
+                        if (!result2)
+                        {
+                           return label_135();
+                        }
+                        else
+                        {
+                           check0 = result2 != 0x80800003;
+                           return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+                        }
+                        #pragma endregion
+                     }
+                     #pragma endregion
                   }
                   else
                   {
-                     check0 = result2 != 0x80800003;
+                     result2 = 0x80800001;
+                     check0 = 1;
                      return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
                   }
+                  #pragma endregion
                }
+               #pragma endregion
             }
-
-            result2 = 0x80800001;
-            check0 = 1;
-            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+            else
+            {
+               #pragma region no fall through
+               if (mount_id0 > 0x3F0)
+               {
+                  #pragma region no fall through
+                  if (mount_id0 != 0x3F1)
+                  {
+                     result2 = 0x80800001;
+                     check0 = 1;
+                     return mpd_cleanup();
+                  }
+                  else
+                  {
+                     pfs_mount_type = 0x15;
+                     return label_135();
+                  }
+                  #pragma endregion
+               }
+               else
+               {
+                  pfs_mount_type = 0x14;
+                  return label_135();
+               }
+               #pragma endregion
+            }
             #pragma endregion
+         }
+         #pragma endregion
       }
-
-      #pragma region
-      if (mount_id0 > 0x3F0)
+      else if (mount_id0 >= 0x3EA)
       {
-         if (mount_id0 != 0x3F1)
+         #pragma region no fall through
+         if (strncmp(mountpoint, "gro0:", 5u)) // gro0:
          {
-            result2 = 0x80800001;
-            check0 = 1;
-            return mpd_cleanup();
+            pfs_mount_type = 4;
          }
          else
          {
-            pfs_mount_type = 0x15;
+            pfs_mount_type = 0xC;
+         }
+
+         result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+
+         if (!result2)
+         {
             return label_135();
          }
+         else
+         {
+            check0 = result2 != 0x80800003;
+            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+         }
+         #pragma endregion
+      }
+      else if (mount_id0 >= 0x1FA)
+      {
+         #pragma region no fall through
+         if (mount_id0 < 0x3E8)
+         {
+            #pragma region no fall through
+            result2 = 0x80800001;
+            check0 = 1;
+            return mpd_cleanup();
+            #pragma endregion
+         }
+         else
+         {
+            #pragma region no fall through
+            if (clearsign_exists_23D9A4C(mountpoint))
+            {
+               #pragma region no fall through
+               pfs_mount_type = 2;
+               memcpy(klicensee0, klicensee, 0x10);
+               return label_135();
+               #pragma endregion
+            }
+            else
+            {
+               #pragma region no fall through
+               pfs_mount_type = 0x14;
+               return label_135();
+               #pragma endregion
+            }
+            #pragma endregion
+         }
+         #pragma endregion
+      }
+      else if (mount_id0 < 0x1F8)
+      {
+         #pragma region no fall through
+         if (mount_id0 - 0x1F4 <= 1)
+         {
+            #pragma region no fall through
+            pfs_mount_type = 4;
+            result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+
+            if (!result2)
+            {
+               return label_135();
+            }
+            else
+            {
+               check0 = result2 != 0x80800003;
+               return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+            }
+            #pragma endregion
+         }
+         else
+         {
+            #pragma region no fall through
+            result2 = 0x80800001;
+            check0 = 1;
+            return mpd_cleanup();
+            #pragma endregion
+         }
+         #pragma endregion
       }
       else
       {
-         pfs_mount_type = 0x14;
-         return label_135();
+         #pragma region no fall through
+         pfs_mount_type = 6;
+         result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
+
+         if (!result2)
+         {
+            return label_135();
+         }
+         else
+         {
+            check0 = result2 != 0x80800003;
+            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+         }
+         #pragma endregion
       }
       #pragma endregion
-    }
-
-    if ( mount_id0 >= 0x3EA )
-    {
-      if ( strncmp(mountpoint, "gro0:", 5u) )// gro0:
-      {
-        pfs_mount_type = 4;
-      }
-      else
-      {
-        pfs_mount_type = 0xC;
-      }
-
-      result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-      
-        if ( !result2 )
-        {
-          return label_135();
-        }
-        else
-        {
-           check0 = result2 != 0x80800003;
-           return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
-        }
-
-
-    }
-
-    if ( mount_id0 >= 0x1FA )
-    {
-      if ( mount_id0 < 0x3E8 )
-      {
-        result2 = 0x80800001;
-        check0 = 1;
-         return mpd_cleanup();
-      }
-
-      if ( clearsign_exists_23D9A4C(mountpoint) )
-      {
-        pfs_mount_type = 2;
-
-        memcpy(klicensee0, klicensee, 0x10);
-
-        return label_135();
-      }
-
-      pfs_mount_type = 0x14;
-
-      return label_135();
-    }
-
-    if ( mount_id0 < 0x1F8 )
-    {
-      if ( mount_id0 - 0x1F4 <= 1 )
-      {
-        pfs_mount_type = 4;
-        result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-        
-        if ( !result2 )
-        {
-          return label_135();
-        }
-        else
-        {
-           check0 = result2 != 0x80800003;
-           return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
-        }
-
-      }
-      
-      result2 = 0x80800001;
-        check0 = 1;
-         return mpd_cleanup();
-    }
-
-     pfs_mount_type = 6;
-     result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-    
-     if ( !result2 )
-     {
-       return label_135();
-     }
-     else
-     {
-        check0 = result2 != 0x80800003;
-        return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
-     }
-
-  }
-
-  
-
-   if (mount_id0 >= 0x190)
+   }
+   else if (mount_id0 >= 0x190)
    {
+      #pragma region no fall through
       pfs_mount_type = 0x16;
       return label_135();
+      #pragma endregion
    }
-
-   if (mount_id0 != 0x6E)
+   else if (mount_id0 != 0x6E)
    {
+      #pragma region no fall through
       if (mount_id0 > 0x6E)
       {
+         #pragma region no fall through
          if (mount_id0 <= 0xCF)
          {
+            #pragma region no fall through
             if (mount_id0 < 0xC8 && mount_id0 > 0x70)
             {
                result2 = 0x80800001;
@@ -1993,15 +2029,19 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
                pfs_mount_type = 0x15;
                return label_135();
             }
+            #pragma endregion
          }
          else if (mount_id0 - 0x12E > 2)
          {
+            #pragma region no fall through
             result2 = 0x80800001;
             check0 = 1;
             return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+            #pragma endregion
          }
          else
          {
+            #pragma region no fall through
             pfs_mount_type = 6;
             result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
 
@@ -2014,11 +2054,13 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
                check0 = result2 != 0x80800003;
                return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
             }
+            #pragma endregion
          }
+         #pragma endregion
       }
-
-      if (mount_id0 <= 0x6C)
+      else if (mount_id0 <= 0x6C)
       {
+         #pragma region no fall through
          if (mount_id0 >= 0x6B)
          {
             pfs_mount_type = 0x15;
@@ -2030,35 +2072,43 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
             check0 = 1;
             return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
          }
+         #pragma endregion
       }
-
-      pfs_mount_type = 0x16;
-      return label_135();
-   }
-
-   if ( klicensee )
-   {
-      pfs_mount_type = 5;
-      memcpy(klicensee0, klicensee, 0x10);
-      return label_135();
+      else
+      {
+         pfs_mount_type = 0x16;
+         return label_135();
+      }
+      #pragma endregion
    }
    else
    {
-      pfs_mount_type = 5;
-      result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
-
-      if (!result2)
+      #pragma region no fall through
+      if (klicensee)
       {
+         pfs_mount_type = 5;
+         memcpy(klicensee0, klicensee, 0x10);
          return label_135();
       }
       else
       {
-         check0 = result2 != 0x80800003;
-         return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
-      }
-   }
+         #pragma region no fall through
+         pfs_mount_type = 5;
+         result2 = read_sealedkey_23D6EA0(mountpoint, klicensee0);
 
-  */
+         if (!result2)
+         {
+            return label_135();
+         }
+         else
+         {
+            check0 = result2 != 0x80800003;
+            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+         }
+         #pragma endregion
+      }
+      #pragma endregion
+   }
 }
 
 
