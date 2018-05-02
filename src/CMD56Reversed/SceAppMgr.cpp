@@ -655,6 +655,11 @@ int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, mount_ctx_t *mc
    return 0;
 }
 
+int clearsign_exists_23D9A4C(char *mountpoint)
+{
+   return 0;
+}
+
 //----------------
 
 int generate_mount_drive(unsigned int mount_id, char* mount_drive)
@@ -1781,6 +1786,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    char klicensee0[16];
    #pragma endregion
 
+   //===========================================
 
    mountpoint = mpd_entry_alloc1->path;
 
@@ -1873,9 +1879,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
                   #pragma region no fall through
                   if (mount_id0 != 0x3F1)
                   {
-                     result2 = 0x80800001;
-                     check0 = 1;
-                     return mpd_cleanup();
+                     return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
                   }
                   else
                   {
@@ -1925,11 +1929,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
          #pragma region no fall through
          if (mount_id0 < 0x3E8)
          {
-            #pragma region no fall through
-            result2 = 0x80800001;
-            check0 = 1;
-            return mpd_cleanup();
-            #pragma endregion
+            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
          }
          else
          {
@@ -1975,11 +1975,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
          }
          else
          {
-            #pragma region no fall through
-            result2 = 0x80800001;
-            check0 = 1;
-            return mpd_cleanup();
-            #pragma endregion
+            return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
          }
          #pragma endregion
       }
@@ -2111,16 +2107,9 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    }
 }
 
-
-
 //----------------
 
 void * alloc_mem_23DDFF8(SceSize size)
-{
-   return 0;
-}
-
-int clearsign_exists_23D9A4C(char *mountpoint)
 {
    return 0;
 }
