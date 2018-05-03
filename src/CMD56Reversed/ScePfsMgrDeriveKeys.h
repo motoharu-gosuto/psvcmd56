@@ -54,21 +54,23 @@ typedef struct pfs_pmi_buffer_list_ctx
 typedef struct CryptEngineData //size is 0x60
 {
    unsigned const char* klicensee;
-   uint32_t salt0; // salt that is used to derive keys
-   uint32_t salt1; // salt that is used to derive keys
-   uint16_t type; // 0xC
-   uint16_t pmi_bcl_flag; // 0xE
+   uint32_t files_salt; // salt from files.db is used to derive keys
+   uint32_t icv_salt; // unicv page or icv filename is used as salt to derive keys
+   uint16_t mode_index;
+   uint16_t crypto_engine_flag;
    
-   uint16_t key_id; // 0x10
-   uint16_t flag0; // 0x12
+   uint16_t key_id; // used for WithKeygen DMAC5 / F00D functions. always 0.
+   uint16_t fs_attr; // 0x12 - fs_attr
    
    uint32_t unk_14;
+
    uint32_t unk_18;
    uint32_t unk_1C;
    
    uint32_t unk_20;
    uint32_t unk_24;
-   uint32_t block_size; //0x28
+   uint32_t block_size; // file sector size specified in unicv.db
+
    unsigned char key[0x10]; //0x2C
    
    unsigned char iv_xor_key[0x10]; //0x3C
