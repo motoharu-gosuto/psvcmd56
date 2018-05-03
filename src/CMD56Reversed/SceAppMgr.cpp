@@ -1655,23 +1655,23 @@ int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_
    }
    else if((mount_id0 >= 0x64) && (mount_id0 <= 0x6A))
    {
-      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x16);
+      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x16); //fake / redirect
    }
    else if ((mount_id0 >= 0x6B) && (mount_id0 <= 0x6C))
    {
-      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15);
+      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15); //fake / redirect
    }
    else if (mount_id0 == 0x6D)
    {
-      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x16);
+      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x16); //fake / redirect
    }
    else if (mount_id0 == 0x6E)
    {
-      return create_mount_from_klicensee_or_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x05);
+      return create_mount_from_klicensee_or_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x05); //savedata like
    }
    else if((mount_id0 >= 0x6F) && (mount_id0 <= 0x70))
    {
-      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15);
+      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15); //fake / redirect
    }
    else if((mount_id0 > 0x70) && (mount_id0 < 0xC8))
    {
@@ -1679,11 +1679,11 @@ int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_
    }
    else if((mount_id0 >= 0xC8) && (mount_id0 <= 0xCF))
    {
-      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15);
+      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15); //fake / redirect
    }
    else if((mount_id0 > 0xCF) && (mount_id0 <= 0x130))
    {
-      return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x06);
+      return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x06); //savedata like
    }
    else if ((mount_id0) > 0x130 && (mount_id0 < 0x190))
    {
@@ -1691,11 +1691,11 @@ int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_
    }
    else if ((mount_id0 >= 0x190) && (mount_id0 <= 0x192))
    {
-      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x16);
+      return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x16); //fake / redirect
    }
    else if ((mount_id0 >= 0x193) && (mount_id0 <= 0x1F5))
    {
-      return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x04);
+      return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x04); //ac
    }
    else if((mount_id0 > 0x1F5) && (mount_id0 < 0x1F8))
    {
@@ -1703,7 +1703,7 @@ int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_
    }
    else if((mount_id0 >= 0x1F8) && (mount_id0 <= 0x1F9))
    {
-      return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x06);
+      return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x06); //savedata like
    }
    else if ((mount_id0 > 0x1F9) && (mount_id0 < 0x3E8))
    {
@@ -1718,31 +1718,31 @@ int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_
          {
             if (clearsign_exists_23D9A4C(mountpoint))
             {
-               return create_mount_with_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x02);
+               return create_mount_with_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x02); //game
             }
             else
             {
-               return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x14);
+               return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x14); //fake / redirect
             }
          }
       case 0x3EA:
       case 0x3EB:
          {
-            std::uint16_t mode_index = strncmp(mountpoint, "gro0:", 5u) ? 0x04 : 0x0C;
+            std::uint16_t mode_index = strncmp(mountpoint, "gro0:", 5u) ? 0x04 : 0x0C; //ac / ac
             return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, mode_index);
          }
       case 0x3EC:
-         return create_mount_with_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x0D);
+         return create_mount_with_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x0D); //game
       case 0x3ED:
-         return create_mount_from_klicensee_or_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x05);
+         return create_mount_from_klicensee_or_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x05); //savedata like
       case 0x3EE:
-         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15);
+         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15); //fake / redirect
       case 0x3EF:
-         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x14);
+         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x14); //fake / redirect
       case 0x3F0:
-         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x14);
+         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x14); //fake / redirect
       case 0x3F1:
-         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15);
+         return create_mount_with_empty_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, 0x15); //fake / redirect
       default:
          return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, 1, 0x80800001);
       }
