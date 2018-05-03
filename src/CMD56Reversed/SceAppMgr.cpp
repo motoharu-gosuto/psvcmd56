@@ -1475,7 +1475,7 @@ int create_loopback_mount(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_a
 }
 
 int create_pfs_mount_raw(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
-                         char* klicensee0, int pfs_mount_type, const char *mountpoint, char *gen_pfs_drive0)
+                         char* klicensee0, std::uint16_t mode_index, const char *mountpoint, char *gen_pfs_drive0)
 {
    if (mpd_entry_alloc2->gen_mount_point[0] == 0)
       return label_136_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id);
@@ -1503,7 +1503,7 @@ int create_pfs_mount_raw(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_al
       klicensee1 = klicensee0[15] ? klicensee0 : 0;
    }
 
-   int mnt_res = ScePfsMgrForKernel_mount_a772209c(mountpoint, gen_pfs_drive0, auth_ctx0.auth_id, klicensee1, pfs_mount_type);
+   int mnt_res = ScePfsMgrForKernel_mount_a772209c(mountpoint, gen_pfs_drive0, auth_ctx0.auth_id, klicensee1, mode_index);
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm2);
    if (mnt_res)
       return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, mnt_res != 0x80800003, mnt_res);
@@ -1554,7 +1554,7 @@ int create_pfs_mount_raw(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_al
 
    //check authid
 
-   if (pfs_mount_type == 0x04)
+   if (mode_index == 0x04)
    {
       int check_res3 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(mpd_entry_alloc2->gen_mount_point, 0x2800000000000010); // SceSettings
       if (check_res3 != 0x80010011)
@@ -1568,7 +1568,7 @@ int create_pfs_mount_raw(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_al
    }
    else
    {
-      if (pfs_mount_type == 0x05)
+      if (mode_index == 0x05)
       {
          int check_res4 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(mpd_entry_alloc2->gen_mount_point, 0x2800000000000039); // SceDailyCheckerBg
          if (check_res4 != 0x80010011)
@@ -1590,29 +1590,29 @@ int create_pfs_mount_raw(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_al
 //======================
 
 int create_mount_with_klicensee(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
-                                const char* klicensee, const char *mountpoint, char *gen_pfs_drive0, int mount_point_type)
+                                const char* klicensee, const char *mountpoint, char *gen_pfs_drive0, std::uint16_t mode_index)
 {
    char klicensee0[16];
    memcpy(klicensee0, klicensee, 0x10);
-   return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mount_point_type, mountpoint, gen_pfs_drive0);
+   return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mode_index, mountpoint, gen_pfs_drive0);
 }
 
 int create_mount_with_empty_klicensee(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
-                                      const char *mountpoint, char *gen_pfs_drive0, int mount_point_type)
+                                      const char *mountpoint, char *gen_pfs_drive0, std::uint16_t mode_index)
 {
    char klicensee0[16] = {0};
-   return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mount_point_type, mountpoint, gen_pfs_drive0);
+   return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mode_index, mountpoint, gen_pfs_drive0);
 }
 
 int create_mount_from_sealedkey(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
-                                const char *mountpoint, char *gen_pfs_drive0, int mount_point_type)
+                                const char *mountpoint, char *gen_pfs_drive0, std::uint16_t mode_index)
 {
    char klicensee0[16] = {0};
 
    int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
    if (!sk_read_res)
    {
-      return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mount_point_type, mountpoint, gen_pfs_drive0);
+      return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mode_index, mountpoint, gen_pfs_drive0);
    }
    else
    {
@@ -1621,21 +1621,21 @@ int create_mount_from_sealedkey(SceUID pid, unsigned int mount_id, mount_ctx_t *
 }
 
 int create_mount_from_klicensee_or_sealedkey(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, SceUInt64 auth_id,
-                                             const char* klicensee, const char *mountpoint, char *gen_pfs_drive0, int mount_point_type)
+                                             const char* klicensee, const char *mountpoint, char *gen_pfs_drive0, std::uint16_t mode_index)
 {
    char klicensee0[16] = {0};
    
    if (klicensee)
    {
       memcpy(klicensee0, klicensee, 0x10);
-      return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mount_point_type, mountpoint, gen_pfs_drive0);
+      return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mode_index, mountpoint, gen_pfs_drive0);
    }
    else
    {
       int sk_read_res = read_sealedkey_23D6EA0(mountpoint, klicensee0);
       if (!sk_read_res)
       {
-         return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mount_point_type, mountpoint, gen_pfs_drive0);
+         return create_pfs_mount_raw(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee0, mode_index, mountpoint, gen_pfs_drive0);
       }
       else
       {
@@ -1728,8 +1728,8 @@ int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_
       case 0x3EA:
       case 0x3EB:
          {
-            int mount_point_type = strncmp(mountpoint, "gro0:", 5u) ? 0x04 : 0x0C;
-            return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, mount_point_type);
+            std::uint16_t mode_index = strncmp(mountpoint, "gro0:", 5u) ? 0x04 : 0x0C;
+            return create_mount_from_sealedkey(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, mountpoint, gen_pfs_drive0, mode_index);
          }
       case 0x3EC:
          return create_mount_with_klicensee(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, auth_id, klicensee, mountpoint, gen_pfs_drive0, 0x0D);
