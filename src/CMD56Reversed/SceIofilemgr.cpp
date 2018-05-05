@@ -6,6 +6,7 @@
 #include "SceSysmemGlobalVariables.h"
 #include "SceCpu.h"
 #include "SceThreadmgr.h"
+#include "SceSysmem.h"
 
 int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
 {
@@ -1570,3 +1571,95 @@ int SceIofilemgrForDriver_sceIoUmountForDriver_20574100(int vshMountId, int unk1
 {
    return 0;
 }
+
+struct callback_BEA5C4_args
+{
+  const char* drive;
+};
+
+int t_callback_BEA5C4(callback_BEA5C4_args* args)
+{
+   return 0;
+}
+
+SceUID SceIoScheduler_99D724;
+
+int normalize_path_and_BF4F1C(const char *file, int normalize)
+{
+   if (!file)
+      return 0x8001000E;
+
+   if (strnlen(file, 0x400u) == 0x400)
+      return 0x8001005B;
+
+   const char* semicolon_pos = strchr(file, ':');
+   if (semicolon_pos)
+   {
+      int drive_name_len0 = ((int)semicolon_pos - (int)file);
+      if (drive_name_len0 > 0x1E )
+         return 0;
+
+      char drive_str[32];
+
+      int drive_len = (int)semicolon_pos - (int)file + 1;
+      strncpy(drive_str, file, drive_len);
+      drive_str[31] = 0;
+
+      if (!strncmp("sdstor0:", drive_str, 9u) )
+      {
+         if (SceSysrootForKernel_ksceSysrootIsSafeMode_834439a7() == 1 || SceSysrootForKernel_ksceSysrootIsUpdateMode_b0e1fc67() == 1)
+            return 0;
+
+         callback_BEA5C4_args args;
+         args.drive = file;
+         return SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, t_callback_BEA5C4, &args);
+      }
+
+      if (normalize != 1)
+      {
+         callback_BEA5C4_args args;
+         args.drive = file;
+         return SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, t_callback_BEA5C4, &args);
+      }
+      else
+      {
+         callback_BEA5C4_args args;
+         args.drive = drive_str;
+         return SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, t_callback_BEA5C4, &args);
+      }
+   }
+   else
+   {
+      if (normalize != 1)
+      {
+         callback_BEA5C4_args args;
+         args.drive = file;
+         return SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, t_callback_BEA5C4, &args);
+      }
+      else
+      {
+         if (file[0] != '/' )
+            return 0x80010016;
+
+         const char* next_slash_pos = strchr(file + 1, '/');
+         if (next_slash_pos == 0)
+            return 0;
+
+         char* args_alloc = (char*)SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceIoScheduler_99D724, 0x400u);
+         
+         if (args_alloc == 0)
+            return 0x8001000C;
+
+         int drive_name_len0 = (int)next_slash_pos - (int)file;
+         strncpy(args_alloc, file, drive_name_len0);
+         args_alloc[drive_name_len0] = 0;
+
+         callback_BEA5C4_args args;
+         args.drive = args_alloc;
+         int res0 = SceThreadmgrForDriver_ksceKernelRunWithStack_e54fd746(0x2000, t_callback_BEA5C4, &args);
+         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceIoScheduler_99D724, args_alloc);
+         return res0;
+      }  
+   }
+}
+

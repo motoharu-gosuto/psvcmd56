@@ -149,3 +149,13 @@ void* SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceUID uid,
 {
    return SceSysmemForDriver_sceKernelAllocHeapMemory3ForDriver_49D4DD9B(uid, size, unk2);
 }
+
+int SceSysrootForKernel_ksceSysrootIsSafeMode_834439a7()
+{
+   return 0;
+}
+
+int SceSysrootForKernel_ksceSysrootIsUpdateMode_b0e1fc67()
+{
+   return 0;
+}
