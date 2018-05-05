@@ -1663,3 +1663,62 @@ int normalize_path_and_BF4F1C(const char *file, int normalize)
    }
 }
 
+SceUID SceIoVfsHeap_99C0D8;
+
+char* buffers_99C16C[4];
+
+char* proc_alloc_400_from_SceIoVfsHeap_BECE0C()
+{
+   int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e((int*)0x99D9F8);
+   int counter = 0;
+   
+   do
+   {
+      char* static_buffer = buffers_99C16C[counter];
+      if(static_buffer != 0)
+      {
+         buffers_99C16C[counter] = 0;
+         SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99D9F8, prev_state);
+         memset(static_buffer, 0, 0x400);
+         return static_buffer;
+      }
+      else
+      {
+         counter++;
+      }
+   }
+   while(counter != 4);
+
+   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99D9F8, prev_state);
+   char* buffer = (char*)SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceIoVfsHeap_99C0D8, 0x400);
+   if(buffer == 0)
+      return 0;
+            
+   memset(buffer,0,0x400);
+   return buffer;
+}
+
+void proc_free_400_from_SceIoVfsHeap_BECE80(char* buffer)
+{
+   int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e((int*)0x99D9F8);
+   int counter = 0;
+
+   do
+   {
+      char* static_buffer = buffers_99C16C[counter];
+      if(static_buffer == 0)
+      {
+         buffers_99C16C[counter] = buffer;
+         SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99D9F8, prev_state);
+         return;
+      }
+      else
+      {
+         counter++;
+      }
+   }
+   while(counter != 4);
+
+   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99D9F8, prev_state);
+   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceIoVfsHeap_99C0D8, buffer);
+}
