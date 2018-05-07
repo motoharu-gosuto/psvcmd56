@@ -1207,7 +1207,7 @@ int label_115_cleanup(SceUID pid,  mount_ctx_t *mctx_alloc1, mount_ctx_holder_t 
    }
 }
 
-int special_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char* mount_drive_input, char *gen_mount_point)
+int special_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, char *mount_point_result)
 {
    mount_ctx_t * mount_ctx_current = mount_ctx_holder->mount;
 
@@ -1221,7 +1221,7 @@ int special_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1,
 
          if (mount_ctx_current->mnt_entry)
          {
-            if (mpd_entry->mount_id == mount_id && !strncmp(mount_ctx_current->mountDrive, mount_drive_input, 0x10u))
+            if (mpd_entry->mount_id == mount_id && !strncmp(mount_ctx_current->mountDrive, mctx_alloc0->mountDrive, 0x10u))
             {
                break;
             }
@@ -1231,17 +1231,17 @@ int special_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1,
 
          if (!mount_ctx_current)
          {
-            return label_21_cleanup(pid, mctx_alloc1, mount_ctx_current, 0x80800002);
+            return label_21_cleanup(pid, mctx_alloc0, mount_ctx_current, 0x80800002);
          }
       }
 
-      mctx_alloc1->entry_18 = mpd_entry;
+      mctx_alloc0->entry_18 = mpd_entry;
 
-      return label_115_cleanup(pid, mctx_alloc1, mount_ctx_holder, gen_mount_point);
+      return label_115_cleanup(pid, mctx_alloc0, mount_ctx_holder, mount_point_result);
    }
    else
    {
-      return label_21_cleanup(pid, mctx_alloc1, mount_ctx_current, 0x80800002);
+      return label_21_cleanup(pid, mctx_alloc0, mount_ctx_current, 0x80800002);
    }
 }
 
@@ -1257,12 +1257,12 @@ int label_113_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc
       }
       else
       {
-         return special_cleanup(pid, 0x3EA, mctx_alloc0, mount_ctx_holder, mctx_alloc0->mountDrive, mount_point_result);
+         return special_cleanup(pid, 0x3EA, mctx_alloc0, mount_ctx_holder, mount_point_result);
       }
    }
    else
    {
-      return special_cleanup(pid, 0x3E8, mctx_alloc0, mount_ctx_holder, mctx_alloc0->mountDrive, mount_point_result);  
+      return special_cleanup(pid, 0x3E8, mctx_alloc0, mount_ctx_holder, mount_point_result);  
    }  
 }
 
