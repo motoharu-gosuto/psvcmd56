@@ -9,7 +9,7 @@ struct mount_point_data_entry
 {
   int mount_id;
   char path[0x124]; //used for PFS mount
-  char rnd_drive_id[0x10]; //used for PFS mount
+  char pfs_rnd_drive_id[0x10]; //used for PFS mount
   char title_id[0x10];
   SceUInt64 auth_ids[0x10];
   mount_point_data_entry *prev;
