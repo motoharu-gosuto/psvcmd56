@@ -1266,13 +1266,13 @@ int label_113_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc
    }  
 }
 
-bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, SceUInt64 auth_id, int& error_code)
+bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path, char *mount_point_result, SceUInt64 auth_id, int& error_code)
 {
    //search
 
    mount_point_data_entry* glb_mpd_entry0 = mount_point_entries_22D470C;
 
-   while (mount_id != glb_mpd_entry0->mount_id || strncmp(glb_mpd_entry0->path, physical_path_copy2, 0x124u) != 0)
+   while (mount_id != glb_mpd_entry0->mount_id || strncmp(glb_mpd_entry0->path, physical_path, 0x124u) != 0)
    {
       glb_mpd_entry0 = glb_mpd_entry0->next;
       if (glb_mpd_entry0 == 0)
@@ -1287,7 +1287,7 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, 
    int initialized_global_item_index = select_index(glb_mpd_entry0);
    if(initialized_global_item_index < 0)
    {
-      error_code = label_21_cleanup(pid, mctx_alloc1, physical_path_copy2, 0x8080001E);
+      error_code = label_21_cleanup(pid, mctx_alloc0, physical_path, 0x8080001E);
       return false;
    }
 
@@ -1299,8 +1299,8 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, 
 
    if(glb_mpd_entry0->gen_mount_point[0] == 0)
    {
-      mctx_alloc1->mnt_entry = glb_mpd_entry0;
-      error_code = label_113_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point);
+      mctx_alloc0->mnt_entry = glb_mpd_entry0;
+      error_code = label_113_cleanup(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result);
       return false;
    }
 
@@ -1313,8 +1313,8 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, 
 
       if(res0 == 0x80010011 || res0 >= 0)
       {
-         mctx_alloc1->mnt_entry = glb_mpd_entry0;
-         error_code = label_113_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point);
+         mctx_alloc0->mnt_entry = glb_mpd_entry0;
+         error_code = label_113_cleanup(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result);
          return false;
       }
    }
@@ -1323,12 +1323,12 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, 
 
    if (res0 == 0x80800003)
    {
-      error_code = label_113_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point);
+      error_code = label_113_cleanup(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result);
       return false;
    }
    else
    {
-      error_code = label_21_cleanup(pid, mctx_alloc1, physical_path_copy2, res0);
+      error_code = label_21_cleanup(pid, mctx_alloc0, physical_path, res0);
       return false;
    }
 }
@@ -1838,7 +1838,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    if (mount_point_entries_22D470C)
    {
       int error_code = 0;
-      if(!entries_stuff(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path_local, mount_drive_input, mount_point_result, auth_id, error_code))
+      if(!entries_stuff(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path_local, mount_point_result, auth_id, error_code))
          return error_code;
    }
    
