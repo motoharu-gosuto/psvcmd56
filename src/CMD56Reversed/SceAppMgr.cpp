@@ -1646,7 +1646,7 @@ int create_mount_from_klicensee_or_sealedkey(SceUID pid, unsigned int mount_id, 
 
 //===================
 
-int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc0, SceUInt64 auth_id, const char* klicensee)
+int create_mountpoint_core(SceUID pid, unsigned int mount_id, mount_ctx_holder_t *mount_ctx_holder, mount_ctx_t *mctx_alloc0,  mount_point_data_entry *mpd_entry_alloc0, const char *physical_path, const char* mount_drive_input, SceUInt64 auth_id, const char* klicensee, char *gen_mount_point)
 {   
    if ((mpd_entry_alloc0->mount_id < 0x64))
    {
@@ -1780,6 +1780,8 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
    //===========================================
 
+   //allocate and initialize mount_ctx_t
+
    ctx_49D4DD9B alloc_ctx00;
    alloc_ctx00.unk0 = 0x14;
    alloc_ctx00.unk4 = 0;
@@ -1793,11 +1795,13 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
    memset(mctx_alloc0, 0, 0x24u);
 
-   //===========================================
+   // copy generated drive to mctx_alloc0
 
-   memcpy(mctx_alloc0->mountDrive, mount_drive_input, 0x10); // copy generated drive to mctx_alloc0
+   memcpy(mctx_alloc0->mountDrive, mount_drive_input, 0x10); 
 
    //=========================================== 
+
+   //allocate and initialize physical path copy
    
    ctx_49D4DD9B alloc_ctx01;
    alloc_ctx01.unk0 = 0x14;
@@ -1808,24 +1812,16 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
    char *physical_path_local = (char *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceAppMgrMount_pool_22A0008, 0x124u, &alloc_ctx01);
    if (physical_path_local == 0)
-   {
       return label_21_cleanup(pid, mctx_alloc0, physical_path_local, 0x80801006);
-   }
 
    memset(physical_path_local, 0, 0x124u);
 
-   //=========================================== 
-
    int res0 = verify_copy_23D5A10(physical_path, physical_path_local);
    if (res0 > 0)
-   {
       return label_21_cleanup(pid, mctx_alloc0, physical_path_local, res0);
-   }
 
    if (strnlen(physical_path_local, 0x124) >= 0x124)
-   {
       return label_21_cleanup(pid, mctx_alloc0, physical_path_local, 0x80800001);
-   }
 
    //===========================================
 
@@ -1853,6 +1849,8 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    
    //=========================================== 
 
+   //allocate and init mount_point_data_entry
+
    ctx_49D4DD9B alloc_ctx02;
    alloc_ctx02.unk4 = 0;
    alloc_ctx02.unkC = 0;
@@ -1867,10 +1865,6 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
       return label_21_cleanup(pid, mctx_alloc0, physical_path_local, 0x80801006);
    }
 
-   //=========================================== 
-
-   //init entry
-
    memset(mpd_entry_alloc0, 0, 0x1D0u);
 
    mpd_entry_alloc0->mount_id = mount_id;
@@ -1880,24 +1874,20 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    //===========================================
 
    if (mount_id == 0x258)
-   {
       return create_loopback_mount(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path_local, mount_drive_input, mount_point_result, mpd_entry_alloc0, auth_id);
-   }
    
    //===========================================   
 
    int result2 = proc_generate_random_path_23D4FBC(PD_str_2404BBC, mpd_entry_alloc0->gen_mount_point);
    if (result2 < 0)
-   {
       return mpd_cleanup(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path_local, mount_drive_input, mount_point_result, mpd_entry_alloc0, result2 != 0x80800003, result2);
-   }
 
    if (strncmp(mpd_entry_alloc0->path, "host0:", 6u) == 0)
       mpd_entry_alloc0->gen_mount_point[0] = 0;
 
    //===========================================
 
-   return create_mountpoint_core(pid, mount_id, mctx_alloc0, mount_ctx_holder, physical_path_local, mount_drive_input, mount_point_result, mpd_entry_alloc0, auth_id, klicensee);
+   return create_mountpoint_core(pid, mount_id, mount_ctx_holder, mctx_alloc0, mpd_entry_alloc0, physical_path_local, mount_drive_input, auth_id, klicensee, mount_point_result);
 }
 
 //----------------
