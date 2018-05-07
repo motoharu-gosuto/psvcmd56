@@ -1156,22 +1156,22 @@ int clear_authid(mount_point_data_entry* glb_mpd_entry0, SceUInt64 auth_id)
    return 0;
 }
 
-//this function adds an overlay
-int label_115_cleanup(SceUID pid,  mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, char *gen_mount_point)
+//this function adds an overlay and copies mctx_alloc0->mountDrive to mount_point_result
+int label_115_cleanup(SceUID pid,  mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, char *mount_point_result)
 {
-   int result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid, mctx_alloc1);
+   int result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid, mctx_alloc0);
    if (result2)
    {
-      return label_21_cleanup(pid, mctx_alloc1, 0, result2);  
+      return label_21_cleanup(pid, mctx_alloc0, 0, result2);  
    }
 
    mount_ctx_t* mount_ctx_local3 = mount_ctx_holder->mount;
    
    if (mount_ctx_local3)
    {
-      if (mctx_alloc1 == mount_ctx_local3)
+      if (mctx_alloc0 == mount_ctx_local3)
       {
-         return label_21_cleanup(pid, mctx_alloc1, 0, 0x80800003);
+         return label_21_cleanup(pid, mctx_alloc0, 0, 0x80800003);
       }
       else
       {
@@ -1179,29 +1179,29 @@ int label_115_cleanup(SceUID pid,  mount_ctx_t *mctx_alloc1, mount_ctx_holder_t 
          {
             if (!mount_ctx_local3->next)
             {
-               mount_ctx_local3->next = mctx_alloc1;
-               mctx_alloc1->unk1C = mount_ctx_local3;
-               mctx_alloc1->next = 0;
-               memcpy(gen_mount_point, mctx_alloc1->mountDrive, 0x10);
+               mount_ctx_local3->next = mctx_alloc0;
+               mctx_alloc0->unk1C = mount_ctx_local3;
+               mctx_alloc0->next = 0;
+               memcpy(mount_point_result, mctx_alloc0->mountDrive, 0x10);
 
                return 0;
             }
 
-            if (mctx_alloc1 == mount_ctx_local3)
+            if (mctx_alloc0 == mount_ctx_local3)
                break;
 
             mount_ctx_local3 = mount_ctx_local3->next;
          }
          
-         return label_21_cleanup(pid, mctx_alloc1, 0, 0x80800003);
+         return label_21_cleanup(pid, mctx_alloc0, 0, 0x80800003);
       }
    }
    else
    {
-      mount_ctx_holder->mount = mctx_alloc1;
-      mctx_alloc1->unk1C = 0;
-      mctx_alloc1->next = 0;
-      memcpy(gen_mount_point, mctx_alloc1->mountDrive, 0x10);
+      mount_ctx_holder->mount = mctx_alloc0;
+      mctx_alloc0->unk1C = 0;
+      mctx_alloc0->next = 0;
+      memcpy(mount_point_result, mctx_alloc0->mountDrive, 0x10);
    
       return 0;
    }
