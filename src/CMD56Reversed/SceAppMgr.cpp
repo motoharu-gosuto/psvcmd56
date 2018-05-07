@@ -1049,28 +1049,28 @@ bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, un
    }   
 }
 
-int label_21_cleanup(SceUID pid, const mount_ctx_t* mctx_alloc1, const void* mem, int error_code)
+int label_21_cleanup(SceUID pid, const mount_ctx_t* mctx_alloc0, const void* mem, int error_code)
 {
    //remove overlay
 
-   if (mctx_alloc1->overlay_id)
+   if (mctx_alloc0->overlay_id)
    {
       SceUID pid0 = pid != 0 ? pid : SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
       int prev_perm0 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
-      SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(pid0, mctx_alloc1->overlay_id);
+      SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(pid0, mctx_alloc0->overlay_id);
       SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm0);
    }
 
    //unmount
 
-   if (mctx_alloc1->mnt_entry)
+   if (mctx_alloc0->mnt_entry)
    {
-      w_unmount_23D5F44(pid, mctx_alloc1->mnt_entry, 1);
+      w_unmount_23D5F44(pid, mctx_alloc0->mnt_entry, 1);
    }
 
    //dealloc memory
 
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, mctx_alloc1);
+   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, mctx_alloc0);
 
    if (mem)
    {
