@@ -1345,20 +1345,20 @@ int mpd_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mou
       return label_113_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point);
 }
 
-int label_154_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path_copy2, const char* mount_drive_input, char *gen_mount_point, mount_point_data_entry *mpd_entry_alloc2, bool check0, int result2)
+int label_154_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, mount_point_data_entry *mpd_entry_alloc0, const char *physical_path, char *mount_point_result, bool check0, int result2)
 {
    int prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
-   if (mount_id == 0x258)
+   if (mpd_entry_alloc0->mount_id == 0x258)
    {
       SceIofilemgrForDriver_sceIoUmountForDriver_20574100(0x10000, 0, 0, 0);
    }
    else
    {
-      ScePfsMgrForKernel_unmount_680bc384(mpd_entry_alloc2->gen_mount_point);
+      ScePfsMgrForKernel_unmount_680bc384(mpd_entry_alloc0->gen_mount_point);
    }
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm);
 
-   return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
+   return mpd_cleanup(pid, mpd_entry_alloc0->mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result, mpd_entry_alloc0, check0, result2);
 }
 
 int select_index_136(mount_point_data_entry *mpd_entry_alloc0)
@@ -1404,7 +1404,7 @@ int label_136_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *
    int initialized_allocated_item_index = select_index_136(mpd_entry_alloc0);
    if(initialized_allocated_item_index < 0)
    {
-      return label_154_cleanup(pid, mpd_entry_alloc0->mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result, mpd_entry_alloc0, 1, 0x8080001E);
+      return label_154_cleanup(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, 1, 0x8080001E);
    }
    else
    {
@@ -1415,7 +1415,7 @@ int label_136_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *
       {
          if (mpd_entry_alloc0 == glb_mpd_entry1)
          {
-            return label_154_cleanup(pid, mpd_entry_alloc0->mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result, mpd_entry_alloc0, 0, 0x80800003);
+            return label_154_cleanup(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, 0, 0x80800003);
          }
 
          mount_point_data_entry * r3;
@@ -1427,7 +1427,7 @@ int label_136_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *
 
             if (mpd_entry_alloc0 == glb_mpd_entry1)
             {
-               return label_154_cleanup(pid, mpd_entry_alloc0->mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result, mpd_entry_alloc0, 0, 0x80800003);
+               return label_154_cleanup(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, 0, 0x80800003);
             }
 
             glb_mpd_entry1 = glb_mpd_entry1->next;
