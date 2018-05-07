@@ -9,7 +9,7 @@ struct mount_point_data_entry
 {
   int mount_id;
   char path[0x124]; //used for PFS mount
-  char pfs_rnd_drive_id[0x10]; //used for PFS mount
+  char pfs_rnd_drive_id[0x10]; //used for PFS mount - used internally by iofilemgr to connect to vfs_nodes through vfs_node_info?
   char title_id[0x10];
   SceUInt64 auth_ids[0x10];
   mount_point_data_entry *prev;
@@ -21,7 +21,7 @@ struct mount_ctx_t
 {
   mount_point_data_entry *mnt_entry;
   SceFiosOverlayID overlay_id;
-  char mountDrive[16];
+  char appmgr_rnd_drive_id[0x10]; //used for appmgr mount - returned when executing appmgr mount function
   mount_point_data_entry* entry_18;
   mount_ctx_t* unk1C;
   mount_ctx_t* next;

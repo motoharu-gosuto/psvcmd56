@@ -911,7 +911,7 @@ bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, un
       {
          if (mount_id == current_mount->mnt_entry->mount_id)
          {
-            if (strncmp(current_mount->mountDrive, mount_drive_input, 0x10u) == 0)
+            if (strncmp(current_mount->appmgr_rnd_drive_id, mount_drive_input, 0x10u) == 0)
                break;
          }
 
@@ -924,7 +924,7 @@ bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, un
          }
       }
 
-      memcpy(gen_mount_point, current_mount->mountDrive, 0x10);
+      memcpy(gen_mount_point, current_mount->appmgr_rnd_drive_id, 0x10);
       #pragma endregion
    }
    else
@@ -946,7 +946,7 @@ bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, un
          }
       }
 
-      memcpy(gen_mount_point, current_mount->mountDrive, 0x10);
+      memcpy(gen_mount_point, current_mount->appmgr_rnd_drive_id, 0x10);
       #pragma endregion
    }
 
@@ -972,7 +972,7 @@ bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, un
 
          if ( mount_ctx_local1->mnt_entry )
          {
-            if ( mount_id == mpd_entry0->mount_id && !strncmp(mount_ctx_local1->mountDrive, mount_drive_input, 0x10u))
+            if (mount_id == mpd_entry0->mount_id && !strncmp(mount_ctx_local1->appmgr_rnd_drive_id, mount_drive_input, 0x10u))
                break;
          }
 
@@ -1184,7 +1184,7 @@ int label_115_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, mount_ct
                mount_ctx_local3->next = virt_mount;
                virt_mount->unk1C = mount_ctx_local3;
                virt_mount->next = 0;
-               memcpy(mount_point_result, virt_mount->mountDrive, 0x10);
+               memcpy(mount_point_result, virt_mount->appmgr_rnd_drive_id, 0x10);
 
                return 0;
             }
@@ -1203,7 +1203,7 @@ int label_115_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, mount_ct
       mount_ctx_holder->mount = virt_mount;
       virt_mount->unk1C = 0;
       virt_mount->next = 0;
-      memcpy(mount_point_result, virt_mount->mountDrive, 0x10);
+      memcpy(mount_point_result, virt_mount->appmgr_rnd_drive_id, 0x10);
    
       return 0;
    }
@@ -1223,7 +1223,7 @@ int special_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_holder_t *mount
 
          if (mount_ctx_current->mnt_entry)
          {
-            if (mpd_entry->mount_id == mount_id && !strncmp(mount_ctx_current->mountDrive, virt_mount->mountDrive, 0x10u))
+            if (mpd_entry->mount_id == mount_id && !strncmp(mount_ctx_current->appmgr_rnd_drive_id, virt_mount->appmgr_rnd_drive_id, 0x10u))
             {
                break;
             }
@@ -1794,7 +1794,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
 
    // copy generated drive to virt_mount
 
-   memcpy(virt_mount->mountDrive, mount_drive_input, 0x10); 
+   memcpy(virt_mount->appmgr_rnd_drive_id, mount_drive_input, 0x10); 
 
    //=========================================== 
 
