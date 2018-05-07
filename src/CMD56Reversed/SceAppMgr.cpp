@@ -1333,19 +1333,19 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc1, 
    }
 }
 
-int mpd_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, mount_point_data_entry* mpd_entry_alloc0, const char *physical_path, char *mount_point_result, bool check0, int result2)
+int mpd_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, mount_point_data_entry* mpd_entry_alloc0, const char *physical_path, char *mount_point_result, bool check0, int result)
 {
    SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, mpd_entry_alloc0);
 
    mctx_alloc0->mnt_entry = 0;
 
    if (check0)
-      return label_21_cleanup(pid, mctx_alloc0, physical_path, result2);
+      return label_21_cleanup(pid, mctx_alloc0, physical_path, result);
    else
       return label_113_cleanup(pid, mpd_entry_alloc0->mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result);
 }
 
-int label_154_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, mount_point_data_entry *mpd_entry_alloc0, const char *physical_path, char *mount_point_result, bool check0, int result2)
+int label_154_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, mount_point_data_entry *mpd_entry_alloc0, const char *physical_path, char *mount_point_result, bool check0, int result)
 {
    int prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
    if (mpd_entry_alloc0->mount_id == 0x258)
@@ -1358,7 +1358,7 @@ int label_154_cleanup(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *
    }
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm);
 
-   return mpd_cleanup(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, check0, result2);
+   return mpd_cleanup(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, check0, result);
 }
 
 int select_index_136(mount_point_data_entry *mpd_entry_alloc0)
