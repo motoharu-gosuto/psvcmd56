@@ -17,20 +17,20 @@ struct mount_point_data_entry
 };
 
 //size is 0x24 (known)
-struct mount_ctx_t
+struct appmgr_mount
 {
   mount_point_data_entry *mnt_entry;
   SceFiosOverlayID overlay_id;
   char appmgr_rnd_drive_id[0x10]; //used for appmgr mount - returned when executing appmgr mount function
   mount_point_data_entry* entry_18;
-  mount_ctx_t* unk1C;
-  mount_ctx_t* next;
+  appmgr_mount* unk1C;
+  appmgr_mount* next;
 };
 
 struct mount_ctx_holder_t
 {
   int unk0;
-  mount_ctx_t *mount;
+  appmgr_mount *mount;
 };
 
 struct titleId_item
