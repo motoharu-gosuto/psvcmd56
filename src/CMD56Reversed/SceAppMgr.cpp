@@ -1361,39 +1361,39 @@ int label_154_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_t *mctx_alloc
    return mpd_cleanup(pid, mount_id, mctx_alloc1, mount_ctx_holder, physical_path_copy2, mount_drive_input, gen_mount_point, mpd_entry_alloc2, check0, result2);
 }
 
-int select_index_136(mount_point_data_entry *mpd_entry_alloc2)
+int select_index_136(mount_point_data_entry *mpd_entry_alloc0)
 {
-   if (mpd_entry_alloc2->auth_ids[0] == 0)
+   if (mpd_entry_alloc0->auth_ids[0] == 0)
       return 0;
-   else if (mpd_entry_alloc2->auth_ids[1] == 0)
+   else if (mpd_entry_alloc0->auth_ids[1] == 0)
       return 1;
-   else if (mpd_entry_alloc2->auth_ids[2] == 0)
+   else if (mpd_entry_alloc0->auth_ids[2] == 0)
       return 2; 
-   else if (mpd_entry_alloc2->auth_ids[3] == 0)
+   else if (mpd_entry_alloc0->auth_ids[3] == 0)
       return 3;
-   else if (mpd_entry_alloc2->auth_ids[4] == 0)
+   else if (mpd_entry_alloc0->auth_ids[4] == 0)
       return 4;
-   else if (mpd_entry_alloc2->auth_ids[5] == 0)
+   else if (mpd_entry_alloc0->auth_ids[5] == 0)
       return 5;
-   else if (mpd_entry_alloc2->auth_ids[6] == 0)
+   else if (mpd_entry_alloc0->auth_ids[6] == 0)
       return 6;
-   else if (mpd_entry_alloc2->auth_ids[7] == 0)
+   else if (mpd_entry_alloc0->auth_ids[7] == 0)
       return 7;
-   else if (mpd_entry_alloc2->auth_ids[8] == 0)
+   else if (mpd_entry_alloc0->auth_ids[8] == 0)
       return 8;
-   else if (mpd_entry_alloc2->auth_ids[9] == 0)
+   else if (mpd_entry_alloc0->auth_ids[9] == 0)
       return 9;
-   else if (mpd_entry_alloc2->auth_ids[10] == 0)
+   else if (mpd_entry_alloc0->auth_ids[10] == 0)
       return 10;
-   else if (mpd_entry_alloc2->auth_ids[11] == 0)
+   else if (mpd_entry_alloc0->auth_ids[11] == 0)
       return 11;
-   else if (mpd_entry_alloc2->auth_ids[12] == 0)
+   else if (mpd_entry_alloc0->auth_ids[12] == 0)
       return 12;
-   else if (mpd_entry_alloc2->auth_ids[13] == 0)
+   else if (mpd_entry_alloc0->auth_ids[13] == 0)
       return 13;
-   else if (mpd_entry_alloc2->auth_ids[14] == 0)
+   else if (mpd_entry_alloc0->auth_ids[14] == 0)
       return 14;
-   else if (mpd_entry_alloc2->auth_ids[15] == 0)
+   else if (mpd_entry_alloc0->auth_ids[15] == 0)
       return 15;
    else 
       return -1;
