@@ -1474,7 +1474,7 @@ int create_loopback_mount(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder
    return mpd_cleanup(pid, mpd_entry_alloc0->mount_id, mctx_alloc0, mount_ctx_holder, physical_path, mctx_alloc0->mountDrive, mount_point_result, mpd_entry_alloc0, check0, mount_res);
 }
 
-int create_pfs_mount_raw(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path, char *mount_point_result, mount_point_data_entry *mpd_entry_alloc0, SceUInt64 auth_id, char* klicensee0, std::uint16_t mode_index)
+int create_pfs_mount_raw(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, mount_point_data_entry *mpd_entry_alloc0, const char *physical_path, char *mount_point_result, SceUInt64 auth_id, char* klicensee0, std::uint16_t mode_index)
 {
    if (mpd_entry_alloc0->gen_mount_point[0] == 0)
       return label_136_cleanup(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, auth_id);
@@ -1592,13 +1592,13 @@ int create_mount_with_klicensee(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_
 {
    char klicensee0[16];
    memcpy(klicensee0, klicensee, 0x10);
-   return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, physical_path, mount_point_result, mpd_entry_alloc0, auth_id, klicensee0, mode_index);
+   return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
 }
 
 int create_mount_with_empty_klicensee(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path, mount_point_data_entry *mpd_entry_alloc0, SceUInt64 auth_id, std::uint16_t mode_index, char *mount_point_result)
 {
    char klicensee0[16] = {0};
-   return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, physical_path, mount_point_result, mpd_entry_alloc0, auth_id, klicensee0, mode_index);
+   return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
 }
 
 int create_mount_from_sealedkey(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_holder_t *mount_ctx_holder, const char *physical_path, mount_point_data_entry *mpd_entry_alloc0, SceUInt64 auth_id, std::uint16_t mode_index, char *mount_point_result)
@@ -1608,7 +1608,7 @@ int create_mount_from_sealedkey(SceUID pid, mount_ctx_t *mctx_alloc0, mount_ctx_
    int sk_read_res = read_sealedkey_23D6EA0(mpd_entry_alloc0->path, klicensee0);
    if (!sk_read_res)
    {
-      return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, physical_path, mount_point_result, mpd_entry_alloc0, auth_id, klicensee0, mode_index);
+      return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
    }
    else
    {
@@ -1623,14 +1623,14 @@ int create_mount_from_klicensee_or_sealedkey(SceUID pid, mount_ctx_t *mctx_alloc
    if (klicensee)
    {
       memcpy(klicensee0, klicensee, 0x10);
-      return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, physical_path, mount_point_result, mpd_entry_alloc0, auth_id, klicensee0, mode_index);
+      return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
    }
    else
    {
       int sk_read_res = read_sealedkey_23D6EA0(mpd_entry_alloc0->path, klicensee0);
       if (!sk_read_res)
       {
-         return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, physical_path, mount_point_result, mpd_entry_alloc0, auth_id, klicensee0, mode_index);
+         return create_pfs_mount_raw(pid, mctx_alloc0, mount_ctx_holder, mpd_entry_alloc0, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
       }
       else
       {
