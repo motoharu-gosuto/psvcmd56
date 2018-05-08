@@ -385,7 +385,7 @@ SceUID SceAppMgrMount_mutex_22A000C;
 
 char* PD_str_2404BBC = "PD";
 
-mount_point_data_entry* mount_point_entries_22D470C;
+pfs_mount_t* mount_point_entries_22D470C;
 
 //this function tries to OverlayResolveSync input path
 //then checks that it is not a PD path (temp mount point probably aquired by PFS)
@@ -504,7 +504,7 @@ int iofilemgr_path_mapping_callback_23DDE64(const char *path, SceUID pid, char *
             //terminate path with 0
             path_copy[15] = 0;
 
-            mount_point_data_entry *global_buffer = mount_point_entries_22D470C;
+            pfs_mount_t *global_buffer = mount_point_entries_22D470C;
 
             // if global item is set
             if (global_buffer)
@@ -640,7 +640,7 @@ int verify_copy_23D5A10(char *src, char *dst)
 
 //----------------
 
-int w_unmount_23D5F44(SceUID pid, mount_point_data_entry *mnt_entry, int umountArg)
+int w_unmount_23D5F44(SceUID pid, pfs_mount_t *mnt_entry, int umountArg)
 {
    return 0;
 }
@@ -952,7 +952,7 @@ bool maybe_find_mount(SceUID pid, const mount_ctx_holder_t *mount_ctx_holder, un
 
    //----
 
-   mount_point_data_entry *mpd_entry0;
+   pfs_mount_t *mpd_entry0;
 
    if (mount_drive)
    {
@@ -1080,7 +1080,7 @@ int label_21_cleanup(SceUID pid, const appmgr_mount* virt_mount, const void* mem
    return error_code;
 }
 
-int select_index(const mount_point_data_entry* glb_mpd_entry0)
+int select_index(const pfs_mount_t* glb_mpd_entry0)
 {
    if (glb_mpd_entry0->auth_ids[0] == 0)
       return 0;
@@ -1118,7 +1118,7 @@ int select_index(const mount_point_data_entry* glb_mpd_entry0)
       return -1;
 }
 
-int clear_authid(mount_point_data_entry* glb_mpd_entry0, SceUInt64 auth_id)
+int clear_authid(pfs_mount_t* glb_mpd_entry0, SceUInt64 auth_id)
 {
    if (auth_id == glb_mpd_entry0->auth_ids[0])
       glb_mpd_entry0->auth_ids[0] = 0LL;
@@ -1215,7 +1215,7 @@ int special_cleanup(SceUID pid, unsigned int mount_id, mount_ctx_holder_t *mount
 
    if (mount_ctx_current)
    {
-      mount_point_data_entry * mpd_entry;
+      pfs_mount_t * mpd_entry;
 
       while (1)
       {
@@ -1272,7 +1272,7 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_holder_t *mount_
 {
    //search
 
-   mount_point_data_entry* glb_mpd_entry0 = mount_point_entries_22D470C;
+   pfs_mount_t* glb_mpd_entry0 = mount_point_entries_22D470C;
 
    while (mount_id != glb_mpd_entry0->mount_id || strncmp(glb_mpd_entry0->path, physical_path, 0x124u) != 0)
    {
@@ -1335,7 +1335,7 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, mount_ctx_holder_t *mount_
    }
 }
 
-int mpd_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, mount_point_data_entry* pfs_mount, const char *physical_path, char *mount_point_result, bool check0, int result)
+int mpd_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, pfs_mount_t* pfs_mount, const char *physical_path, char *mount_point_result, bool check0, int result)
 {
    SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, pfs_mount);
 
@@ -1347,7 +1347,7 @@ int mpd_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *
       return label_113_cleanup(pid, pfs_mount->mount_id, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
 }
 
-int label_154_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, mount_point_data_entry *pfs_mount, const char *physical_path, char *mount_point_result, bool check0, int result)
+int label_154_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, char *mount_point_result, bool check0, int result)
 {
    int prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
    if (pfs_mount->mount_id == 0x258)
@@ -1363,7 +1363,7 @@ int label_154_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_m
    return mpd_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, check0, result);
 }
 
-int select_index_136(mount_point_data_entry *pfs_mount)
+int select_index_136(pfs_mount_t *pfs_mount)
 {
    if (pfs_mount->auth_ids[0] == 0)
       return 0;
@@ -1401,7 +1401,7 @@ int select_index_136(mount_point_data_entry *pfs_mount)
       return -1;
 }
 
-int label_136_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, mount_point_data_entry *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id)
+int label_136_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id)
 {
    int initialized_allocated_item_index = select_index_136(pfs_mount);
    if(initialized_allocated_item_index < 0)
@@ -1410,7 +1410,7 @@ int label_136_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_m
    }
    else
    {
-      mount_point_data_entry *glb_mpd_entry1 = (mount_point_data_entry *)mount_point_entries_22D470C;
+      pfs_mount_t *glb_mpd_entry1 = (pfs_mount_t *)mount_point_entries_22D470C;
       pfs_mount->auth_ids[initialized_allocated_item_index] = auth_id;
 
       if (glb_mpd_entry1)
@@ -1420,7 +1420,7 @@ int label_136_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_m
             return label_154_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, 0, 0x80800003);
          }
 
-         mount_point_data_entry * r3;
+         pfs_mount_t * r3;
          while (1)
          {
             r3 = glb_mpd_entry1->next;
@@ -1454,7 +1454,7 @@ int label_136_cleanup(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_m
 
 //======================
 
-int create_loopback_mount(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, mount_point_data_entry *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id)
+int create_loopback_mount(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id)
 {
    pfs_mount->pfs_rnd_drive_id[0] = 0;
    int prev_perm1 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
@@ -1476,7 +1476,7 @@ int create_loopback_mount(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appm
    return mpd_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, check0, mount_res);
 }
 
-int create_pfs_mount_raw(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, mount_point_data_entry *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id, char* klicensee0, std::uint16_t mode_index)
+int create_pfs_mount_raw(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id, char* klicensee0, std::uint16_t mode_index)
 {
    if (pfs_mount->pfs_rnd_drive_id[0] == 0)
       return label_136_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, auth_id);
@@ -1590,20 +1590,20 @@ int create_pfs_mount_raw(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmg
 
 //======================
 
-int create_mount_with_klicensee(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, mount_point_data_entry *pfs_mount, SceUInt64 auth_id, const char* klicensee, std::uint16_t mode_index, char *mount_point_result)
+int create_mount_with_klicensee(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, pfs_mount_t *pfs_mount, SceUInt64 auth_id, const char* klicensee, std::uint16_t mode_index, char *mount_point_result)
 {
    char klicensee0[16];
    memcpy(klicensee0, klicensee, 0x10);
    return create_pfs_mount_raw(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
 }
 
-int create_mount_with_empty_klicensee(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, mount_point_data_entry *pfs_mount, SceUInt64 auth_id, std::uint16_t mode_index, char *mount_point_result)
+int create_mount_with_empty_klicensee(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, pfs_mount_t *pfs_mount, SceUInt64 auth_id, std::uint16_t mode_index, char *mount_point_result)
 {
    char klicensee0[16] = {0};
    return create_pfs_mount_raw(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, auth_id, klicensee0, mode_index);
 }
 
-int create_mount_from_sealedkey(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, mount_point_data_entry *pfs_mount, SceUInt64 auth_id, std::uint16_t mode_index, char *mount_point_result)
+int create_mount_from_sealedkey(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, pfs_mount_t *pfs_mount, SceUInt64 auth_id, std::uint16_t mode_index, char *mount_point_result)
 {
    char klicensee0[16] = {0}; 
 
@@ -1618,7 +1618,7 @@ int create_mount_from_sealedkey(SceUID pid, mount_ctx_holder_t *mount_ctx_holder
    }
 }
 
-int create_mount_from_klicensee_or_sealedkey(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, mount_point_data_entry *pfs_mount, SceUInt64 auth_id, const char* klicensee, std::uint16_t mode_index, char *mount_point_result)
+int create_mount_from_klicensee_or_sealedkey(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, const char *physical_path, pfs_mount_t *pfs_mount, SceUInt64 auth_id, const char* klicensee, std::uint16_t mode_index, char *mount_point_result)
 {
    char klicensee0[16] = {0};
    
@@ -1643,7 +1643,7 @@ int create_mount_from_klicensee_or_sealedkey(SceUID pid, mount_ctx_holder_t *mou
 
 //===================
 
-int create_mountpoint_core(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, mount_point_data_entry *pfs_mount, const char *physical_path, SceUInt64 auth_id, const char* klicensee, char *mount_point_result)
+int create_mountpoint_core(SceUID pid, mount_ctx_holder_t *mount_ctx_holder, appmgr_mount *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, SceUInt64 auth_id, const char* klicensee, char *mount_point_result)
 {   
    if ((pfs_mount->mount_id < 0x64))
    {
@@ -1855,7 +1855,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    alloc_ctx02.unk0 = 20;
    alloc_ctx02.unk8 = 32;
 
-   mount_point_data_entry *pfs_mount = (mount_point_data_entry *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceAppMgrMount_pool_22A0008, 0x1D0u, &alloc_ctx02);
+   pfs_mount_t *pfs_mount = (pfs_mount_t *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceAppMgrMount_pool_22A0008, 0x1D0u, &alloc_ctx02);
    if (!pfs_mount)
    {
       virt_mount->mnt_entry = pfs_mount;
@@ -1865,7 +1865,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, mount_ctx_holder_t *mount_ctx_hol
    memset(pfs_mount, 0, 0x1D0u);
 
    pfs_mount->mount_id = mount_id;
-   strncpy(pfs_mount->path, physical_path_local, 0x123u); //copy physical path to mount_point_data_entry
+   strncpy(pfs_mount->path, physical_path_local, 0x123u); //copy physical path to pfs_mount_t
    memcpy(pfs_mount->title_id, title_id, 0x10);
 
    //===========================================
@@ -1952,7 +1952,7 @@ int w_SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path
    }
    else
    {
-      mount_point_data_entry *mpe = mount_point_entries_22D470C;
+      pfs_mount_t *mpe = mount_point_entries_22D470C;
       if (mpe)
       {
          bool mpe_found = false;

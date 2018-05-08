@@ -5,24 +5,24 @@
 #include "SceFios2Kernel.h"
 
 //size is 0x1D0 (known)
-struct mount_point_data_entry
+struct pfs_mount_t
 {
   int mount_id;
   char path[0x124]; //used for PFS mount
   char pfs_rnd_drive_id[0x10]; //used for PFS mount - used internally by iofilemgr to connect to vfs_nodes through vfs_node_info?
   char title_id[0x10];
   SceUInt64 auth_ids[0x10];
-  mount_point_data_entry *prev;
-  mount_point_data_entry *next;
+  pfs_mount_t *prev;
+  pfs_mount_t *next;
 };
 
 //size is 0x24 (known)
 struct appmgr_mount
 {
-  mount_point_data_entry *mnt_entry;
+  pfs_mount_t *mnt_entry;
   SceFiosOverlayID overlay_id;
   char appmgr_rnd_drive_id[0x10]; //used for appmgr mount - returned when executing appmgr mount function
-  mount_point_data_entry* entry_18;
+  pfs_mount_t* entry_18;
   appmgr_mount* unk1C;
   appmgr_mount* next;
 };
