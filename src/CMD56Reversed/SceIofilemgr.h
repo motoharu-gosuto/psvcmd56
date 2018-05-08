@@ -69,14 +69,14 @@ typedef struct node_ops2 // size is 0x74 (29 pointers)
 typedef struct vfs_mount_point_info_base
 {
   char* unixMount;
-  char* unk_4; //zero
+  char* originalPath;
   uint32_t devMajor;
   uint32_t devMinor;
 
   char* filesystem;
-  void* unk_14; //zero
+  struct pfs_pmi_buffer_list_ctx* blc; //holds klicensee
   vfs_block_dev_info* blockDev1;
-  node_ops2* unk_1C; //zero
+  uint32_t unk_1C; //zero
 } vfs_mount_point_info_base;
 
 typedef struct vfs_add_data
@@ -111,15 +111,9 @@ typedef struct vfs_fd_lock
 
 } vfs_fd_lock;
 
-typedef struct vfs_mount //size is not known exactly, at least 0xD0
+typedef struct vfs_mount //size is not known exactly, at least 0xD0 + 0x10 + 0x10
 {
-   uint32_t fast_mutex_SceVfsMnt;
-
-   uint32_t unk_4;
-   uint32_t unk_8;
-   uint32_t unk_C;
-
-   uint8_t data1[0x30];
+   fast_mutex SceVfsMnt; // size is 0x40
 
    vfs_node* unk_40; // child ?
 
@@ -153,7 +147,7 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
    uint32_t unk_58;   // counter
    vfs_add_data* add_data; // 0x5C
 
-   uint32_t unk_60;   // counter
+   uint32_t some_counter_60;   // counter
 
    uint32_t unk_64;
    uint32_t unk_68;
@@ -166,11 +160,11 @@ typedef struct vfs_mount //size is not known exactly, at least 0xD0
 
    vfs_block_dev_info* blockDev; // 0x7C
 
-   char unixMount[0x40]; // 0x80 /gro/exfat, ux/exfat etc
+   char unixMount[0x40]; // 0x80 /gro/exfat, /ux/exfat etc
 
    uint32_t unk_C0;   
 
-   void* unk_C4; // = mountInfo->unk_14
+   pfs_pmi_buffer_list_ctx* blc; // C4 - from vfs_mount_point_info_base
 
    vfs_fd_lock* fd_lock_ptr; // C8 - points to area in this structure
 

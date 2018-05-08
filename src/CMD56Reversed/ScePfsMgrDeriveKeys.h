@@ -9,47 +9,47 @@ typedef struct buffer_list
     uint32_t unk_8;
     uint32_t unk_C;
     uint32_t unk_10;
-    void* bcl; //0x14 - one of versions is pfs_pmi_buffer_list_ctx
+    void* blc; //0x14 - one of versions is pfs_pmi_buffer_list_ctx
 }buffer_list;
+
+typedef struct pmi_blc_subctx
+{
+  pmi_blc_subctx *subctx0;
+  pmi_blc_subctx *subctx4;
+  SceUInt64 auth_ids[16];
+  vfs_block_dev_info block_dev;
+  uint32_t num_authids;
+} pmi_blc_subctx;
 
 typedef struct pfs_pmi_buffer_list_ctx
 {
     buffer_list* blist;
     uint32_t unk_4;
     SceUID ScePfsPmi_mutex_id; // 0x08
-    char original_path[0x3F];  // 0xC
+    char original_path[0x40];  // 0xC
     
-    char mount_point1[0x22]; // 0x4C - /%s
+    char rnd_drive_id1[0x22]; // 0x4C - "/%s"
     
-    char mount_point2[0x23];  // 0x6E - %s0:
-    
-    char unk_91;
-    
-    uint16_t type;   //0x92
-    uint16_t flag; //0x94 = 0
+    char rnd_drive_id2[0x24];  // 0x6E - "%s0:" - used for pfs_pmi_buffer_list_ctx lookup on mount
+
+    uint16_t mode_index;   //0x92
+    uint16_t crypto_engine_flag; //0x94 = 0
     
     unsigned char klicensee[0x10]; //0x96
     
-    uint16_t key_id; // = 0
-    uint32_t salt0; // 0xA8 = 0
+    uint16_t key_id;
+    uint32_t files_salt;
     uint32_t unk_AC; // = 0
     
     SceUID ScePfsFilesDb_mutex_id; // 0xB0
     
     char unk_data1[0xBC]; // 0xB4
     
-    pfs_pmi_buffer_list_ctx *bcl; //0x170
-    uint32_t unk_174;
-    SceUInt64 auth_id;
-    
-    char unk_data2[0x78]; // 0x180
-
-    vfs_block_dev_info block_dev; // 0x1F8
-
-    uint32_t unk_20C;
+    struct pmi_blc_subctx subctx;
     
     //further fields are unknown
 } pfs_pmi_buffer_list_ctx;
+
 
 typedef struct CryptEngineData //size is 0x60
 {

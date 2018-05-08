@@ -1130,12 +1130,12 @@ int initialize_data_ctx(CryptEngineData* data, uint32_t salt1, int unk2, int unk
    if(ctx1 != 0)
       data->unk_14 = ctx1->unk_28;
 
-   data->files_salt = pfs_pmi_bcl->salt0;
+   data->files_salt = pfs_pmi_bcl->files_salt;
    data->icv_salt = salt1;
    data->unk_1C = arg_4;
 
-   data->mode_index = pfs_pmi_bcl->type;
-   data->crypto_engine_flag = pfs_pmi_bcl->flag;
+   data->mode_index = pfs_pmi_bcl->mode_index;
+   data->crypto_engine_flag = pfs_pmi_bcl->crypto_engine_flag;
    data->key_id = pfs_pmi_bcl->key_id;
    data->fs_attr = flag0;
    
