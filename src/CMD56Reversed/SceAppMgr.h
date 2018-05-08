@@ -27,7 +27,7 @@ struct appmgr_mount_t
   appmgr_mount_t* next;
 };
 
-struct mount_ctx_holder_t
+struct appmgr_mount_holder_t
 {
   int unk0;
   appmgr_mount_t *mount;
@@ -103,7 +103,7 @@ struct sub_ctx_23C2960_558
   char maybe_titleid_0[32];
   SceUID pid;
   int unk24;
-  mount_ctx_holder_t mctx_hldr_28;
+  appmgr_mount_holder_t mctx_hldr_28;
   phys_ctx_t phys_ctx_30;
   sub_ctx_23C2960_558_548 unk548;
 };
