@@ -17,20 +17,20 @@ struct pfs_mount_t
 };
 
 //size is 0x24 (known)
-struct appmgr_mount
+struct appmgr_mount_t
 {
   pfs_mount_t *mnt_entry;
   SceFiosOverlayID overlay_id;
   char appmgr_rnd_drive_id[0x10]; //used for appmgr mount - returned when executing appmgr mount function
   pfs_mount_t* entry_18;
-  appmgr_mount* unk1C;
-  appmgr_mount* next;
+  appmgr_mount_t* unk1C;
+  appmgr_mount_t* next;
 };
 
 struct mount_ctx_holder_t
 {
   int unk0;
-  appmgr_mount *mount;
+  appmgr_mount_t *mount;
 };
 
 struct titleId_item
