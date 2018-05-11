@@ -905,7 +905,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
    if (mount_id >= 0x3E8)
    {
       #pragma region
-      appmgr_mount_t* current_mount = mount_ctx_holder->mount;
+      appmgr_mount_t* current_mount = mount_ctx_holder->first_virt_mount;
 
       while (1)
       {
@@ -930,7 +930,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
    else
    {
       #pragma region
-      appmgr_mount_t* current_mount = mount_ctx_holder->mount;
+      appmgr_mount_t* current_mount = mount_ctx_holder->first_virt_mount;
 
       while (1)
       {
@@ -958,7 +958,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
    {
       #pragma region
 
-      appmgr_mount_t *mount_ctx_local1 = mount_ctx_holder->mount;
+      appmgr_mount_t *mount_ctx_local1 = mount_ctx_holder->first_virt_mount;
 
       if (!mount_ctx_local1)
       {
@@ -991,7 +991,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
    {
       #pragma region
 
-      appmgr_mount_t *mount_ctx_local2 = mount_ctx_holder->mount;
+      appmgr_mount_t *mount_ctx_local2 = mount_ctx_holder->first_virt_mount;
 
       if (!mount_ctx_local2)
       {
@@ -1161,48 +1161,60 @@ int clear_authid(pfs_mount_t* glb_mpd_entry0, SceUInt64 auth_id)
 //links virt_mount with mount_ctx_holder
 int label_115_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, char *mount_point_result)
 {
+   //create overlay
+
    int result2 = proc_fios2kernel_overlay_add_for_process_23D4DDC(pid, virt_mount);
-   if (result2)
-   {
-      return label_21_cleanup(pid, virt_mount, 0, result2);  
-   }
+   if (result2 != 0)
+      return label_21_cleanup(pid, virt_mount, 0, result2);
 
-   appmgr_mount_t* mount_ctx_local3 = mount_ctx_holder->mount;
+   //get first appmgr mount
+
+   appmgr_mount_t* current_appmgr_mount = mount_ctx_holder->first_virt_mount;
    
-   if (mount_ctx_local3)
+   if (current_appmgr_mount)
    {
-      if (virt_mount == mount_ctx_local3)
-      {
+      //if starting node is initialized
+
+      //if starting node is the same as current node - there is nothing to do
+
+      if (virt_mount == current_appmgr_mount)
          return label_21_cleanup(pid, virt_mount, 0, 0x80800003);
-      }
-      else
+
+      while (1)
       {
-         while (1)
+         if (current_appmgr_mount->next == 0)
          {
-            if (!mount_ctx_local3->next)
-            {
-               mount_ctx_local3->next = virt_mount;
-               virt_mount->unk1C = mount_ctx_local3;
-               virt_mount->next = 0;
-               memcpy(mount_point_result, virt_mount->appmgr_rnd_drive_id, 0x10);
+            current_appmgr_mount->next = virt_mount;
 
-               return 0;
-            }
+            virt_mount->prev = current_appmgr_mount;
+            virt_mount->next = 0;
 
-            if (virt_mount == mount_ctx_local3)
-               break;
+            //copy appmgr mount point appmgr_rnd_drive_id to result
 
-            mount_ctx_local3 = mount_ctx_local3->next;
+            memcpy(mount_point_result, virt_mount->appmgr_rnd_drive_id, 0x10);
+
+            return 0;
          }
-         
-         return label_21_cleanup(pid, virt_mount, 0, 0x80800003);
+
+         if (virt_mount == current_appmgr_mount)
+            break;
+
+         current_appmgr_mount = current_appmgr_mount->next;
       }
+         
+      return label_21_cleanup(pid, virt_mount, 0, 0x80800003);
    }
    else
    {
-      mount_ctx_holder->mount = virt_mount;
-      virt_mount->unk1C = 0;
+      //if there is no starting node - assign current appmgr mount point
+
+      mount_ctx_holder->first_virt_mount = virt_mount;
+
+      virt_mount->prev = 0;
       virt_mount->next = 0;
+
+      //copy appmgr mount point appmgr_rnd_drive_id to result
+
       memcpy(mount_point_result, virt_mount->appmgr_rnd_drive_id, 0x10);
    
       return 0;
@@ -1211,7 +1223,9 @@ int label_115_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmg
 
 int special_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, char *mount_point_result)
 {
-   appmgr_mount_t * appmgr_mount_current = mount_ctx_holder->mount;
+   //get first appmgr mount
+
+   appmgr_mount_t * appmgr_mount_current = mount_ctx_holder->first_virt_mount;
 
    if (appmgr_mount_current)
    {
@@ -1788,7 +1802,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, appmgr_mount_holder_t *mount_ctx_
 
    //this may find mountpoint and return with result in mount_point_result
 
-   if (mount_ctx_holder->mount)
+   if (mount_ctx_holder->first_virt_mount)
    {
       int error_code = 0;
       if(!maybe_find_mount(pid, mount_ctx_holder, mount_id, mount_drive, mount_drive_input, mount_point_result, error_code))
