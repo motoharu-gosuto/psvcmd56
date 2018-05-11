@@ -652,124 +652,121 @@ int read_sealedkey_23D6EA0(const char *mountpoint, char *secret)
 
 int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, appmgr_mount_t *mctx)
 {
-  appmgr_mount_t *mctx_local;
-  SceUID pid_local;
-  pfs_mount_t *mpde0_local;
-  pfs_mount_t *mpde1_local;
-  int symbol0;
-  pfs_mount_t *mpde_local;
-  const char *mountDrive_local;
-  int prev_perm;
-  int v10;
-  int result;
-  int symbol1;
-  uint16_t len0;
-  int len01;
-  const char *gen_mount_point_local;
-  uint16_t len1;
-  int len11;
-  SceUID pid0;
-  SceFiosOverlay overlay_local;
+   pfs_mount_t *mpde0_local;
+   pfs_mount_t *mpde1_local;
+   int symbol0;
+   pfs_mount_t *mpde_local;
+   const char *mountDrive_local;
+   int prev_perm;
+   int v10;
+   int result;
+   int symbol1;
+   uint16_t len0;
+   int len01;
+   const char *gen_mount_point_local;
+   uint16_t len1;
+   int len11;
+   SceUID pid0;
+   SceFiosOverlay overlay_local;
   
-
-  mctx_local = mctx;
-  pid_local = pid;
+   appmgr_mount_t *mctx_local = mctx;
+   SceUID pid_local = pid;
   
-  memset(&overlay_local, 0, sizeof(SceFiosOverlay));
-  mpde0_local = mctx_local->this_pfs_mount;
-  mpde1_local = mctx_local->this_pfs_mount;
-  if ( !pid_local )
-  {
-    pid0 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
-    mpde1_local = mctx_local->this_pfs_mount;
-    pid_local = pid0;
-  }
+   memset(&overlay_local, 0, sizeof(SceFiosOverlay));
+   mpde0_local = mctx_local->this_pfs_mount;
+   mpde1_local = mctx_local->this_pfs_mount;
+   if (!pid_local)
+   {
+      pid0 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
+      mpde1_local = mctx_local->this_pfs_mount;
+      pid_local = pid0;
+   }
 
-  if ( mpde1_local->mount_id != 0x3E9 && mpde1_local->mount_id != 0x3EB )
-  {
-    overlay_local.order = 0x81u;
-    symbol0 = mpde0_local->pfs_rnd_drive_id[0];
-    overlay_local.type = 0;
-    if (!symbol0)
-    {
-        if ( mpde1_local->mount_id == 600 )
-        {
-          overlay_local.src_len = strnlen("lma0:", 292);
-          strncpy(overlay_local.src, "lma0:", 0x124u);
-        }
-        else
-        {
-          overlay_local.src_len = strnlen(mpde1_local->path, 292);
-          strncpy(overlay_local.src, mpde1_local->path, 0x124u);
-        }
-    }
-    else
-    {
-       len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
-       len01 = len0;
-       overlay_local.src_len = len0;
-       strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
-       overlay_local.src_len = len01 + 2;
-       overlay_local.src[len01] = '0';
-       overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
-       overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
-    }
-  }
-  else
-  {
-     overlay_local.order = -126;
-     symbol1 = mpde0_local->pfs_rnd_drive_id[0];
-     overlay_local.type = 1;
-     if ( symbol1 )
-     {
-       len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
-       len01 = len0;
-       overlay_local.src_len = len0;
-       strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
-       overlay_local.src_len = len01 + 2;
-       overlay_local.src[len01] = '0';
-       overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
-       overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
-     }
-  }
+   if (mpde1_local->mount_id != 0x3E9 && mpde1_local->mount_id != 0x3EB)
+   {
+      overlay_local.order = 0x81u;
+      symbol0 = mpde0_local->pfs_rnd_drive_id[0];
+      overlay_local.type = 0;
+      if (!symbol0)
+      {
+         if (mpde1_local->mount_id == 600)
+         {
+            overlay_local.src_len = strnlen("lma0:", 292);
+            strncpy(overlay_local.src, "lma0:", 0x124u);
+         }
+         else
+         {
+            overlay_local.src_len = strnlen(mpde1_local->path, 292);
+            strncpy(overlay_local.src, mpde1_local->path, 0x124u);
+         }
+      }
+      else
+      {
+         len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
+         len01 = len0;
+         overlay_local.src_len = len0;
+         strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
+         overlay_local.src_len = len01 + 2;
+         overlay_local.src[len01] = '0';
+         overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
+         overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
+      }
+   }
+   else
+   {
+      overlay_local.order = -126;
+      symbol1 = mpde0_local->pfs_rnd_drive_id[0];
+      overlay_local.type = 1;
+      if (symbol1)
+      {
+         len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
+         len01 = len0;
+         overlay_local.src_len = len0;
+         strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
+         overlay_local.src_len = len01 + 2;
+         overlay_local.src[len01] = '0';
+         overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
+         overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
+      }
+   }
 
-  overlay_local.src[291] = 0;
-  if ( (mpde1_local->mount_id & 0xFFFFFFFD) != 0x3E9 )
-  {
-    mountDrive_local = mctx_local->appmgr_rnd_drive_id;
-    overlay_local.dst_len = strnlen(mountDrive_local, 0x10);
-    strncpy(overlay_local.dst, mountDrive_local, 0x124u);
-  }
-  else
-  {
-     mpde_local = mctx_local->prev_pfs_mount;
-     if ( !mpde_local->pfs_rnd_drive_id[0] )
-     {
-       mountDrive_local = mpde_local->path;
-       overlay_local.dst_len = strnlen(mountDrive_local, 0x10);
-       strncpy(overlay_local.dst, mountDrive_local, 0x124u);
-     }
-     else
-     {
-        gen_mount_point_local = mpde_local->pfs_rnd_drive_id;
-        len1 = strnlen(mpde_local->pfs_rnd_drive_id, 0x10);
-        len11 = len1;
-        overlay_local.dst_len = len1;
-        strncpy(overlay_local.dst, gen_mount_point_local, 0x124u);
-        overlay_local.dst_len = len11 + 2;
-        overlay_local.dst[len11] = '0';
-        overlay_local.dst[(unsigned __int16)(len11 + 1)] = ':';
-        overlay_local.dst[(unsigned __int16)(len11 + 2)] = 0;
-     }
-  }
+   overlay_local.src[291] = 0;
+   if ((mpde1_local->mount_id & 0xFFFFFFFD) != 0x3E9)
+   {
+      mountDrive_local = mctx_local->appmgr_rnd_drive_id;
+      overlay_local.dst_len = strnlen(mountDrive_local, 0x10);
+      strncpy(overlay_local.dst, mountDrive_local, 0x124u);
+   }
+   else
+   {
+      mpde_local = mctx_local->prev_pfs_mount;
+      if (!mpde_local->pfs_rnd_drive_id[0])
+      {
+         mountDrive_local = mpde_local->path;
+         overlay_local.dst_len = strnlen(mountDrive_local, 0x10);
+         strncpy(overlay_local.dst, mountDrive_local, 0x124u);
+      }
+      else
+      {
+         gen_mount_point_local = mpde_local->pfs_rnd_drive_id;
+         len1 = strnlen(mpde_local->pfs_rnd_drive_id, 0x10);
+         len11 = len1;
+         overlay_local.dst_len = len1;
+         strncpy(overlay_local.dst, gen_mount_point_local, 0x124u);
+         overlay_local.dst_len = len11 + 2;
+         overlay_local.dst[len11] = '0';
+         overlay_local.dst[(unsigned __int16)(len11 + 1)] = ':';
+         overlay_local.dst[(unsigned __int16)(len11 + 2)] = 0;
+      }
+   }
 
-  overlay_local.dst[0x123] = 0;
-  overlay_local.pid = pid_local;
-  prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
-  v10 = SceFios2KernelForDriver_sceFiosKernelOverlayAddForProcessForDriver_17e65a1c(pid_local, &overlay_local, &mctx_local->overlay_id);
-  SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm);
-  result = v10;
-  return result;
+   overlay_local.dst[0x123] = 0;
+   overlay_local.pid = pid_local;
+   prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
+   v10 = SceFios2KernelForDriver_sceFiosKernelOverlayAddForProcessForDriver_17e65a1c(pid_local, &overlay_local, &mctx_local->overlay_id);
+   SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm);
+   result = v10;
+   return result;
 }
 
 int clearsign_exists_23D9A4C(const char *mountpoint)
