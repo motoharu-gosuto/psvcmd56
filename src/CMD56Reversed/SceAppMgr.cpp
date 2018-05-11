@@ -692,71 +692,77 @@ int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, appmgr_mount_t 
     overlay_local.type = 0;
     if (!symbol0)
     {
-      goto LABEL_6;
+        if ( mpde1_local->mount_id == 600 )
+        {
+          overlay_local.src_len = strnlen("lma0:", 292);
+          strncpy(overlay_local.src, "lma0:", 0x124u);
+        }
+        else
+        {
+          overlay_local.src_len = strnlen(mpde1_local->path, 292);
+          strncpy(overlay_local.src, mpde1_local->path, 0x124u);
+        }
     }
-
-LABEL_15:
-    len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
-    len01 = len0;
-    overlay_local.src_len = len0;
-    strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
-    overlay_local.src_len = len01 + 2;
-    overlay_local.src[len01] = '0';
-    overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
-    overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
-    goto LABEL_8;
-  }
-
-  overlay_local.order = -126;
-  symbol1 = mpde0_local->pfs_rnd_drive_id[0];
-  overlay_local.type = 1;
-  if ( symbol1 )
-  {
-    goto LABEL_15;
-  }
-
-LABEL_6:
-  if ( mpde1_local->mount_id == 600 )
-  {
-    overlay_local.src_len = strnlen("lma0:", 292);
-    strncpy(overlay_local.src, "lma0:", 0x124u);
+    else
+    {
+       len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
+       len01 = len0;
+       overlay_local.src_len = len0;
+       strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
+       overlay_local.src_len = len01 + 2;
+       overlay_local.src[len01] = '0';
+       overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
+       overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
+    }
   }
   else
   {
-    overlay_local.src_len = strnlen(mpde1_local->path, 292);
-    strncpy(overlay_local.src, mpde1_local->path, 0x124u);
+     overlay_local.order = -126;
+     symbol1 = mpde0_local->pfs_rnd_drive_id[0];
+     overlay_local.type = 1;
+     if ( symbol1 )
+     {
+       len0 = strnlen(mpde1_local->pfs_rnd_drive_id, 16);
+       len01 = len0;
+       overlay_local.src_len = len0;
+       strncpy(overlay_local.src, mpde0_local->pfs_rnd_drive_id, 0x124u);
+       overlay_local.src_len = len01 + 2;
+       overlay_local.src[len01] = '0';
+       overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
+       overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
+     }
   }
 
-LABEL_8:
   overlay_local.src[291] = 0;
   if ( (mpde1_local->mount_id & 0xFFFFFFFD) != 0x3E9 )
   {
     mountDrive_local = mctx_local->appmgr_rnd_drive_id;
-    goto LABEL_11;
-  }
-
-  mpde_local = mctx_local->prev_pfs_mount;
-  if ( !mpde_local->pfs_rnd_drive_id[0] )
-  {
-    mountDrive_local = mpde_local->path;
-
-LABEL_11:
     overlay_local.dst_len = strnlen(mountDrive_local, 0x10);
     strncpy(overlay_local.dst, mountDrive_local, 0x124u);
-    goto LABEL_12;
+  }
+  else
+  {
+     mpde_local = mctx_local->prev_pfs_mount;
+     if ( !mpde_local->pfs_rnd_drive_id[0] )
+     {
+       mountDrive_local = mpde_local->path;
+       overlay_local.dst_len = strnlen(mountDrive_local, 0x10);
+       strncpy(overlay_local.dst, mountDrive_local, 0x124u);
+     }
+     else
+     {
+        gen_mount_point_local = mpde_local->pfs_rnd_drive_id;
+        len1 = strnlen(mpde_local->pfs_rnd_drive_id, 0x10);
+        len11 = len1;
+        overlay_local.dst_len = len1;
+        strncpy(overlay_local.dst, gen_mount_point_local, 0x124u);
+        overlay_local.dst_len = len11 + 2;
+        overlay_local.dst[len11] = '0';
+        overlay_local.dst[(unsigned __int16)(len11 + 1)] = ':';
+        overlay_local.dst[(unsigned __int16)(len11 + 2)] = 0;
+     }
   }
 
-  gen_mount_point_local = mpde_local->pfs_rnd_drive_id;
-  len1 = strnlen(mpde_local->pfs_rnd_drive_id, 0x10);
-  len11 = len1;
-  overlay_local.dst_len = len1;
-  strncpy(overlay_local.dst, gen_mount_point_local, 0x124u);
-  overlay_local.dst_len = len11 + 2;
-  overlay_local.dst[len11] = '0';
-  overlay_local.dst[(unsigned __int16)(len11 + 1)] = ':';
-  overlay_local.dst[(unsigned __int16)(len11 + 2)] = 0;
-
-LABEL_12:
   overlay_local.dst[0x123] = 0;
   overlay_local.pid = pid_local;
   prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
