@@ -9,3 +9,8 @@ int SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247e
 {
    return 0;
 }
+
+int SceFios2KernelForDriver_sceFiosKernelOverlayAddForProcessForDriver_17e65a1c(SceUID pid, SceFiosOverlay *overlay, SceFiosOverlayID *outID)
+{
+   return 0;
+}
