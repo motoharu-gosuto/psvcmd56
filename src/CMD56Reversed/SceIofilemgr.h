@@ -76,7 +76,7 @@ typedef struct vfs_mount_point_info_base
   char* filesystem;
   struct pfs_pmi_buffer_list_ctx* blc; //holds klicensee
   vfs_block_dev_info* blockDev1;
-  uint32_t unk_1C; //zero
+  node_ops2* ops2;
 } vfs_mount_point_info_base;
 
 typedef struct vfs_add_data
