@@ -909,7 +909,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
 
       while (1)
       {
-         if (mount_id == current_mount->mnt_entry->mount_id)
+         if (mount_id == current_mount->this_pfs_mount->mount_id)
          {
             if (strncmp(current_mount->appmgr_rnd_drive_id, mount_drive_input, 0x10u) == 0)
                break;
@@ -934,7 +934,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
 
       while (1)
       {
-         if(mount_id == current_mount->mnt_entry->mount_id)
+         if(mount_id == current_mount->this_pfs_mount->mount_id)
             break;
 
          current_mount = current_mount->next;
@@ -968,9 +968,9 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
 
       while (1)
       {
-         mpd_entry0 = mount_ctx_local1->mnt_entry;
+         mpd_entry0 = mount_ctx_local1->this_pfs_mount;
 
-         if ( mount_ctx_local1->mnt_entry )
+         if (mount_ctx_local1->this_pfs_mount)
          {
             if (mount_id == mpd_entry0->mount_id && !strncmp(mount_ctx_local1->appmgr_rnd_drive_id, mount_drive_input, 0x10u))
                break;
@@ -1001,9 +1001,9 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
 
       while (1)
       {
-         mpd_entry0 = mount_ctx_local2->mnt_entry;
+         mpd_entry0 = mount_ctx_local2->this_pfs_mount;
 
-         if (mount_ctx_local2->mnt_entry)
+         if (mount_ctx_local2->this_pfs_mount)
          {
             if (mount_id == mpd_entry0->mount_id)
                break;
@@ -1063,9 +1063,9 @@ int label_21_cleanup(SceUID pid, const appmgr_mount_t* virt_mount, const void* m
 
    //unmount
 
-   if (virt_mount->mnt_entry)
+   if (virt_mount->this_pfs_mount)
    {
-      w_unmount_23D5F44(pid, virt_mount->mnt_entry, 1);
+      w_unmount_23D5F44(pid, virt_mount->this_pfs_mount, 1);
    }
 
    //dealloc memory
@@ -1211,39 +1211,35 @@ int label_115_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmg
 
 int special_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, char *mount_point_result)
 {
-   appmgr_mount_t * mount_ctx_current = mount_ctx_holder->mount;
+   appmgr_mount_t * appmgr_mount_current = mount_ctx_holder->mount;
 
-   if (mount_ctx_current)
+   if (appmgr_mount_current)
    {
-      pfs_mount_t * mpd_entry;
+      pfs_mount_t * pfs_mount_current;
 
       while (1)
       {
-         mpd_entry = mount_ctx_current->mnt_entry;
+         pfs_mount_current = appmgr_mount_current->this_pfs_mount;
 
-         if (mount_ctx_current->mnt_entry)
+         if (appmgr_mount_current->this_pfs_mount)
          {
-            if (mpd_entry->mount_id == mount_id && !strncmp(mount_ctx_current->appmgr_rnd_drive_id, virt_mount->appmgr_rnd_drive_id, 0x10u))
-            {
+            if (pfs_mount_current->mount_id == mount_id && !strncmp(appmgr_mount_current->appmgr_rnd_drive_id, virt_mount->appmgr_rnd_drive_id, 0x10u))
                break;
-            }
          }
 
-         mount_ctx_current = mount_ctx_current->next;
+         appmgr_mount_current = appmgr_mount_current->next;
 
-         if (!mount_ctx_current)
-         {
-            return label_21_cleanup(pid, virt_mount, mount_ctx_current, 0x80800002);
-         }
+         if (!appmgr_mount_current)
+            return label_21_cleanup(pid, virt_mount, 0, 0x80800002);
       }
 
-      virt_mount->entry_18 = mpd_entry;
+      virt_mount->prev_pfs_mount = pfs_mount_current;
 
       return label_115_cleanup(pid, mount_ctx_holder, virt_mount, mount_point_result);
    }
    else
    {
-      return label_21_cleanup(pid, virt_mount, mount_ctx_current, 0x80800002);
+      return label_21_cleanup(pid, virt_mount, 0, 0x80800002);
    }
 }
 
@@ -1251,9 +1247,9 @@ int label_113_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *
 {
    SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path);
 
-   if (mount_id != 0x3E9)
+   if (mount_id != 0x3E9) //patch
    {
-      if (mount_id != 0x3EB)
+      if (mount_id != 0x3EB) //addcont
       {
          return label_115_cleanup(pid, mount_ctx_holder, virt_mount, mount_point_result);
       }
@@ -1266,6 +1262,27 @@ int label_113_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *
    {
       return special_cleanup(pid, 0x3E8, mount_ctx_holder, virt_mount, mount_point_result);  
    }  
+}
+
+int label_113_cleanup2(SceUID pid, pfs_mount_t *pfs_mount, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, const char *physical_path, char *mount_point_result)
+{
+   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path);
+
+   if (pfs_mount->mount_id != 0x3E9) //patch
+   {
+      if (pfs_mount->mount_id != 0x3EB) //addcont
+      {
+         return label_115_cleanup(pid, mount_ctx_holder, virt_mount, mount_point_result);
+      }
+      else
+      {
+         return special_cleanup(pid, 0x3EA, mount_ctx_holder, virt_mount, mount_point_result);
+      }
+   }
+   else
+   {
+      return special_cleanup(pid, 0x3E8, mount_ctx_holder, virt_mount, mount_point_result);  
+   } 
 }
 
 bool entries_stuff(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id, int& error_code)
@@ -1301,7 +1318,7 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mou
 
    if(glb_mpd_entry0->pfs_rnd_drive_id[0] == 0)
    {
-      virt_mount->mnt_entry = glb_mpd_entry0;
+      virt_mount->this_pfs_mount = glb_mpd_entry0;
       error_code = label_113_cleanup(pid, mount_id, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
       return false;
    }
@@ -1315,7 +1332,7 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mou
 
       if(res0 == 0x80010011 || res0 >= 0)
       {
-         virt_mount->mnt_entry = glb_mpd_entry0;
+         virt_mount->this_pfs_mount = glb_mpd_entry0;
          error_code = label_113_cleanup(pid, mount_id, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
          return false;
       }
@@ -1339,12 +1356,12 @@ int mpd_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmgr_moun
 {
    SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, pfs_mount);
 
-   virt_mount->mnt_entry = 0;
+   virt_mount->this_pfs_mount = 0;
 
    if (check0)
       return label_21_cleanup(pid, virt_mount, physical_path, result);
    else
-      return label_113_cleanup(pid, pfs_mount->mount_id, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
+      return label_113_cleanup2(pid, pfs_mount, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
 }
 
 int label_154_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, char *mount_point_result, bool check0, int result)
@@ -1410,45 +1427,48 @@ int label_136_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmg
    }
    else
    {
-      pfs_mount_t *glb_mpd_entry1 = (pfs_mount_t *)mount_point_entries_22D470C;
+      pfs_mount_t *current_pfs_mount = (pfs_mount_t *)mount_point_entries_22D470C;
       pfs_mount->auth_ids[initialized_allocated_item_index] = auth_id;
 
-      if (glb_mpd_entry1)
+      if (current_pfs_mount)
       {
-         if (pfs_mount == glb_mpd_entry1)
-         {
+         //if pointers are same - there is no need to rearrange global list
+         if (pfs_mount == current_pfs_mount)
             return label_154_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, 0, 0x80800003);
-         }
 
-         pfs_mount_t * r3;
-         while (1)
+         //insert new pfs_mount at the end
+         pfs_mount_t * next_pfs_mount;
+         while (true)
          {
-            r3 = glb_mpd_entry1->next;
-            if(r3 == 0)
+            next_pfs_mount = current_pfs_mount->next;
+            if(next_pfs_mount == 0)
                break;
 
-            if (pfs_mount == glb_mpd_entry1)
-            {
+            if (pfs_mount == current_pfs_mount)
                return label_154_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, 0, 0x80800003);
-            }
 
-            glb_mpd_entry1 = glb_mpd_entry1->next;
+            current_pfs_mount = current_pfs_mount->next;
          }
 
-         glb_mpd_entry1->next = pfs_mount;
-         pfs_mount->prev = glb_mpd_entry1;
-         pfs_mount->next = r3;
+         current_pfs_mount->next = pfs_mount;
+
+         pfs_mount->prev = current_pfs_mount;
+         pfs_mount->next = next_pfs_mount;
       }
       else
       {
+         //if mount_point_entries_22D470C was not initialized
+         //assign current pfs_mount
          mount_point_entries_22D470C = pfs_mount;
+
          pfs_mount->prev = 0;
          pfs_mount->next = 0;
       }
 
-      virt_mount->mnt_entry = pfs_mount;
+      //assign pfs_mount to virtual mount
+      virt_mount->this_pfs_mount = pfs_mount;
 
-      return label_113_cleanup(pid, pfs_mount->mount_id, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
+      return label_113_cleanup2(pid, pfs_mount, mount_ctx_holder, virt_mount, physical_path, mount_point_result);
    }
 }
 
@@ -1858,7 +1878,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, appmgr_mount_holder_t *mount_ctx_
    pfs_mount_t *pfs_mount = (pfs_mount_t *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceAppMgrMount_pool_22A0008, 0x1D0u, &alloc_ctx02);
    if (!pfs_mount)
    {
-      virt_mount->mnt_entry = pfs_mount;
+      virt_mount->this_pfs_mount = 0;
       return label_21_cleanup(pid, virt_mount, physical_path_local, 0x80801006);
    }
 

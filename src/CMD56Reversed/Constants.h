@@ -22,3 +22,8 @@ typedef unsigned int SceUInt32;
 typedef long long SceInt64;
 typedef unsigned long long SceUInt64;
 typedef SceInt64 SceOff;
+
+typedef struct fast_mutex
+{
+   char data[0x40];
+}fast_mutex;
