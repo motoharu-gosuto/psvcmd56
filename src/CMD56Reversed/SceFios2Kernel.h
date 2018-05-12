@@ -8,6 +8,14 @@ int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(Sc
 
 typedef int SceFiosOverlayID;
 
+enum SceFiosOverlayType 
+{
+   SCE_FIOS_OVERLAY_TYPE_OPAQUE = 0,
+   SCE_FIOS_OVERLAY_TYPE_TRANSLUCENT = 1,
+   SCE_FIOS_OVERLAY_TYPE_NEWER = 2,
+   SCE_FIOS_OVERLAY_TYPE_WRITABLE = 3
+} SceFiosOverlayType;
+
 struct SceFiosOverlay
 {
   std::uint8_t type;
