@@ -652,95 +652,105 @@ int read_sealedkey_23D6EA0(const char *mountpoint, char *secret)
 
 int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, appmgr_mount_t *mctx)
 {
+   //initialize overlay
+
    SceFiosOverlay overlay_local;
   
    memset(&overlay_local, 0, sizeof(SceFiosOverlay));
 
-   SceUID pid_local = pid;
-   if (!pid_local)
-   {
-      pid_local = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
-   }
+   //assign pid to overlay
 
-   if (mctx->this_pfs_mount->mount_id != 0x3E9 && mctx->this_pfs_mount->mount_id != 0x3EB)
+   overlay_local.pid = pid != 0 ? pid : SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
+
+   //assign type and order of overlay
+
+   if (mctx->this_pfs_mount->mount_id != 0x3E9 && mctx->this_pfs_mount->mount_id != 0x3EB) //not patch and addcont (ux0:, grw0:)
    {
+      //makes sense for app and addcont (gro0:, ux0:, grw0:)
+
       overlay_local.order = 0x81;
-      overlay_local.type = SceFiosOverlayType::SCE_FIOS_OVERLAY_TYPE_OPAQUE;
-
-      if (!mctx->this_pfs_mount->pfs_rnd_drive_id[0])
-      {
-         if (mctx->this_pfs_mount->mount_id == 0x258)
-         {
-            overlay_local.src_len = strnlen("lma0:", 292);
-            strncpy(overlay_local.src, "lma0:", 0x124u);
-         }
-         else
-         {
-            overlay_local.src_len = strnlen(mctx->this_pfs_mount->path, 292);
-            strncpy(overlay_local.src, mctx->this_pfs_mount->path, 0x124u);
-         }
-      }
-      else
-      {
-         int len0 = strnlen(mctx->this_pfs_mount->pfs_rnd_drive_id, 16);
-         int len01 = len0;
-         overlay_local.src_len = len0;
-         strncpy(overlay_local.src, mctx->this_pfs_mount->pfs_rnd_drive_id, 0x124u);
-         overlay_local.src_len = len01 + 2;
-         overlay_local.src[len01] = '0';
-         overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
-         overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
-      }
+      overlay_local.type = SceFiosOverlayType::SCE_FIOS_OVERLAY_TYPE_OPAQUE; //src replaces dest, access to dest is redirected to src
    }
    else
    {
-      overlay_local.order = 0x82;
-      overlay_local.type = SceFiosOverlayType::SCE_FIOS_OVERLAY_TYPE_TRANSLUCENT;
+      //makes sense for patch
 
-      if (mctx->this_pfs_mount->pfs_rnd_drive_id[0])
-      {
-         int len0 = strnlen(mctx->this_pfs_mount->pfs_rnd_drive_id, 16);
-         int len01 = len0;
-         overlay_local.src_len = len0;
-         strncpy(overlay_local.src, mctx->this_pfs_mount->pfs_rnd_drive_id, 0x124u);
-         overlay_local.src_len = len01 + 2;
-         overlay_local.src[len01] = '0';
-         overlay_local.src[(unsigned __int16)(len01 + 1)] = ':';
-         overlay_local.src[(unsigned __int16)(len01 + 2)] = 0;
-      }
+      overlay_local.order = 0x82;
+      overlay_local.type = SceFiosOverlayType::SCE_FIOS_OVERLAY_TYPE_TRANSLUCENT; //src merges with dest, first src, then dest, write is redirected to dst
    }
 
-   overlay_local.src[291] = 0;
-   if ((mctx->this_pfs_mount->mount_id & 0xFFFFFFFD) != 0x3E9)
+   //construct source path
+
+   if (mctx->this_pfs_mount->pfs_rnd_drive_id[0] != 0)
    {
+      //src overlay path will be pfs random drive
+
+      int len = strnlen(mctx->this_pfs_mount->pfs_rnd_drive_id, 0x10);
+      strncpy(overlay_local.src, mctx->this_pfs_mount->pfs_rnd_drive_id, 0x124u);
+      overlay_local.src_len = len + 2;
+
+      overlay_local.src[len] = '0';
+      overlay_local.src[len + 1] = ':';
+      overlay_local.src[len + 2] = 0;
+   }
+   else
+   {
+      if (mctx->this_pfs_mount->mount_id == 0x258)
+      {
+         //src overlay path will be lma0: (for loopback drive)
+
+         overlay_local.src_len = strnlen("lma0:", 292);
+         strncpy(overlay_local.src, "lma0:", 0x124u);
+      }
+      else
+      {
+         //src will be physical path to app like ux0:app/<TITLEID>
+
+         overlay_local.src_len = strnlen(mctx->this_pfs_mount->path, 292);
+         strncpy(overlay_local.src, mctx->this_pfs_mount->path, 0x124u);
+      }
+   }
+   
+   overlay_local.src[291] = 0;
+
+   //construct dest path
+
+   if ((mctx->this_pfs_mount->mount_id & 0xFFFFFFFD) != 0x3E9) //not patch
+   {
+      //app mgr random drive will be dst path
+
       overlay_local.dst_len = strnlen(mctx->appmgr_rnd_drive_id, 0x10);
       strncpy(overlay_local.dst, mctx->appmgr_rnd_drive_id, 0x124u);
    }
    else
    {
-      if (!mctx->prev_pfs_mount->pfs_rnd_drive_id[0])
+      if (mctx->prev_pfs_mount->pfs_rnd_drive_id[0] != 0)
       {
-         overlay_local.dst_len = strnlen(mctx->prev_pfs_mount->path, 0x10);
-         strncpy(overlay_local.dst, mctx->prev_pfs_mount->path, 0x124u);
+         //src overlay path will be pfs random drive
+
+         int len = strnlen(mctx->prev_pfs_mount->pfs_rnd_drive_id, 0x10);
+         strncpy(overlay_local.dst, mctx->prev_pfs_mount->pfs_rnd_drive_id, 0x124u);
+         overlay_local.dst_len = len + 2;
+
+         overlay_local.dst[len] = '0';
+         overlay_local.dst[len + 1] = ':';
+         overlay_local.dst[len + 2] = 0;  
       }
       else
       {
-         int len1 = strnlen(mctx->prev_pfs_mount->pfs_rnd_drive_id, 0x10);
-         int len11 = len1;
-         overlay_local.dst_len = len1;
-         strncpy(overlay_local.dst, mctx->prev_pfs_mount->pfs_rnd_drive_id, 0x124u);
-         overlay_local.dst_len = len11 + 2;
-         overlay_local.dst[len11] = '0';
-         overlay_local.dst[(unsigned __int16)(len11 + 1)] = ':';
-         overlay_local.dst[(unsigned __int16)(len11 + 2)] = 0;
+         //src will be physical path to app like ux0:app/<TITLEID>
+
+         overlay_local.dst_len = strnlen(mctx->prev_pfs_mount->path, 0x10);
+         strncpy(overlay_local.dst, mctx->prev_pfs_mount->path, 0x124u);
       }
    }
 
    overlay_local.dst[0x123] = 0;
-   overlay_local.pid = pid_local;
+
+   //create overlay
 
    int prev_perm = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(128);
-   int result = SceFios2KernelForDriver_sceFiosKernelOverlayAddForProcessForDriver_17e65a1c(pid_local, &overlay_local, &mctx->overlay_id);
+   int result = SceFios2KernelForDriver_sceFiosKernelOverlayAddForProcessForDriver_17e65a1c(overlay_local.pid, &overlay_local, &mctx->overlay_id);
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm);
 
    return result;
@@ -1354,18 +1364,18 @@ int label_113_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *
 
    if (mount_id != 0x3E9) //patch
    {
-      if (mount_id != 0x3EB) //addcont
+      if (mount_id != 0x3EB) //addcont (ux0:, grw0:)
       {
          return label_115_cleanup(pid, mount_ctx_holder, virt_mount, mount_point_result);
       }
       else
       {
-         return special_cleanup(pid, 0x3EA, mount_ctx_holder, virt_mount, mount_point_result);
+         return special_cleanup(pid, 0x3EA, mount_ctx_holder, virt_mount, mount_point_result); //addcont (gro0:, ux0:, grw0:)
       }
    }
    else
    {
-      return special_cleanup(pid, 0x3E8, mount_ctx_holder, virt_mount, mount_point_result);  
+      return special_cleanup(pid, 0x3E8, mount_ctx_holder, virt_mount, mount_point_result);  //app
    }  
 }
 

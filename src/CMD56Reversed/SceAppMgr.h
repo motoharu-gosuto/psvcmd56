@@ -22,7 +22,7 @@ struct appmgr_mount_t
   pfs_mount_t *this_pfs_mount;
   SceFiosOverlayID overlay_id;
   char appmgr_rnd_drive_id[0x10]; //used for appmgr mount - returned when executing appmgr mount function
-  pfs_mount_t* prev_pfs_mount; //other pfs mount with same mount_id and appmgr_rnd_drive_id if 0x3EA or 0x3E8
+  pfs_mount_t* prev_pfs_mount; //other pfs mount with same mount_id and appmgr_rnd_drive_id if mount_id is 0x3EA or 0x3E8
   appmgr_mount_t* prev; //pointer to prev item or 0
   appmgr_mount_t* next; //pointer to next item or 0
 };
