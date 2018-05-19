@@ -2403,3 +2403,19 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
    return var_009EA004 == cookie ? result : STACK_CHECK_FAIL;
 }
 
+//=======================
+
+int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
+{
+   return 0;
+}
+
+int SceAppMgr_SceAppMgrForDriver__exp_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint)
+{
+   bool cond0 = (unsigned int)(mountId - 0x64) <= 0xC;
+   bool cond1 = (1 << (mountId - 0x64)) & 0x1B2F;
+   if (cond0 && cond1)
+      return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+   else
+      return 0x80800001;
+}
