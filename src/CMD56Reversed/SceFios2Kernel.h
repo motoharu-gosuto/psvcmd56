@@ -8,7 +8,7 @@ int SceFios2KernelForDriver_sceFiosKernelOverlayResolveSyncForDriver_0f456345(Sc
 
 typedef int SceFiosOverlayID;
 
-enum SceFiosOverlayType 
+typedef enum SceFiosOverlayType 
 {
    SCE_FIOS_OVERLAY_TYPE_OPAQUE = 0,
    SCE_FIOS_OVERLAY_TYPE_TRANSLUCENT = 1,

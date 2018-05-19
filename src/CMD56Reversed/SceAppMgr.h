@@ -215,3 +215,5 @@ typedef ctx_23C2960 global_ctx_item;
 int AppMgr_decrypt_str_constant_23D59D4(char* input, char* output);
 
 int AppMgr_decrypt_str_constant_23D5998(char *input, char *output);
+
+int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint);

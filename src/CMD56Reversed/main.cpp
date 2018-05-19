@@ -276,8 +276,20 @@ int dec_app_mgr_strings()
    return 0;
 }
 
+int test_data_mount()
+{
+   for(int i = 0x64; i <= 0x70; i++)
+   {
+      SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(i, 0);
+   }
+
+   return 0;
+}
+
 int main(int argc, char* argv[])
 {
+   test_data_mount();
+
    //test_cmd56();
 
    //test_pfs();

@@ -13,6 +13,9 @@
 
 #include <string>
 #include <cstdint>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 //==============================
 
@@ -2410,12 +2413,24 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
    return 0;
 }
 
-int SceAppMgr_SceAppMgrForDriver__exp_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint)
+int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint)
 {
-   bool cond0 = (unsigned int)(mountId - 0x64) <= 0xC;
-   bool cond1 = (1 << (mountId - 0x64)) & 0x1B2F;
-   if (cond0 && cond1)
-      return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
-   else
+   if(mountId < 0x64 || mountId > 0x70)
       return 0x80800001;
+
+   switch(mountId)
+   {
+      case 0x64:
+      case 0x65:
+      case 0x66:
+      case 0x67:
+      case 0x69:
+      case 0x6C:
+      case 0x6D:
+      case 0x6F:
+      case 0x70:
+         return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+      default:
+         return 0x80800001;
+   }
 }
