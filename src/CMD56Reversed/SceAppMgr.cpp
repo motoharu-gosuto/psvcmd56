@@ -716,7 +716,7 @@ int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, appmgr_mount_t 
 
    //construct dest path
 
-   if ((mctx->this_pfs_mount->mount_id & 0xFFFFFFFD) != 0x3E9) //not patch
+   if ((mctx->this_pfs_mount->mount_id & 0xFFFFFFFD) != 0x3E9) //not patch (since this is a mask this means not 0x3E9 or not 0x3EB!)
    {
       //app mgr random drive will be dst path
 
@@ -1337,7 +1337,7 @@ int special_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mo
       {
          pfs_mount_current = appmgr_mount_current->this_pfs_mount;
 
-         if (appmgr_mount_current->this_pfs_mount)
+         if (pfs_mount_current)
          {
             if (pfs_mount_current->mount_id == mount_id && !strncmp(appmgr_mount_current->appmgr_rnd_drive_id, virt_mount->appmgr_rnd_drive_id, 0x10u))
                break;

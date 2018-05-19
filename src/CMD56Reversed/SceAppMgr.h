@@ -20,7 +20,7 @@ struct pfs_mount_t
 struct appmgr_mount_t
 {
    pfs_mount_t *this_pfs_mount;
-   //SceFiosOverlayID overlay_id; // overlay for redirecting <appmgr_rnd_drive_id> to <this_pfs_mount->pfs_rnd_drive_id>0: (if this_pfs_mount is not a 0x3E9 patch mount point )
+   SceFiosOverlayID overlay_id; // overlay for redirecting <appmgr_rnd_drive_id> to <this_pfs_mount->pfs_rnd_drive_id>0: (if this_pfs_mount is not a 0x3E9 patch mount point )
                                  // or <mctx->prev_pfs_mount->pfs_rnd_drive_id>0: to <this_pfs_mount->pfs_rnd_drive_id>0: (if this_pfs_mount is a 0x3E9 patch mount point )
                                  // or <mctx->prev_pfs_mount->path> to <this_pfs_mount->path>
 
