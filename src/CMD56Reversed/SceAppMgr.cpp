@@ -650,6 +650,7 @@ int read_sealedkey_23D6EA0(const char *mountpoint, char *secret)
    return 0;
 }
 
+//redirect appmgr mount to pfs mount
 int proc_fios2kernel_overlay_add_for_process_23D4DDC(SceUID pid, appmgr_mount_t *mctx)
 {
    //initialize overlay
@@ -1533,6 +1534,7 @@ int select_index_136(pfs_mount_t *pfs_mount)
       return -1;
 }
 
+//this function adds pfs mount mount to a list
 int label_136_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, pfs_mount_t *pfs_mount, const char *physical_path, char *mount_point_result, SceUInt64 auth_id)
 {
    int initialized_allocated_item_index = select_index_136(pfs_mount);

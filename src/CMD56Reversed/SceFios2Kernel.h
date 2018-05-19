@@ -26,7 +26,7 @@ struct SceFiosOverlay
   SceUID pid;
   SceFiosOverlayID id;
   char dst[292];
-  char src[292];
+  char src[292]; //this is the path that is used insead of dst
 };
 
 int SceFios2KernelForDriver_sceFiosKernelOverlayRemoveForProcessForDriver_23247efb(SceUID pid, SceFiosOverlayID id);
