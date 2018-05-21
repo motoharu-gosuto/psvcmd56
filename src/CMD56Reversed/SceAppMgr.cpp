@@ -2411,11 +2411,7 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
 int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
 {
    return 0;
-}
-
-/*
-int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
-{
+   /*
   unsigned int mountId_local; // r5
   SceUID pid_local; // r9
   char *mountPoint_local; // r8
@@ -3297,8 +3293,8 @@ LABEL_15:
   if ( cookie != MEMORY[0x9EA004] )
     SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(lock_res0);
   return result;
+  */
 }
-*/
 
 int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint)
 {
@@ -3322,9 +3318,10 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char
    }
 }
 
-/*
 int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
+   return 0;
+   /*
   unsigned int mount_id_diff; // r6
   int mountId_local; // r7
   unsigned __int8 *titleId_local; // r9
@@ -3589,9 +3586,8 @@ LABEL_7:
   if ( cookie != MEMORY[0x9EA004] )
     SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result);
   return result;
+  */
 }
-
-*/
 
 int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
 {
@@ -3620,9 +3616,22 @@ int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char
    }
 }
 
-int w_sceAppMgrWorkDirMountByIdForKernel_23F214C(int mount_id, char *titleid, char *mountPoint)
+int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_id, char *titleid, char *keystone_data, const char *gen_mount_point)
 {
    return 0;
+}
+
+int w_sceAppMgrWorkDirMountByIdForKernel_23E0F90(int mount_id, char *titleid, char *mount_point)
+{
+   if (mount_id != 0xCD && mount_id != 0xCF)
+   return 0x80800001;
+   
+   return w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(0, mount_id, titleid, 0, mount_point);
+}
+
+int w_sceAppMgrWorkDirMountByIdForKernel_23F214C(int mount_id, char *titleid, char *mountPoint)
+{
+   return w_sceAppMgrWorkDirMountByIdForKernel_23E0F90(mount_id, titleid, mountPoint);
 }
 
 int SceAppMgr_sceAppMgrWorkDirMountById_58e4cc90(int mountId, generic_mount_ctx *data, char *mountPoint, sceAppMgrWorkDirMountByIdOpt *opt)
