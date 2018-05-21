@@ -280,7 +280,7 @@ int test_data_mount()
 {
    for(int i = 0x64; i <= 0x70; i++)
    {
-      SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(i, 0);
+      //SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(i, 0);
    }
 
    return 0;

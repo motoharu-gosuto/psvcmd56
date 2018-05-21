@@ -3613,78 +3613,66 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23F214C(int mount_id, char *titleid, ch
    return 0;
 }
 
-struct sceAppMgrWorkDirMountByIdOpt
+int SceAppMgr_sceAppMgrWorkDirMountById_58e4cc90(int mountId, generic_mount_ctx *data, char *mountPoint, sceAppMgrWorkDirMountByIdOpt *opt)
 {
-  int reserved0;
-  int reserved1;
-};
+   sceAppMgrWorkDirMountByIdOpt opt_local;
+   int result0 = SceSysmemForDriver_sceKernelMemcpyUserToKernel_bc996a7a(&opt_local, (uintptr_t)opt, 8u);
+   if(result0 < 0)
+      return result0;
 
-int SceAppMgr_sceAppMgrWorkDirMountById_58e4cc90(int mountId, char *titleId, char *mount_point, sceAppMgrWorkDirMountByIdOpt *opt)
-{
-  int mount_id_local; // r9
-  char *titleId_local; // r5
-  char *mount_point_local; // r8
-  int result; // r0
-  char *titleid_kernel_copy; // r10
-  int mount_res; // r5
-  int copy_res; // r0
-  char result1; // cf
-  char mount_point_kernel[16]; // [sp-4h] [bp-60h]
-  char titleid_kernel[64]; // [sp+14h] [bp-48h]
-  sceAppMgrWorkDirMountByIdOpt opt_local; // [sp+60h] [bp+4h]
-  
-  mount_id_local = mountId;
-  titleId_local = titleId;
-  mount_point_local = mount_point;
-  
-  result = SceSysmemForDriver_sceKernelMemcpyUserToKernel_bc996a7a(&opt_local, (uintptr_t)opt, 8u);
-  if ( result < 0 )
-  {
-    return result;
-  }
+   if (data == 0)
+   {
+      generic_mount_ctx * data_kernel_copy = 0;
 
-  if ( !titleId_local )
-  {
-    titleid_kernel_copy = 0;
-    if ( mount_point_local )
-    {
-      goto LABEL_6;
-    }
+      if (mountPoint == 0)
+      {
+         return w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mountId, data_kernel_copy->titleId, 0);
+      }
+      else
+      {
+         char mountPoint_kernel[16];
+         memset(mountPoint_kernel, 0, 0x10);
 
-LABEL_11:
-    result = w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mount_id_local, titleid_kernel_copy, mount_point_local);
-    return result;
-  }
+         int mount_res = w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mountId, data_kernel_copy->titleId, mountPoint_kernel);
+         int copy_res = SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a((uintptr_t)mountPoint, mountPoint_kernel, 0x10u);
+         int result1 = copy_res < 0;
+         int result2 = copy_res & (copy_res >> 32);
 
-  result = SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(titleid_kernel, (uintptr_t)titleId_local, 0x40u);
-  titleid_kernel_copy = titleid_kernel;
-  if ( result < 0 )
-  {
-    return result;
-  }
+         if (result1 != 0)
+            return result2;
+         
+         return mount_res;
+      }
+   }
+   else
+   {
+      generic_mount_ctx data_kernel;
 
-  if ( result == 0x40 && titleid_kernel[63] )
-  {
-    result = 0x8002710B;
-    return result;
-  }
+      int result0 = SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(&data_kernel, (uintptr_t)data, 0x40u);
+      if (result0 < 0)
+         return result0;
 
-  if ( !mount_point_local )
-  {
-    goto LABEL_11;
-  }
+      if (result0 == 0x40 && data_kernel.mountDrive[15])
+         return 0x8002710B;
 
-LABEL_6:
-  memset(mount_point_kernel, 0, 0x10);
-  mount_res = w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mount_id_local, titleid_kernel_copy, mount_point_kernel);
-  copy_res = SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a((uintptr_t)mount_point_local, mount_point_kernel, 0x10u);
-  result1 = copy_res < 0;
-  result = copy_res & (copy_res >> 32);
+      if (mountPoint == 0)
+      {
+         return w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mountId, data_kernel.titleId, 0);
+      }
+      else
+      {
+         char mountPoint_kernel[16];
+         memset(mountPoint_kernel, 0, 0x10);
 
-  if ( !result1 )
-  {
-    result = mount_res;
-  }
+         int mount_res = w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mountId, data_kernel.titleId, mountPoint_kernel);
+         int copy_res = SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a((uintptr_t)mountPoint, mountPoint_kernel, 0x10u);
+         int result1 = copy_res < 0;
+         int result2 = copy_res & (copy_res >> 32);
 
-  return result;
+         if (result1 != 0)
+            return result2;
+      
+         return mount_res;
+      }
+   }
 }
