@@ -3314,3 +3314,271 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char
          return 0x80800001;
    }
 }
+
+signed int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
+{
+  unsigned int mount_id_diff; // r6
+  int mountId_local; // r7
+  unsigned __int8 *titleId_local; // r9
+  char *gen_mount_drive; // r10
+  unsigned int v7; // r8
+  int lock_res0; // r11
+  signed int result; // r0
+  signed int symbol0; // r3
+  SceUID pid1; // r0
+  global_ctx_item *gctxi; // r0
+  global_ctx_item *gctxi1; // r9
+  int flag1; // r1
+  SceUID pid0; // r0
+  int flag0; // r2
+  char *random_path_init; // [sp+4h] [bp-94h]
+  char *physical_path; // [sp+10h] [bp-88h]
+  char *mount_drive; // [sp+14h] [bp-84h]
+  char title_id[16]; // [sp+1Ch] [bp-7Ch]
+  char dec_output[16]; // [sp+2Ch] [bp-6Ch]
+  int cookie; // [sp+6Ch] [bp-2Ch]
+
+  mount_id_diff = mountId - 0x68;
+  mountId_local = mountId;
+  titleId_local = (unsigned __int8 *)titleId;
+  gen_mount_drive = mountPoint;
+  cookie = MEMORY[0x9EA004];
+  if ( (unsigned int)(mountId - 0x68) <= 6 && (1 << mount_id_diff) & 0x4D )
+  {
+    *(_DWORD *)title_id = 0;
+    *(_DWORD *)&title_id[4] = 0;
+    *(_DWORD *)&title_id[8] = 0;
+    *(_DWORD *)&title_id[12] = 0;
+    v7 = __mrc(15, 0, 13, 0, 3);
+    __mcr(15, 0, v7 << 16, 13, 0, 3);
+    lock_res0 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelLockMutex_089_16ac80c5(MEMORY[0x22A000C], 1, 0);
+    if ( lock_res0 < 0 )
+    {
+LABEL_6:
+      __mcr(15, 0, v7, 13, 0, 3);
+      result = lock_res0;
+      goto LABEL_7;
+    }
+    lock_res0 = 0x80800009;
+    if ( check_privileges_23D5D54(mountId_local) )
+    {
+      if ( gen_mount_drive )
+      {
+        if ( mount_id_diff <= 6 )
+        {
+          switch ( mount_id_diff )
+          {
+            case 0u:
+              if ( !titleId_local
+                || (unsigned int)*titleId_local - 65 > 0x19
+                || (unsigned int)titleId_local[1] - 65 > 0x19
+                || (unsigned int)titleId_local[2] - 65 > 0x19
+                || (unsigned int)titleId_local[3] - 65 > 0x19
+                || (unsigned int)titleId_local[4] - 48 > 9
+                || (unsigned int)titleId_local[5] - 48 > 9
+                || (unsigned int)titleId_local[6] - 48 > 9
+                || (unsigned int)titleId_local[7] - 48 > 9
+                || (unsigned int)titleId_local[8] - 48 > 9
+                || titleId_local[9] != 95
+                || (unsigned int)titleId_local[10] - 48 > 9
+                || (unsigned int)titleId_local[11] - 48 > 9
+                || titleId_local[12] != 0 )
+              {
+                goto LABEL_26;
+              }
+              break;
+            case 2u:
+            case 3u:
+              if ( titleId_local
+                && (unsigned int)*titleId_local - 0x41 <= 0x19
+                && (unsigned int)titleId_local[1] - 0x41 <= 0x19
+                && (unsigned int)titleId_local[2] - 0x41 <= 0x19
+                && (unsigned int)titleId_local[3] - 0x41 <= 0x19
+                && (unsigned int)titleId_local[4] - 0x30 <= 9
+                && (unsigned int)titleId_local[5] - 0x30 <= 9
+                && (unsigned int)titleId_local[6] - 0x30 <= 9
+                && (unsigned int)titleId_local[7] - 0x30 <= 9
+                && (unsigned int)titleId_local[8] - 0x30 <= 9
+                && titleId_local[9] == 0 )
+              {
+                break;
+              }
+              goto LABEL_26;
+            case 6u:
+              symbol0 = (signed int)titleId_local;
+              if ( titleId_local )
+                symbol0 = 1;
+              if ( symbol0 )
+                break;
+              goto LABEL_26;
+            default:
+              break;
+          }
+        }
+        MEMORY[0x22D4DF0] = 0;
+        MEMORY[0x22D4DF4] = 0;
+        MEMORY[0x22D4DF8] = 0;
+        MEMORY[0x22D4590] = 0;
+        MEMORY[0x22D4588] = 0;
+        MEMORY[0x22D458C] = 0;
+        MEMORY[0x22D4594] = 0;
+        MEMORY[0x22D4598] = 0;
+        MEMORY[0x22D459C] = 0;
+        MEMORY[0x22D45A0] = 0;
+        MEMORY[0x22D4DFC] = 0;
+        MEMORY[0x22D4E00] = 0;
+        MEMORY[0x22D4E04] = 0;
+        MEMORY[0x22D4E08] = 0;
+        MEMORY[0x22D4E0C] = 0;
+        MEMORY[0x22D45A4] = 0;
+        if ( (unsigned int)(mountId_local - 0x69) <= 5 )
+        {
+          switch ( mountId_local )
+          {
+            case 0x69:
+              lock_res0 = dec_string_constant_23D5998(ux0_music_2406948, dec_output);// ux0:music
+              if ( lock_res0 < 0 )
+                goto LABEL_5;
+              physical_path = dec_output;
+              mount_drive = aMusic0_0;
+              goto LABEL_48;
+            case 0x6A:
+              mount_drive = 0;
+              SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D4710, 0x20u, aUx0PsmSRo, titleId_local);// ux0:psm/%s/RO
+              physical_path = (char *)0x22D4710;
+              goto LABEL_48;
+            case 0x6B:
+              physical_path = (char *)0x22D4710;
+              mount_drive = 0;
+              SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D4710, 0x20u, aUx0PsmSRw, titleId_local);// ux0:psm/%s/RW
+              goto LABEL_48;
+            case 0x6C:
+              lock_res0 = dec_string_constant_23D5998((char *)ux0_calendar_2406BB8, dec_output);// ux0:calendar
+              if ( lock_res0 < 0 )
+                goto LABEL_5;
+              goto LABEL_69;
+            case 0x6D:
+              lock_res0 = dec_string_constant_23D5998(ux0_video_2406BF0, dec_output);// ux0:video
+              if ( lock_res0 < 0 )
+                goto LABEL_5;
+              physical_path = dec_output;
+              mount_drive = aVideo0_0;
+              goto LABEL_48;
+            case 0x6E:
+              lock_res0 = dec_string_constant_23D59D4(ux0_appmeta_2406B00, (char *)0x22D4DF0);// ux0:appmeta
+              if ( lock_res0 < 0 )
+                goto LABEL_5;
+              if ( (unsigned int)SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(
+                                   dec_output,
+                                   0x40u,
+                                   aSS_1,
+                                   0x22D4DF0,   // ux0:appmeta
+                                   titleId_local,
+                                   random_path_init) > 0x3F )// %s/%s
+                goto LABEL_26;
+LABEL_69:
+              physical_path = dec_output;
+              mount_drive = 0;
+              goto LABEL_48;
+            default:
+              break;
+          }
+        }
+        lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+        if ( lock_res0 < 0 )
+          goto LABEL_5;
+        lock_res0 = dec_string_constant_23D59D4(near_data_gift_received_2406B70, (char *)0x22D4588);
+        if ( lock_res0 < 0 )
+          goto LABEL_5;
+        if ( !MEMORY[0x22D4778] )
+          set_accoutNo_global_23D58B4();
+        if ( (unsigned int)SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(
+                             dec_output,
+                             0x40u,
+                             aSSSS,             // %s/%s/%s/%s
+                             0x22D4DF0,         // ur0:user
+                             0x22D4778,         // account no
+                             0x22D4588,         // ear/data/gift/received
+                             titleId_local) <= 0x3F )// titleid
+        {
+          physical_path = dec_output;
+          mount_drive = aGift0;
+LABEL_48:
+          pid1 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
+          gctxi = get_global_ctx_item_23C2DE0((ctx_23C2960 *)0x22A0500, pid1);
+          gctxi1 = gctxi;
+          if ( !gctxi )
+          {
+            lock_res0 = 0x80801002;
+            goto LABEL_5;
+          }
+          SceAppMgr_SceSysclibForDriver__imp_strncpy_6d286146(title_id, gctxi->unk_558.maybe_titleid_0, 0xAu);
+          flag1 = gctxi1->unk_558.phys_ctx_30.flag_160;
+          if ( flag1 & 0x30 )
+          {
+            lock_res0 = 0x80800048;
+            if ( !check_flags_23D4CE0(mountId_local, flag1) )
+              goto LABEL_5;
+          }
+          if ( mountId_local == 0x6E )
+          {
+            lock_res0 = create_pfs_directory_23DFEAC(0x6E, physical_path, 0);
+            if ( lock_res0 )
+              goto LABEL_5;
+          }
+          else
+          {
+            if ( gctxi1->unk_558.phys_ctx_30.flag_160 & 0x10 )
+            {
+              if ( (mountId_local & 0xFFFFFFFB) == 0x69 )
+              {
+                lock_res0 = 0x80010013;
+                if ( get_fake_no_memory_card_23E5660() )
+                  goto LABEL_5;
+              }
+            }
+            lock_res0 = normalize_path_select_mode_create_dir_23D9354(physical_path, 1);
+            if ( lock_res0 )
+              goto LABEL_5;
+          }
+          pid0 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
+          lock_res0 = create_mountpoint_base_23D9B50(
+                        pid0,
+                        &gctxi1->unk_558.mctx_hldr_28,
+                        mountId_local,
+                        title_id,
+                        physical_path,
+                        mount_drive,
+                        0,
+                        gen_mount_drive);
+          if ( !lock_res0 )
+          {
+            flag0 = gctxi1->unk_558.phys_ctx_30.flag_160;
+            if ( flag0 & 0x30 )
+            {
+              if ( mountId_local == 0x69 )
+              {
+                gctxi1->unk_558.phys_ctx_30.flag_160 = flag0 | 0x4000000;
+              }
+              else if ( mountId_local == 0x6D )
+              {
+                gctxi1->unk_558.phys_ctx_30.flag_160 = flag0 | 0x8000000;
+              }
+            }
+          }
+          goto LABEL_5;
+        }
+      }
+LABEL_26:
+      lock_res0 = 0x80800001;
+    }
+LABEL_5:
+    SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
+    goto LABEL_6;
+  }
+  result = 0x80800001;
+LABEL_7:
+  if ( cookie != MEMORY[0x9EA004] )
+    SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result);
+  return result;
+}
