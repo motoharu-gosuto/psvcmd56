@@ -3582,3 +3582,26 @@ LABEL_7:
     SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result);
   return result;
 }
+
+signed int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
+{
+  char *mountPoint_local; // r2
+  int mountId_local; // r4
+  char *mountPoint_copy; // ST04_4
+  int v6; // r0
+
+  mountPoint_local = mountPoint;
+  mountId_local = mountId;
+  if ( mountId != 0xCA )
+  {
+    if ( (unsigned int)(mountId - 0xC8) > 6 || !((1 << (mountId + 0x38)) & 0x5F) )
+      return 0x80800001;
+    return w_sceAppMgrDataMount_generic_23E1014(0, mountId_local, mountPoint_local);
+  }
+  mountPoint_copy = mountPoint;
+  v6 = SceAppMgr_SceSblACMgrForDriver__imp_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0);
+  mountPoint_local = mountPoint_copy;
+  if ( v6 )
+    return w_sceAppMgrDataMount_generic_23E1014(0, mountId_local, mountPoint_local);
+  return 0x80800009;
+}
