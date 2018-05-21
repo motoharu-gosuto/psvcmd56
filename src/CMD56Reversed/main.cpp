@@ -290,7 +290,17 @@ int test_workdir_mount()
 {
    for(int i = 0xC8; i <= 0xCE; i++)
    {
-      SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(i, 0);
+      //SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(i, 0);
+   }
+
+   return 0;
+}
+
+int test_data_mount2()
+{
+   for(int i = 0x68; i <= 0x6E; i++)
+   {
+      SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(i, 0, 0);
    }
 
    return 0;
@@ -298,7 +308,7 @@ int test_workdir_mount()
 
 int main(int argc, char* argv[])
 {
-   test_workdir_mount();
+   test_data_mount2();
 
    //test_cmd56();
 

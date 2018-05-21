@@ -3348,16 +3348,9 @@ int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char
 
 //=======================
 
-//need to reverse this
-int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
+int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
-   int check0 = (unsigned int)(mountId - 0x68) <= 6;
-   int check1 = (1 << (mountId - 0x68)) & 0x4D;
-
-   if (!check0  || !check1)
-      return 0x80800001;
-
-  return 0;
+   return 0;
 
    /*
   unsigned int mount_id_diff; // r6
@@ -3623,6 +3616,24 @@ LABEL_7:
 
   return result; 
   */
+}
+
+//need to reverse this
+int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
+{
+   if(mountId < 0x68 || mountId > 0x6E)
+      return 0x80800001;
+
+   switch(mountId)
+   {
+   case 0x68:
+   case 0x6A:
+   case 0x6B:
+   case 0x6E:
+      return w_sceAppMgrAppDataMountByIdForDriver_5e311f71(mountId, titleId, mountPoint);
+   default:
+      return 0x80800001;
+   }
 }
 
 //need to reverse this

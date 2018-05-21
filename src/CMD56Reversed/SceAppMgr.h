@@ -232,3 +232,5 @@ struct generic_mount_ctx
 int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint);
 
 int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint);
+
+int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint);
