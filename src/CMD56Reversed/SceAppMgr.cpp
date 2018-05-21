@@ -3597,9 +3597,20 @@ int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char
 {
    if (mountId != 0xCA)
    {
-      if ((unsigned int)(mountId - 0xC8) > 6 || !((1 << (mountId + 0x38)) & 0x5F))
+      if(mountId < 0xC8 || mountId > 0xCE)
          return 0x80800001;
-      return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+
+      switch(mountId)
+      {
+         case 0xC8:
+         case 0xC9:
+         case 0xCB:
+         case 0xCC:
+         case 0xCE:
+            return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+         default:
+            return 0x80800001;
+      }
    }
    else
    {
