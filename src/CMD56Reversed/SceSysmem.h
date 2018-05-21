@@ -371,3 +371,9 @@ void* SceSysmemForDriver_sceKernelAllocHeapMemory3ForKernel_49D4DD9B(SceUID uid,
 int SceSysrootForKernel_ksceSysrootIsSafeMode_834439a7();
 
 int SceSysrootForKernel_ksceSysrootIsUpdateMode_b0e1fc67();
+
+int SceSysmemForDriver_sceKernelMemcpyUserToKernel_bc996a7a(void *dst, uintptr_t src, size_t len);
+
+int SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a(uintptr_t dst, const void *src, size_t len);
+
+int SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(void *dst, uintptr_t src, size_t len);

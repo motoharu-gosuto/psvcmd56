@@ -159,3 +159,18 @@ int SceSysrootForKernel_ksceSysrootIsUpdateMode_b0e1fc67()
 {
    return 0;
 }
+
+int SceSysmemForDriver_sceKernelMemcpyUserToKernel_bc996a7a(void *dst, uintptr_t src, size_t len)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a(uintptr_t dst, const void *src, size_t len)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(void *dst, uintptr_t src, size_t len)
+{
+   return 0;
+}
