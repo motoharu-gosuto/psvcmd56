@@ -3315,7 +3315,7 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char
    }
 }
 
-signed int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
+int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
   unsigned int mount_id_diff; // r6
   int mountId_local; // r7
@@ -3583,7 +3583,7 @@ LABEL_7:
   return result;
 }
 
-signed int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
+int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
 {
   char *mountPoint_local; // r2
   int mountId_local; // r4
@@ -3604,4 +3604,70 @@ signed int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountI
   if ( v6 )
     return w_sceAppMgrDataMount_generic_23E1014(0, mountId_local, mountPoint_local);
   return 0x80800009;
+}
+
+int SceAppMgr_sceAppMgrWorkDirMountById_58e4cc90(int mountId, char *titleId, char *mount_point, sceAppMgrWorkDirMountByIdOpt *opt)
+{
+  int mount_id_local; // r9
+  char *titleId_local; // r5
+  char *mount_point_local; // r8
+  int result; // r0
+  char *titleid_kernel_copy; // r10
+  int mount_res; // r5
+  int copy_res; // r0
+  char result1; // cf
+  char mount_point_kernel[16]; // [sp-4h] [bp-60h]
+  char titleid_kernel[64]; // [sp+14h] [bp-48h]
+  sceAppMgrWorkDirMountByIdOpt opt_local; // [sp+60h] [bp+4h]
+  int cookie; // [sp+68h] [bp+Ch]
+
+  mount_id_local = mountId;
+  titleId_local = titleId;
+  mount_point_local = mount_point;
+  cookie = MEMORY[0x9EA004];
+  result = SceAppMgr_SceSysmemForDriver__imp_sceKernelMemcpyUserToKernel_bc996a7a(&opt_local, (uintptr_t)opt, 8u);
+  if ( result < 0 )
+    goto LABEL_8;
+  if ( !titleId_local )
+  {
+    titleid_kernel_copy = 0;
+    if ( mount_point_local )
+      goto LABEL_6;
+LABEL_11:
+    result = w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mount_id_local, titleid_kernel_copy, mount_point_local);
+    goto LABEL_8;
+
+  }
+  result = SceAppMgr_SceSysmemForDriver__imp_sceKernelStrncpyUserToKernel_db3ec244(
+             titleid_kernel,
+             (uintptr_t)titleId_local,
+             0x40u);
+  titleid_kernel_copy = titleid_kernel;
+  if ( result < 0 )
+    goto LABEL_8;
+  if ( result == 0x40 && titleid_kernel[63] )
+  {
+    result = 0x8002710B;
+    goto LABEL_8;
+  }
+  if ( !mount_point_local )
+    goto LABEL_11;
+LABEL_6:
+  *(_DWORD *)mount_point_kernel = 0;
+  *(_DWORD *)&mount_point_kernel[4] = 0;
+  *(_DWORD *)&mount_point_kernel[8] = 0;
+  *(_DWORD *)&mount_point_kernel[12] = 0;
+  mount_res = w_sceAppMgrWorkDirMountByIdForKernel_23F214C(mount_id_local, titleid_kernel_copy, mount_point_kernel);
+  copy_res = SceAppMgr_SceSysmemForDriver__imp_sceKernelMemcpyKernelToUser_6d88ef8a(
+               (uintptr_t)mount_point_local,
+               mount_point_kernel,
+               0x10u);
+  result1 = copy_res < 0;
+  result = copy_res & (copy_res >> 32);
+  if ( !result1 )
+    result = mount_res;
+LABEL_8:
+  if ( cookie != MEMORY[0x9EA004] )
+    SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result);
+  return result;
 }
