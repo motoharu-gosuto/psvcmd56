@@ -2408,6 +2408,11 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
 
 //=======================
 
+int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
+{
+   return 0;
+}
+
 /*
 int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
 {
@@ -3293,6 +3298,7 @@ LABEL_15:
     SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(lock_res0);
   return result;
 }
+*/
 
 int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char *mountPoint)
 {
@@ -3316,6 +3322,7 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char
    }
 }
 
+/*
 int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
   unsigned int mount_id_diff; // r6
@@ -3584,29 +3591,23 @@ LABEL_7:
   return result;
 }
 
+*/
+
 int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
 {
-  char *mountPoint_local; // r2
-  int mountId_local; // r4
-  char *mountPoint_copy; // ST04_4
-  int v6; // r0
-
-  mountPoint_local = mountPoint;
-  mountId_local = mountId;
-  if ( mountId != 0xCA )
-  {
-    if ( (unsigned int)(mountId - 0xC8) > 6 || !((1 << (mountId + 0x38)) & 0x5F) )
-      return 0x80800001;
-    return w_sceAppMgrDataMount_generic_23E1014(0, mountId_local, mountPoint_local);
-  }
-  mountPoint_copy = mountPoint;
-  v6 = SceAppMgr_SceSblACMgrForDriver__imp_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0);
-  mountPoint_local = mountPoint_copy;
-  if ( v6 )
-    return w_sceAppMgrDataMount_generic_23E1014(0, mountId_local, mountPoint_local);
-  return 0x80800009;
+   if (mountId != 0xCA)
+   {
+      if ((unsigned int)(mountId - 0xC8) > 6 || !((1 << (mountId + 0x38)) & 0x5F))
+         return 0x80800001;
+      return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+   }
+   else
+   {
+      if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0))
+         return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+      return 0x80800009;
+   }
 }
-*/
 
 int w_sceAppMgrWorkDirMountByIdForKernel_23F214C(int mount_id, char *titleid, char *mountPoint)
 {
