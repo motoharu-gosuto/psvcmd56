@@ -3351,7 +3351,14 @@ int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char
 //need to reverse this
 int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
-   return 0;
+   int check0 = (unsigned int)(mountId - 0x68) <= 6;
+   int check1 = (1 << (mountId - 0x68)) & 0x4D;
+
+   if (!check0  || !check1)
+      return 0x80800001;
+
+  return 0;
+
    /*
   unsigned int mount_id_diff; // r6
   int mountId_local; // r7
@@ -3372,15 +3379,14 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, 
   char *mount_drive; // [sp+14h] [bp-84h]
   char title_id[16]; // [sp+1Ch] [bp-7Ch]
   char dec_output[16]; // [sp+2Ch] [bp-6Ch]
-  int cookie; // [sp+6Ch] [bp-2Ch]
+  
 
   mount_id_diff = mountId - 0x68;
   mountId_local = mountId;
   titleId_local = (unsigned __int8 *)titleId;
   gen_mount_drive = mountPoint;
-  cookie = MEMORY[0x9EA004];
-  if ( (unsigned int)(mountId - 0x68) <= 6 && (1 << mount_id_diff) & 0x4D )
-  {
+
+  
     *(_DWORD *)title_id = 0;
     *(_DWORD *)&title_id[4] = 0;
     *(_DWORD *)&title_id[8] = 0;
@@ -3611,12 +3617,11 @@ LABEL_26:
 LABEL_5:
     SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
     goto LABEL_6;
-  }
+  
   result = 0x80800001;
 LABEL_7:
-  if ( cookie != MEMORY[0x9EA004] )
-    SceAppMgr_SceSysclibForDriver__imp_sceKernelStackCheckFail_b997493d(result);
-  return result;
+  
+  return result; 
   */
 }
 
