@@ -2408,6 +2408,7 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
 
 //=======================
 
+//need to reverse this
 int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
 {
    return 0;
@@ -3318,6 +3319,36 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountForDriver_b1d3c287(int mountId, char
    }
 }
 
+int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
+{
+   if (mountId != 0xCA)
+   {
+      if(mountId < 0xC8 || mountId > 0xCE)
+         return 0x80800001;
+
+      switch(mountId)
+      {
+         case 0xC8:
+         case 0xC9:
+         case 0xCB:
+         case 0xCC:
+         case 0xCE:
+            return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+         default:
+            return 0x80800001;
+      }
+   }
+   else
+   {
+      if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0))
+         return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
+      return 0x80800009;
+   }
+}
+
+//=======================
+
+//need to reverse this
 int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
    return 0;
@@ -3589,33 +3620,7 @@ LABEL_7:
   */
 }
 
-int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char *mountPoint)
-{
-   if (mountId != 0xCA)
-   {
-      if(mountId < 0xC8 || mountId > 0xCE)
-         return 0x80800001;
-
-      switch(mountId)
-      {
-         case 0xC8:
-         case 0xC9:
-         case 0xCB:
-         case 0xCC:
-         case 0xCE:
-            return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
-         default:
-            return 0x80800001;
-      }
-   }
-   else
-   {
-      if (SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(0))
-         return w_sceAppMgrDataMount_generic_23E1014(0, mountId, mountPoint);
-      return 0x80800009;
-   }
-}
-
+//need to reverse this
 int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_id, char *titleid, char *keystone_data, const char *gen_mount_point)
 {
    return 0;
