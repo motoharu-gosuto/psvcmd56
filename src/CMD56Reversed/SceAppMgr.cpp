@@ -4409,7 +4409,7 @@ LABEL_87:
                 || mount_id_local == 0x6E
                 || mount_id_local >= 0x6E && mount_id_local - 0x12E <= 2 )
               {
-                goto LABEL_148;
+                return label_148_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
               }
             }
             else if ( mount_id_local >= 0x1F8 )
@@ -4426,11 +4426,8 @@ LABEL_87:
                 }
               }
               */
-LABEL_148:
-              sdfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfs
 
-
-
+              return label_148_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
             }
 
             
