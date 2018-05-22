@@ -3641,6 +3641,211 @@ int check_privileges_23D5D54(unsigned int mountId)
    return 0;
 }
 
+bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
+{
+   if (mountId != 0xCF)
+   {
+      if (mountId > 0xCF)
+      {
+         #pragma region
+
+         if (mountId >= 0x1F8)
+         {
+            if (mountId == 0x258)
+            {
+               if (titleId == 0)
+               {
+                  error_code = 0x80800001;
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                  return false;
+               }
+
+               int index0 = 0;
+
+               do
+               {
+                  int symbol0 = (unsigned __int8)titleId[index0];
+                  unsigned int symbol_diff0 = symbol0 - 0x41;
+                  unsigned int symbol_diff1 = symbol0 - 0x30;
+                  char check1 = symbol_diff0 >= 5;
+                  char check2 = symbol_diff0 == 5;
+
+                  if (symbol_diff0 > 5)
+                  {
+                     check1 = symbol_diff1 >= 9;
+                     check2 = symbol_diff1 == 9;
+                  }
+
+                  if (!check2 & (unsigned __int8)check1)
+                  {
+                     error_code = 0x80800001;
+                     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                     return false;
+                  }
+
+                  ++index0;
+               }
+               while (index0 != 0x20);
+
+               if (titleId[0x20] != 0)
+               {
+                  error_code = 0x80800001;
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                  return false;
+               }
+            }
+
+            error_code = 0;
+            return true;
+         }
+
+         if (mountId < 0x1F4)
+         {
+            if (mountId - 0x12F > 1)
+            {
+               error_code = 0;
+               return true;
+            }
+
+            if ( !titleId
+               || (unsigned int)(unsigned __int8)*titleId - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[1] - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[2] - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[3] - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[4] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[5] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[6] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[7] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[8] - 48 > 9
+               || titleId[9] != 95
+               || (unsigned int)(unsigned __int8)titleId[10] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[11] - 48 > 9
+               || titleId[12] != 0 )
+            {
+               error_code = 0x80800001;
+               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+               return false;
+            }
+
+            error_code = 0;
+            return true;
+         }
+
+         #pragma endregion
+      }
+      else
+      {
+         if (mountId > 0x6B)
+         {
+            #pragma region
+
+            if (mountId == 0x6E)
+            {
+               char * check0 = titleId;
+               if (titleId)
+               {
+                  check0 = (char *)1;
+               }
+
+               if (!check0)
+               {
+                  error_code = 0x80800001;
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                  return false;
+               }
+
+               error_code = 0;
+               return true;
+            }
+
+            if (mountId != 0xCD)
+            {
+               error_code = 0;
+               return true;
+            }
+
+            if ( !titleId
+               || (unsigned int)(unsigned __int8)*titleId - 0x41 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[1] - 0x41 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[2] - 0x41 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[3] - 0x41 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[4] - 0x30 > 9
+               || (unsigned int)(unsigned __int8)titleId[5] - 0x30 > 9
+               || (unsigned int)(unsigned __int8)titleId[6] - 0x30 > 9
+               || (unsigned int)(unsigned __int8)titleId[7] - 0x30 > 9
+               || (unsigned int)(unsigned __int8)titleId[8] - 0x30 > 9
+               || titleId[9] != 0 )
+            {
+               error_code = 0x80800001;
+               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+               return false;
+            }
+
+            error_code = 0;
+            return true;
+
+            #pragma endregion
+         }
+
+         if (mountId < 0x6A)
+         {
+            #pragma region
+
+            if (mountId != 0x68)
+            {
+               error_code = 0;
+               return true;
+            }
+
+            if ( !titleId
+               || (unsigned int)(unsigned __int8)*titleId - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[1] - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[2] - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[3] - 65 > 0x19
+               || (unsigned int)(unsigned __int8)titleId[4] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[5] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[6] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[7] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[8] - 48 > 9
+               || titleId[9] != 95
+               || (unsigned int)(unsigned __int8)titleId[10] - 48 > 9
+               || (unsigned int)(unsigned __int8)titleId[11] - 48 > 9
+               || titleId[12] != 0 )
+            {
+               error_code = 0x80800001;
+               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+               return false;
+            }
+
+            error_code = 0;
+            return true;
+
+            #pragma endregion
+         }
+      }
+   }
+
+   if ( !titleId
+      || (unsigned int)(unsigned __int8)*titleId - 0x41 > 0x19
+      || (unsigned int)(unsigned __int8)titleId[1] - 0x41 > 0x19
+      || (unsigned int)(unsigned __int8)titleId[2] - 0x41 > 0x19
+      || (unsigned int)(unsigned __int8)titleId[3] - 0x41 > 0x19
+      || (unsigned int)(unsigned __int8)titleId[4] - 0x30 > 9
+      || (unsigned int)(unsigned __int8)titleId[5] - 0x30 > 9
+      || (unsigned int)(unsigned __int8)titleId[6] - 0x30 > 9
+      || (unsigned int)(unsigned __int8)titleId[7] - 0x30 > 9
+      || (unsigned int)(unsigned __int8)titleId[8] - 0x30 > 9
+      || titleId[9] != 0 )
+   {
+      error_code = 0x80800001;
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return false;
+   }
+
+   error_code = 0;
+   return true;
+}
+
 //need to reverse this
 int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_id, char *titleid, char *keystone_data, const char *gen_mount_point)
 {
@@ -3668,16 +3873,12 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
       return 0x80800001;
    }
 
+   int error_code0 = 0;
+   if(!w_sub1_23E00B8(mount_id_local, titleid_local, error_code0))
+      return error_code0;
+   
    /*
    int result; // r0
-   char *check0; // r3
-   int index0; // r3
-  
-   int symbol0; // r2
-   unsigned int symbol_diff0; // r1
-   unsigned int symbol_diff1; // r2
-   char check1; // cf
-   char check2; // zf
    int index1; // r11
    int index2; // r3
    const char *phys_path0; // r2
@@ -3715,164 +3916,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
    char v54[40]; // [sp+E0h] [bp-28h]
   */
 
-   lock_res0 = 0x80800009;
-
-   if (mount_id_local != 0xCF)
-   {
-      if (mount_id_local > 0xCF)
-      {
-         #pragma region
-
-         if (mount_id_local >= 0x1F8)
-         {
-            if (mount_id_local == 0x258)
-            {
-               if (titleid_local == 0)
-               {
-                  lock_res0 = 0x80800001;
-                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-                  return lock_res0;
-               }
-
-               index0 = 0;
-
-               do
-               {
-                  symbol0 = (unsigned __int8)titleid_local[index0];
-                  symbol_diff0 = symbol0 - 0x41;
-                  symbol_diff1 = symbol0 - 0x30;
-                  check1 = symbol_diff0 >= 5;
-                  check2 = symbol_diff0 == 5;
-
-                  if ( symbol_diff0 > 5 )
-                  {
-                     check1 = symbol_diff1 >= 9;
-                     check2 = symbol_diff1 == 9;
-                  }
-
-                  if ( !check2 & (unsigned __int8)check1 )
-                  {
-                     lock_res0 = 0x80800001;
-                     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-                     return lock_res0;
-                  }
-
-                  ++index0;
-               }
-               while (index0 != 0x20);
-
-               if (titleid_local[0x20] != 0)
-               {
-                  lock_res0 = 0x80800001;
-                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-                  return lock_res0;
-               }
-            }
-
-            goto LABEL_26;
-         }
-
-         if (mount_id_local < 0x1F4)
-         {
-            if (mount_id_local - 0x12F > 1)
-            {
-               goto LABEL_26;
-            }
-
-            goto LABEL_43;
-         }
-
-         #pragma endregion
-      }
-      else
-      {
-         if (mount_id_local > 0x6B)
-         {
-            #pragma region
-
-            if (mount_id_local == 0x6E)
-            {
-               check0 = titleid_local;
-               if (titleid_local)
-               {
-                  check0 = (char *)1;
-               }
-
-               if (!check0)
-               {
-                  lock_res0 = 0x80800001;
-                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-                  return lock_res0;
-               }
-
-               goto LABEL_26;
-            }
-
-            if (mount_id_local != 0xCD)
-            {
-               goto LABEL_26;
-            }
-
-            goto LABEL_59;
-
-            #pragma endregion
-         }
-
-         if (mount_id_local < 0x6A)
-         {
-            #pragma region
-
-            if (mount_id_local != 0x68)
-            {
-               goto LABEL_26;
-            }
-LABEL_43:
-            if ( !titleid_local
-               || (unsigned int)(unsigned __int8)*titleid_local - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleid_local[1] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleid_local[2] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleid_local[3] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleid_local[4] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleid_local[5] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleid_local[6] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleid_local[7] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleid_local[8] - 48 > 9
-               || titleid_local[9] != 95
-               || (unsigned int)(unsigned __int8)titleid_local[10] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleid_local[11] - 48 > 9
-               || titleid_local[12] != 0 )
-            {
-               lock_res0 = 0x80800001;
-               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-               return lock_res0;
-            }
-
-            goto LABEL_26;
-
-            #pragma endregion
-         }
-      }
-   }
-
-       /*
-LABEL_59:
-    if ( !titleid_local
-      || (unsigned int)(unsigned __int8)*titleid_local - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleid_local[1] - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleid_local[2] - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleid_local[3] - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleid_local[4] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleid_local[5] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleid_local[6] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleid_local[7] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleid_local[8] - 0x30 > 9
-      || titleid_local[9] != 0 )
-    {
-      lock_res0 = 0x80800001;
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-    }
-
+    /*
 LABEL_26:
     index1 = 0;
     MEMORY[0x22D4588] = 0;
