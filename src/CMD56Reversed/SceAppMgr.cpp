@@ -4439,7 +4439,8 @@ LABEL_87:
           {
             SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D45E8, 0x20u, aUx0CacheS, gctxi0_copy->unk_558.phys_ctx_30.unk498);
             physical_path2 = (char *)0x22D45E8;
-            goto LABEL_151;
+            
+            return label_151_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
           }
 
           if ( mount_id_local != 0x12C )
@@ -4463,7 +4464,7 @@ LABEL_87:
                 }
                 else
                 {
-                  goto LABEL_151;
+                  return label_151_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
                 }
               }
               */
@@ -4471,9 +4472,6 @@ LABEL_87:
               return label_148_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
             }
 
-            
-            
-LABEL_151:
             return label_151_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
 
           }
