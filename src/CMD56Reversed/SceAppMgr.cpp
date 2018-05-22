@@ -3641,18 +3641,67 @@ int check_privileges_23D5D54(unsigned int mountId)
    return 0;
 }
 
+int check_long_titleId(char * titleId)
+{
+   if (titleId == 0
+      || (unsigned int)titleId[0] - 0x41 > 0x19 //alpha
+      || (unsigned int)titleId[1] - 0x41 > 0x19 //alpha
+      || (unsigned int)titleId[2] - 0x41 > 0x19 //alpha
+      || (unsigned int)titleId[3] - 0x41 > 0x19 //alpha
+      || (unsigned int)titleId[4] - 0x30 > 9 //number
+      || (unsigned int)titleId[5] - 0x30 > 9 //number
+      || (unsigned int)titleId[6] - 0x30 > 9 //number
+      || (unsigned int)titleId[7] - 0x30 > 9 //number
+      || (unsigned int)titleId[8] - 0x30 > 9 //number
+      || (unsigned int)titleId[9] != '_' //underline
+      || (unsigned int)titleId[10] - 0x30 > 9 //number
+      || (unsigned int)titleId[11] - 0x30 > 9 //number
+      || (unsigned int)titleId[12] != 0 ) //terminated
+   {
+      return false;
+   }
+
+   return true;
+}
+
+int check_short_titleId(char * titleId)
+{
+   if (titleId == 0
+      || (unsigned int)(unsigned __int8)*titleId - 0x41 > 0x19 //alpha
+      || (unsigned int)(unsigned __int8)titleId[1] - 0x41 > 0x19 //alpha
+      || (unsigned int)(unsigned __int8)titleId[2] - 0x41 > 0x19 //alpha
+      || (unsigned int)(unsigned __int8)titleId[3] - 0x41 > 0x19 //alpha
+      || (unsigned int)(unsigned __int8)titleId[4] - 0x30 > 9 //number
+      || (unsigned int)(unsigned __int8)titleId[5] - 0x30 > 9 //number
+      || (unsigned int)(unsigned __int8)titleId[6] - 0x30 > 9 //number
+      || (unsigned int)(unsigned __int8)titleId[7] - 0x30 > 9 //number
+      || (unsigned int)(unsigned __int8)titleId[8] - 0x30 > 9 //number
+      || titleId[9] != 0 ) //terminated
+   {
+      return false;
+   }
+
+   return true;
+}
+
 bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
 {
    if (mountId != 0xCF)
    {
+      #pragma region does not fall through
+
       if (mountId > 0xCF)
       {
-         #pragma region
+         #pragma region does not fall through
 
          if (mountId >= 0x1F8)
          {
+            #pragma region does not fall through
+
             if (mountId == 0x258)
             {
+               #pragma region does not fall through
+
                if (titleId == 0)
                {
                   error_code = 0x80800001;
@@ -3664,6 +3713,8 @@ bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
 
                do
                {
+                  #pragma region
+
                   int symbol0 = (unsigned __int8)titleId[index0];
                   unsigned int symbol_diff0 = symbol0 - 0x41;
                   unsigned int symbol_diff1 = symbol0 - 0x30;
@@ -3684,6 +3735,8 @@ bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
                   }
 
                   ++index0;
+
+                  #pragma endregion
                }
                while (index0 != 0x20);
 
@@ -3693,157 +3746,208 @@ bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
                   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
                   return false;
                }
+               else
+               {
+                  error_code = 0;
+                  return true;
+               }
+
+               #pragma endregion
+            }
+            else
+            {
+               #pragma region does not fall through
+
+               error_code = 0;
+               return true;
+
+               #pragma endregion
             }
 
-            error_code = 0;
-            return true;
+            #pragma endregion
          }
-
-         if (mountId < 0x1F4)
+         else if (mountId < 0x1F4)
          {
+            #pragma region does not fall through
+
             if (mountId - 0x12F > 1)
             {
                error_code = 0;
                return true;
             }
+            else
+            {
+               #pragma region does not fall through
 
-            if ( !titleId
-               || (unsigned int)(unsigned __int8)*titleId - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[1] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[2] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[3] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[4] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[5] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[6] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[7] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[8] - 48 > 9
-               || titleId[9] != 95
-               || (unsigned int)(unsigned __int8)titleId[10] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[11] - 48 > 9
-               || titleId[12] != 0 )
+               if(!check_long_titleId(titleId))
+               {
+                  error_code = 0x80800001;
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                  return false;
+               }
+               else
+               {
+                  error_code = 0;
+                  return true;
+               }
+
+               #pragma endregion
+            }
+
+            #pragma endregion
+         }
+         else
+         {
+            #pragma region does not fall through
+
+            if(!check_short_titleId(titleId))
             {
                error_code = 0x80800001;
                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
                return false;
             }
+            else
+            {
+               error_code = 0;
+               return true;
+            }
 
-            error_code = 0;
-            return true;
+            #pragma endregion
          }
 
          #pragma endregion
       }
       else
       {
+         #pragma region does not fall through
+
          if (mountId > 0x6B)
          {
-            #pragma region
+            #pragma region does not fall through
 
             if (mountId == 0x6E)
             {
-               char * check0 = titleId;
-               if (titleId)
-               {
-                  check0 = (char *)1;
-               }
+               #pragma region does not fall through
 
-               if (!check0)
+               if (titleId == 0)
                {
                   error_code = 0x80800001;
                   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
                   return false;
                }
+               else
+               {
+                  error_code = 0;
+                  return true;
+               }
 
-               error_code = 0;
-               return true;
+               #pragma endregion
             }
-
-            if (mountId != 0xCD)
+            else
             {
-               error_code = 0;
-               return true;
-            }
+               #pragma region does not fall through
 
-            if ( !titleId
-               || (unsigned int)(unsigned __int8)*titleId - 0x41 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[1] - 0x41 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[2] - 0x41 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[3] - 0x41 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[4] - 0x30 > 9
-               || (unsigned int)(unsigned __int8)titleId[5] - 0x30 > 9
-               || (unsigned int)(unsigned __int8)titleId[6] - 0x30 > 9
-               || (unsigned int)(unsigned __int8)titleId[7] - 0x30 > 9
-               || (unsigned int)(unsigned __int8)titleId[8] - 0x30 > 9
-               || titleId[9] != 0 )
-            {
-               error_code = 0x80800001;
-               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-               return false;
-            }
+               if (mountId != 0xCD)
+               {
+                  error_code = 0;
+                  return true;
+               }
+               else
+               {
+                  #pragma region does not fall through
 
-            error_code = 0;
-            return true;
+                  if(!check_short_titleId(titleId))
+                  {
+                     error_code = 0x80800001;
+                     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                     return false;
+                  }
+                  else
+                  {
+                     error_code = 0;
+                     return true;
+                  }
+
+                  #pragma endregion
+               }
+
+               #pragma endregion
+            }
 
             #pragma endregion
          }
-
-         if (mountId < 0x6A)
+         else if (mountId < 0x6A)
          {
-            #pragma region
+            #pragma region does not fall through
 
             if (mountId != 0x68)
             {
                error_code = 0;
                return true;
             }
+            else
+            {
+               #pragma region does not fall through
 
-            if ( !titleId
-               || (unsigned int)(unsigned __int8)*titleId - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[1] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[2] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[3] - 65 > 0x19
-               || (unsigned int)(unsigned __int8)titleId[4] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[5] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[6] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[7] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[8] - 48 > 9
-               || titleId[9] != 95
-               || (unsigned int)(unsigned __int8)titleId[10] - 48 > 9
-               || (unsigned int)(unsigned __int8)titleId[11] - 48 > 9
-               || titleId[12] != 0 )
+               if(!check_long_titleId(titleId))
+               {
+                  error_code = 0x80800001;
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+                  return false;
+               }
+               else
+               {
+                  error_code = 0;
+                  return true;
+               }
+
+               #pragma endregion
+            }
+
+            #pragma endregion
+         }
+         else
+         {
+            #pragma region does not fall through
+
+            if(!check_short_titleId(titleId))
             {
                error_code = 0x80800001;
                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
                return false;
             }
-
-            error_code = 0;
-            return true;
+            else
+            {
+               error_code = 0;
+               return true;
+            }
 
             #pragma endregion
          }
+
+         #pragma endregion
       }
-   }
 
-   if ( !titleId
-      || (unsigned int)(unsigned __int8)*titleId - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleId[1] - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleId[2] - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleId[3] - 0x41 > 0x19
-      || (unsigned int)(unsigned __int8)titleId[4] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleId[5] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleId[6] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleId[7] - 0x30 > 9
-      || (unsigned int)(unsigned __int8)titleId[8] - 0x30 > 9
-      || titleId[9] != 0 )
+      #pragma endregion
+   }
+   else
    {
-      error_code = 0x80800001;
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return false;
-   }
+      #pragma region does not fall through
 
-   error_code = 0;
-   return true;
+      if(!check_short_titleId(titleId))
+      {
+         error_code = 0x80800001;
+         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+         return false;
+      }
+      else
+      {
+         error_code = 0;
+         return true;
+      }
+
+      #pragma endregion
+   }
 }
 
 //need to reverse this
