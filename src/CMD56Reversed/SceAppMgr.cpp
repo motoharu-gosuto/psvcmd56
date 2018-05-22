@@ -4046,6 +4046,23 @@ int label_96_23E00B8(int mount_id_local, char *keystone_data_local, global_ctx_i
    return lock_res0;
 }
 
+int create_pfs_directory_23DFEAC(int mount_id, char *physical_path, char *keystone_data)
+{
+   return 0;
+}
+
+int label_148_23E00B8(int mount_id_local, char *keystone_data_local, global_ctx_item *gctxi0_copy, char* title_id2, char* physical_path2, char* mount_drive, char* gen_mount_point)
+{
+   int lock_res0 = create_pfs_directory_23DFEAC(mount_id_local, physical_path2, keystone_data_local);
+   if (lock_res0)
+   {
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return lock_res0;
+   }
+
+   return label_96_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
+}
+
 int label_87_23E00B8()
 {
    return 0;
@@ -4408,16 +4425,9 @@ LABEL_87:
                   goto LABEL_151;
                 }
               }
-LABEL_148:
-              lock_res0 = create_pfs_directory_23DFEAC(mount_id_local, physical_path2, keystone_data_local);
-              if ( lock_res0 )
-              {
-                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-               return lock_res0;
-              }
               */
-
-              return label_96_23E00B8(mount_id_local, keystone_data_local, gctxi0_copy, title_id2, physical_path2, mount_drive, gen_mount_point);
+LABEL_148:
+              sdfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfs
 
 
 
