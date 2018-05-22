@@ -3684,7 +3684,7 @@ int check_short_titleId(char * titleId)
    return true;
 }
 
-bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
+bool check_title_id(int mountId, char * titleId, int& error_code)
 {
    if (mountId != 0xCF)
    {
@@ -3950,6 +3950,33 @@ bool w_sub1_23E00B8(int mountId, char * titleId, int& error_code)
    }
 }
 
+typedef struct g_22D4588_t
+{
+   int unk0; //0x22D4588
+   int unk4; //0x22D458C
+   int unk8; //0x22D4590
+   int unkC; //0x22D4594
+   int unk10; //0x22D4598
+   int unk14; //0x22D459C
+   int unk18; //0x22D45A0
+   int unk1C; //0x22D45A4
+}g_22D4588_t;
+
+typedef struct g_22D4DF0_t
+{
+   int unk0; //0x22D4DF0
+   int unk4; //0x22D4DF4
+   int unk8; //0x22D4DF8
+   int unkC; //0x22D4DFC
+   int unk10; //0x22D4E00
+   int unk14; //0x22D4E04
+   int unk18; //0x22D4E08
+   int unk1C; //0x22D4E0C
+}g_22D4DF0_t;
+
+g_22D4588_t var_22D4588;
+g_22D4DF0_t var_22D4DF0;
+
 //need to reverse this
 int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_id, char *titleid, char *keystone_data, const char *gen_mount_point)
 {
@@ -3978,12 +4005,24 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
    }
 
    int error_code0 = 0;
-   if(!w_sub1_23E00B8(mount_id_local, titleid_local, error_code0))
+   if(!check_title_id(mount_id_local, titleid_local, error_code0))
       return error_code0;
-   
-   /*
+    
+   int index1 = 0;
+
+   memset(&var_22D4588, 0, sizeof(g_22D4588_t));
+   memset(&var_22D4DF0, 0, sizeof(g_22D4DF0_t));
+
+   if ( mount_id_local == 0xCD )
+   {
+      mount_drive = 0;
+      SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D45E8, 0x20u, "ux0:cache/%s", titleid_local);
+      physical_path2 = (char *)0x22D45E8;
+      goto LABEL_87;
+   }
+    
+    /*
    int result; // r0
-   int index1; // r11
    int index2; // r3
    const char *phys_path0; // r2
    SceUID pid0; // r0
@@ -4019,36 +4058,6 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
   
    char v54[40]; // [sp+E0h] [bp-28h]
   */
-
-    /*
-LABEL_26:
-    index1 = 0;
-    MEMORY[0x22D4588] = 0;
-    MEMORY[0x22D458C] = 0;
-    MEMORY[0x22D4590] = 0;
-    MEMORY[0x22D4594] = 0;
-    MEMORY[0x22D4598] = 0;
-    MEMORY[0x22D459C] = 0;
-    MEMORY[0x22D45A0] = 0;
-    MEMORY[0x22D45A4] = 0;
-    MEMORY[0x22D4DF0] = 0;
-    MEMORY[0x22D4DF4] = 0;
-    MEMORY[0x22D4DF8] = 0;
-    MEMORY[0x22D4DFC] = 0;
-    MEMORY[0x22D4E00] = 0;
-    MEMORY[0x22D4E04] = 0;
-    MEMORY[0x22D4E08] = 0;
-    MEMORY[0x22D4E0C] = 0;
-
-    if ( mount_id_local == 0xCD )
-    {
-      mount_drive = 0;
-      SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D45E8, 0x20u, aUx0CacheS, titleid_local);// ux0:cache/%s
-      physical_path2 = (char *)0x22D45E8;
-      goto LABEL_87;
-    }
-    */
-
 
    #pragma region
     /*
@@ -4265,6 +4274,7 @@ LABEL_159:
         }
         mount_drive = (char *)ur0_temp_checkout_24069F0[index4];
         v54[index4 - 0x44] = 0;
+
 LABEL_87:
         pid0 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
         gctxi0 = get_global_ctx_item_23C2DE0((ctx_23C2960 *)0x22A0500, pid0);
