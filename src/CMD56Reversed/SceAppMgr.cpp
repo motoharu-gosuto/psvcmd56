@@ -4203,6 +4203,17 @@ int label_87_23E00B8(SceUID pid_local, int mount_id_local, char *keystone_data_l
    return lock_res0;
 }
 
+char var_22D4778[3];
+
+int set_accoutNo_global_23D58B4()
+{
+   var_22D4778[0] = 0;
+   var_22D4778[1] = 0;
+   var_22D4778[2] = 0;
+
+   return 0;
+}
+
 //need to reverse this
 int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_id, char *titleid, char *keystone_data, char *gen_mount_point)
 {
@@ -5050,19 +5061,13 @@ LABEL_192:
     */
    #pragma endregion
 
-    /*
-    if ( !MEMORY[0x22D4778] )
-    {
+   if (var_22D4778[0] == 0)
       set_accoutNo_global_23D58B4();
-    }
 
-    phys_path0 = aUx0UserS_temp_;
-    */
+   char buffer10[0x20];
+   _snprintf(buffer10, 0x20u, "ux0:user/%s/_temp_savedata_vc", var_22D4778);
 
-    char buffer10[0x20];
-    _snprintf(buffer10, 0x20u, phys_path0, 0x22D4778);
-
-    return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer10, 0, gen_mount_point);
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer10, 0, gen_mount_point);
 }
 
 int w_sceAppMgrWorkDirMountByIdForKernel_23E0F90(int mount_id, char *titleid, char *mount_point)
