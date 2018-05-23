@@ -4307,7 +4307,9 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
             symbol1 = (char *)ux0_calendar_2406BB8[index1];
             if ( !ux0_calendar_2406BB8[index1] )
             {
-               goto LABEL_159;
+               mount_drive = symbol1;
+               v54[index1 - 0x44] = (char)symbol1;
+               return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
             }
 
             dec_buffer0[index1++] = ~(_BYTE)symbol1;
@@ -4333,7 +4335,9 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
                symbol1 = (char *)ur0_temp_sqlite_2406B98[index1];
                if ( !ur0_temp_sqlite_2406B98[index1] )
                {
-                  goto LABEL_159;
+                  mount_drive = symbol1;
+                  v54[index1 - 0x44] = (char)symbol1;
+                  return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
                }
 
                dec_buffer0[index1++] = ~(_BYTE)symbol1;
@@ -4452,7 +4456,9 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
                symbol1 = (char *)ux0_pspemu_2406B38[index1];
                if ( !ux0_pspemu_2406B38[index1] )
                {
-                  goto LABEL_159;
+                  mount_drive = symbol1;
+                  v54[index1 - 0x44] = (char)symbol1;
+                  return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
                }
 
                dec_buffer0[index1++] = ~(_BYTE)symbol1;
@@ -4487,8 +4493,6 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
                }
             }
 
-LABEL_159:
-
             mount_drive = symbol1;
             v54[index1 - 0x44] = (char)symbol1;
             return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
@@ -4505,7 +4509,9 @@ LABEL_159:
 
                if ( !ur0_temp_grief_report_2406B48[index1] )
                {
-                  goto LABEL_159;
+                  mount_drive = symbol1;
+                  v54[index1 - 0x44] = (char)symbol1;
+                  return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
                }
 
                dec_buffer0[index1++] = ~(_BYTE)symbol1;
@@ -4922,7 +4928,12 @@ LABEL_159:
         {
           symbol1 = (char *)ur0_temp_webbrowser_2406A90[index1];
           if ( !ur0_temp_webbrowser_2406A90[index1] )
-            goto LABEL_159;
+          {
+            mount_drive = symbol1;
+            v54[index1 - 0x44] = (char)symbol1;
+            return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
+         }
+
           dec_buffer0[index1++] = ~(_BYTE)symbol1;
           if ( index1 == 0x40 )
           {
@@ -5018,7 +5029,12 @@ LABEL_271:
           {
             symbol1 = (char *)vs0_sys_external_2406930[index1];
             if ( !vs0_sys_external_2406930[index1] )
-              goto LABEL_159;
+            {
+              mount_drive = symbol1;
+               v54[index1 - 0x44] = (char)symbol1;
+               return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
+            }
+
             dec_buffer0[index1++] = ~(_BYTE)symbol1;
             if ( index1 == 0x40 )
             {
@@ -5055,7 +5071,12 @@ LABEL_271:
           {
             symbol1 = (char *)vs0_data_external_2406B20[index1];
             if ( !vs0_data_external_2406B20[index1] )
-              goto LABEL_159;
+            {
+              mount_drive = symbol1;
+               v54[index1 - 0x44] = (char)symbol1;
+               return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
+            }
+
             dec_buffer0[index1++] = ~(_BYTE)symbol1;
             if ( index1 == 0x40 )
             {
