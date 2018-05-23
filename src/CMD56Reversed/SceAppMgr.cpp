@@ -4236,15 +4236,14 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
    memset(&var_22D4588, 0, sizeof(g_22D4588_t));
    memset(&var_22D4DF0, 0, sizeof(g_22D4DF0_t));
 
-   /*
-   if ( mount_id_local == 0xCD )
+   if (mount_id_local == 0xCD)
    {
-      mount_drive = 0;
-      SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D45E8, 0x20u, "ux0:cache/%s", titleid_local);
-      physical_path2 = (char *)0x22D45E8;
-      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
+      char buffer0[0x20];
+      _snprintf(buffer0, 0x20u, "ux0:cache/%s", titleid_local);
+
+      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
    }
-   */
+   
     
     /*
    int result; // r0
