@@ -4780,7 +4780,16 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
 
       physical_path2 = dec_buffer0;
 
-      goto LABEL_271;
+      sprinf_res0 = SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_buffer0, 0x40u, aSSS_0, 0x22D4DF0, 0x22D4778, 0x22D4588);
+      
+      if (sprinf_res0 > 0x3F)
+      {
+         lock_res0 = 0x80800001;
+         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+         return lock_res0;
+      }
+
+      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
    }
 
     */
@@ -4991,16 +5000,10 @@ LABEL_279:
         set_accoutNo_global_23D58B4();
       }
       physical_path2 = dec_buffer0;
-LABEL_271:
-      sprinf_res0 = SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(
-                      dec_buffer0,
-                      0x40u,
-                      aSSS_0,
-                      0x22D4DF0,
-                      0x22D4778,
-                      0x22D4588);
+
+      sprinf_res0 = SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_buffer0, 0x40u, aSSS_0, 0x22D4DF0, 0x22D4778, 0x22D4588);
       
-      if ( sprinf_res0 > 0x3F )
+      if (sprinf_res0 > 0x3F)
       {
          lock_res0 = 0x80800001;
          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
