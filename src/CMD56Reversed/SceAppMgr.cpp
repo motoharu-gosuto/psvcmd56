@@ -4524,6 +4524,17 @@ int sub_23E00B8_mount_0xCC()
    */
 }
 
+int sub_23E00B8_mount_0xCD()
+{
+   return 0;
+   /*
+   char buffer0[0x20];
+   _snprintf(buffer0, 0x20u, "ux0:cache/%s", titleid_local);
+
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   */
+}
+
 int sub_23E00B8_mount_0xCF()
 {
    return 0;
@@ -4861,10 +4872,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
 
    if (mount_id_local == 0xCD)
    {
-      char buffer0[0x20];
-      _snprintf(buffer0, 0x20u, "ux0:cache/%s", titleid_local);
-
-      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+      return sub_23E00B8_mount_0xCD();
    }
    
    //vars
