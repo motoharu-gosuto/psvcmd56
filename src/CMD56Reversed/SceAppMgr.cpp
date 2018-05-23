@@ -4242,7 +4242,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
       mount_drive = 0;
       SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D45E8, 0x20u, "ux0:cache/%s", titleid_local);
       physical_path2 = (char *)0x22D45E8;
-      goto LABEL_87;
+      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
    }
    */
     
@@ -4348,7 +4348,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
               }
               v54[index1 - 68] = 0;
               mount_drive = aVideo0_0;          // video0:
-              goto LABEL_87;
+              return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
             }
             if ( mount_id_local != 0x6F )
             {
@@ -4370,7 +4370,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
                 }
                 mount_drive = (char *)ux0_book_2406C48[index2];
                 v54[index2 - 0x44] = 0;
-                goto LABEL_87;
+                return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
               }
 
               lock_res0 = 0x80800001;
@@ -4386,7 +4386,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
             }
 LABEL_86:
             mount_drive = 0;
-            goto LABEL_87;
+            return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
           }
           lock_res0 = dec_string_constant_23D59D4(ux0_appmeta_2406B00, (char *)0x22D4DF0);// ux0:appmeta
           if ( lock_res0 < 0 )
@@ -4453,7 +4453,7 @@ LABEL_159:
           
           mount_drive = symbol1;
           v54[index1 - 0x44] = (char)symbol1;
-          goto LABEL_87;
+          return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
         }
         if ( mount_id_local == 0xCB )
         {
@@ -4499,9 +4499,7 @@ LABEL_159:
         v54[index4 - 0x44] = 0;
         
         
-        
-LABEL_87:
-      return label_87_23E00B8();
+      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
    }
 
       if ( mount_id_local == 0x67 )
@@ -4563,7 +4561,7 @@ LABEL_87:
                   aUx0PsmSRo,                   // ux0:psm/%s/RO
                   titleid_local);
                 physical_path2 = (char *)0x22D4710;
-                goto LABEL_87;
+                return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
               }
               if ( mount_id_local == 0x6B )
               {
@@ -4574,7 +4572,7 @@ LABEL_87:
                   aUx0PsmSRw,                   // ux0:psm/%s/RW
                   titleid_local);
                 physical_path2 = (char *)0x22D4710;
-                goto LABEL_87;
+                return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
               }
 
               lock_res0 = 0x80800001;
@@ -4612,7 +4610,7 @@ LABEL_87:
             physical_path2 = dec_buffer0;
             mount_drive = aGift0;               // gift0:
           }
-          goto LABEL_87;
+          return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
         }
         if ( mount_id_local != 0x65 )
         {
@@ -4640,7 +4638,7 @@ LABEL_87:
             }
             v54[index1 - 0x44] = 0;
             mount_drive = aPhoto0_1;            // photo0:
-            goto LABEL_87;
+            return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
           }
 
           MEMORY[0x22D4DF0] = 0;
@@ -4833,7 +4831,7 @@ LABEL_87:
         mount_drive = 0;
         SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D4738, 0x20u, aUx0TempApp_w_0, titleid_local);
         physical_path2 = (char *)0x22D4738;
-        goto LABEL_87;
+        return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
       }
 
       if ( mount_id_local < 0xCF )
@@ -4859,7 +4857,7 @@ LABEL_87:
       {
         physical_path2 = 0;
         mount_drive = 0;
-        goto LABEL_87;
+        return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
       }
       if ( mount_id_local != 0x12E )
       {
@@ -4954,7 +4952,7 @@ LABEL_271:
               aUx0UmassS_img,
               titleid_local);
             physical_path2 = (char *)0x22D45A8;
-            goto LABEL_87;
+            return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
           }
 
           lock_res0 = 0x80800001;
@@ -5002,7 +5000,7 @@ LABEL_271:
         }
         mount_drive = (char *)ux0_data_userdata_2406A28[index5];
         v54[index5 - 68] = 0;
-        goto LABEL_87;
+        return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
       }
       if ( mount_id_local == 0x1F6 )
       {
@@ -5019,7 +5017,7 @@ LABEL_192:
           mount_drive = 0;
           SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D4568, 0x20u, phys_path1, titleid1);
           physical_path2 = (char *)0x22D4568;
-          goto LABEL_87;
+          return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
         }
         if ( mount_id_local != 0x1F7 )
         {
@@ -5046,7 +5044,7 @@ LABEL_192:
         phys_drive0,
         physical_path);
       physical_path2 = (char *)0x22D4568;
-      goto LABEL_87;
+      return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
     }
     */
    #pragma endregion
