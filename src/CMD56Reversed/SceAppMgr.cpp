@@ -5028,7 +5028,11 @@ LABEL_192:
           if ( !MEMORY[0x22D4778] )
             set_accoutNo_global_23D58B4();
           phys_path0 = aUx0UserSSave_1;
-          goto LABEL_85;
+          
+          char buffer10[0x20];
+          _snprintf(buffer10, 0x20u, phys_path0, 0x22D4778);
+
+          return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer10, 0, gen_mount_point);
         }
         phys_drive0 = aUx0_0;
         physical_path = titleid_local;
@@ -5055,7 +5059,6 @@ LABEL_192:
     phys_path0 = aUx0UserS_temp_;
     */
 
-LABEL_85:
     char buffer10[0x20];
     _snprintf(buffer10, 0x20u, phys_path0, 0x22D4778);
 
