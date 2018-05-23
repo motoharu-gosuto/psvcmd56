@@ -4244,7 +4244,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
       return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
    }
    
-    
+    //vars
     /*
    int result; // r0
    int index2; // r3
@@ -4383,9 +4383,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
                return lock_res0;
             }
-LABEL_86:
-            mount_drive = 0;
-            return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
+            return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
           }
           lock_res0 = dec_string_constant_23D59D4(ux0_appmeta_2406B00, (char *)0x22D4DF0);// ux0:appmeta
           if ( lock_res0 < 0 )
@@ -4409,7 +4407,7 @@ LABEL_188:
             return lock_res0;
           }
 
-          goto LABEL_86;
+          return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
         }
         if ( mount_id_local == 0xCA )
         {
@@ -4769,7 +4767,7 @@ LABEL_159:
                return lock_res0;
              }
         }
-        goto LABEL_86;
+        return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
       }
       if ( mount_id_local > 0x12E )
       {
@@ -5055,16 +5053,13 @@ LABEL_192:
     }
 
     phys_path0 = aUx0UserS_temp_;
+    */
 
 LABEL_85:
-    SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D4568, 0x20u, phys_path0, 0x22D4778);
-    physical_path2 = (char *)0x22D4568;
-    goto LABEL_86;
-   */
+    char buffer10[0x20];
+    _snprintf(buffer10, 0x20u, phys_path0, 0x22D4778);
 
-    //not needed anymore
-  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-  return lock_res0;
+    return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer10, 0, gen_mount_point);
 }
 
 int w_sceAppMgrWorkDirMountByIdForKernel_23E0F90(int mount_id, char *titleid, char *mount_point)
