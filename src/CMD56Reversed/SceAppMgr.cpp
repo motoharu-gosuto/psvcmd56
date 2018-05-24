@@ -4652,6 +4652,7 @@ int sub_23E00B8_mount_0xC8()
 
 int sub_23E00B8_mount_0xC9()
 {
+   return 0;
    /*
    physical_path2 = dec_buffer0;
    SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
@@ -4777,6 +4778,8 @@ int sub_23E00B8_mount_0xCD()
 
 int sub_23E00B8_mount_0xCE()
 {
+   return 0;
+   /*
    physical_path2 = dec_buffer0;
    SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
 
@@ -4800,6 +4803,7 @@ int sub_23E00B8_mount_0xCE()
          return lock_res0;
       }
    }
+   */
 }
 
 int sub_23E00B8_mount_0xCF()
