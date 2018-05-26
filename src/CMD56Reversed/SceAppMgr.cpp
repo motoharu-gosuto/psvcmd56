@@ -2406,6 +2406,48 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
    return var_009EA004 == cookie ? result : STACK_CHECK_FAIL;
 }
 
+//===============================================
+
+int set_accoutNo_global_23D58B4(char* accountNo)
+{
+   /*
+   var_22D4778[0] = 0;
+   var_22D4778[1] = 0;
+   var_22D4778[2] = 0;
+   */
+   return 0;
+}
+
+int check_privileges_23D5D54(unsigned int mountId)
+{
+   return 0;
+}
+
+int read_keystone_23D6664(SceUID pid, const char *gen_mount_point, char *keystone_data)
+{
+   return 0;
+}
+
+int create_pfs_directory_23DFEAC(int mount_id, const char *physical_path, const char *keystone_data)
+{
+   return 0;
+}
+
+int get_fake_no_memory_card_23E5660()
+{
+   return 0;
+}
+
+int normalize_path_select_mode_create_dir_23D9354(const char *physical_path, int some_flag)
+{
+   return 0;
+}
+
+int check_flags_23D4CE0(int mountId, int flag)
+{
+   return 0;
+}
+
 //=======================
 
 //need to reverse this
@@ -3634,48 +3676,6 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, 
    default:
       return 0x80800001;
    }
-}
-
-//===============================================
-
-int set_accoutNo_global_23D58B4(char* accountNo)
-{
-   /*
-   var_22D4778[0] = 0;
-   var_22D4778[1] = 0;
-   var_22D4778[2] = 0;
-   */
-   return 0;
-}
-
-int check_privileges_23D5D54(unsigned int mountId)
-{
-   return 0;
-}
-
-int read_keystone_23D6664(SceUID pid, const char *gen_mount_point, char *keystone_data)
-{
-   return 0;
-}
-
-int create_pfs_directory_23DFEAC(int mount_id, const char *physical_path, const char *keystone_data)
-{
-   return 0;
-}
-
-int get_fake_no_memory_card_23E5660()
-{
-   return 0;
-}
-
-int normalize_path_select_mode_create_dir_23D9354(const char *physical_path, int some_flag)
-{
-   return 0;
-}
-
-int check_flags_23D4CE0(int mountId, int flag)
-{
-   return 0;
 }
 
 //===============================================
