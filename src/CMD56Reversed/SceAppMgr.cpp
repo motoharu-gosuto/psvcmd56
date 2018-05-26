@@ -4087,7 +4087,7 @@ int sub_23D8908(SceUID pid, const char *titleId, appmgr_mount_holder_t *a3, appm
    return 0;
 }
 
-int label_87_23E00B8(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* physical_path2, char* mount_drive, char* gen_mount_point)
+int work_dir_mount_23E00B8(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* physical_path2, char* mount_drive, char* gen_mount_point)
 {
    char title_id2[16];
    memset(title_id2, 0, 0x10);
@@ -4191,7 +4191,7 @@ int set_accoutNo_global_23D58B4(char* accountNo)
 
 int sub_23E00B8_mount_0x64(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:picture", "photo0:", gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:picture", "photo0:", gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x65(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4210,7 +4210,7 @@ int sub_23E00B8_mount_0x65(SceUID pid_local, int mount_id_local, char *keystone_
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x66(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4229,7 +4229,7 @@ int sub_23E00B8_mount_0x66(SceUID pid_local, int mount_id_local, char *keystone_
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x67(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4248,7 +4248,7 @@ int sub_23E00B8_mount_0x67(SceUID pid_local, int mount_id_local, char *keystone_
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x68(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4267,7 +4267,7 @@ int sub_23E00B8_mount_0x68(SceUID pid_local, int mount_id_local, char * titleid_
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, "gift0:", gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, "gift0:", gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x69(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4275,7 +4275,7 @@ int sub_23E00B8_mount_0x69(SceUID pid_local, int mount_id_local, char *keystone_
    char dec_buffer0[0x40];
    memset(dec_buffer0, 0, 0x40);
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:music", "music0:", gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:music", "music0:", gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x6A(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4285,7 +4285,7 @@ int sub_23E00B8_mount_0x6A(SceUID pid_local, int mount_id_local, char * titleid_
    
    _snprintf(buffer, 0x20u, "ux0:psm/%s/RO", titleid_local);
    
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer, 0, gen_mount_point);  
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer, 0, gen_mount_point);  
 }
 
 int sub_23E00B8_mount_0x6B(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4295,17 +4295,17 @@ int sub_23E00B8_mount_0x6B(SceUID pid_local, int mount_id_local, char * titleid_
    
    _snprintf(buffer, 0x20u, "ux0:psm/%s/RW", titleid_local);
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x6C(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:calendar", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:calendar", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x6D(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:video", "video0:", gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:video", "video0:", gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x6E(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4319,43 +4319,43 @@ int sub_23E00B8_mount_0x6E(SceUID pid_local, int mount_id_local, char * titleid_
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x6F(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "tm0:nphome", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "tm0:nphome", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x70(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:book", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:book", 0, gen_mount_point);
 }
 
 
 int sub_23E00B8_mount_0xC8(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/sqlite", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/sqlite", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xC9(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/attach", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/attach", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xCA(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:pspemu", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:pspemu", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xCB(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/grief_report", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/grief_report", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xCC(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/checkout", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/checkout", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xCD(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4365,12 +4365,12 @@ int sub_23E00B8_mount_0xCD(SceUID pid_local, int mount_id_local, char * titleid_
 
    _snprintf(buffer0, 0x20u, "ux0:cache/%s", titleid_local);
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xCE(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/webbrowser", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/webbrowser", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0xCF(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4380,13 +4380,13 @@ int sub_23E00B8_mount_0xCF(SceUID pid_local, int mount_id_local, char * titleid_
    
    _snprintf(buffer0, 0x20u, "ux0:temp/app_work/%s/rec", titleid_local);
    
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 //???????????
 int sub_23E00B8_mount_0x12C(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, 0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, 0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x12E(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4405,7 +4405,7 @@ int sub_23E00B8_mount_0x12E(SceUID pid_local, int mount_id_local, char *keystone
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x12F(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4424,7 +4424,7 @@ int sub_23E00B8_mount_0x12F(SceUID pid_local, int mount_id_local, char * titleid
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x130(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4443,23 +4443,23 @@ int sub_23E00B8_mount_0x130(SceUID pid_local, int mount_id_local, char * titleid
       return 0x80800001;
    }
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 
 int sub_23E00B8_mount_0x190(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:mms/photo", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:mms/photo", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x191(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:mms/music", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:mms/music", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x192(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:mms/video", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:mms/video", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x1F4(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4468,7 +4468,7 @@ int sub_23E00B8_mount_0x1F4(SceUID pid_local, int mount_id_local, char * titleid
    memset(buffer0, 0, 0x20);
 
    _snprintf(buffer0, 0x20u, "grw0:addcont/%s", titleid_local);
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x1F5(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4478,7 +4478,7 @@ int sub_23E00B8_mount_0x1F5(SceUID pid_local, int mount_id_local, char * titleid
 
    _snprintf(buffer0, 0x20u, "ux0:addcont/%s", titleid_local);
    
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x1F6(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4488,7 +4488,7 @@ int sub_23E00B8_mount_0x1F6(SceUID pid_local, int mount_id_local, char * titleid
 
    _snprintf(buffer0, 0x20u, "%spatch/%s", "grw0:", titleid_local);
    
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x1F7(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
@@ -4498,7 +4498,7 @@ int sub_23E00B8_mount_0x1F7(SceUID pid_local, int mount_id_local, char * titleid
 
    _snprintf(buffer0, 0x20u, "%spatch/%s", "ux0:", titleid_local);
    
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x1F8(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4513,7 +4513,7 @@ int sub_23E00B8_mount_0x1F8(SceUID pid_local, int mount_id_local, char *keystone
 
    _snprintf(buffer0, 0x20u, "ux0:user/%s/savedata_vc", accountNo);
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x1F9(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
@@ -4528,7 +4528,7 @@ int sub_23E00B8_mount_0x1F9(SceUID pid_local, int mount_id_local, char *keystone
 
    _snprintf(buffer0, 0x20u, "ux0:user/%s/_temp_savedata_vc", accountNo);
 
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
 
@@ -4539,23 +4539,23 @@ int sub_23E00B8_mount_0x258(SceUID pid_local, int mount_id_local, char * titleid
 
    _snprintf(dec_buffer0, 0x40u, "ux0:umass/%s.img", titleid_local);
    
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 
 int sub_23E00B8_mount_0x3EF(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "vs0:sys/external", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "vs0:sys/external", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x3F0(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "vs0:data/external", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "vs0:data/external", 0, gen_mount_point);
 }
 
 int sub_23E00B8_mount_0x3F1(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:data/userdata", 0, gen_mount_point);
+   return work_dir_mount_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:data/userdata", 0, gen_mount_point);
 }
 
 
