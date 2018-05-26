@@ -4358,348 +4358,117 @@ int sub_23E00B8_mount_0x70(SceUID pid_local, int mount_id_local, char *keystone_
 }
 
 
-int sub_23E00B8_mount_0xC8()
+int sub_23E00B8_mount_0xC8(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = dec_buffer0;
-   SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
-
-   while (1)
-   {
-      symbol1 = (char *)ur0_temp_sqlite_2406B98[index1];
-      if (!ur0_temp_sqlite_2406B98[index1])
-      {
-         mount_drive = symbol1;
-         v54[index1 - 0x44] = (char)symbol1;
-         return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-      }
-
-      dec_buffer0[index1++] = ~(_BYTE)symbol1;
-
-      if (index1 == 0x40)
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/sqlite", 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0xC9()
+int sub_23E00B8_mount_0xC9(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = dec_buffer0;
-   SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
-
-   while (1)
-   {
-      symbol1 = (char *)ur0_temp_attach_2406AA8[index1];
-      if (!ur0_temp_attach_2406AA8[index1])
-      {
-         mount_drive = symbol1;
-         v54[index1 - 0x44] = (char)symbol1;
-         return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-      }
-
-      dec_buffer0[index1++] = ~(_BYTE)symbol1;
-
-      if ( index1 == 0x40 )
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/attach", 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0xCA()
+int sub_23E00B8_mount_0xCA(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = dec_buffer0;
-   SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
-
-   while (1)
-   {
-      symbol1 = (char *)ux0_pspemu_2406B38[index1];
-      if (!ux0_pspemu_2406B38[index1])
-      {
-         mount_drive = symbol1;
-         v54[index1 - 0x44] = (char)symbol1;
-         return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-      }
-
-      dec_buffer0[index1++] = ~(_BYTE)symbol1;
-
-      if (index1 == 0x40)
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ux0:pspemu", 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0xCB()
+int sub_23E00B8_mount_0xCB(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = dec_buffer0;
-   SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
-
-   while (1)
-   {
-      symbol1 = (char *)ur0_temp_grief_report_2406B48[index1];
-
-      if (!ur0_temp_grief_report_2406B48[index1])
-      {
-         mount_drive = symbol1;
-         v54[index1 - 0x44] = (char)symbol1;
-         return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-      }
-
-      dec_buffer0[index1++] = ~(_BYTE)symbol1;
-
-      if (index1 == 0x40)
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/grief_report", 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0xCC()
+int sub_23E00B8_mount_0xCC(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = dec_buffer0;
-   SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
-
-   index4 = 0;
-   while (ur0_temp_checkout_24069F0[index4])
-   {
-      dec_buffer0[index4] = ~ur0_temp_checkout_24069F0[index4];
-
-      if (++index4 == 0x40)
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-
-   mount_drive = (char *)ur0_temp_checkout_24069F0[index4];
-   v54[index4 - 0x44] = 0;
-
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/checkout", 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0xCD()
+int sub_23E00B8_mount_0xCD(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
    char buffer0[0x20];
+   memset(buffer0, 0, 0x20);
+
    _snprintf(buffer0, 0x20u, "ux0:cache/%s", titleid_local);
 
    return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
-   */
 }
 
-int sub_23E00B8_mount_0xCE()
+int sub_23E00B8_mount_0xCE(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = dec_buffer0;
-   SceAppMgr_SceSysclibForDriver__imp_memset_0ab9bf5c(dec_buffer0, 0, 0x40u);
-
-   while (1)
-   {
-      symbol1 = (char *)ur0_temp_webbrowser_2406A90[index1];
-
-      if (!ur0_temp_webbrowser_2406A90[index1])
-      {
-         mount_drive = symbol1;
-         v54[index1 - 0x44] = (char)symbol1;
-         return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-      }
-
-      dec_buffer0[index1++] = ~(_BYTE)symbol1;
-
-      if (index1 == 0x40)
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, "ur0:temp/webbrowser", 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0xCF()
+int sub_23E00B8_mount_0xCF(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   mount_drive = 0;
-   SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981((char *)0x22D4738, 0x20u, aUx0TempApp_w_0, titleid_local);
-   physical_path2 = (char *)0x22D4738;
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-   */
+   char buffer0[0x20];
+   memset(buffer0, 0, 0x20);
+   
+   _snprintf(buffer0, 0x20u, "ux0:temp/app_work/%s/rec", titleid_local);
+   
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, buffer0, 0, gen_mount_point);
 }
 
-
-int sub_23E00B8_mount_0x12C()
+//???????????
+int sub_23E00B8_mount_0x12C(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   physical_path2 = 0;
-   mount_drive = 0;
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, mount_drive, gen_mount_point);
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, 0, 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0x12E()
+int sub_23E00B8_mount_0x12E(SceUID pid_local, int mount_id_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   MEMORY[0x22D4DF0] = 0;
-   MEMORY[0x22D4DF4] = 0;
-   MEMORY[0x22D4DF8] = 0;
-   MEMORY[0x22D4DFC] = 0;
-   MEMORY[0x22D4E00] = 0;
-   MEMORY[0x22D4E04] = 0;
-   MEMORY[0x22D4E08] = 0;
-   MEMORY[0x22D4E0C] = 0;
+   char dec_buffer0[0x40];
+   memset(dec_buffer0, 0, 0x40);
 
-   index3 = 0;
+   char accountNo[3];
+   memset(accountNo, 0, 3);
 
-   while ( ur0_user_2406920[index3] )
-   {
-      *(_BYTE *)(index3 + 0x22D4DF0) = ~ur0_user_2406920[index3];
+   set_accoutNo_global_23D58B4(accountNo);
 
-      if (++index3 == 0x20)
-      {
-         lock_res0 = 0x80800001;
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return lock_res0;
-      }
-   }
-
-   phys_path_chunk1 = trophy_data_sce_trop_2406A78;
-
-   *(_BYTE *)(index3 + 0x22D4DF0) = 0;
-
-   lock_res0 = dec_string_constant_23D59D4(phys_path_chunk1, (char *)0x22D4588);
-
-   if (lock_res0 < 0)
+   if (_snprintf(dec_buffer0, 0x40u, "%s/%s/%s", "ur0:user", accountNo, "trophy/data/sce_trop") > 0x3F)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
 
-   if (!MEMORY[0x22D4778])
-   {
-      set_accoutNo_global_23D58B4();
-   }
-
-   physical_path2 = dec_buffer0;
-
-   sprinf_res0 = SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_buffer0, 0x40u, aSSS_0, 0x22D4DF0, 0x22D4778, 0x22D4588);
-
-   if (sprinf_res0 > 0x3F)
-   {
-      lock_res0 = 0x80800001;
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-   }
-
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0x12F()
+int sub_23E00B8_mount_0x12F(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+   char dec_buffer0[0x40];
+   memset(dec_buffer0, 0, 0x40);
 
-   if (lock_res0 < 0)
+   char accountNo[3];
+   memset(accountNo, 0, 3);
+
+   set_accoutNo_global_23D58B4(accountNo);
+
+   if (_snprintf(dec_buffer0, 0x40u, "%s/%s/%s/%s", "ur0:user", accountNo, "trophy/data", titleid_local) > 0x3F)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
 
-   lock_res0 = dec_string_constant_23D59D4(trophy_data_2406C38, (char *)0x22D4588);
-
-   if (lock_res0 < 0)
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-   }
-
-   if (!MEMORY[0x22D4778])
-   {
-      set_accoutNo_global_23D58B4();
-   }
-
-   physical_path2 = dec_buffer0;
-   sprinf_res0 = SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, titleid_local);
-         
-   if (sprinf_res0 > 0x3F)
-   {
-      lock_res0 = 0x80800001;
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-   }
-
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
-int sub_23E00B8_mount_0x130()
+int sub_23E00B8_mount_0x130(SceUID pid_local, int mount_id_local, char * titleid_local, char *keystone_data_local, char* gen_mount_point)
 {
-   return 0;
-   /*
-   lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+   char dec_buffer0[0x40];
+   memset(dec_buffer0, 0, 0x40);
 
-   if (lock_res0 < 0)
+   char accountNo[3];
+   memset(accountNo, 0, 3);
+
+   set_accoutNo_global_23D58B4(accountNo);
+    
+   if (_snprintf(dec_buffer0, 0x40u, "%s/%s/%s/%s_BK", "ur0:user", accountNo, "trophy/data", titleid_local) > 0x3F)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
 
-   lock_res0 = dec_string_constant_23D59D4(trophy_data_2406C38, (char *)0x22D4588);
-
-   if (lock_res0 < 0)
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-   }
-
-   if (!MEMORY[0x22D4778])
-   {
-      set_accoutNo_global_23D58B4();
-   }
-
-   physical_path2 = dec_buffer0;
-   sprinf_res0 = SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_buffer0, 0x40u, aSSSS_bk, 0x22D4DF0, 0x22D4778, 0x22D4588, titleid_local);
-         
-   if (sprinf_res0 > 0x3F)
-   {
-      lock_res0 = 0x80800001;
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-   }
-
-   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, physical_path2, 0, gen_mount_point);
-   */
+   return label_87_23E00B8(pid_local, mount_id_local, keystone_data_local, dec_buffer0, 0, gen_mount_point);
 }
 
 
@@ -5026,21 +4795,21 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
       switch(mount_id_local)
       {
       case 0xC8:
-         return sub_23E00B8_mount_0xC8();
+         return sub_23E00B8_mount_0xC8(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0xC9:
-         return sub_23E00B8_mount_0xC9();
+         return sub_23E00B8_mount_0xC9(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0xCA:
-         return sub_23E00B8_mount_0xCA();
+         return sub_23E00B8_mount_0xCA(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0xCB:
-         return sub_23E00B8_mount_0xCB();
+         return sub_23E00B8_mount_0xCB(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0xCC:
-         return sub_23E00B8_mount_0xCC();
+         return sub_23E00B8_mount_0xCC(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0xCD:
-         return sub_23E00B8_mount_0xCD();
+         return sub_23E00B8_mount_0xCD(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
       case 0xCE:
-         return sub_23E00B8_mount_0xCE();
+         return sub_23E00B8_mount_0xCE(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0xCF:
-         return sub_23E00B8_mount_0xCF();
+         return sub_23E00B8_mount_0xCF(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
       }
 
       #pragma endregion
@@ -5058,7 +4827,7 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
       switch(mount_id_local)
       {
       case 0x12C:
-         return sub_23E00B8_mount_0x12C();
+         return sub_23E00B8_mount_0x12C(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0x12D:
          {
             lock_res0 = 0x80800001;
@@ -5066,11 +4835,11 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
             return lock_res0;
          }
       case 0x12E:
-         return sub_23E00B8_mount_0x12E();
+         return sub_23E00B8_mount_0x12E(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
       case 0x12F:
-         return sub_23E00B8_mount_0x12F();
+         return sub_23E00B8_mount_0x12F(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
       case 0x130:
-         return sub_23E00B8_mount_0x130();
+         return sub_23E00B8_mount_0x130(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
       }
 
       #pragma endregion
