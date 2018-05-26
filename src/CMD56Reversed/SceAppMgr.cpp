@@ -3393,61 +3393,51 @@ int SceAppMgrForDriver_sceAppMgrWorkDirMountForDriver_3a0a9b82(int mountId, char
 //need to reverse this
 int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
-   return 0;
+   /*
+   unsigned int mount_id_diff; // r6
+   int mountId_local; // r7
+   unsigned __int8 *titleId_local; // r9
+   char *gen_mount_drive; // r10
+   unsigned int v7; // r8
+   int lock_res0; // r11
+   signed int result; // r0
+   signed int symbol0; // r3
+   SceUID pid1; // r0
+   global_ctx_item *gctxi; // r0
+   global_ctx_item *gctxi1; // r9
+   int flag1; // r1
+   SceUID pid0; // r0
+   int flag0; // r2
+   char *random_path_init; // [sp+4h] [bp-94h]
+   char *physical_path; // [sp+10h] [bp-88h]
+   char *mount_drive; // [sp+14h] [bp-84h]
+   char title_id[16]; // [sp+1Ch] [bp-7Ch]
+   char dec_output[16]; // [sp+2Ch] [bp-6Ch]
+   */
 
-  /*
-  unsigned int mount_id_diff; // r6
-  int mountId_local; // r7
-  unsigned __int8 *titleId_local; // r9
-  char *gen_mount_drive; // r10
-  unsigned int v7; // r8
-  int lock_res0; // r11
-  signed int result; // r0
-  signed int symbol0; // r3
-  SceUID pid1; // r0
-  global_ctx_item *gctxi; // r0
-  global_ctx_item *gctxi1; // r9
-  int flag1; // r1
-  SceUID pid0; // r0
-  int flag0; // r2
-  char *random_path_init; // [sp+4h] [bp-94h]
-  char *physical_path; // [sp+10h] [bp-88h]
-  char *mount_drive; // [sp+14h] [bp-84h]
-  char title_id[16]; // [sp+1Ch] [bp-7Ch]
-  char dec_output[16]; // [sp+2Ch] [bp-6Ch]
-  */
-
-  mount_id_diff = mountId - 0x68;
   mountId_local = mountId;
   titleId_local = (unsigned __int8 *)titleId;
   gen_mount_drive = mountPoint;
 
-
-  *(_DWORD *)title_id = 0;
-  *(_DWORD *)&title_id[4] = 0;
-  *(_DWORD *)&title_id[8] = 0;
-  *(_DWORD *)&title_id[12] = 0;
-
-  v7 = __mrc(15, 0, 13, 0, 3);
-  __mcr(15, 0, v7 << 16, 13, 0, 3);
+  memset(title_id, 0, 0x10);
 
   lock_res0 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelLockMutex_089_16ac80c5(MEMORY[0x22A000C], 1, 0);
-  if ( lock_res0 < 0 )
+
+  if (lock_res0 < 0)
   {
-LABEL_6:
-     __mcr(15, 0, v7, 13, 0, 3);
      result = lock_res0;
-     goto LABEL_7;
+     return result;
   }
+
   lock_res0 = 0x80800009;
 
   if (check_privileges_23D5D54(mountId_local))
   {
      if (gen_mount_drive)
      {
-        if ( mount_id_diff <= 6 )
+        if ((mountId - 0x68) <= 6 )
         {
-           switch (mount_id_diff)
+           switch ((mountId - 0x68))
            {
            case 0u:
               if ( !titleId_local
@@ -3654,12 +3644,8 @@ LABEL_26:
 
 LABEL_5:
   SceAppMgr_SceThreadmgrForDriver__imp_sceKernelUnlockMutex_089_1e82e5d0(MEMORY[0x22A000C], 1);
-  goto LABEL_6;
-
-  result = 0x80800001;
-LABEL_7:
-
-  return result; 
+  result = lock_res0;
+  return result;
 }
 
 int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
