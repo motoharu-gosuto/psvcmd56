@@ -2833,7 +2833,7 @@ LABEL_147:
                 gctxi1->unk_558.maybe_titleid_0,
                 0xAu);
               pid2 = SceAppMgr_SceThreadmgrForDriver__imp_sceKernelGetProcessId_9dcb4b7a();
-              lock_res0 = sub_23D8908(
+              lock_res0 = special_mount_0x12C_23D8908(
                             pid2,
                             title_id_or_drive,
                             &gctxi1_copy->unk_558.mctx_hldr_28,
@@ -4015,7 +4015,7 @@ int cleanup_23E00B8(int mountId, global_ctx_item *gctxi)
 
 //===============================================
 
-int sub_23D8908(SceUID pid, const char *titleId, appmgr_mount_holder_t *a3, appmgr_mount_holder_t *appmgr_holder, char *mountPoint)
+int special_mount_0x12C_23D8908(SceUID pid, const char *titleId, appmgr_mount_holder_t *appmgr_holder_other_proces, appmgr_mount_holder_t *appmgr_holder_current_process, char *mountPoint)
 {
    return 0;
 }
@@ -4141,7 +4141,7 @@ int work_dir_mount_23E00B8(SceUID pid, int mountId, const char *keystone_data, c
          return 0x80801002;
       }
 
-      int lock_res0 = sub_23D8908(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), gctxi1->unk_558.titleId, &gctxi1->unk_558.mctx_hldr_28, &gctxi0->unk_558.mctx_hldr_28, mountPoint);
+      int lock_res0 = special_mount_0x12C_23D8908(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), gctxi1->unk_558.titleId, &gctxi1->unk_558.mctx_hldr_28, &gctxi0->unk_558.mctx_hldr_28, mountPoint);
       if (lock_res0)
       {
          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
