@@ -4029,22 +4029,40 @@ int mount_base_23E00B8(int mountId, const char *keystone_data, global_ctx_item *
       return create_res;
    }
 
-   if (mountId - 0x1F4 > 1)
-      return cleanup_23E00B8(mountId, gctxi);
+   //check if mountId requires keystone check
 
-   char keystone_data2[96];
-   int lock_res0 = read_keystone_23D6664(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), mountPoint, keystone_data2);
-   if (lock_res0 >= 0)
+   if (mountId >= 0x1F6)
    {
-      if (memcmp(keystone_data, keystone_data2, 96) == 0)
-         return cleanup_23E00B8(mountId, gctxi);
+      //successfull return
+      return cleanup_23E00B8(mountId, gctxi);
    }
+   else
+   {
+      //if mount was successfull - read keystone file
+      char keystone_data_expected[0x60];
+      int read_res = read_keystone_23D6664(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), mountPoint, keystone_data_expected);
+      if(read_res < 0)
+      {
+         if (mountPoint[0] != 0)
+            w_unmount_23D8E80(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), &gctxi->unk_558.mctx_hldr_28, mountPoint, 0);
 
-   if (mountPoint[0] != 0)
-      w_unmount_23D8E80(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), &gctxi->unk_558.mctx_hldr_28, mountPoint, 0);
+         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+         return 0x80800006;
+      }
 
-   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-   return 0x80800006;
+      //compare keystone file
+      if (memcmp(keystone_data, keystone_data_expected, 0x60) != 0)
+      {
+         if (mountPoint[0] != 0)
+            w_unmount_23D8E80(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), &gctxi->unk_558.mctx_hldr_28, mountPoint, 0);
+
+         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+         return 0x80800006;
+      }
+
+      //successfull return
+      return cleanup_23E00B8(mountId, gctxi);
+   }
 }
 
 int mount_with_fake_no_memory_card_23E00B8(int mountId, const char *keystone_data, global_ctx_item *gctxi, const char* titleId, const char* physical_path, const char* mount_drive, char* mountPoint)
