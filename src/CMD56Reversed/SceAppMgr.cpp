@@ -3711,18 +3711,18 @@ int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, ch
    if (lock_res0 < 0)
       return lock_res0;
 
-  if (check_privileges_23D5D54(mountId_local) == 0)
-  {
-     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+   if (check_privileges_23D5D54(mountId_local) == 0)
+   {
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800009;
-  }
+   }
 
-  if (!gen_mount_drive)
-  {
-     lock_res0 = 0x80800001;
-     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-     return lock_res0;
-  }
+   if (!gen_mount_drive)
+   {
+      lock_res0 = 0x80800001;
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return lock_res0;
+   }
 
    int error_code = 0;
    if(!check_titleid_5e311f71(mountId_local, titleId_local, error_code))
@@ -3730,7 +3730,7 @@ int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, ch
 
    memset(0x22D4DF0, 0, 0x20);
    memset(0x22D4588, 0, 0x20);
-        
+
    switch (mountId_local)
    {
    case 0x68:
