@@ -3681,6 +3681,7 @@ int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, const char *title
 }
 
 //it is strange that function does not allow all mountIds that it can handle
+//does not mount: music0: ux0:calendar video0:
 int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, char *titleId, char *mountPoint)
 {
    if(mountId < 0x68 || mountId > 0x6E)
@@ -3688,10 +3689,10 @@ int SceAppMgrForDriver_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, 
 
    switch(mountId)
    {
-   case 0x68:
-   case 0x6A:
-   case 0x6B:
-   case 0x6E:
+   case 0x68: //gift0:
+   case 0x6A: //ux0:psm/%s/RO
+   case 0x6B: //ux0:psm/%s/RW
+   case 0x6E: //ux0:appmeta
       return w_sceAppMgrAppDataMountByIdForDriver_5e311f71(mountId, titleId, mountPoint);
    default:
       return 0x80800001;
