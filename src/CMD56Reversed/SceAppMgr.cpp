@@ -3991,20 +3991,20 @@ int check_flags_23D4CE0(int mountId, int flag)
 
 //===============================================
 
-int cleanup_23E00B8(int mount_id_local, global_ctx_item *gctxi0_copy)
+int cleanup_23E00B8(int mountId, global_ctx_item *gctxi)
 {
-   if (gctxi0_copy->unk_558.phys_ctx_30.flag_160 & 0x30)
+   if (gctxi->unk_558.phys_ctx_30.flag_160 & 0x30)
    {
-      switch (mount_id_local)
+      switch (mountId)
       {
-         case 0x64u:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x2000000;
+      case 0x64u:
+         gctxi->unk_558.phys_ctx_30.flag_160 = gctxi->unk_558.phys_ctx_30.flag_160 | 0x2000000;
          break;
-         case 0x69u:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x4000000;
+      case 0x69u:
+         gctxi->unk_558.phys_ctx_30.flag_160 = gctxi->unk_558.phys_ctx_30.flag_160 | 0x4000000;
          break;
-         case 0x6Du:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x8000000;
+      case 0x6Du:
+         gctxi->unk_558.phys_ctx_30.flag_160 = gctxi->unk_558.phys_ctx_30.flag_160 | 0x8000000;
          break;
       }
    }
