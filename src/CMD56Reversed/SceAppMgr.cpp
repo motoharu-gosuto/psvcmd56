@@ -4129,7 +4129,7 @@ int work_dir_mount_23E00B8(SceUID pid, int mountId, const char *keystone_data, c
 
       _snprintf(buffer, 0x20u, "ux0:cache/%s", gctxi0->unk_558.phys_ctx_30.unk498);
 
-      return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, buffer, mount_drive, mountPoint);
+      return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, buffer, mount_drive, mountPoint);
    }
    else if(mountId == 0x12C)
    {
@@ -4141,7 +4141,7 @@ int work_dir_mount_23E00B8(SceUID pid, int mountId, const char *keystone_data, c
          return 0x80801002;
       }
 
-      int lock_res0 = sub_23D8908(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), gctxi1->unk_558.maybe_titleid_0, &gctxi1->unk_558.mctx_hldr_28, &gctxi0->unk_558.mctx_hldr_28, mountPoint);
+      int lock_res0 = sub_23D8908(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), gctxi1->unk_558.titleId, &gctxi1->unk_558.mctx_hldr_28, &gctxi0->unk_558.mctx_hldr_28, mountPoint);
       if (lock_res0)
       {
          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
@@ -4157,11 +4157,11 @@ int work_dir_mount_23E00B8(SceUID pid, int mountId, const char *keystone_data, c
       {
          if (mountId >= 0x1F4 || mountId == 0x6E || mountId >= 0x6E && mountId - 0x12E <= 2 )
          {
-            return mount_with_create_dir_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, physical_path, mount_drive, mountPoint);
+            return mount_with_create_dir_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, physical_path, mount_drive, mountPoint);
          }
          else
          {
-            return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, physical_path, mount_drive, mountPoint);
+            return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, physical_path, mount_drive, mountPoint);
          }
       }
       else if (mountId >= 0x1F8)
@@ -4170,21 +4170,21 @@ int work_dir_mount_23E00B8(SceUID pid, int mountId, const char *keystone_data, c
          {
             if (mountId == 0x258)
             {
-               return mount_base_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, physical_path, mount_drive, mountPoint);
+               return mount_base_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, physical_path, mount_drive, mountPoint);
             }
             else
             {
-               return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, physical_path, mount_drive, mountPoint);
+               return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, physical_path, mount_drive, mountPoint);
             }
          }
          else
          {
-            return mount_with_create_dir_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, physical_path, mount_drive, mountPoint);
+            return mount_with_create_dir_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, physical_path, mount_drive, mountPoint);
          }
       }
       else
       {
-         return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.maybe_titleid_0, physical_path, mount_drive, mountPoint);
+         return mount_with_fake_no_memory_card_23E00B8(mountId, keystone_data, gctxi0, gctxi0->unk_558.titleId, physical_path, mount_drive, mountPoint);
       }
    }
 }

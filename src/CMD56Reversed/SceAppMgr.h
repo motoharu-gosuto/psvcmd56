@@ -106,7 +106,7 @@ struct sub_ctx_23C2960_558_548
 //which is a root for appmgr mountpoints
 struct sub_ctx_23C2960_558
 {
-   char maybe_titleid_0[32];
+   char titleId[32];
    SceUID pid;
    int unk24;
    appmgr_mount_holder_t mctx_hldr_28;
