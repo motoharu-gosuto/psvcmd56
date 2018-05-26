@@ -3522,40 +3522,22 @@ int mount_base_5e311f71(int mountId, const char* physical_path, const char* moun
    }
 }
 
-int sub_5e311f71_mount_0x68()
+int sub_5e311f71_mount_0x68(int mountId, const char* titleId, char* mountPoint)
 {
-   return 0;
-   /*
-   lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
-   if (lock_res0 < 0)
+   char dec_output[0x40];
+
+   char accountNo[3];
+   memset(accountNo, 0, 3);
+
+   set_accoutNo_global_23D58B4(accountNo);
+
+   if (_snprintf(dec_output, 0x40u, "%s/%s/%s/%s", "ur0:user", accountNo, "near/data/gift/received", titleId) > 0x3F)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
 
-   lock_res0 = dec_string_constant_23D59D4(near_data_gift_received_2406B70, (char *)0x22D4588);
-
-   if (lock_res0 < 0)
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
-   }
-
-   if (!MEMORY[0x22D4778])
-      set_accoutNo_global_23D58B4();
-
-   if ((unsigned int)SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_output, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, titleId_local) <= 0x3F)
-   {
-      physical_path = dec_output;
-      mount_drive = aGift0;
-      return mount_base_5e311f71();
-   }
-   
-
-   lock_res0 = 0x80800001;
-   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-   return lock_res0;
-   */
+   return mount_base_5e311f71(mountId, dec_output, "gift0:", mountPoint);
 }
 
 int sub_5e311f71_mount_0x69(int mountId, char* mountPoint)
@@ -3679,7 +3661,7 @@ int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, const char *title
    switch (mountId)
    {
    case 0x68:
-      return sub_5e311f71_mount_0x68();
+      return sub_5e311f71_mount_0x68(mountId, titleId, mountPoint);
    case 0x69:
       return sub_5e311f71_mount_0x69(mountId, mountPoint);
    case 0x6A:
