@@ -3964,29 +3964,6 @@ int check_privileges_23D5D54(unsigned int mountId)
    return 0;
 }
 
-int label_98_23E00B8(int mount_id_local, global_ctx_item *gctxi0_copy)
-{
-   int flag1 = gctxi0_copy->unk_558.phys_ctx_30.flag_160;
-   if ( flag1 & 0x30 )
-   {
-      switch (mount_id_local)
-      {
-         case 0x64u:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = flag1 | 0x2000000;
-         break;
-         case 0x69u:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = flag1 | 0x4000000;
-         break;
-         case 0x6Du:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = flag1 | 0x8000000;
-         break;
-      }
-   }
-
-   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-   return 0;
-}
-
 int read_keystone_23D6664(SceUID pid, const char *gen_mount_point, char *keystone_data)
 {
    return 0;
@@ -4014,50 +3991,60 @@ int check_flags_23D4CE0(int mountId, int flag)
 
 //===============================================
 
+int cleanup_23E00B8(int mount_id_local, global_ctx_item *gctxi0_copy)
+{
+   if (gctxi0_copy->unk_558.phys_ctx_30.flag_160 & 0x30)
+   {
+      switch (mount_id_local)
+      {
+         case 0x64u:
+         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x2000000;
+         break;
+         case 0x69u:
+         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x4000000;
+         break;
+         case 0x6Du:
+         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x8000000;
+         break;
+      }
+   }
+
+   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+   return 0;
+}
+
+//===============================================
+
 int sub_23D8908(SceUID pid, const char *titleId, appmgr_mount_holder_t *a3, appmgr_mount_holder_t *appmgr_holder, char *mountPoint)
 {
    return 0;
 }
 
-int mount_base_23E00B8(int mount_id_local, const char *keystone_data_local, global_ctx_item *gctxi0_copy, const char* title_id2, const char* physical_path2, const char* mount_drive, char* gen_mount_point)
+int mount_base_23E00B8(int mountId, const char *keystone_data, global_ctx_item *gctxi, const char* titleId, const char* physical_path, const char* mount_drive, char* mountPoint)
 {
-   int pid1 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
-   int lock_res0 = create_mountpoint_base_23D9B50(pid1, &gctxi0_copy->unk_558.mctx_hldr_28, mount_id_local, title_id2, physical_path2, mount_drive, 0, gen_mount_point);
-
-   if (lock_res0)
+   int create_res = create_mountpoint_base_23D9B50(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), &gctxi->unk_558.mctx_hldr_28, mountId, titleId, physical_path, mount_drive, 0, mountPoint);
+   if (create_res != 0)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return create_res;
    }
 
-   if (mount_id_local - 0x1F4 > 1)
-   {
-      return label_98_23E00B8(mount_id_local, gctxi0_copy);
-   }
+   if (mountId - 0x1F4 > 1)
+      return cleanup_23E00B8(mountId, gctxi);
 
    char keystone_data2[96];
-
-   int pid3 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
-   lock_res0 = read_keystone_23D6664(pid3, gen_mount_point, keystone_data2);
-
+   int lock_res0 = read_keystone_23D6664(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), mountPoint, keystone_data2);
    if (lock_res0 >= 0)
    {
-      if (!memcmp(keystone_data_local, keystone_data2, 96))
-      {
-         return label_98_23E00B8(mount_id_local, gctxi0_copy);
-      }
-
-      lock_res0 = 0x80800006;
+      if (memcmp(keystone_data, keystone_data2, 96) == 0)
+         return cleanup_23E00B8(mountId, gctxi);
    }
 
-   if (*gen_mount_point)
-   {
-      int pid4 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
-      w_unmount_23D8E80(pid4, &gctxi0_copy->unk_558.mctx_hldr_28, gen_mount_point, 0);
-   }
+   if (mountPoint[0] != 0)
+      w_unmount_23D8E80(SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a(), &gctxi->unk_558.mctx_hldr_28, mountPoint, 0);
 
    SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-   return lock_res0;
+   return 0x80800006;
 }
 
 int mount_with_fake_no_memory_card_23E00B8(int mountId, const char *keystone_data, global_ctx_item *gctxi, const char* titleId, const char* physical_path, const char* mount_drive, char* mountPoint)
