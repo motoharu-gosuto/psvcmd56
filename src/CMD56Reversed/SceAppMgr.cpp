@@ -3703,30 +3703,8 @@ int check_titleid_5e311f71(int mountId, const char* titleId, int& error_code)
    return true;
 }
 
-//need to reverse this
 int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, const char *titleId, char *mountPoint)
 {
-   /*
-   unsigned int mount_id_diff; // r6
-   int mountId_local; // r7
-   unsigned __int8 *titleId_local; // r9
-   char *gen_mount_drive; // r10
-   unsigned int v7; // r8
-   int lock_res0; // r11
-   signed int result; // r0
-   signed int symbol0; // r3
-   SceUID pid1; // r0
-   global_ctx_item *gctxi; // r0
-   global_ctx_item *gctxi1; // r9
-   int flag1; // r1
-   SceUID pid0; // r0
-   int flag0; // r2
-   char *random_path_init; // [sp+4h] [bp-94h]
-   char *physical_path; // [sp+10h] [bp-88h]
-   char *mount_drive; // [sp+14h] [bp-84h]
-   char dec_output[16]; // [sp+2Ch] [bp-6Ch]
-   */
-
    int lock_res0 = SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(SceAppMgrMount_mutex_22A000C, 1, 0);
    if (lock_res0 < 0)
       return lock_res0;
@@ -3747,11 +3725,6 @@ int w_sceAppMgrAppDataMountByIdForDriver_5e311f71(int mountId, const char *title
    int error_code = 0;
    if(!check_titleid_5e311f71(mountId, titleId, error_code))
       return error_code;
-
-   /*
-   memset(0x22D4DF0, 0, 0x20);
-   memset(0x22D4588, 0, 0x20);
-   */
 
    switch (mountId)
    {
