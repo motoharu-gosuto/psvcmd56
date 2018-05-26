@@ -3950,33 +3950,6 @@ bool check_title_id(int mountId, char * titleId, int& error_code)
    }
 }
 
-typedef struct g_22D4588_t
-{
-   int unk0; //0x22D4588
-   int unk4; //0x22D458C
-   int unk8; //0x22D4590
-   int unkC; //0x22D4594
-   int unk10; //0x22D4598
-   int unk14; //0x22D459C
-   int unk18; //0x22D45A0
-   int unk1C; //0x22D45A4
-}g_22D4588_t;
-
-typedef struct g_22D4DF0_t
-{
-   int unk0; //0x22D4DF0
-   int unk4; //0x22D4DF4
-   int unk8; //0x22D4DF8
-   int unkC; //0x22D4DFC
-   int unk10; //0x22D4E00
-   int unk14; //0x22D4E04
-   int unk18; //0x22D4E08
-   int unk1C; //0x22D4E0C
-}g_22D4DF0_t;
-
-g_22D4588_t var_22D4588;
-g_22D4DF0_t var_22D4DF0;
-
 int label_98_23E00B8(int mount_id_local, global_ctx_item *gctxi0_copy)
 {
    int flag1 = gctxi0_copy->unk_558.phys_ctx_30.flag_160;
@@ -4586,18 +4559,13 @@ int sub_23E00B8_mount_0x3F1(SceUID pid_local, int mount_id_local, char *keystone
 }
 
 
-int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_id, char *titleid, char *keystone_data, char *gen_mount_point)
+int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mountId, char *titleId, char *keystone_data, char *gen_mount_point)
 {
-   SceUID pid_local = pid;
-   int mount_id_local = mount_id;
-   char * titleid_local = titleid;
-   char *keystone_data_local = keystone_data;
-
-   int lock_res0 = SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(SceAppMgrMount_mutex_22A000C, 1, 0);
-   if (lock_res0 < 0)
-      return lock_res0;
+   int lock_res = SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(SceAppMgrMount_mutex_22A000C, 1, 0);
+   if (lock_res < 0)
+      return lock_res;
        
-   if (check_privileges_23D5D54(mount_id_local) == 0)
+   if (check_privileges_23D5D54(mountId) == 0)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800009;
@@ -4610,205 +4578,191 @@ int w_sceAppMgrWorkDirMountByIdForKernel_23E00B8(SceUID pid, unsigned int mount_
    }
 
    int error_code0 = 0;
-   if(!check_title_id(mount_id_local, titleid_local, error_code0))
+   if(!check_title_id(mountId, titleId, error_code0))
       return error_code0;
     
-   int index1 = 0;
-
-   memset(&var_22D4588, 0, sizeof(g_22D4588_t));
-   memset(&var_22D4DF0, 0, sizeof(g_22D4DF0_t));
-
-   if (mount_id_local < 0x64)
+   if (mountId < 0x64)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if(mount_id_local >= 0x64 && mount_id_local <= 0x70)
+   else if(mountId >= 0x64 && mountId <= 0x70)
    {
       #pragma region
 
-      switch(mount_id_local)
+      switch(mountId)
       {
       case 0x64:
-         return sub_23E00B8_mount_0x64(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x64(pid, mountId, keystone_data, gen_mount_point);
       case 0x65:
-         return sub_23E00B8_mount_0x65(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x65(pid, mountId, keystone_data, gen_mount_point);
       case 0x66:
-         return sub_23E00B8_mount_0x66(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x66(pid, mountId, keystone_data, gen_mount_point);
       case 0x67:
-         return sub_23E00B8_mount_0x67(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x67(pid, mountId, keystone_data, gen_mount_point);
       case 0x68:
-         return sub_23E00B8_mount_0x68(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x68(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x69:
-         return sub_23E00B8_mount_0x69(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x69(pid, mountId, keystone_data, gen_mount_point);
       case 0x6A:
-         return sub_23E00B8_mount_0x6A(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x6A(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x6B:
-         return sub_23E00B8_mount_0x6B(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x6B(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x6C:
-         return sub_23E00B8_mount_0x6C(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x6C(pid, mountId, keystone_data, gen_mount_point);
       case 0x6D:
-         return sub_23E00B8_mount_0x6D(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x6D(pid, mountId, keystone_data, gen_mount_point);
       case 0x6E:
-         return sub_23E00B8_mount_0x6E(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x6E(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x6F:
-         return sub_23E00B8_mount_0x6F(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x6F(pid, mountId, keystone_data, gen_mount_point);
       case 0x70:
-         return sub_23E00B8_mount_0x70(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x70(pid, mountId, keystone_data, gen_mount_point);
       }
 
       #pragma endregion
    }
-   else if (mount_id_local > 0x70 && mount_id_local < 0xC8)
+   else if (mountId > 0x70 && mountId < 0xC8)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if (mount_id_local >= 0xC8 && mount_id_local <= 0xCF)
+   else if (mountId >= 0xC8 && mountId <= 0xCF)
    {
       #pragma region
 
-      switch(mount_id_local)
+      switch(mountId)
       {
       case 0xC8:
-         return sub_23E00B8_mount_0xC8(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xC8(pid, mountId, keystone_data, gen_mount_point);
       case 0xC9:
-         return sub_23E00B8_mount_0xC9(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xC9(pid, mountId, keystone_data, gen_mount_point);
       case 0xCA:
-         return sub_23E00B8_mount_0xCA(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xCA(pid, mountId, keystone_data, gen_mount_point);
       case 0xCB:
-         return sub_23E00B8_mount_0xCB(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xCB(pid, mountId, keystone_data, gen_mount_point);
       case 0xCC:
-         return sub_23E00B8_mount_0xCC(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xCC(pid, mountId, keystone_data, gen_mount_point);
       case 0xCD:
-         return sub_23E00B8_mount_0xCD(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xCD(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0xCE:
-         return sub_23E00B8_mount_0xCE(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xCE(pid, mountId, keystone_data, gen_mount_point);
       case 0xCF:
-         return sub_23E00B8_mount_0xCF(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0xCF(pid, mountId, titleId, keystone_data, gen_mount_point);
       }
 
       #pragma endregion
    }
-   else if(mount_id_local > 0xCF && mount_id_local < 0x12C)
+   else if(mountId > 0xCF && mountId < 0x12C)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if(mount_id_local >= 0x12C && mount_id_local <= 0x130)
+   else if(mountId >= 0x12C && mountId <= 0x130)
    {
       #pragma region
 
-      switch(mount_id_local)
+      switch(mountId)
       {
       case 0x12C:
-         return sub_23E00B8_mount_0x12C(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x12C(pid, mountId, keystone_data, gen_mount_point);
       case 0x12D:
          {
-            lock_res0 = 0x80800001;
             SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-            return lock_res0;
+            return 0x80800001;
          }
       case 0x12E:
-         return sub_23E00B8_mount_0x12E(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x12E(pid, mountId, keystone_data, gen_mount_point);
       case 0x12F:
-         return sub_23E00B8_mount_0x12F(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x12F(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x130:
-         return sub_23E00B8_mount_0x130(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x130(pid, mountId, titleId, keystone_data, gen_mount_point);
       }
 
       #pragma endregion
    }
-   else if(mount_id_local > 0x130 && mount_id_local < 0x190)
+   else if(mountId > 0x130 && mountId < 0x190)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if(mount_id_local >= 0x190 && mount_id_local <= 0x192)
+   else if(mountId >= 0x190 && mountId <= 0x192)
    {
       #pragma region
 
-      switch (mount_id_local)
+      switch (mountId)
       {
       case 0x191:
-         return sub_23E00B8_mount_0x191(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x191(pid, mountId, keystone_data, gen_mount_point);
       case 0x192:
-         return sub_23E00B8_mount_0x192(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x192(pid, mountId, keystone_data, gen_mount_point);
       case 0x190:
-         return sub_23E00B8_mount_0x190(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x190(pid, mountId, keystone_data, gen_mount_point);
       }
 
       #pragma endregion
    }
-   else if(mount_id_local > 0x192 && mount_id_local < 0x1F4)
+   else if(mountId > 0x192 && mountId < 0x1F4)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if(mount_id_local >= 0x1F4 && mount_id_local <= 0x1F9)
+   else if(mountId >= 0x1F4 && mountId <= 0x1F9)
    {
       #pragma region
 
-      switch(mount_id_local)
+      switch(mountId)
       {
       case 0x1F4:
-         return sub_23E00B8_mount_0x1F4(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x1F4(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x1F5:
-         return sub_23E00B8_mount_0x1F5(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x1F5(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x1F6:
-         return sub_23E00B8_mount_0x1F6(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x1F6(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x1F7:
-         return sub_23E00B8_mount_0x1F7(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x1F7(pid, mountId, titleId, keystone_data, gen_mount_point);
       case 0x1F8:
-         return sub_23E00B8_mount_0x1F8(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x1F8(pid, mountId, keystone_data, gen_mount_point);
       case 0x1F9:
-         return sub_23E00B8_mount_0x1F9(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x1F9(pid, mountId, keystone_data, gen_mount_point);
       }
 
       #pragma endregion
    }
-   else if(mount_id_local > 0x1F9 && mount_id_local < 0x258)
+   else if(mountId > 0x1F9 && mountId < 0x258)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if (mount_id_local == 0x258)
+   else if (mountId == 0x258)
    {
-      return sub_23E00B8_mount_0x258(pid_local, mount_id_local, titleid_local, keystone_data_local, gen_mount_point);
+      return sub_23E00B8_mount_0x258(pid, mountId, titleId, keystone_data, gen_mount_point);
    }
-   else if(mount_id_local > 0x258 && mount_id_local < 0x3EF)
+   else if(mountId > 0x258 && mountId < 0x3EF)
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
-   else if(mount_id_local >= 0x3EF && mount_id_local <= 0x3F1)
+   else if(mountId >= 0x3EF && mountId <= 0x3F1)
    {
       #pragma region
 
-      switch(mount_id_local)
+      switch(mountId)
       {
       case 0x3EF:
-         return sub_23E00B8_mount_0x3EF(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x3EF(pid, mountId, keystone_data, gen_mount_point);
       case 0x3F0:
-         return sub_23E00B8_mount_0x3F0(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x3F0(pid, mountId, keystone_data, gen_mount_point);
       case 0x3F1:
-         return sub_23E00B8_mount_0x3F1(pid_local, mount_id_local, keystone_data_local, gen_mount_point);
+         return sub_23E00B8_mount_0x3F1(pid, mountId, keystone_data, gen_mount_point);
       }
 
       #pragma endregion
    }
    else
    {
-      lock_res0 = 0x80800001;
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return lock_res0;
+      return 0x80800001;
    }
 }
 
