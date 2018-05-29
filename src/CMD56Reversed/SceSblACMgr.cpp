@@ -57,3 +57,33 @@ int SceSblACMgrForKernel_sceSblACMgrCheckAuthIdForKernel_f5ad56e4(SceUID pid)
 {
    return SceSblACMgrForDriver_sceSblACMgrCheckAuthIdForDriver_0b6e6cd7(pid);
 }
+
+int SceSblACMgrForDriver_check_auth_id_4db7f512(SceUID pid)
+{
+   return 0;
+}
+
+int SceSblACMgrForDriver_check_auth_id_456da7ac(SceUID pid)
+{
+   return 0;
+}
+
+int SceSblACMgrForDriver_check_auth_id_c98d82ee(SceUID pid)
+{
+   return 0;
+}
+
+int SceSblACMgrForDriver_sceSblACMgrIsShell_8612b243(SceUID pid)
+{
+   return 0;
+}
+
+int SceSblACMgrForDriver_sceSblACMgrIsNonGameProgram_6c5ab07f(SceUID pid)
+{
+   return 0;
+}
+
+int SceSblACMgrForDriver_sceSblACMgrIsSomething_f5ae24ac(SceUID a1)
+{
+   return 0;
+}

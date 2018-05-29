@@ -2563,7 +2563,7 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
   {
     if ( mountId_local == 0x258 )
     {
-      SceAppMgr_SceSblACMgrForDriver__imp_check_auth_id_4db7f512(0);
+      authid_check_res0 = SceSblACMgrForDriver_check_auth_id_4db7f512(0);
       goto LABEL_26;
     }
     if ( mountId_local > 0x258 )
@@ -2582,14 +2582,14 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
     {
       if ( mountId_local != 0xCD )
         goto LABEL_8;
-      authid_check_res0 = SceAppMgr_SceSblACMgrForDriver__imp_check_auth_id_456da7ac(0);
+      authid_check_res0 = SceSblACMgrForDriver_check_auth_id_456da7ac(0);
       goto LABEL_26;
     }
     if ( mountId_local < 0x6E )
     {
       if ( mountId_local - 106 <= 1
-        && !SceAppMgr_SceSblACMgrForDriver__imp_c98d82ee(0)
-        && !SceAppMgr_SceSblACMgrForDriver__imp_sceSblACMgrIsShell_8612b243(0) )
+        && !SceSblACMgrForDriver_check_auth_id_c98d82ee(0)
+        && !SceSblACMgrForDriver_sceSblACMgrIsShell_8612b243(0) )
       {
         goto LABEL_27;
       }
@@ -2959,7 +2959,7 @@ LABEL_147:
                   goto LABEL_28;
                 if ( !MEMORY[0x22D4778] )
                   set_accoutNo_global_23D58B4();
-                if ( (unsigned int)SceAppMgr_SceSysclibForDriver__imp_snprintf_ae7a8981(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0) <= 0x3F )
+                if ( (unsigned int)_snprintf(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0) <= 0x3F )
                 {
                   physical_path = dec_buffer0;
                   mount_drive = aGift0;
@@ -3261,7 +3261,7 @@ LABEL_76:
     goto LABEL_27;
   if ( mountId_local == 0x70 )
   {
-    authid_check_res0 = SceAppMgr_SceSblACMgrForDriver__imp_sceSblACMgrIsNonGameProgram_6c5ab07f(0);
+    authid_check_res0 = SceSblACMgrForDriver_sceSblACMgrIsNonGameProgram_6c5ab07f(0);
     goto LABEL_26;
   }
   if ( mountId_local > 0x70 )
@@ -3292,7 +3292,7 @@ LABEL_100:
     {
       if ( mountId_local == 111 )
       {
-        authid_check_res0 = SceAppMgr_SceSblACMgrForDriver__imp_f5ae24ac(0) != 0;
+        authid_check_res0 = SceSblACMgrForDriver_sceSblACMgrIsSomething_f5ae24ac(0) != 0; 
         goto LABEL_26;
       }
       goto LABEL_100;
