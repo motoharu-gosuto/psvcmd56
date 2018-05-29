@@ -2498,7 +2498,6 @@ int check_short_titleId(const char * titleId)
 //need to reverse this
 int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
 {
-   return 0;
    /*
   unsigned int mountId_local; // r5
   SceUID pid_local; // r9
@@ -2558,7 +2557,10 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
   
   lock_res0 = SceThreadmgrForDriver_ksceKernelLockMutex_16AC80C5(MEMORY[0x22A000C], 1, 0);
   if ( lock_res0 < 0 )
-    goto LABEL_15;
+  {
+    result = lock_res0;
+   return result;
+  }
   if ( mountId_local > 0x130 )
   {
     if ( mountId_local == 0x258 )
@@ -2569,7 +2571,9 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
     if ( mountId_local > 0x258 )
     {
       if ( mountId_local - 0x384 > 1 )
+      {
         goto LABEL_8;
+      }
     }
     else if ( mountId_local - 0x1F4 > 5 )
     {
@@ -2581,27 +2585,41 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
     if ( mountId_local > 0x70 )
     {
       if ( mountId_local != 0xCD )
+      {
         goto LABEL_8;
+      }
+
       authid_check_res0 = SceSblACMgrForDriver_check_auth_id_456da7ac(0);
       goto LABEL_26;
     }
+
     if ( mountId_local < 0x6E )
     {
       if ( mountId_local - 106 <= 1
         && !SceSblACMgrForDriver_check_auth_id_c98d82ee(0)
         && !SceSblACMgrForDriver_sceSblACMgrIsShell_8612b243(0) )
       {
-        goto LABEL_27;
+        lock_res0 = 0x80800009;
+        SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+        result = lock_res0;
+        return result;
       }
+
+
 LABEL_8:
       if ( !mountPoint_local || mountId_local == 0xCF )
+      {
         goto LABEL_14;
+      }
+
       if ( mountId_local > 0xCF )
       {
         if ( mountId_local >= 0x1F8 )
         {
           if ( mountId_local == 0x258 )
+          {
             goto LABEL_14;
+          }
         }
         else if ( mountId_local >= 0x1F4 || mountId_local - 0x12F <= 1 )
         {
@@ -2611,13 +2629,17 @@ LABEL_8:
       else if ( mountId_local > 0x6B )
       {
         if ( mountId_local == 0x6E || mountId_local == 0xCD )
+        {
           goto LABEL_14;
+        }
       }
       else if ( mountId_local >= 0x6A || mountId_local == 0x68 )
       {
         goto LABEL_14;
       }
+
       index0 = 0;
+
       MEMORY[0x22D4588] = 0;
       MEMORY[0x22D458C] = 0;
       MEMORY[0x22D4590] = 0;
@@ -2634,6 +2656,7 @@ LABEL_8:
       MEMORY[0x22D4E04] = 0;
       MEMORY[0x22D4E08] = 0;
       MEMORY[0x22D4E0C] = 0;
+
       if ( mountId_local == 0xCD )
       {
         mount_drive = 0;
@@ -2641,20 +2664,29 @@ LABEL_8:
         physical_path = (char *)0x22D45E8;
         goto LABEL_78;
       }
+
       if ( mountId_local <= 0xCD )
       {
         if ( mountId_local == 0x6C )
         {
           physical_path = dec_buffer0;
           memset(dec_buffer0, 0, 0x40u);
+
           while ( 1 )
           {
             symbol1 = (char *)ux0_calendar_2406BB8[index0];
+
             if ( !ux0_calendar_2406BB8[index0] )
+            {
               goto LABEL_226;
+            }
+
             dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
             if ( index0 == 64 )
+            {
               goto LABEL_14;
+            }
           }
         }
         if ( mountId_local > 0x6C )
@@ -2663,16 +2695,25 @@ LABEL_8:
           {
             physical_path = dec_buffer0;
             memset(dec_buffer0, 0, 0x40u);
+
             while ( 1 )
             {
               symbol1 = (char *)ur0_temp_sqlite_2406B98[index0];
+
               if ( !ur0_temp_sqlite_2406B98[index0] )
+              {
                 goto LABEL_226;
+              }
+
               dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
               if ( index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
           }
+
           if ( mountId_local <= 0xC8 )
           {
             if ( mountId_local != 0x6E )
@@ -2681,16 +2722,21 @@ LABEL_8:
               {
                 physical_path = dec_buffer0;
                 memset(dec_buffer0, 0, 0x40u);
+
                 while ( ux0_video_2406BF0[index0] )
                 {
                   dec_buffer0[index0] = ~ux0_video_2406BF0[index0];
                   if ( ++index0 == 0x40 )
+                  {
                     goto LABEL_14;
+                  }
                 }
+
                 *(&v47 + index0 - 0x44) = 0;
                 mount_drive = aVideo0_0;
                 goto LABEL_78;
               }
+
               if ( mountId_local != 0x6F )
               {
                 if ( mountId_local == 0x70 )
@@ -2698,115 +2744,180 @@ LABEL_8:
                   physical_path = dec_buffer0;
                   memset(dec_buffer0, 0, 0x40u);
                   index1 = 0;
+
                   while ( 1 )
                   {
                     symbol0 = (char *)ux0_book_2406C48[index1];
+
                     if ( !ux0_book_2406C48[index1] )
                       break;
+
                     dec_buffer0[index1++] = ~(_BYTE)symbol0;
+
                     if ( index1 == 0x40 )
+                    {
                       goto LABEL_14;
+                    }
                   }
 LABEL_270:
                   mount_drive = symbol0;
                   *(&v47 + index1 - 0x44) = (char)symbol0;
                   goto LABEL_78;
                 }
+
                 goto LABEL_14;
               }
+
               physical_path = dec_buffer0;
               lock_res0 = dec_string_constant_23D5998(tm0_nphome_2406A18, dec_buffer0);// tm0:nphome
+
               if ( lock_res0 < 0 )
-                goto LABEL_28;
+              {
+                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+              }
 LABEL_77:
               mount_drive = 0;
               goto LABEL_78;
             }
+
             lock_res0 = dec_string_constant_23D59D4(ux0_appmeta_2406B00, (char *)0x22D4DF0);// ux0:appmeta
+
             if ( lock_res0 < 0 )
-              goto LABEL_28;
+            {
+              SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+              result = lock_res0;
+              return result;
+            }
+
             physical_path = dec_buffer0;
             bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSS_1, 0x22D4DF0, 0);
 LABEL_216:
             if ( bytes_printed0 > 0x3F )
+            {
               goto LABEL_14;
+            }
+
             goto LABEL_77;
           }
+
           if ( mountId_local == 0xCA )
           {
             physical_path = dec_buffer0;
             memset(dec_buffer0, 0, 0x40u);
+
             while ( 1 )
             {
               symbol1 = (char *)ux0_pspemu_2406B38[index0];
+
               if ( !ux0_pspemu_2406B38[index0] )
+              {
                 goto LABEL_226;
+              }
+
               dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
               if ( index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
           }
           if ( mountId_local < 0xCA )
           {
             physical_path = dec_buffer0;
             memset(dec_buffer0, 0, 0x40u);
+
             while ( 1 )
             {
               symbol1 = (char *)ur0_temp_attach_2406AA8[index0];
               if ( !ur0_temp_attach_2406AA8[index0] )
+              {
                 goto LABEL_226;
+              }
+
               dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
               if ( index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
           }
+
           if ( mountId_local == 0xCB )
           {
             physical_path = dec_buffer0;
             memset(dec_buffer0, 0, 0x40u);
+
             while ( 1 )
             {
               symbol1 = (char *)ur0_temp_grief_report_2406B48[index0];
+
               if ( !ur0_temp_grief_report_2406B48[index0] )
+              {
                 goto LABEL_226;
+              }
+
               dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
               if ( index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
           }
+
           if ( mountId_local != 0xCC )
+          {
             goto LABEL_14;
+          }
+
           physical_path = dec_buffer0;
           memset(dec_buffer0, 0, 0x40u);
           index3 = 0;
+
           while ( ur0_temp_checkout_24069F0[index3] )
           {
             dec_buffer0[index3] = ~ur0_temp_checkout_24069F0[index3];
             if ( ++index3 == 0x40 )
+            {
               goto LABEL_14;
+            }
           }
+
           mount_drive = (char *)ur0_temp_checkout_24069F0[index3];
           *(&v47 + index3 - 0x44) = 0;
 LABEL_78:
           pid0 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
           gctxi0 = get_global_ctx_item_23C2DE0((ctx_23C2960 *)0x22A0500, pid0);
           gctxi0_copy = gctxi0;
+
           if ( gctxi0 )
           {
             strncpy(title_id_or_drive, gctxi0->unk_558.maybe_titleid_0, 0xAu);
             flag0 = gctxi0_copy->unk_558.phys_ctx_30.flag_160;
+
             if ( flag0 & 0x30 )
             {
               lock_res0 = 0x80800048;
+
               if ( !check_flags_23D4CE0(mountId_local, flag0) )
-                goto LABEL_28;
+              {
+                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+              }
             }
+
             if ( mountId_local == 0xCD )
             {
               _snprintf((char *)0x22D45E8, 0x20u, aUx0CacheS, gctxi0_copy->unk_558.phys_ctx_30.unk498);
               physical_path = (char *)0x22D45E8;
               goto LABEL_147;
             }
+
             if ( mountId_local != 0x12C )
             {
               if ( mountId_local < 0x1F6 )
@@ -2823,22 +2934,40 @@ LABEL_78:
                 if ( mountId_local >= 0x1FA )
                 {
                   if ( mountId_local == 0x258 )
+                  {
                     goto LABEL_87;
+                  }
+
                   goto LABEL_147;
                 }
 LABEL_144:
                 lock_res0 = create_pfs_directory_23DFEAC(mountId_local, physical_path, 0);
+
                 if ( lock_res0 )
-                  goto LABEL_28;
+                {
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+                }
 LABEL_87:
                 pid1 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
                 lock_res0 = create_mountpoint_base_23D9B50(pid1, &gctxi0_copy->unk_558.mctx_hldr_28, mountId_local, title_id_or_drive, physical_path, mount_drive, 0, mountPoint_local);
+
                 if ( lock_res0 )
-                  goto LABEL_28;
+                {
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+                }
+
                 if ( mountId_local - 0x1F4 > 1 )
+                {
                   goto LABEL_89;
+                }
+
                 pid3 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
                 lock_res0 = read_keystone_23D6664(pid3, mountPoint_local, (char *)&auth_ctx);
+
                 if ( lock_res0 >= 0 )
                 {
                   if ( !time_const_memcmp(0, (char *)&auth_ctx, 0x60) )
@@ -2862,50 +2991,84 @@ LABEL_89:
                     }
 LABEL_96:
                     lock_res0 = 0;
-                    goto LABEL_28;
+                    SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                    result = lock_res0;
+                    return result;
                   }
+
                   lock_res0 = 0x80800006;
                 }
+
                 if ( *mountPoint_local )
                 {
                   pid4 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
                   w_unmount_23D8E80(pid4, &gctxi0_copy->unk_558.mctx_hldr_28, mountPoint_local, 0);
                 }
-                goto LABEL_28;
+
+                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
               }
 LABEL_147:
               if ( gctxi0_copy->unk_558.phys_ctx_30.flag_160 & 0x10 )
               {
                 check5 = mountId_local == 0x64;
+
                 if ( mountId_local != 0x64 )
+                {
                   check5 = (mountId_local & 0xFFFFFFFB) == 0x69;
+                }
+
                 if ( check5 )
                 {
                   lock_res0 = 0x80010013;
+
                   if ( get_fake_no_memory_card_23E5660() )
-                    goto LABEL_28;
+                  {
+                    SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                    result = lock_res0;
+                    return result;
+                  }
                 }
               }
+
               lock_res0 = normalize_path_select_mode_create_dir_23D9354(physical_path, 1);
+
               if ( lock_res0 )
-                goto LABEL_28;
+              {
+                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+              }
+
               goto LABEL_87;
             }
+
             gctxi1 = get_global_ctx_item_23C2DE0((ctx_23C2960 *)0x22A0500, pid_local);
             gctxi1_copy = gctxi1;
+
             if ( gctxi1 )
             {
               strncpy(title_id_or_drive, gctxi1->unk_558.maybe_titleid_0, 0xAu);
               pid2 = SceThreadmgrForDriver_ksceKernelGetProcessId_9dcb4b7a();
               lock_res0 = special_mount_0x12C_23D8908(pid2, title_id_or_drive, &gctxi1_copy->unk_558.mctx_hldr_28, &gctxi0_copy->unk_558.mctx_hldr_28, mountPoint_local);
+
               if ( lock_res0 )
-                goto LABEL_28;
+              {
+                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+              }
               goto LABEL_96;
             }
           }
+
           lock_res0 = 0x80801002;
-          goto LABEL_28;
+          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+           result = lock_res0;
+           return result;
         }
+
         if ( mountId_local == 0x67 )
         {
           MEMORY[0x22D4DF0] = 0;
@@ -2917,12 +3080,16 @@ LABEL_147:
           MEMORY[0x22D4E04] = 0;
           MEMORY[0x22D4E08] = 0;
           MEMORY[0x22D4E0C] = 0;
+
           while ( ur0_user_2406920[index4] )
           {
             *(_BYTE *)(index4 + 0x22D4DF0) = ~ur0_user_2406920[index4];
             if ( ++index4 == 0x20 )
+            {
               goto LABEL_14;
+            }
           }
+
           dec_str_src0 = near_data_sys_2406BE0;
         }
         else
@@ -2940,6 +3107,7 @@ LABEL_147:
                   physical_path = (char *)0x22D4710;
                   goto LABEL_78;
                 }
+
                 if ( mountId_local == 107 )
                 {
                   mount_drive = 0;
@@ -2952,13 +3120,26 @@ LABEL_147:
               {
                 dec_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
                 lock_res0 = dec_res0;
+
                 if ( dec_res0 < 0 )
-                  goto LABEL_28;
+                {
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+                }
+
                 lock_res0 = dec_string_constant_23D59D4(near_data_gift_received_2406B70, (char *)0x22D4588);
+
                 if ( lock_res0 < 0 )
-                  goto LABEL_28;
+                {
+                  SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                 result = lock_res0;
+                 return result;
+                }
+
                 if ( !MEMORY[0x22D4778] )
                   set_accoutNo_global_23D58B4();
+
                 if ( (unsigned int)_snprintf(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0) <= 0x3F )
                 {
                   physical_path = dec_buffer0;
@@ -2966,20 +3147,25 @@ LABEL_147:
                   goto LABEL_78;
                 }
               }
+
               goto LABEL_14;
             }
+
             physical_path = dec_buffer0;
             memset(dec_buffer0, 0, 0x40u);
             while ( ux0_music_2406948[index0] )
             {
               dec_buffer0[index0] = ~ux0_music_2406948[index0];
               if ( ++index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
             *(&v47 + index0 - 0x44) = 0;
             mount_drive = aMusic0_0;
             goto LABEL_78;
           }
+
           if ( mountId_local == 0x65 )
           {
             MEMORY[0x22D4DF0] = 0;
@@ -2991,12 +3177,16 @@ LABEL_147:
             MEMORY[0x22D4E04] = 0;
             MEMORY[0x22D4E08] = 0;
             MEMORY[0x22D4E0C] = 0;
+
             while ( ur0_user_2406920[index4] )
             {
               *(_BYTE *)(index4 + 0x22D4DF0) = ~ur0_user_2406920[index4];
               if ( ++index4 == 0x20 )
+              {
                 goto LABEL_14;
+              }
             }
+
             dec_str_src0 = psnfriend_2406AD8;
           }
           else
@@ -3004,19 +3194,25 @@ LABEL_147:
             if ( mountId_local <= 0x65 )
             {
               if ( mountId_local != 0x64 )
+              {
                 goto LABEL_14;
+              }
+
               physical_path = dec_buffer0;
               memset(dec_buffer0, 0, 0x40u);
+
               while ( ux0_picture_2406958[index0] )
               {
                 dec_buffer0[index0] = ~ux0_picture_2406958[index0];
                 if ( ++index0 == 0x40 )
                   goto LABEL_14;
               }
+
               *(&v47 + index0 - 0x44) = 0;
               mount_drive = aPhoto0_1;
               goto LABEL_78;
             }
+
             MEMORY[0x22D4DF0] = 0;
             MEMORY[0x22D4DF4] = 0;
             MEMORY[0x22D4DF8] = 0;
@@ -3026,27 +3222,44 @@ LABEL_147:
             MEMORY[0x22D4E04] = 0;
             MEMORY[0x22D4E08] = 0;
             MEMORY[0x22D4E0C] = 0;
+
             while ( ur0_user_2406920[index4] )
             {
               *(_BYTE *)(index4 + 0x22D4DF0) = ~ur0_user_2406920[index4];
               if ( ++index4 == 0x20 )
+              {
                 goto LABEL_14;
+              }
             }
+
             dec_str_src0 = psnmsg_2406AF8;
           }
         }
+
         *(_BYTE *)(index4 + 0x22D4DF0) = 0;
         lock_res0 = dec_string_constant_23D59D4(dec_str_src0, (char *)0x22D4588);
+
         if ( lock_res0 < 0 )
-          goto LABEL_28;
+        {
+          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+           result = lock_res0;
+           return result;
+        }
+
         if ( !MEMORY[0x22D4778] )
           set_accoutNo_global_23D58B4();
+
         physical_path = dec_buffer0;
         LOWORD(format0) = 0x4984;
+
 LABEL_138:
         HIWORD(format0) = (unsigned int)aSSS_0 >> 0x10;
+
         if ( (unsigned int)_snprintf(dec_buffer0, 0x40u, format0, 0x22D4DF0, 0x22D4778, 0x22D4588) > 0x3F )
+        {
           goto LABEL_14;
+        }
+
         goto LABEL_77;
       }
       if ( mountId_local == 0x1F4 )
@@ -3061,40 +3274,72 @@ LABEL_138:
           switch ( mountId_local )
           {
             case 0x191u:
-              physical_path = dec_buffer0;
-              lock_res0 = dec_string_constant_23D5998(ux0_mms_music_2406C28, dec_buffer0);// ux0:mms/music
-              if ( lock_res0 < 0 )
-                goto LABEL_28;
+               {
+                 physical_path = dec_buffer0;
+                 lock_res0 = dec_string_constant_23D5998(ux0_mms_music_2406C28, dec_buffer0);// ux0:mms/music
+                 if ( lock_res0 < 0 )
+                 {
+                   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                    result = lock_res0;
+                    return result;
+                 }
+               }
               break;
             case 0x192u:
-              physical_path = dec_buffer0;
-              lock_res0 = dec_string_constant_23D5998(ux0_mms_video_24069D0, dec_buffer0);// ux0:mms/video
-              if ( lock_res0 < 0 )
-                goto LABEL_28;
+               {
+                 physical_path = dec_buffer0;
+                 lock_res0 = dec_string_constant_23D5998(ux0_mms_video_24069D0, dec_buffer0);// ux0:mms/video
+                 if ( lock_res0 < 0 )
+                 {
+                   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                    result = lock_res0;
+                    return result;
+                 }
+               }
               break;
             case 0x190u:
-              physical_path = dec_buffer0;
-              lock_res0 = dec_string_constant_23D5998(ux0_mms_photo_24069C0, dec_buffer0);// ux0:mms/photo
-              if ( lock_res0 < 0 )
-                goto LABEL_28;
+               {
+                 physical_path = dec_buffer0;
+                 lock_res0 = dec_string_constant_23D5998(ux0_mms_photo_24069C0, dec_buffer0);// ux0:mms/photo
+                 if ( lock_res0 < 0 )
+                 {
+                   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+                    result = lock_res0;
+                    return result;
+                 }
+               }
               break;
             default:
               goto LABEL_14;
           }
+
           goto LABEL_77;
         }
         if ( mountId_local > 0x12E )
         {
           lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+
           if ( lock_res0 < 0 )
-            goto LABEL_28;
+          {
+            SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+           result = lock_res0;
+           return result;
+          }
+
           lock_res0 = dec_string_constant_23D59D4(trophy_data_2406C38, (char *)0x22D4588);
+
           if ( lock_res0 < 0 )
-            goto LABEL_28;
+          {
+            SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+           result = lock_res0;
+           return result;
+          }
+
           if ( mountId_local == 0x130 )
           {
             if ( !MEMORY[0x22D4778] )
               set_accoutNo_global_23D58B4();
+
             physical_path = dec_buffer0;
             bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSSSS_bk, 0x22D4DF0, 0x22D4778, 0x22D4588, 0);
           }
@@ -3102,11 +3347,14 @@ LABEL_138:
           {
             if ( !MEMORY[0x22D4778] )
               set_accoutNo_global_23D58B4();
+
             physical_path = dec_buffer0;
             bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0);
           }
+
           goto LABEL_216;
         }
+
         if ( mountId_local == 0xCF )
         {
           mount_drive = 0;
@@ -3114,38 +3362,66 @@ LABEL_138:
           physical_path = (char *)0x22D4738;
           goto LABEL_78;
         }
+
         if ( mountId_local < 0xCF )
         {
           physical_path = dec_buffer0;
           memset(dec_buffer0, 0, 0x40u);
+
           while ( 1 )
           {
             symbol1 = (char *)ur0_temp_webbrowser_2406A90[index0];
+
             if ( !ur0_temp_webbrowser_2406A90[index0] )
+            {
               goto LABEL_226;
+            }
+
             dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
             if ( index0 == 0x40 )
+            {
               goto LABEL_14;
+            }
           }
         }
+
         if ( mountId_local == 0x12C )
         {
           physical_path = 0;
           mount_drive = 0;
           goto LABEL_78;
         }
+
         if ( mountId_local != 0x12E )
+        {
           goto LABEL_14;
+        }
+
         lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+
         if ( lock_res0 < 0 )
-          goto LABEL_28;
+        {
+          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+           result = lock_res0;
+           return result;
+        }
+
         lock_res0 = dec_string_constant_23D59D4(trophy_data_sce_trop_2406A78, (char *)0x22D4588);
+
         if ( lock_res0 < 0 )
-          goto LABEL_28;
+        {
+          SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+           result = lock_res0;
+           return result;
+        }
+
         if ( !MEMORY[0x22D4778] )
           set_accoutNo_global_23D58B4();
+
         LOWORD(format0) = (unsigned int)aSSS_0;
         physical_path = dec_buffer0;
+
         goto LABEL_138;
       }
       if ( mountId_local != 0x1F9 )
@@ -3159,11 +3435,15 @@ LABEL_138:
             while ( 1 )
             {
               symbol1 = (char *)vs0_sys_external_2406930[index0];
+
               if ( !vs0_sys_external_2406930[index0] )
                 break;
+
               dec_buffer0[index0++] = ~(_BYTE)symbol1;
               if ( index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
           }
           else
@@ -3177,8 +3457,10 @@ LABEL_138:
                 physical_path = (char *)0x22D45A8;
                 goto LABEL_78;
               }
+
               goto LABEL_14;
             }
+
             if ( mountId_local != 0x3F0 )
             {
               if ( mountId_local == 0x3F1 )
@@ -3186,11 +3468,15 @@ LABEL_138:
                 physical_path = dec_buffer0;
                 memset(dec_buffer0, 0, 0x40u);
                 index1 = 0;
+
                 do
                 {
                   symbol0 = (char *)ux0_data_userdata_2406A28[index1];
                   if ( !ux0_data_userdata_2406A28[index1] )
+                  {
                     goto LABEL_270;
+                  }
+
                   dec_buffer0[index1++] = ~(_BYTE)symbol0;
                 }
                 while ( index1 != 0x40 );
@@ -3198,18 +3484,26 @@ LABEL_138:
 LABEL_14:
               lock_res0 = 0x80800001;
               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
-              goto LABEL_15;
+              result = lock_res0;
+               return result;
             }
             physical_path = dec_buffer0;
             memset(dec_buffer0, 0, 0x40u);
+
             while ( 1 )
             {
               symbol1 = (char *)vs0_data_external_2406B20[index0];
               if ( !vs0_data_external_2406B20[index0] )
+              {
                 break;
+              }
+
               dec_buffer0[index0++] = ~(_BYTE)symbol1;
+
               if ( index0 == 0x40 )
+              {
                 goto LABEL_14;
+              }
             }
           }
 LABEL_226:
@@ -3217,6 +3511,7 @@ LABEL_226:
           *(&v47 + index0 - 0x44) = (char)symbol1;
           goto LABEL_78;
         }
+
         if ( mountId_local == 0x1F6 )
         {
           phys_drive0 = aGrw0_0;
@@ -3232,55 +3527,79 @@ LABEL_194:
             physical_path = (char *)0x22D4568;
             goto LABEL_78;
           }
+
           if ( mountId_local != 0x1F7 )
           {
             if ( mountId_local != 0x1F8 )
+            {
               goto LABEL_14;
+            }
+
             if ( !MEMORY[0x22D4778] )
               set_accoutNo_global_23D58B4();
+
             phys_path0 = aUx0UserSSave_1;
             goto LABEL_76;
           }
+
           phys_drive0 = aUx0_0;
         }
+
         mount_drive = 0;
         _snprintf((char *)0x22D4568, 0x20u, aSpatchS, phys_drive0, 0);
         physical_path = (char *)0x22D4568;
         goto LABEL_78;
       }
+
       if ( !MEMORY[0x22D4778] )
         set_accoutNo_global_23D58B4();
+
       phys_path0 = aUx0UserS_temp_;
+
 LABEL_76:
       _snprintf((char *)0x22D4568, 0x20u, phys_path0, 0x22D4778);
       physical_path = (char *)0x22D4568;
       goto LABEL_77;
     }
   }
+  
   if ( SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(0, (SceSelfAuthInfo *)&auth_ctx) < 0 )
-    goto LABEL_27;
+  {
+    lock_res0 = 0x80800009;
+     SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
+     result = lock_res0;
+     return result;
+  }
+
   if ( mountId_local == 0x70 )
   {
     authid_check_res0 = SceSblACMgrForDriver_sceSblACMgrIsNonGameProgram_6c5ab07f(0);
     goto LABEL_26;
   }
+
   if ( mountId_local > 0x70 )
   {
     if ( mountId_local - 0x384 > 1 )
     {
 LABEL_100:
       check1 = HIDWORD(auth_ctx.auth_id) == 0x28000000;
+
       if ( HIDWORD(auth_ctx.auth_id) == 0x28000000 )
         check1 = LODWORD(auth_ctx.auth_id) == 1;
+
       if ( check1 )
         authid_check_res0 = 1;
       else
         authid_check_res0 = 0;
+
       goto LABEL_26;
     }
+
     check0 = HIDWORD(auth_ctx.auth_id) == 0x28080000;
+
     if ( HIDWORD(auth_ctx.auth_id) == 0x28080000 )
       check0 = LODWORD(auth_ctx.auth_id) == 1;
+
     if ( check0 )
       authid_check_res0 = 1;
     else
@@ -3297,30 +3616,36 @@ LABEL_100:
       }
       goto LABEL_100;
     }
+
     check2 = HIDWORD(auth_ctx.auth_id) == 0x28000000;
     if ( HIDWORD(auth_ctx.auth_id) == 0x28000000 )
       check2 = LODWORD(auth_ctx.auth_id) == 1;
+
     if ( check2 )
       v23 = 0;
     else
       v23 = 1;
+
     check3 = HIDWORD(auth_ctx.auth_id) == 0x28000000;
     if ( HIDWORD(auth_ctx.auth_id) == 0x28000000 )
       check3 = LODWORD(auth_ctx.auth_id) == 0x2D;
+
     if ( check3 )
       check4 = 0;
     else
       check4 = v23 & 1;
+
     authid_check_res0 = check4 ^ 1;
   }
+
 LABEL_26:
   if ( authid_check_res0 )
+  {
     goto LABEL_8;
-LABEL_27:
+  }
+
   lock_res0 = 0x80800009;
-LABEL_28:
   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(MEMORY[0x22A000C], 1);
-LABEL_15:
   result = lock_res0;
   return result;
 }
