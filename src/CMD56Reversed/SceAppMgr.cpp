@@ -2990,14 +2990,22 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
    MEMORY[0x22D458C] = 0;
    MEMORY[0x22D4590] = 0;
    MEMORY[0x22D4594] = 0;
+   */
+
+   /*
    MEMORY[0x22D4598] = 0;
    MEMORY[0x22D459C] = 0;
    MEMORY[0x22D45A0] = 0;
    MEMORY[0x22D45A4] = 0;
+
+   /*
    MEMORY[0x22D4DF0] = 0;
    MEMORY[0x22D4DF4] = 0;
    MEMORY[0x22D4DF8] = 0;
    MEMORY[0x22D4DFC] = 0;
+   */
+
+   /*
    MEMORY[0x22D4E00] = 0;
    MEMORY[0x22D4E04] = 0;
    MEMORY[0x22D4E08] = 0;
@@ -3006,7 +3014,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
 
    if (mountId_local == 0xCD)
    {
-      return sub_23E1014_mount_0xCD();
+      return sub_23E1014_mount_0xCD(pid_local, mountId_local, mountPoint_local);
    }
    else if (mountId_local <= 0xCD)
    {
@@ -3014,7 +3022,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
 
       if (mountId_local == 0x6C)
       {
-         return sub_23E1014_mount_0x6C();
+         return sub_23E1014_mount_0x6C(pid_local, mountId_local, mountPoint_local);
       }
       else if (mountId_local > 0x6C)
       {
@@ -3123,7 +3131,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
       }
       else if (mountId_local == 0x67)
       {
-         return sub_23E1014_mount_0x67();
+         return sub_23E1014_mount_0x67(pid_local, mountId_local, mountPoint_local);
       }
       else
       {
@@ -3133,7 +3141,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
             #pragma region no fall through
             if (mountId_local == 0x69)
             {
-               return sub_23E1014_mount_0x69();
+               return sub_23E1014_mount_0x69(pid_local, mountId_local, mountPoint_local);
             }
             else
             {
@@ -3201,7 +3209,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
          }
          else if (mountId_local == 0x65)
          {
-            return sub_23E1014_mount_0x65();
+            return sub_23E1014_mount_0x65(pid_local, mountId_local, mountPoint_local);
          }
          else if (mountId_local <= 0x65)
          {
@@ -3279,7 +3287,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
    }
    else if (mountId_local == 0x1F4)
    {
-      return sub_23E1014_mount_0x1F4();
+      return sub_23E1014_mount_0x1F4(pid_local, mountId_local, mountPoint_local);
    }
    else if (mountId_local <= 0x1F4)
    {
@@ -3357,7 +3365,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
       }
       else if (mountId_local == 0xCF)
       {
-         return sub_23E1014_mount_0xCF();
+         return sub_23E1014_mount_0xCF(pid_local, mountId_local, mountPoint_local);
       }
       else if (mountId_local < 0xCF)
       {
@@ -3391,11 +3399,11 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
       }
       else if (mountId_local == 0x12C)
       {
-         return sub_23E1014_mount_0x12C();
+         return sub_23E1014_mount_0x12C(pid_local, mountId_local, mountPoint_local);
       }
       else if (mountId_local == 0x12E)
       {
-         return sub_23E1014_mount_0x12E();
+         return sub_23E1014_mount_0x12E(pid_local, mountId_local, mountPoint_local);
       }
       else
       {
@@ -3407,7 +3415,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
    }
    else if (mountId_local == 0x1F9)
    {
-      return sub_23E1014_mount_0x1F9();
+      return sub_23E1014_mount_0x1F9(pid_local, mountId_local, mountPoint_local);
    }
    else
    {
@@ -3461,7 +3469,7 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
       }
       else if (mountId_local == 0x1F6)
       {
-         return sub_23E1014_mount_0x1F6();
+         return sub_23E1014_mount_0x1F6(pid_local, mountId_local, mountPoint_local);
       }
       else
       {
@@ -3482,13 +3490,13 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
          }
          else if (mountId_local == 0x1F7)
          {
-            return sub_23E1014_mount_0x1F7();
+            return sub_23E1014_mount_0x1F7(pid_local, mountId_local, mountPoint_local);
          }
          else
          {
             if (mountId_local == 0x1F8)
             {
-               return sub_23E1014_mount_0x1F8();
+               return sub_23E1014_mount_0x1F8(pid_local, mountId_local, mountPoint_local);
             }
             else
             {
