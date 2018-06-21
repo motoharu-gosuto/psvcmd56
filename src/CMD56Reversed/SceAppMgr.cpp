@@ -2495,20 +2495,20 @@ int check_short_titleId(const char * titleId)
 
 //=======================
 
-int sub_23E1014_label_89(int mountId_local, global_ctx_item* gctxi0_copy)
+int cleanup_23E1014(int mountId, global_ctx_item* gctxi)
 {
-   if (gctxi0_copy->unk_558.phys_ctx_30.flag_160 & 0x30)
+   if (gctxi->unk_558.phys_ctx_30.flag_160 & 0x30)
    {
-      switch (mountId_local)
+      switch (mountId)
       {
       case 0x64u:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x2000000;
+         gctxi->unk_558.phys_ctx_30.flag_160 = gctxi->unk_558.phys_ctx_30.flag_160 | 0x2000000;
          break;
       case 0x69u:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x4000000;
+         gctxi->unk_558.phys_ctx_30.flag_160 = gctxi->unk_558.phys_ctx_30.flag_160 | 0x4000000;
          break;
       case 0x6Du:
-         gctxi0_copy->unk_558.phys_ctx_30.flag_160 = gctxi0_copy->unk_558.phys_ctx_30.flag_160 | 0x8000000;
+         gctxi->unk_558.phys_ctx_30.flag_160 = gctxi->unk_558.phys_ctx_30.flag_160 | 0x8000000;
          break;
       }
    }
@@ -2528,7 +2528,7 @@ int sub_23E1014_label_87(int mountId_local, global_ctx_item* gctxi0_copy, const 
 
    if (mountId_local - 0x1F4 > 1)
    {
-      return sub_23E1014_label_89(mountId_local, gctxi0_copy);
+      return cleanup_23E1014(mountId_local, gctxi0_copy);
    }
 
    char keystone_data_expected[0x60];
@@ -2537,7 +2537,7 @@ int sub_23E1014_label_87(int mountId_local, global_ctx_item* gctxi0_copy, const 
    {
       if (memcmp(0, keystone_data_expected, 0x60) == 0)
       {
-         return sub_23E1014_label_89(mountId_local, gctxi0_copy);
+         return cleanup_23E1014(mountId_local, gctxi0_copy);
       }
       else
       {
