@@ -2716,6 +2716,7 @@ bool sub_23E1014_check_mountId(int mountId_local, int& error_code)
    return true;
 }
 
+//--
 
 int sub_23E1014_mount_0x64(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {                  
@@ -2740,61 +2741,22 @@ int sub_23E1014_mount_0x65(SceUID pid_local, int mountId_local, char* mountPoint
    return sub_23E1014_label_78(pid_local, mountId_local, buffer, 0, mountPoint_local);
 }
 
-//check this for consistensy!
 int sub_23E1014_mount_0x66(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
-   MEMORY[0x22D4DF0] = 0;
-   MEMORY[0x22D4DF4] = 0;
-   MEMORY[0x22D4DF8] = 0;
-   MEMORY[0x22D4DFC] = 0;
-   index4 = 0;
-   MEMORY[0x22D4E00] = 0;
-   MEMORY[0x22D4E04] = 0;
-   MEMORY[0x22D4E08] = 0;
-   MEMORY[0x22D4E0C] = 0;
+   char accountNo[3];
+   memset(accountNo, 0, 3);
 
-   while ( ur0_user_2406920[index4] )
-   {
-      *(_BYTE *)(index4 + 0x22D4DF0) = ~ur0_user_2406920[index4];
-      if ( ++index4 == 0x20 )
-      {
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return 0x80800001;
-      }
-   }
+   set_accoutNo_global_23D58B4(accountNo);
 
-   dec_str_src0 = psnmsg_2406AF8;
+   char buffer[0x40];
 
-   *(_BYTE *)(index4 + 0x22D4DF0) = 0;
-   lock_res0 = dec_string_constant_23D59D4(dec_str_src0, (char *)0x22D4588);
-
-   if ( lock_res0 < 0 )
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
-
-   if ( !MEMORY[0x22D4778] )
-      set_accoutNo_global_23D58B4();
-
-   physical_path = dec_buffer0;
-   LOWORD(format0) = 0x4984;
-
-   HIWORD(format0) = (unsigned int)aSSS_0 >> 0x10;
-
-   if ( (unsigned int)_snprintf(dec_buffer0, 0x40u, format0, 0x22D4DF0, 0x22D4778, 0x22D4588) > 0x3F )
+   if (_snprintf(buffer, 0x40u, "%s/%s/%s", "ur0:user", accountNo, "psnmsg") > 0x3F)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
 
-   mount_drive = 0;
-
-   return sub_23E1014_label_78();
-
-   #pragma endregion
+   return sub_23E1014_label_78(pid_local, mountId_local, buffer, 0, mountPoint_local);
 }
 
 int sub_23E1014_mount_0x67(SceUID pid_local, int mountId_local, char* mountPoint_local)
@@ -2815,45 +2777,22 @@ int sub_23E1014_mount_0x67(SceUID pid_local, int mountId_local, char* mountPoint
    return sub_23E1014_label_78(pid_local, mountId_local, buffer, 0, mountPoint_local);
 }
 
-//check this for consistensy!
 int sub_23E1014_mount_0x68(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
-   dec_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
-   lock_res0 = dec_res0;
+   char accountNo[3];
+   memset(accountNo, 0, 3);
 
-   if (dec_res0 < 0)
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
+   set_accoutNo_global_23D58B4(accountNo);
 
-   lock_res0 = dec_string_constant_23D59D4(near_data_gift_received_2406B70, (char *)0x22D4588);
+   char buffer[0x40];
 
-   if (lock_res0 < 0)
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
-
-   if (!MEMORY[0x22D4778])
-      set_accoutNo_global_23D58B4();
-
-   if ( (unsigned int)_snprintf(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0) <= 0x3F )
-   {
-      physical_path = dec_buffer0;
-      mount_drive = aGift0;
-
-      return sub_23E1014_label_78();
-   }
-   else
+   if (_snprintf(buffer, 0x40u, "%s/%s/%s/%s", "ur0:user", accountNo, "near/data/gift/received", 0) > 0x3F)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
-   #pragma endregion
+   
+   return sub_23E1014_label_78(pid_local, mountId_local, buffer, "gift0:", mountPoint_local);
 }
 
 int sub_23E1014_mount_0x69(SceUID pid_local, int mountId_local, char* mountPoint_local)
@@ -2884,27 +2823,9 @@ int sub_23E1014_mount_0x6C(SceUID pid_local, int mountId_local, char* mountPoint
    return sub_23E1014_label_78(pid_local,  mountId_local, "ux0:calendar", 0, mountPoint_local);
 }
 
-//check this for consistensy!
 int sub_23E1014_mount_0x6D(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
-   physical_path = dec_buffer0;
-   memset(dec_buffer0, 0, 0x40u);
-
-   while ( ux0_video_2406BF0[index0] )
-   {
-      dec_buffer0[index0] = ~ux0_video_2406BF0[index0];
-      if ( ++index0 == 0x40 )
-      {
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return 0x80800001;
-      }
-   }
-
-   *(&v47 + index0 - 0x44) = 0;
-   mount_drive = aVideo0_0;
-   return sub_23E1014_label_78();
-   #pragma endregion
+   return sub_23E1014_label_78(pid_local, mountId_local, "ux0:video", "video0:", mountPoint_local);
 }
 
 int sub_23E1014_mount_0x6E(SceUID pid_local, int mountId_local, char* mountPoint_local)
@@ -2936,32 +2857,9 @@ int sub_23E1014_mount_0xC8(SceUID pid_local, int mountId_local, char* mountPoint
    return sub_23E1014_label_78(pid_local, mountId_local, "ur0:temp/sqlite", 0, mountPoint_local);
 }
 
-//check this for consistensy!
 int sub_23E1014_mount_0xC9(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
-   physical_path = dec_buffer0;
-   memset(dec_buffer0, 0, 0x40u);
-
-   while (1)
-   {
-      symbol1 = (char *)ur0_temp_attach_2406AA8[index0];
-      if ( !ur0_temp_attach_2406AA8[index0] )
-      {
-         mount_drive = symbol1;
-         *(&v47 + index0 - 0x44) = (char)symbol1;
-         return sub_23E1014_label_78();
-      }
-
-      dec_buffer0[index0++] = ~(_BYTE)symbol1;
-
-      if ( index0 == 0x40 )
-      {
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return 0x80800001;
-      }
-   }
-   #pragma endregion
+   return sub_23E1014_label_78(pid_local, mountId_local, "ur0:temp/attach", 0, mountPoint_local);
 }
 
 int sub_23E1014_mount_0xCA(SceUID pid_local, int mountId_local, char* mountPoint_local)
@@ -3169,6 +3067,7 @@ int sub_23E1014_mount_0x3F1(SceUID pid_local, int mountId_local, char* mountPoin
    return sub_23E1014_label_78(pid_local, mountId_local, "ux0:data/userdata", 0, mountPoint_local);
 }
 
+//--
 
 int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
