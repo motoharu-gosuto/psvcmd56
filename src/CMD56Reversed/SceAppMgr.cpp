@@ -3086,120 +3086,100 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
-   else if (mountId_local == 0x64)
+   else if(mountId_local >= 0x64 && mountId_local <= 0x70)
    {
-      return sub_23E1014_mount_0x64(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x65)
-   {
-      return sub_23E1014_mount_0x65(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x66)
-   {
-      return sub_23E1014_mount_0x66(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x67)
-   {
-      return sub_23E1014_mount_0x67(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x68)
-   {
-      return sub_23E1014_mount_0x68(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x69)
-   {
-      return sub_23E1014_mount_0x69(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x6A)
-   {
-      return sub_23E1014_mount_0x6A(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x6B)
-   {
-      return sub_23E1014_mount_0x6B(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x6C)
-   {
-      return sub_23E1014_mount_0x6C(pid_local, mountId_local, mountPoint_local);
-   }       
-   else if (mountId_local == 0x6D)
-   {
-      return sub_23E1014_mount_0x6D(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x6E)
-   {
-      return sub_23E1014_mount_0x6E(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x6F)
-   {
-      return sub_23E1014_mount_0x6F(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x70)
-   {
-      return sub_23E1014_mount_0x70(pid_local, mountId_local, mountPoint_local);
+      #pragma region
+
+      switch(mountId_local)
+      {
+      case 0x64:
+         return sub_23E1014_mount_0x64(pid_local, mountId_local, mountPoint_local);
+      case 0x65:
+         return sub_23E1014_mount_0x65(pid_local, mountId_local, mountPoint_local);
+      case 0x66:
+         return sub_23E1014_mount_0x66(pid_local, mountId_local, mountPoint_local);
+      case 0x67:
+         return sub_23E1014_mount_0x67(pid_local, mountId_local, mountPoint_local);
+      case 0x68:
+         return sub_23E1014_mount_0x68(pid_local, mountId_local, mountPoint_local);
+      case 0x69:
+         return sub_23E1014_mount_0x69(pid_local, mountId_local, mountPoint_local);
+      case 0x6A:
+         return sub_23E1014_mount_0x6A(pid_local, mountId_local, mountPoint_local);
+      case 0x6B:
+         return sub_23E1014_mount_0x6B(pid_local, mountId_local, mountPoint_local);
+      case 0x6C:
+         return sub_23E1014_mount_0x6C(pid_local, mountId_local, mountPoint_local);
+      case 0x6D:
+         return sub_23E1014_mount_0x6D(pid_local, mountId_local, mountPoint_local);
+      case 0x6E:
+         return sub_23E1014_mount_0x6E(pid_local, mountId_local, mountPoint_local);
+      case 0x6F:
+         return sub_23E1014_mount_0x6F(pid_local, mountId_local, mountPoint_local);
+      case 0x70:
+         return sub_23E1014_mount_0x70(pid_local, mountId_local, mountPoint_local);
+      }
+
+      #pragma endregion
    }
    else if(mountId_local > 0x70 && mountId_local < 0xC8)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
-   else if (mountId_local == 0xC8)
+   else if(mountId_local >= 0xC8 && mountId_local <= 0xCF)
    {
-      return sub_23E1014_mount_0xC8(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xC9)
-   {
-      return sub_23E1014_mount_0xC9(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xCA)
-   {
-      return sub_23E1014_mount_0xCA(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xCB)
-   {
-      return sub_23E1014_mount_0xCB(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xCC)
-   {
-      return sub_23E1014_mount_0xCC(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xCD)
-   {
-      return sub_23E1014_mount_0xCD(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xCE)
-   {
-      return sub_23E1014_mount_0xCE(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0xCF)
-   {
-      return sub_23E1014_mount_0xCF(pid_local, mountId_local, mountPoint_local);
+      #pragma region
+
+      switch(mountId_local)
+      {
+      case 0xC8:
+         return sub_23E1014_mount_0xC8(pid_local, mountId_local, mountPoint_local);
+      case 0xC9:
+         return sub_23E1014_mount_0xC9(pid_local, mountId_local, mountPoint_local);
+      case 0xCA:
+         return sub_23E1014_mount_0xCA(pid_local, mountId_local, mountPoint_local);
+      case 0xCB:
+         return sub_23E1014_mount_0xCB(pid_local, mountId_local, mountPoint_local);
+      case 0xCC:
+         return sub_23E1014_mount_0xCC(pid_local, mountId_local, mountPoint_local);
+      case 0xCD:
+         return sub_23E1014_mount_0xCD(pid_local, mountId_local, mountPoint_local);
+      case 0xCE:
+         return sub_23E1014_mount_0xCE(pid_local, mountId_local, mountPoint_local);
+      case 0xCF:
+         return sub_23E1014_mount_0xCF(pid_local, mountId_local, mountPoint_local);
+      }
+
+      #pragma endregion
    }
    else if(mountId_local > 0xCF && mountId_local < 0x12C)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
-   else if (mountId_local == 0x12C)
+   else if(mountId_local >= 0x12C && mountId_local <= 0x130)
    {
-      return sub_23E1014_mount_0x12C(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x12D)
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      return 0x80800001;
-   }
-   else if (mountId_local == 0x12E)
-   {
-      return sub_23E1014_mount_0x12E(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x12F)
-   {
-      return sub_23E1014_mount_0x12F(pid_local, mountId_local, mountPoint_local);
-   }
-   else if(mountId_local == 0x130)
-   {
-      return sub_23E1014_mount_0x130(pid_local, mountId_local, mountPoint_local);
+      #pragma region
+
+      switch(mountId_local)
+      {
+      case 0x12C:
+         return sub_23E1014_mount_0x12C(pid_local, mountId_local, mountPoint_local);
+      case 0x12D:
+         {
+            SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+            return 0x80800001;
+         }
+      case 0x12E:
+         return sub_23E1014_mount_0x12E(pid_local, mountId_local, mountPoint_local);
+      case 0x12F:
+         return sub_23E1014_mount_0x12F(pid_local, mountId_local, mountPoint_local);
+      case 0x130:
+         return sub_23E1014_mount_0x130(pid_local, mountId_local, mountPoint_local);
+      }
+
+      #pragma endregion
    }
    else if(mountId_local > 0x130 && mountId_local < 0x190)
    {
@@ -3208,6 +3188,8 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
    }
    else if (mountId_local >= 0x190 && mountId_local <= 0x192)
    {
+      #pragma region
+
       switch (mountId_local)
       {
       case 0x190:
@@ -3216,39 +3198,36 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
          return sub_23E1014_mount_0x191(pid_local, mountId_local, mountPoint_local);
       case 0x192:
          return sub_23E1014_mount_0x192(pid_local, mountId_local, mountPoint_local);
-      default:
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return 0x80800001;
       }
+
+      #pragma endregion
    }
    else if(mountId_local > 0x192 && mountId_local < 0x1F4)
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
-   else if (mountId_local == 0x1F4)
+   else if (mountId_local >= 0x1F4 && mountId_local <= 0x1F9)
    {
-      return sub_23E1014_mount_0x1F4(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x1F5)
-   {
-      return sub_23E1014_mount_0x1F5(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x1F6)
-   {
-      return sub_23E1014_mount_0x1F6(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x1F7)
-   {
-      return sub_23E1014_mount_0x1F7(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x1F8)
-   {
-      return sub_23E1014_mount_0x1F8(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x1F9)
-   {
-      return sub_23E1014_mount_0x1F9(pid_local, mountId_local, mountPoint_local);
+      #pragma region
+
+      switch(mountId_local)
+      {
+      case 0x1F4:
+         return sub_23E1014_mount_0x1F4(pid_local, mountId_local, mountPoint_local);
+      case 0x1F5:
+         return sub_23E1014_mount_0x1F5(pid_local, mountId_local, mountPoint_local);
+      case 0x1F6:
+         return sub_23E1014_mount_0x1F6(pid_local, mountId_local, mountPoint_local);
+      case 0x1F7:
+         return sub_23E1014_mount_0x1F7(pid_local, mountId_local, mountPoint_local);
+      case 0x1F8:
+         return sub_23E1014_mount_0x1F8(pid_local, mountId_local, mountPoint_local);
+      case 0x1F9:
+         return sub_23E1014_mount_0x1F9(pid_local, mountId_local, mountPoint_local);
+      }
+
+      #pragma endregion
    }
    else if (mountId_local > 0x1F9 && mountId_local < 0x258)
    {
@@ -3264,17 +3243,21 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
-   else if (mountId_local == 0x3EF)
+   else if (mountId_local >= 0x3EF && mountId_local <= 0x3F1)
    {
-      return sub_23E1014_mount_0x3EF(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x3F0)
-   {
-      return sub_23E1014_mount_0x3F0(pid_local, mountId_local, mountPoint_local);
-   }
-   else if (mountId_local == 0x3F1)
-   {
-      return sub_23E1014_mount_0x3F1(pid_local, mountId_local, mountPoint_local);
+      #pragma region
+
+      switch(mountId_local)
+      {
+      case 0x3EF:
+         return sub_23E1014_mount_0x3EF(pid_local, mountId_local, mountPoint_local);
+      case 0x3F0:
+         return sub_23E1014_mount_0x3F0(pid_local, mountId_local, mountPoint_local);
+      case 0x3F1:
+         return sub_23E1014_mount_0x3F1(pid_local, mountId_local, mountPoint_local);
+      }
+
+      #pragma endregion
    }
    else
    {
