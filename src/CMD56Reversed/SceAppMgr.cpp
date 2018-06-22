@@ -2841,33 +2841,7 @@ int sub_23E1014_mount_0xCD(SceUID pid_local, int mountId_local, char* mountPoint
 
 int sub_23E1014_mount_0xCE(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
-
-   physical_path = dec_buffer0;
-   memset(dec_buffer0, 0, 0x40u);
-
-   while ( 1 )
-   {
-      symbol1 = (char *)ur0_temp_webbrowser_2406A90[index0];
-
-      if ( !ur0_temp_webbrowser_2406A90[index0] )
-      {
-         mount_drive = symbol1;
-         *(&v47 + index0 - 0x44) = (char)symbol1;
-
-         return sub_23E1014_label_78();
-      }
-
-      dec_buffer0[index0++] = ~(_BYTE)symbol1;
-
-      if ( index0 == 0x40 )
-      {
-         SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-         return 0x80800001;
-      }
-   }
-
-   #pragma endregion
+   return sub_23E1014_label_78(pid_local, mountId_local, "ur0:temp/webbrowser", 0, mountPoint_local);
 }
 
 int sub_23E1014_mount_0xCF(SceUID pid_local, int mountId_local, char* mountPoint_local)
@@ -2905,106 +2879,38 @@ int sub_23E1014_mount_0x12E(SceUID pid_local, int mountId_local, char* mountPoin
 
 int sub_23E1014_mount_0x12F(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
+   char accountNo[3];
+   memset(accountNo, 0, 3);
 
-   lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+   set_accoutNo_global_23D58B4(accountNo);
 
-   if ( lock_res0 < 0 )
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
+   char buffer[0x40];
 
-   lock_res0 = dec_string_constant_23D59D4(trophy_data_2406C38, (char *)0x22D4588);
-
-   if ( lock_res0 < 0 )
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
-
-   if (mountId_local == 0x130)
-   {
-      if ( !MEMORY[0x22D4778] )
-         set_accoutNo_global_23D58B4();
-
-      physical_path = dec_buffer0;
-      bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSSSS_bk, 0x22D4DF0, 0x22D4778, 0x22D4588, 0);
-   }
-   else
-   {
-      if ( !MEMORY[0x22D4778] )
-         set_accoutNo_global_23D58B4();
-
-      physical_path = dec_buffer0;
-      bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0);
-   }
-
-   if ( bytes_printed0 > 0x3F )
+   if (_snprintf(buffer, 0x40u, "%s/%s/%s/%s", "ur0:user", accountNo, "trophy/data", 0) > 0x3F) //not sure why, but zero is indeed passed
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
 
-   mount_drive = 0;
-
-   return sub_23E1014_label_78();
-
-   #pragma endregion
+   return sub_23E1014_label_78(pid_local, mountId_local, buffer, 0, mountPoint_local);
 }
 
 int sub_23E1014_mount_0x130(SceUID pid_local, int mountId_local, char* mountPoint_local)
 {
-   #pragma region no fall through
+   char accountNo[3];
+   memset(accountNo, 0, 3);
 
-   lock_res0 = dec_string_constant_23D59D4((char *)ur0_user_2406920, (char *)0x22D4DF0);// ur0:user
+   set_accoutNo_global_23D58B4(accountNo);
 
-   if ( lock_res0 < 0 )
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
+   char buffer[0x40];
 
-   lock_res0 = dec_string_constant_23D59D4(trophy_data_2406C38, (char *)0x22D4588);
-
-   if ( lock_res0 < 0 )
-   {
-      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-      result = lock_res0;
-      return result;
-   }
-
-   if (mountId_local == 0x130)
-   {
-      if ( !MEMORY[0x22D4778] )
-         set_accoutNo_global_23D58B4();
-
-      physical_path = dec_buffer0;
-      bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSSSS_bk, 0x22D4DF0, 0x22D4778, 0x22D4588, 0);
-   }
-   else
-   {
-      if ( !MEMORY[0x22D4778] )
-         set_accoutNo_global_23D58B4();
-
-      physical_path = dec_buffer0;
-      bytes_printed0 = _snprintf(dec_buffer0, 0x40u, aSSSS, 0x22D4DF0, 0x22D4778, 0x22D4588, 0);
-   }
-
-   if ( bytes_printed0 > 0x3F )
+   if (_snprintf(buffer, 0x40u, "%s/%s/%s/%s_BK", "ur0:user", accountNo, "trophy/data", 0) > 0x3F) //not sure why, but zero is indeed passed
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800001;
    }
 
-   mount_drive = 0;
-
-   return sub_23E1014_label_78();
-
-   #pragma endregion
+   return sub_23E1014_label_78(pid_local, mountId_local, buffer, 0, mountPoint_local);
 }
 
 
