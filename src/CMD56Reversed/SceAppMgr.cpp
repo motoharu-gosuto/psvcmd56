@@ -3266,6 +3266,19 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
    }
 }
 
+int sub_23E1014_label_100(SceSelfAuthInfo& auth_ctx, SceUID pid_local, int mountId_local, char* mountPoint_local)
+{
+   if(auth_ctx.auth_id == 0x2800000000000001)
+   {
+      return sub_23E1014_label_8(pid_local, mountId_local, mountPoint_local);
+   }
+   else
+   {
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return 0x80800009;
+   }
+}
+
 //need to reverse this
 int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoint)
 {
@@ -3421,37 +3434,19 @@ int w_sceAppMgrDataMount_generic_23E1014(SceUID pid, int mountId, char *mountPoi
    {
       if (mountId - 0x384 > 1)
       {
-LABEL_100:
-         check1 = HIDWORD(auth_ctx.auth_id) == 0x28000000;
-
-         if (HIDWORD(auth_ctx.auth_id) == 0x28000000)
-            check1 = LODWORD(auth_ctx.auth_id) == 1;
-
-         if (check1)
-            authid_check_res0 = 1;
-         else
-            authid_check_res0 = 0;
-
-         if (authid_check_res0)
+         return sub_23E1014_label_100();
+      }
+      else
+      {
+         if(auth_ctx.auth_id == 0x2808000000000001)
          {
-            return sub_23E1014_label_8();
+            authid_check_res0 = 1
          }
          else
          {
-            SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-            return 0x80800009;
+            authid_check_res0 = 0;
          }
       }
-
-      check0 = HIDWORD(auth_ctx.auth_id) == 0x28080000;
-
-      if (HIDWORD(auth_ctx.auth_id) == 0x28080000)
-         check0 = LODWORD(auth_ctx.auth_id) == 1;
-
-      if (check0)
-         authid_check_res0 = 1;
-      else
-         authid_check_res0 = 0;
    }
    else
    {
@@ -3471,27 +3466,27 @@ LABEL_100:
             }
          }
 
-         goto LABEL_100;
+         return sub_23E1014_label_100();
       }
 
-      check2 = HIDWORD(auth_ctx.auth_id) == 0x28000000;
-      if (HIDWORD(auth_ctx.auth_id) == 0x28000000)
-         check2 = LODWORD(auth_ctx.auth_id) == 1;
-
-      if ( check2 )
+      if(auth_ctx.auth_id == 0x2800000000000001)
+      {
          v23 = 0;
+      }
       else
+      {
          v23 = 1;
+      }
 
-      check3 = HIDWORD(auth_ctx.auth_id) == 0x28000000;
-      if ( HIDWORD(auth_ctx.auth_id) == 0x28000000 )
-         check3 = LODWORD(auth_ctx.auth_id) == 0x2D;
-
-      if (check3)
+      if(auth_ctx.auth_id == 0x280000000000002D)
+      {
          check4 = 0;
+      }
       else
+      {
          check4 = v23 & 1;
-
+      }
+      
       authid_check_res0 = check4 ^ 1;
    }
 
