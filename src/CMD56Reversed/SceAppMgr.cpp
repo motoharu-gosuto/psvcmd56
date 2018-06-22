@@ -3443,51 +3443,31 @@ int sub_23E1014_label_8(SceUID pid_local, int mountId_local, char* mountPoint_lo
    {
       return sub_23E1014_mount_0x1F9(pid_local, mountId_local, mountPoint_local);
    }
-   else if (mountId_local >= 0x1FA)
+   else if (mountId_local > 0x1F9 && mountId_local < 0x258)
    {
-      #pragma region no fall through
-
-      if (mountId_local == 0x3EF)
-      {
-         return sub_23E1014_mount_0x3EF();
-      }
-      else
-      {
-         #pragma region no fall through
-
-         if (mountId_local < 0x3F0)
-         {
-            if (mountId_local == 0x258)
-            {
-               return sub_23E1014_mount_0x258();
-            }
-            else
-            {
-               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-               return 0x80800001;
-            }
-         }
-         else if (mountId_local == 0x3F0)
-         {
-            return sub_23E1014_mount_0x3F0();
-         }
-         else
-         {
-            if (mountId_local == 0x3F1)
-            {
-               return sub_23E1014_mount_0x3F1();
-            }
-            else
-            {
-               SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
-               return 0x80800001;
-            }
-         }
-
-         #pragma endregion
-      }
-
-      #pragma endregion
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return 0x80800001;
+   }
+   else if(mountId_local == 0x258)
+   {
+      return sub_23E1014_mount_0x258(pid_local, mountId_local, mountPoint_local);
+   }
+   else if(mountId_local > 0x258 && mountId_local < 0x3EF)
+   {
+      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
+      return 0x80800001;
+   }
+   else if (mountId_local == 0x3EF)
+   {
+      return sub_23E1014_mount_0x3EF(pid_local, mountId_local, mountPoint_local);
+   }
+   else if (mountId_local == 0x3F0)
+   {
+      return sub_23E1014_mount_0x3F0(pid_local, mountId_local, mountPoint_local);
+   }
+   else if (mountId_local == 0x3F1)
+   {
+      return sub_23E1014_mount_0x3F1(pid_local, mountId_local, mountPoint_local);
    }
    else
    {
