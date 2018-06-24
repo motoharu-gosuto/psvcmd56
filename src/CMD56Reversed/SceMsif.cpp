@@ -73,6 +73,342 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 
 int w_dmac5_command_0x41_C8D2F0(char* result, const char* data, int size)
 {
+   /*
+   VMOV.I32        D16, #0
+   MOVW            R3, #0xA004 ; 00C8D2F4 : external reference: 009EA004
+   PUSH.W          {R4-R11,LR}
+   MOVT.W          R3, #0x9E ; 00C8D2FC : external reference: 009EA004
+   SUB             SP, SP, #0x3C ; key_size
+   LDR             R4, [R3] ; cookie
+   MOV             R8, R1  ; arg1
+   ADD.W           R10, SP, #0x60+buffer
+   STR             R0, [SP,#0x60+var_54] ; arg0 - result ptr
+   MOVS            R5, #0xC0 ; key_size
+   VMOV            R0, R1, D16
+   MOV             R9, R2  ; arg2
+   STR             R3, [SP,#0x60+var_58] ; store cookie ptr
+   MOVS            R3, #1
+   STRD.W          R0, R1, [R10,#-0x28]!
+   MOVS            R2, #8  ; size
+   STR             R3, [SP,#0x60+arg_4] ; num4 = 1
+   ADD             R1, SP, #0x60+some_buffer ; dst
+   MOV             R0, R10 ; src
+   STR             R5, [SP,#0x60+key_size] ; num3 = 0xC0
+   MOVS            R3, #0x1C ; key_slot
+   STR             R4, [SP,#0x60+var_2C]
+   BLX             SceMsif.SceSblSsMgrForDriver._imp_execute_dmac5_command_0x41_37dd5cbf
+   CMP             R0, #0
+   BLT.W           loc_C8D5AA
+   */
+
+   if(R0 < 0)
+   {
+      /*
+      LDR             R1, [SP,#0x60+var_58]
+      LDR             R2, [SP,#0x60+var_2C]
+      LDR             R3, [R1]
+      CMP             R2, R3
+      BNE             loc_C8D5BA
+      */
+
+      //stackfail or return
+   }
+
+   /*
+   LDRD.W          R4, R3, [SP,#0x28]
+   MOVS            R7, #0
+   MOVS            R5, #0
+   STR             R3, [SP,#0x60+var_50+4]
+   MOVS            R3, #0
+   VDUP.8          D16, R4
+   LSRS            R6, R4, #8
+   LSRS            R2, R4, #0x10
+   STR             R4, [SP,#0x60+var_50]
+   VSHR.U64        D16, D16, #0x38
+   UXTB            R6, R6
+   VSHL.I64        D17, D16, #8
+   UXTB            R2, R2
+   VMOV            R0, R1, D17
+   LSRS            R4, R4, #0x18
+   ORRS            R1, R7
+   LDRSB.W         LR, [SP,#0x60+var_50]
+   LSLS            R1, R1, #8
+   ORRS            R0, R6
+   UXTB            R4, R4
+   LDRB.W          R6, [SP,#0x60+var_50+4]
+   ORR.W           R1, R1, R0,LSR#24
+   LSLS            R0, R0, #8
+   ORRS            R3, R1
+   ORRS            R2, R0
+   LSLS            R3, R3, #8
+   MOVS            R7, #0
+   LDRB.W          R0, [SP,#0x60+var_50+5]
+   MOVS            R1, #0
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R3, R5
+   ORRS            R2, R4
+   LSLS            R3, R3, #8
+   LDRB.W          R4, [SP,#0x60+var_50+6]
+   MOVS            R5, #0
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R3, R7
+   ORRS            R2, R6
+   LSLS            R3, R3, #8
+   LDRB.W          R6, [SP,#0x60+var_50+7]
+   MOVS            R7, #0
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R3, R1
+   ORRS            R2, R0
+   LSLS            R3, R3, #8
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R3, R5
+   ORRS            R2, R4
+   LSLS            R3, R3, #8
+   MOVS            R5, #0
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R6, R2
+   ORRS            R7, R3
+   ADDS            R6, R6, R6
+   ADCS            R7, R7
+   UXTB            R1, R6
+   LSRS            R3, R7, #0x18
+   LSRS            R0, R7, #8
+   STRB.W          R1, [SP,#0x60+var_41]
+   LSRS            R2, R6, #0x18
+   STRB.W          R3, [SP,#0x60+var_48]
+   CMP.W           LR, #0
+   STRB.W          R0, [SP,#0x60+var_46]
+   IT LT
+   EORLT.W         R1, R1, #0x1B
+   LDRB.W          R0, [SP,#0x60+var_48]
+   MOV.W           R4, R7,LSR#16
+   IT LT
+   STRLTB.W        R1, [SP,#0x60+var_41]
+   MOVS            R1, #0
+   ORR.W           R2, R2, R7,LSL#8
+   LSLS            R1, R1, #8
+   STRB.W          R4, [SP,#0x60+var_47]
+   LSRS            R4, R6, #0x10
+   STRB.W          R2, [SP,#0x60+var_44]
+   MOVS            R3, #0
+   ORR.W           R1, R1, R0,LSR#24
+   LDRB.W          R2, [SP,#0x60+var_47]
+   LSLS            R0, R0, #8
+   ORR.W           R4, R4, R7,LSL#16
+   LSRS            R6, R6, #8
+   STRB.W          R7, [SP,#0x60+var_45]
+   ORRS            R3, R1
+   STRB.W          R4, [SP,#0x60+var_43]
+   LSLS            R3, R3, #8
+   ORRS            R2, R0
+   LDRB.W          R4, [SP,#0x60+var_46]
+   ORR.W           R6, R6, R7,LSL#24
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   STRB.W          R6, [SP,#0x60+var_42]
+   ORRS            R3, R5
+   LDRB.W          R6, [SP,#0x60+var_45]
+   LSLS            R3, R3, #8
+   ORRS            R2, R4
+   MOVS            R7, #0
+   LDRB.W          R0, [SP,#0x60+var_44]
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   LDRB.W          R4, [SP,#0x60+var_43]
+   ORRS            R3, R7
+   ORRS            R2, R6
+   LSLS            R3, R3, #8
+   MOVS            R1, #0
+   MOVS            R5, #0
+   LDRB.W          R6, [SP,#0x60+var_42]
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   LDRSB.W         LR, [SP,#0x60+var_48]
+   ORRS            R3, R1
+   ORRS            R2, R0
+   LSLS            R3, R3, #8
+   MOVS            R7, #0
+   LDRB.W          R0, [SP,#0x60+var_41]
+   MOVS            R1, #0
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R3, R5
+   ORRS            R2, R4
+   LSLS            R3, R3, #8
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R3, R7
+   ORRS            R2, R6
+   LSLS            R3, R3, #8
+   MOVS            R7, #0  ; some hash result accumulator
+   ORR.W           R3, R3, R2,LSR#24
+   LSLS            R2, R2, #8
+   ORRS            R0, R2
+   ORRS            R1, R3
+   ADDS            R0, R0, R0
+   ADCS            R1, R1
+   LSRS            R2, R0, #0x18
+   LSRS            R6, R1, #0x10
+   UXTB            R4, R0
+   LSRS            R3, R1, #0x18
+   LSRS            R5, R1, #8
+   STRB.W          R6, [SP,#0x60+var_3F]
+   LSRS            R6, R0, #0x10
+   CMP.W           LR, #0
+   ORR.W           R2, R2, R1,LSL#8
+   ORR.W           R6, R6, R1,LSL#16
+   MOV.W           R0, R0,LSR#8
+   STRB.W          R4, [SP,#0x60+var_39]
+   IT LT
+   EORLT.W         R4, R4, #0x1B
+   STRB.W          R1, [SP,#0x60+var_3D]
+   STRB.W          R3, [SP,#0x60+var_40]
+   ORR.W           R0, R0, R1,LSL#24
+   STRB.W          R5, [SP,#0x60+var_3E]
+   STRB.W          R2, [SP,#0x60+var_3C]
+   STRB.W          R6, [SP,#0x60+var_3B]
+   MOV.W           R6, #0  ; some hash result accumulator
+   IT LT
+   STRLTB.W        R4, [SP,#0x60+var_39]
+   STRB.W          R0, [SP,#0x60+var_3A]
+   */
+
+   if(R9 <= 8)
+   {
+      /*
+      LDR             R1, [SP,#0x60+var_58]
+      LDR             R2, [SP,#0x60+var_2C]
+      LDR             R3, [R1]
+      CMP             R2, R3
+      */
+
+      //stackfail or return
+   }
+
+   //MOV.W           R11, #0xC0
+
+   while(true)
+   {
+      /*
+      ADD.W           R8, R8, #8
+      STR.W           R11, [SP,#0x60+key_size] ; key_size
+      LDRD.W          R4, R5, [R8,#-8] ; get 8 bytes of data
+      MOVS            R1, #1
+      STR             R1, [SP,#0x60+arg_4] ; arg_4
+      MOV             R0, R10 ; src
+      ADD             R1, SP, #0x60+some_buffer ; dst
+      MOVS            R2, #8  ; size
+      EORS            R4, R6  ; R4 = data - accumulate
+      EORS            R5, R7  ; R5  data - accumulate
+      MOVS            R3, #0x1C ; key_slot
+      PLD.W           [R8,#0x30] ; preload
+      STRD.W          R4, R5, [SP,#0x60+var_50] ; store data bytes
+      BLX             SceMsif.SceSblSsMgrForDriver._imp_execute_dmac5_command_0x41_37dd5cbf
+      */
+
+      if(R0 < 0)
+      {
+         break;
+      }
+      else
+      {
+         /*
+         SUB.W           R9, R9, #8 ; R9 = arg2 size
+         LDRD.W          R6, R7, [SP,#0x28]
+         */
+
+         if(R9 <= 8)
+         {
+            break;
+         }
+      }
+   }
+
+   if(R9 == 8)
+   {
+      /*
+      LDRD.W          R2, R3, [SP,#0x60+var_48]
+      LDRD.W          R0, R1, [R8]
+      EORS            R6, R2
+      EORS            R7, R3
+      */
+   }
+   else
+   {
+      /*
+      LDRD.W          R2, R3, [R8]
+      ADD.W           R0, R9, #1
+      MOV.W           R1, #0  ; value
+      STRD.W          R2, R3, [SP,#0x10]
+      ADD             R3, SP, #0x60+buffer
+      ADD             R3, R9
+      STRB.W          R1, [R3,#-0x28]
+      */
+      
+      if(R0 != 0)
+      {
+         /*
+         ADD             R0, R10 ; ptr
+         RSB.W           R2, R9, #7
+         BLX             SceMsif.SceSysclibForDriver._imp_memset_0ab9bf5c
+         */
+      }
+      
+      /*
+      LDRD.W          R2, R3, [SP,#0x60+var_40]
+      LDRD.W          R0, R1, [SP,#0x60+var_50]
+      EORS            R6, R2
+      EORS            R7, R3
+      */
+   }
+
+   /*
+   MOVS            R2, #0xC0
+   MOVS            R3, #1
+   STMEA.W         SP, {R2,R3}
+   EORS            R6, R0
+   EORS            R7, R1
+   MOV             R0, R10 ; src
+   ADD             R1, SP, #0x60+some_buffer ; dst
+   MOVS            R2, #8  ; size
+   MOVS            R3, #0x1C ; key_slot
+   STRD.W          R6, R7, [SP,#0x60+var_50]
+   BLX             SceMsif.SceSblSsMgrForDriver._imp_execute_dmac5_command_0x41_37dd5cbf
+   */
+
+   if(R0 < 0)
+   {
+      /*
+      LDR             R1, [SP,#0x60+var_58]
+      LDR             R2, [SP,#0x60+var_2C]
+      LDR             R3, [R1]
+      CMP             R2, R3
+      */
+
+      //stackfail or return
+   }
+
+   /*
+   LDRD.W          R2, R3, [SP,#0x60+some_buffer] ; get result
+   MOVS            R0, #0
+   LDR             R1, [SP,#0x60+var_54] ; arg0 - get result ptr
+   STRD.W          R2, R3, [R1] ; store result
+   */
+
+   /*
+   LDR             R1, [SP,#0x60+var_58]
+   LDR             R2, [SP,#0x60+var_2C]
+   LDR             R3, [R1]
+   CMP             R2, R3
+   */
+
+   //stackfail or return
+
    return 0;
 }
 
