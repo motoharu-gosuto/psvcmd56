@@ -76,49 +76,35 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
    return 0;
 }
 
-int w_dmac5_command_0x41_C8D2F0(int* result, const char* data, int size)
+int w_dmac5_command_0x41_bit_magic_C8D2F0(int* some_buffer, int* var_48_res, int* var_40_res)
 {
-   /*
-   key_size        DCD ?
-   arg_4           DCD ?
-   */
-
-   
-   //int* var_58;
-   //char* var_54;
-
    int var_50[2]; // 8 bytes
-   
+
    char var_48; //16 bytes
    char var_47;
    char var_46;
    char var_45;
+
    char var_44;
    char var_43;
    char var_42;
    char var_41;
+
+   //----
+
    char var_40;
    char var_3F;
    char var_3E;
    char var_3D;
+
    char var_3C;
    char var_3B;
    char var_3A;
    char var_39;
-   
-   int some_buffer[2];
-   char unk[4];
-   //int  var_2C;
-   //buffer          DCB ?
-   
-   memset(var_50, 0, 8);
 
-   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)var_50, (char*)some_buffer, 8, 0x1C, 0xC0, 1);
-   if(enc_res0 < 0)
-      return enc_res0;
+   //---- calculate var_48, var_48 ----
 
-   //--------------------------------------
-
+   /*
    r4 = some_buffer[0];
    r3 = some_buffer[1];
    
@@ -280,7 +266,7 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const char* data, int size)
    r3 = r3 | r7;
    r2 = r2 | r6;
    r3 = r3 << 8;
-   r7 = 0;
+   
    r3 = r3 | (r2 >> 24);
    r2 = r2 << 8;
    r0 = r0 | r2;
@@ -309,123 +295,123 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const char* data, int size)
    var_40 = (char)r3;
    r0 = r0 | (r1 << 24);
    var_3E = (char)r5;
+
    var_3C = (char)r2;
    var_3B = (char)r6;
-   r6 = 0;
-   
+
    if(lr < 0)
    {
       var_39 = (char)r4;
    }
    
    var_3A = (char)r0;
+   */
 
-   //--------------------------------------
+   return 0;
+}
+
+int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
+{
+   int tmp_src0[2];
+   tmp_src0[0] = 0;
+   tmp_src0[1] = 0;
+
+   int tmp_dst0[2];
+
+   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)tmp_src0, (char*)tmp_dst0, 8, 0x1C, 0xC0, 1);
+   if(enc_res0 < 0)
+      return enc_res0;
+
+   //calculate tweak keys?
+
+   int tweak_key_48[2];
+   int tweak_key_40[2];
+   int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, tweak_key_48, tweak_key_40);
+
+   //---- process data in blocks of 8 bytes ----
 
    if(size <= 8)
-   {
       return r0;
-   }
 
-   int* current_ptr = data;
+   const int* current_ptr = data;
    int current_size = size;
+
+   int round_buffer[2];
+   round_buffer[0] = 0;
+   round_buffer[1] = 0;
 
    while(true)
    {
       current_ptr = current_ptr + 2;
       
-      r4 = (current_ptr - 2)[0];
-      r5 = (current_ptr - 2)[1];
-      
-      r0 = var_50;
-      r1 = some_buffer;
-      r2 = 8;
+      //perform xor operation with input data
+      int current_round[2];
+      current_round[0] = (current_ptr - 2)[0] ^ round_buffer[0];
+      current_round[1] = (current_ptr - 2)[1] ^ round_buffer[1];
 
-      r4 = r4 ^ r6;
-      r5 = r5 ^ r7;
-      r3 = 0x1C;
-      
-      
-      
-      ((int*)var_50)[0] = r4;
-      ((int*)var_50)[1] = r5;
-      
-      SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(r0, r1, r2, r3, 0xC0, 1);
-
-      if(R0 < 0)
-      {
+      //perform encryption, write back to round_buffer
+      int enc_res1 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)current_round, (char*)round_buffer, 8, 0x1C, 0xC0, 1);
+      if(enc_res1 < 0)
          break;
-      }
-      else
-      {
-         current_size = current_size - 8;
 
-         r6 = some_buffer[0]
-         r7 = some_buffer[1]
-
-         if(current_size <= 8)
-         {
-            break;
-         }
-      }
+      current_size = current_size - 8;
+      if(current_size <= 8)
+         break;
    }
+
+   //---- process tail of the data (is this cipher text stealing?) ----
+
+   int tail_tweak[2];
+   int tail_data[2];
 
    if(current_size == 8)
    {
-      r2 = ((int*)var_48)[0]
-      r3 = ((int*)var_48)[1]
+      //write last chunk of data
+      tail_data[0] = current_ptr[0];
+      tail_data[1] = current_ptr[1];
       
-      r0 = current_ptr[0]
-      r1 = current_ptr[1]
-      
-      r6 = r6 ^ r2;
-      r7 = r7 ^ r3;
+      //perform xor operation of current buffer with some data
+      tail_tweak[0] = round_buffer[0] ^ tweak_key_48[0];
+      tail_tweak[1] = round_buffer[1] ^ tweak_key_48[1];
    }
    else
    {
-      r2 = current_ptr[0];
-      r3 = current_ptr[1];
+      //I assume this code pads the tail with zeroes (but not sure)
+
+      int temp_src2[2];
+      temp_src2[0] = current_ptr[0];
+      temp_src2[1] = current_ptr[1];
       
-      r0 = current_size + 1;
-      r1 = 0;
-      
-      var_50[0] = r2;
-      var_50[1] = r3;
-      
-      r3 = buffer;
-      r3 = r3 + current_size;
-      
-      ((char)r3[-0x28]) = (char)r1;
-      
-      if(R0 != 0)
+      //zero first byte of tail
+      char* ptr1 = ((char*)temp_src2) + current_size;
+      ptr1[0] = 0;
+
+      //not sure how this code works !
+      int size1 = current_size + 1;
+      if(size1 != 0)
       {
-         r0 = r0 + var_50;
-         r2 = 7 - current_size;
-         memset(r0, r1, r2);
+         char* ptr3 = ((char*)temp_src2) + size1;
+         memset(ptr3, 0, 7 - current_size);
       }
       
-      r2 = ((int*)var_40)[0];
-      r3 = ((int*)var_40)[1];
-
-      r0 = var_50[0];
-      r1 = var_50[1];
+      //write last padded chunk of data
+      tail_data[0] = temp_src2[0];
+      tail_data[1] = temp_src2[1];
       
-      r6 = r6 ^ r2;
-      r7 = r7 ^ r3;
+      //perform xor operation of current buffer with some data
+      tail_tweak[0] = round_buffer[0] ^ tweak_key_40[0];
+      tail_tweak[1] = round_buffer[1] ^ tweak_key_40[1];
    }
 
-   r6 = r6 ^ r0;
-   r7 = r7 ^ r1;
-   
-   var_50[0] = r6;
-   var_50[1] = r7;
-   
-   int enc_res2 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)var_50, (char*)some_buffer, 8, 0x1C, 0xC0, 1);
+   //perform xor operation with input data
+   int final_round[2];
+   final_round[0] = tail_tweak[0] ^ tail_data[0];
+   final_round[1] = tail_tweak[1] ^ tail_data[1];
+
+   //perform encryption - store result
+   int enc_res2 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)final_round, (char*)result, 8, 0x1C, 0xC0, 1);
    if(enc_res2 < 0)
       return enc_res2;
-
-   result[0] = some_buffer[0];
-   result[1] = some_buffer[1];
 
    return 0;
 }
@@ -747,7 +733,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    // execute dmac5 command 41
 
-   int dmc5res1 = w_dmac5_command_0x41_C8D2F0(dmac5_result_1, (char*)&d5req1, 0x28); //send dmac5 request with 0x20 bytes of 0x49 response and 8 bytes of random data
+   int dmc5res1 = w_dmac5_command_0x41_C8D2F0((int*)dmac5_result_1, (int*)&d5req1, 0x28); //send dmac5 request with 0x20 bytes of 0x49 response and 8 bytes of random data
    if(dmc5res1 != 0)
       return dmc5res1;
 
@@ -767,7 +753,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    // execute dmac5 command 41
 
-   int dmc5res2 = w_dmac5_command_0x41_C8D2F0(dmac_5_result_2, (char*)&d5req2, 0x10);
+   int dmc5res2 = w_dmac5_command_0x41_C8D2F0((int*)dmac_5_result_2, (int*)&d5req2, 0x10);
    if(dmc5res2 != 0)
       return dmc5res2;
    
