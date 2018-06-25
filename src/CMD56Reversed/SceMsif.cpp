@@ -76,49 +76,51 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
    return 0;
 }
 
-int w_dmac5_command_0x41_C8D2F0(char* result, const char* data, int size)
+int w_dmac5_command_0x41_C8D2F0(int* result, const char* data, int size)
 {
-   ((int*)D16)[0] = 0;
-   ((int*)D16)[1] = 0;
-   r3 = 0x9EA004;
-   r4 = r4[r3];
+   /*
+   key_size        DCD ?
+   arg_4           DCD ?
+   */
 
-   r8 = r1;
-   r10 = buffer;
-   var_54 = 0;
-   r5 = 0xC0
-   r0 = D16[0]
-   r1 = D16[1];
-   r9 = r2;
-   var_58 = r3;
-   r3 = 1;
-   r10 = r10 - 0x28;
-   r10[0] = r0;
-   r10[1] = r1;
-   r2 = 8;
-   arg_4 = r3;
-   r1 = some_buffer;
-   r0 = r10;
-   key_size = r5;
-   r3 = 0x1C;
-   var_2C = r4;
-   r0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(r0, r1, r2, r3, arg_0, arg_4);
    
-   if(r0 < 0)
-   {
-      r1 = var_58;
-      r2 = var_2C;
-      r3 = r1[0];
-      if(r2 != r3)
-         return STACK_FAIL;
-      else
-         return r0;
-   }
+   //int* var_58;
+   //char* var_54;
+
+   int var_50[2]; // 8 bytes
+   
+   char var_48; //16 bytes
+   char var_47;
+   char var_46;
+   char var_45;
+   char var_44;
+   char var_43;
+   char var_42;
+   char var_41;
+   char var_40;
+   char var_3F;
+   char var_3E;
+   char var_3D;
+   char var_3C;
+   char var_3B;
+   char var_3A;
+   char var_39;
+   
+   int some_buffer[2];
+   char unk[4];
+   //int  var_2C;
+   //buffer          DCB ?
+   
+   memset(var_50, 0, 8);
+
+   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)var_50, (char*)some_buffer, 8, 0x1C, 0xC0, 1);
+   if(enc_res0 < 0)
+      return enc_res0;
 
    //--------------------------------------
 
-   r4 = (int)some_buffer[0];
-   r3 = (int)some_buffer[1];
+   r4 = some_buffer[0];
+   r3 = some_buffer[1];
    
    r7 = 0;
    r5 = 0;
@@ -318,34 +320,24 @@ int w_dmac5_command_0x41_C8D2F0(char* result, const char* data, int size)
    
    var_3A = (char)r0;
 
-   if(R9 <= 8)
-   {
-      r1 = var_58;
-      r2 = var_2C;
-      r3 = r1[0];
-      if(r2 != r3)
-         return STACK_FAIL;
-      else
-         return r0;
-   }
-
    //--------------------------------------
 
-   r11 = 0xC0;
+   if(size <= 8)
+   {
+      return r0;
+   }
+
+   int* current_ptr = data;
+   int current_size = size;
 
    while(true)
    {
-      r8 = r8 + 8;
-
-      key_size = r11;
+      current_ptr = current_ptr + 2;
       
-      r4 = ((int*)[r8-8])[0];
-      r5 = ((int*)[r8-8])[1];
+      r4 = (current_ptr - 2)[0];
+      r5 = (current_ptr - 2)[1];
       
-      r1 = 1;
-      arg_4 = r1;
-      
-      r0 = r10;
+      r0 = var_50;
       r1 = some_buffer;
       r2 = 8;
 
@@ -353,12 +345,12 @@ int w_dmac5_command_0x41_C8D2F0(char* result, const char* data, int size)
       r5 = r5 ^ r7;
       r3 = 0x1C;
       
-      //PLD.W           [R8,#0x30] ; preload
+      
       
       ((int*)var_50)[0] = r4;
       ((int*)var_50)[1] = r5;
       
-      SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(r0, r1, r2, r3, arg_0, arg_4);
+      SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(r0, r1, r2, r3, 0xC0, 1);
 
       if(R0 < 0)
       {
@@ -366,109 +358,76 @@ int w_dmac5_command_0x41_C8D2F0(char* result, const char* data, int size)
       }
       else
       {
-         r9 = r9 - 8;
+         current_size = current_size - 8;
 
-         r6 = ((int*)some_buffer)[0]
-         r7 = ((int*)some_buffer)[1]
+         r6 = some_buffer[0]
+         r7 = some_buffer[1]
 
-         if(R9 <= 8)
+         if(current_size <= 8)
          {
             break;
          }
       }
    }
 
-   if(r9 == 8)
+   if(current_size == 8)
    {
       r2 = ((int*)var_48)[0]
       r3 = ((int*)var_48)[1]
       
-      r0 = ((int*)r8)[0]
-      r1 = ((int*)r8)[1]
+      r0 = current_ptr[0]
+      r1 = current_ptr[1]
       
       r6 = r6 ^ r2;
       r7 = r7 ^ r3;
    }
    else
    {
-      r2 = ((int*)r8)[0];
-      r3 = ((int*)r8)[1];
+      r2 = current_ptr[0];
+      r3 = current_ptr[1];
       
-      r0 = r9 + 1;
+      r0 = current_size + 1;
       r1 = 0;
       
-      ((int*)var_50)[0] = r2;
-      ((int*)var_50)[1] = r3;
+      var_50[0] = r2;
+      var_50[1] = r3;
       
       r3 = buffer;
-      r3 = r3 + r9;
+      r3 = r3 + current_size;
       
       ((char)r3[-0x28]) = (char)r1;
       
       if(R0 != 0)
       {
-         r0 = r0 + r10;
-         r2 = 7 - r9;
+         r0 = r0 + var_50;
+         r2 = 7 - current_size;
          memset(r0, r1, r2);
       }
       
       r2 = ((int*)var_40)[0];
       r3 = ((int*)var_40)[1];
 
-      r0 = ((int*)var_50)[0];
-      r1 = ((int*)var_50)[1];
+      r0 = var_50[0];
+      r1 = var_50[1];
       
       r6 = r6 ^ r2;
       r7 = r7 ^ r3;
    }
 
-   r2 = 0xC0;
-   r3 = 1;
-   
-   arg_0 = r2;
-   arg_4 = r3;
-   
    r6 = r6 ^ r0;
    r7 = r7 ^ r1;
    
-   r0 = r10;
-   r1 = some_buffer;
-   r2 = 8;
-   r3 = 0x1C;
-
-   ((int*)var_50)[0] = r6;
-   ((int*)var_50)[1] = r7;
+   var_50[0] = r6;
+   var_50[1] = r7;
    
-   int r0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(r0, r1, r2, r3, arg_0, arg_4);
+   int enc_res2 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)var_50, (char*)some_buffer, 8, 0x1C, 0xC0, 1);
+   if(enc_res2 < 0)
+      return enc_res2;
 
-   if(r0 < 0)
-   {
-      r1 = var_58;
-      r2 = var_2C;
-      r3 = r1[0];
-      if(r2 != r3)
-         return STACK_FAIL;
-      else
-         return r0;
-   }
+   result[0] = some_buffer[0];
+   result[1] = some_buffer[1];
 
-   r2 = ((int*)some_buffer)[0];
-   r3 = ((int*)some_buffer)[1];
-
-   r0 = 0;
-
-   r1 = var_54;
-   
-   ((int*)r1)[0] = r2;
-   ((int*)r1)[1] = r3;
-
-   r1 = var_58;
-   r2 = var_2C;
-   r3 = r1[0];
-   if(r2 != r3)
-      return STACK_FAIL;
-   else
-      return r0;
+   return 0;
 }
 
 int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx *subctx2, int delay)
