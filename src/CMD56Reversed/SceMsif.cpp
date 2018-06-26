@@ -78,8 +78,8 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 
 int w_dmac5_command_0x41_bit_magic_C8D2F0(int* some_buffer, int* var_48_res, int* var_40_res)
 {
-   int var_50[2]; // 8 bytes
-
+   
+   
    char var_48; //16 bytes
    char var_47;
    char var_46;
@@ -104,187 +104,202 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(int* some_buffer, int* var_48_res, int
 
    //---- calculate var_48, var_48 ----
 
-   /*
-   r4 = some_buffer[0];
-   r3 = some_buffer[1];
    
-   r7 = 0;
-   r5 = 0;
+   char D16[8];
    
-   [var_50 + 4] = (int)r3;
-   
-   r3 = 0;
-   
-   ((char*)D16)[0] = (char)r4;
-   ((char*)D16)[1] = (char)r4;
-   ((char*)D16)[2] = (char)r4;
-   ((char*)D16)[3] = (char)r4;
-   ((char*)D16)[4] = (char)r4;
-   ((char*)D16)[5] = (char)r4;
-   ((char*)D16)[6] = (char)r4;
-   ((char*)D16)[7] = (char)r4;
+   D16[0] = ((char*)some_buffer)[0];
+   D16[1] = ((char*)some_buffer)[0];
+   D16[2] = ((char*)some_buffer)[0];
+   D16[3] = ((char*)some_buffer)[0];
+   D16[4] = ((char*)some_buffer)[0];
+   D16[5] = ((char*)some_buffer)[0];
+   D16[6] = ((char*)some_buffer)[0];
+   D16[7] = ((char*)some_buffer)[0];
 
-   r6 = r4 >> 8;
-   r2 = r4 >> 0x10;
-
-   var_50 = (int)r4;
-
-   D16 = D16 >> 0x38;
+   *((uint64_t*)D16) = (*((uint64_t*)D16)) >> 56;
    
-   r6 = (char)r6;
+   char D17[8];
 
-   D17 = D16 << 8;
+   *((uint64_t*)D17) = *((uint64_t*)D16) << 8;
 
-   r2 = (char)r2;
-   
    r0 = ((int*)D17)[0];
    r1 = ((int*)D17)[1];
    
-   r4 = r4 >> 0x18;
-   r1 = r1 | r7;
-   
-   lr = (char)[var_50];
-   
-   r1 = r1 << 8;
-   r0 = r0 | r6;
-   r4 = (char)r4;
-   r6 = (char)[var_50 + 4]
-   r1 = r1 | (r0 >> 24);
-   r0 = r0 << 8;
-   r3 = r3 | r1;
-   r2 = r2 | r0;
-   r3 = r3 << 8;
-   r7 = 0;
-   r0 = (char)[var_50 + 5];
-   r1 = 0;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r5;
-   r2 = r2 | r4;
-   r3 = r3 << 8;
-   r4 = (char)[var_50 + 6]
-   r5 = 0;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r7;
-   r2 = r2 | r6;
-   r3 = r3 << 8;
-   r6 = (char)[var_50 + 7];
-   r7 = 0;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r1;
-   r2 = r2 | r0;
-   r3 = r3 << 8;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r5;
-   r2 = r2 | r4;
-   r3 = r3 << 8;
-   r5 = 0;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r6 = r6 | r2;
-   r7 = r7 | r3;
-   r6 = r6 + r6;
-   r7 = r7 + r7; //carry add
+   //---
 
-   r1 = (char)r6;
-   r3 = r7 >> 0x18;
-   r0 = r7 >> 8;
-   var_41 = (char)r1;
-   r2 = r6 >> 0x18;
-   var_48 = (char)r3;
-   var_46 = (char)r0;
+   char value0 = ((char*)some_buffer)[0];
+   char value1 = ((char*)some_buffer)[1];
+   char value2 = ((char*)some_buffer)[2];
+   char value3 = ((char*)some_buffer)[3];
+   char value4 = ((char*)some_buffer)[4];
+   char value5 = ((char*)some_buffer)[5];
+   char value6 = ((char*)some_buffer)[6];
+   char value7 = ((char*)some_buffer)[7];
 
-   if(lr < 0)
+   int r7 = 0;
+
+   int r1 = r1 | r7;
+   int r1 = r1 << 8;
+   int r0 = r0 | value1;
+   int r1 = r1 | (r0 >> 24);
+   int r0 = r0 << 8;
+
+   int r3 = 0;
+   
+   int r3 = r1 | r3;
+   int r3 = r3 << 8;
+   int r2 = r0 | value2; //change register from r0 to r2
+   int r3 = r3 | (r2 >> 24);
+   int r2 = r2 << 8;
+
+   int r5 = 0;
+
+   int r3 = r3 | r5;
+   int r3 = r3 << 8;
+   int r2 = r2 | value3;
+   int r3 = r3 | (r2 >> 24);
+   int r2 = r2 << 8;
+
+   int r7 = 0;
+   
+   int r3 = r3 | r7;
+   int r3 = r3 << 8;
+   int r2 = r2 | value4;
+   int r3 = r3 | (r2 >> 24);
+   int r2 = r2 << 8;
+
+   int r1 = 0;
+
+   int r3 = r3 | r1;
+   int r3 = r3 << 8;
+   int r2 = r2 | value5;
+   int r3 = r3 | (r2 >> 24);
+   int r2 = r2 << 8;
+
+   int r5 = 0;
+
+   int r3 = r3 | r5;
+   int r3 = r3 << 8;
+   int r2 = r2 | value6;
+   int r3 = r3 | (r2 >> 24);
+   int r2 = r2 << 8;
+
+   int r7 = 0;
+   
+   int r6 = value7 | r2;
+   int r7 = r7 | r3;
+
+   int r6 = r6 + r6;
+   int r7 = r7 + r7; //carry add
+
+   //---
+
+   char shiftr7_0 = (char)(r7);
+   char shiftr7_1 = (char)(r7 >> 8);
+   char shiftr7_2 = (char)(r7 >> 16);
+   char shiftr7_3 = (char)(r7 >> 24);
+
+   char shiftr6_0 = (char)(r6);
+   char shiftr6_1 = (char)(r6 >> 8);
+   char shiftr6_2 = (char)(r6 >> 16);
+   char shiftr6_3 = (char)(r6 >> 24);
+
+   var_41 = shiftr6_0;
+
+   if(value0 < 0)
    {
-      r1 = r1 ^ 0x1B;
+      var_41 = (char)(shiftr6_0 ^ 0x1B);
    }
+
+   var_42 = (char)(shiftr6_1 | (r7 << 24));
+   var_43 = (char)(shiftr6_2 | (r7 << 16));
+   var_44 = (char)(shiftr6_3 | (r7 << 8));
+
+   var_45 = shiftr7_0;
+   var_46 = shiftr7_1;
+   var_47 = shiftr7_2;
+   var_48 = shiftr7_3;
+   
+   //---
+
+   r1 = 0;
+   r3 = 0;
 
    r0 = (char)var_48;
-   r4 = r7 >> 16;
+   r1 = r1 << 8;
+   r1 = r1 | (r0 >> 24);
+   r0 = r0 << 8;
+   r3 = r3 | r1;
+
+   r5 = 0;
+
+   r2 = (char)var_47;
+   r3 = r3 << 8;
+   r2 = r2 | r0; // switch register ???
+   r3 = r3 | (r2 >> 24);
+   r2 = r2 << 8;
+   r3 = r3 | r5;
+
+   r7 = 0;
    
-   if(lr < 0)
-   {
-      var_41 = (char)r1;
-   }
+   r2 = r2 | (char)var_46;
+   r3 = r3 << 8;
+   r3 = r3 | (r2 >> 24);
+   r2 = r2 << 8;
+   r3 = r3 | r7;
 
    r1 = 0;
-   r2 = r2 | (r7 << 8);
-   r1 = r1 << 8;
-   var_47 = (char)r4;
-   r4 = r6 >> 0x10;
-   var_44 = (char)r2;
-   r3 = 0;
-   r1 = r1 | (r0 >> 24);
-   r2 = (char)var_47;
-   r0 = r0 << 8;
-   r4 = r4 | (r7 << 16);
-   r6 = r6 >> 8;
-   var_45 = (char)r7;
-   r3 = r3 | r1;
-   var_43 = (char)r4;
-   r3 = r3 << 8;
-   r2 = r2 | r0;
-   r4 = (char)var_46;
-   r6 = r6 | (r7 << 24);
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   var_42 = r6;
-   r3 = r3 | r5;
-   r6 = (char)var_45;
-   r3 = r3 << 8;
-   r2 = r2 | r4;
-   r7 = 0;
-   r0 = (char)var_44;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r4 = (char)var_43;
-   r3 = r3 | r7;
-   r2 = r2 | r6;
-   r3 = r3 << 8;
-   r1 = 0;
-   r5 = 0;
-   r6 = (char)var_42;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   lr = (char)var_48;
-   r3 = r3 | r1;
-   r2 = r2 | r0;
-   r3 = r3 << 8; 
-   r7 = 0;
-   r0 = (char)var_41;
-   r1 = 0;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r5;
-   r2 = r2 | r4;
-   r3 = r3 << 8;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r7;
-   r2 = r2 | r6;
-   r3 = r3 << 8;
    
+   r2 = r2 | (char)var_45;
+   r3 = r3 << 8;
    r3 = r3 | (r2 >> 24);
    r2 = r2 << 8;
-   r0 = r0 | r2;
-   r1 = r1 | r3;
+   r3 = r3 | r1;
+
+   r5 = 0;
+   
+   r2 = r2 | (char)var_44;
+   r3 = r3 << 8; 
+   r3 = r3 | (r2 >> 24);
+   r2 = r2 << 8;
+   r3 = r3 | r5;
+
+   r7 = 0;
+   
+   r2 = r2 | (char)var_43;
+   r3 = r3 << 8;
+   r3 = r3 | (r2 >> 24);
+   r2 = r2 << 8;
+   r3 = r3 | r7;
+
+   r1 = 0;
+   
+   r2 = r2 | (char)var_42;
+   r3 = r3 << 8;
+   r3 = r3 | (r2 >> 24);
+   r2 = r2 << 8;
+   r1 = r3 | r1;
+
+   r0 = r2 | (char)var_41;
+   
    r0 = r0 + r0;
    r1 = r1 + r1; //carry add
 
-   r2 = r2 >> 0x18;
-   r6 = r1 >> 0x10;
+   //-----------------
+
+   r2 = r2 >> 24;
+   r6 = r1 >> 16;
    r4 = (char)r0;
-   r3 = r1 >> 0x18;
+   r3 = r1 >> 24;
    r5 = r1 >> 8;
    var_3F = (char)r6;
-   r6 = r0 >> 0x10;
+   r6 = r0 >> 16;
    r2 = r2 | (r1 << 8);
    r6 = r6 | (r1 << 16);
    r0 = r0 >> 8;
    var_39 = (char)r4;
+
+   lr = (char)var_48;
 
    if(lr < 0)
    {
@@ -305,8 +320,8 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(int* some_buffer, int* var_48_res, int
    }
    
    var_3A = (char)r0;
-   */
-
+   
+   
    return 0;
 }
 
