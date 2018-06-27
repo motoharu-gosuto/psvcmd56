@@ -131,40 +131,64 @@ std::uint32_t adcs(std::uint32_t left, std::uint32_t right, std::uint32_t* carry
 
 //--------
 
+void process_back_inverse_body(unsigned int& lo, unsigned int& hi, unsigned char value)
+{
+   unsigned int v1 = lo | value;
+   unsigned int v2 = hi << 8;
+   unsigned int v3 = v2 | (v1 >> 24);
+   lo = v1 << 8;
+   hi = v3 | 0;
+}
+
+void process_back_inverse_head(unsigned int& lo, unsigned int& hi, unsigned char value)
+{
+   hi = 0;
+   lo = 0;
+
+   process_back_inverse_body(lo, hi, value);
+}
+
+void process_back_inverse_tail(unsigned int& lo, unsigned int& hi, unsigned char value)
+{
+   lo = lo | value;
+}
+
+//--------
+
 int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned int* var_48_res, unsigned int* var_40_res)
 {
    //---- reverse input buffer ----
 
-   unsigned int lo;
-   unsigned int hi;
-   process_block_invert_head(lo, hi, ((unsigned char*)some_buffer)[0]);
-   process_block_invert_body(lo, hi, ((unsigned char*)some_buffer)[1]);
-   process_block_invert_body(lo, hi, ((unsigned char*)some_buffer)[2]);
-   process_block_invert_body(lo, hi, ((unsigned char*)some_buffer)[3]);
-   process_block_invert_body(lo, hi, ((unsigned char*)some_buffer)[4]);
-   process_block_invert_body(lo, hi, ((unsigned char*)some_buffer)[5]);
-   process_block_invert_body(lo, hi, ((unsigned char*)some_buffer)[6]);
-   process_block_invert_tail(lo, hi, ((unsigned char*)some_buffer)[7]);
+   unsigned int lo0;
+   unsigned int hi0;
+   process_block_invert_head(lo0, hi0, ((unsigned char*)some_buffer)[0]);
+   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[1]);
+   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[2]);
+   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[3]);
+   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[4]);
+   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[5]);
+   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[6]);
+   process_block_invert_tail(lo0, hi0, ((unsigned char*)some_buffer)[7]);
 
    //---- carry add input buffer ----
 
-   std::uint32_t carry = 0;
-   std::uint32_t au = adds(lo, lo, &carry); //technically this is a multiplication by 2
-   std::uint32_t bu = adcs(hi, hi, &carry); //technically this is a multiplication by 2 (but also with carry)
+   std::uint32_t carry0 = 0;
+   std::uint32_t au0 = adds(lo0, lo0, &carry0); //technically this is a multiplication by 2
+   std::uint32_t bu0 = adcs(hi0, hi0, &carry0); //technically this is a multiplication by 2 (but also with carry)
 
    //---- retrieve bytes
 
    unsigned char a[4]; 
-   a[0] = (unsigned char)(au);
-   a[1] = (unsigned char)(au >>  8);
-   a[2] = (unsigned char)(au >> 16);
-   a[3] = (unsigned char)(au >> 24);
+   a[0] = (unsigned char)(au0);
+   a[1] = (unsigned char)(au0 >>  8);
+   a[2] = (unsigned char)(au0 >> 16);
+   a[3] = (unsigned char)(au0 >> 24);
 
    unsigned char b[4]; 
-   b[0] = (unsigned char)(bu);
-   b[1] = (unsigned char)(bu >>  8);
-   b[2] = (unsigned char)(bu >> 16);
-   b[3] = (unsigned char)(bu >> 24);
+   b[0] = (unsigned char)(bu0);
+   b[1] = (unsigned char)(bu0 >>  8);
+   b[2] = (unsigned char)(bu0 >> 16);
+   b[3] = (unsigned char)(bu0 >> 24);
 
    //---- mix bytes ----
 
@@ -205,75 +229,31 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    unsigned char var_3A;
    unsigned char var_39;
 
-   std::cout << std::endl;
+   //---- back reverse buffer ----
    
+   unsigned int hi1;
+   unsigned int lo1;
+   process_back_inverse_head(lo1, hi1, var_48);
+   process_back_inverse_body(lo1, hi1, var_47);
+   process_back_inverse_body(lo1, hi1, var_46);
+   process_back_inverse_body(lo1, hi1, var_45);
+   process_back_inverse_body(lo1, hi1, var_44);
+   process_back_inverse_body(lo1, hi1, var_43);
+   process_back_inverse_body(lo1, hi1, var_42);
+   process_back_inverse_tail(lo1, hi1, var_41);
+
+   //---- carry add buffer ----
+
+   std::uint32_t carry1 = 0;
+   std::uint32_t r0 = adds(lo1, lo1, &carry1); //technically this is a multiplication by 2
+   std::uint32_t r1 = adcs(hi0, hi0, &carry1); //technically this is a multiplication by 2 (but also with carry)
+
+   //---
+
+   std::cout << std::endl;
+
    //---
    /*
-   r1 = 0;
-   r3 = 0;
-
-   r0 = (char)var_48;
-   r1 = r1 << 8;
-   r1 = r1 | (r0 >> 24);
-   r0 = r0 << 8;
-   r3 = r3 | r1;
-
-   r5 = 0;
-
-   r2 = (char)var_47;
-   r3 = r3 << 8;
-   r2 = r2 | r0; // switch register ???
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r5;
-
-   r7 = 0;
-   
-   r2 = r2 | (char)var_46;
-   r3 = r3 << 8;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r7;
-
-   r1 = 0;
-   
-   r2 = r2 | (char)var_45;
-   r3 = r3 << 8;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r1;
-
-   r5 = 0;
-   
-   r2 = r2 | (char)var_44;
-   r3 = r3 << 8; 
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r5;
-
-   r7 = 0;
-   
-   r2 = r2 | (char)var_43;
-   r3 = r3 << 8;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r3 = r3 | r7;
-
-   r1 = 0;
-   
-   r2 = r2 | (char)var_42;
-   r3 = r3 << 8;
-   r3 = r3 | (r2 >> 24);
-   r2 = r2 << 8;
-   r1 = r3 | r1;
-
-   r0 = r2 | (char)var_41;
-   
-   r0 = r0 + r0;
-   r1 = r1 + r1; //carry add
-
-   //-----------------
-
    r2 = r2 >> 24;
    r6 = r1 >> 16;
    r4 = (char)r0;
