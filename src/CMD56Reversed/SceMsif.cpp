@@ -279,9 +279,9 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
 
    //calculate tweak keys?
 
-   unsigned int tweak_key_48[2];
-   unsigned int tweak_key_40[2];
-   int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, tweak_key_48, tweak_key_40);
+   unsigned int tweak_key0[2];
+   unsigned int tweak_key1[2];
+   int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, tweak_key0, tweak_key1);
 
    //---- process data in blocks of 8 bytes ----
 
@@ -326,8 +326,8 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
       tail_data[1] = current_ptr[1];
       
       //perform xor operation of current buffer with some data
-      tail_tweak[0] = round_buffer[0] ^ tweak_key_48[0];
-      tail_tweak[1] = round_buffer[1] ^ tweak_key_48[1];
+      tail_tweak[0] = round_buffer[0] ^ tweak_key0[0];
+      tail_tweak[1] = round_buffer[1] ^ tweak_key0[1];
    }
    else
    {
@@ -354,8 +354,8 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
       tail_data[1] = temp_src2[1];
       
       //perform xor operation of current buffer with some data
-      tail_tweak[0] = round_buffer[0] ^ tweak_key_40[0];
-      tail_tweak[1] = round_buffer[1] ^ tweak_key_40[1];
+      tail_tweak[0] = round_buffer[0] ^ tweak_key1[0];
+      tail_tweak[1] = round_buffer[1] ^ tweak_key1[1];
    }
 
    //perform xor operation with input data
