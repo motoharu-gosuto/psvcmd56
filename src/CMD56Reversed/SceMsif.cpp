@@ -81,28 +81,23 @@ char ctx_130_part_C904A8[0x90];
 
 int food_start_F00D_communication_rmauth_sm_C8D880()
 {
-   int result;
    elf_info_pair self;
+   self.size = 0xC;
+   self.elf_data = 0;
+   self.elf_size = 0;
+   
+   if (SceSysrootForKernel_f10ab792(1, &self) < 0)
+      return 0x800F0016;
+
    sm_comm_ctx_130 ctx_130;
    
    memset(&ctx_130, 0, 0x130u);
    memcpy(ctx_130.data0, ctx_130_part_C904A8, 0x90u);
-   self.elf_data = 0;
+
    ctx_130.pathId = 2;
-   self.elf_size = 0;
-   self.size = 0xC;
+   ctx_130.self_type = 2;
 
-   if (SceSysrootForKernel_f10ab792(1, &self) < 0)
-   {
-      result = 0x800F0016;
-   }
-   else
-   {
-      ctx_130.self_type = ctx_130.self_type & 0xFFFFFFF0 | 2;
-      result = SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
-   }
-
-   return result;
+   return SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
 }
 
 int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
