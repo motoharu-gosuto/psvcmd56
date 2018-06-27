@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "SceSblSsMgr.h"
+#include "SceSysmem.h"
 
 typedef struct SceMsif_subctx
 {
@@ -74,55 +75,36 @@ int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd
 
 int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 {
-   int *input_local; // r5
-   int i0; // r0
-   int i1; // r1
-   int i2; // r2
-   int i3; // r3
-   
-   signed int res1; // r4
-   int result; // r0
-   int f00d_resp; // [sp+8h] [bp-48h]
-   sm_comm_pair res; // [sp+Ch] [bp-44h]
-   char buffer[32]; // [sp+14h] [bp-3Ch]
-   
-   input_local = (int *)input;
-   
    if (input == 0)
       return 0x800F1916;
 
-   SceMsif_SceKernelSuspendForDriver__imp_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0);
-      
-   i0 = *input_local;
-   i1 = input_local[1];
-   i2 = input_local[2];
-   i3 = input_local[3];
-      
-   f00d_resp = 0;
-      
-   *(_DWORD *)buffer = i0;
-   *(_DWORD *)&buffer[4] = i1;
-   *(_DWORD *)&buffer[8] = i2;
-   *(_DWORD *)&buffer[0xC] = i3;
-      
+   SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0);
+         
    int res0 = food_start_F00D_communication_rmauth_sm_C8D880();
    if (res0 != 0)
    {
-      SceMsif_SceKernelSuspendForDriver__imp_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
+      SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
       return res0;
    }
 
+   char buffer[32];
+   memcpy(buffer, input, 0x10);
+
+   int f00d_resp = 0;
+
    if (SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommCallFunc_db9fc204(MEMORY[0xB9F9BC], 2, &f00d_resp, buffer, 32))
       f00d_resp = 0x800F1928;
-      
-   res0 = SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommStopSm_0631f8ed(MEMORY[0xB9F9BC], &res);
-   if (res0 != 0)
+   
+   sm_comm_pair res;
+
+   int res1 = SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommStopSm_0631f8ed(MEMORY[0xB9F9BC], &res);
+   if (res1 != 0)
    {
-      SceMsif_SceKernelSuspendForDriver__imp_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
-      return res0;
+      SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
+      return res1;
    }
    
-   SceMsif_SceKernelSuspendForDriver__imp_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
+   SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
    return f00d_resp;
 }
 
