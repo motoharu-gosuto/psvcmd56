@@ -39,7 +39,7 @@ struct context_db9fc204
 {
    //this is a structure of size 0x814
 
-   int var838; ; // set to 1
+   int var838; // set to 1
    int command; //var834
    char data[0x800]; //var830
    int packet6_de; //var30
@@ -53,7 +53,7 @@ struct context_db9fc204
 struct smc_133_input
 {
    SceSize size; //0x40 + 0x814
-   int mode; //for example 1000B
+   int service_id; //for example 1000B
    int smcArg0; // or error state
    int unk; // is 0
 

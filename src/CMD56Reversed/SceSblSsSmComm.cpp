@@ -45,44 +45,49 @@ int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_
 // =============================
 
 
-int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int mode, int* err_state, context_db9fc204* ctx, int size)
+int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, int* f00d_resp, void* ctx, int size)
 {
    //many globals, functionality is simplier
 
    //TODO: imitating size change and encryption - need to figure out what is going on here
 
-   switch(ctx->command)
+   if(service_id == 0x1000B)
    {
-   case KIRK_SERVICE_1B:
-      //size is ok
-      memset(ctx->data, 0xBB, ctx->size);
-      break;
-   case KIRK_SERVICE_1C:
-      ctx->size = 0x33;  // 0x40 -> 0x33
-      memset(ctx->data, 0xBB, ctx->size);
-      break;
-   case KIRK_SERVICE_1D:
-      //size is ok
-      memset(ctx->data, 0xBB, ctx->size);
-      break;
-   case KIRK_SERVICE_1E:
-      ctx->size = 0x33;  //0x51 -> 0x33
-      memset(ctx->data, 0xBB, ctx->size);
-      break;
-   case KIRK_SERVICE_1F:
-      ctx->size = 0x20;  //0xB3 -> 0x20
-      memset(ctx->data, 0xBB, ctx->size);
-      break;
-   case KIRK_SERVICE_20:
-      ctx->size = 0x34; //0x116 -> 0x34
-      memset(ctx->data, 0xBB, ctx->size);
-      break;
+      context_db9fc204* ctx_cast = (context_db9fc204*)ctx;
+
+      switch(ctx_cast->command)
+      {
+      case KIRK_SERVICE_1B:
+         //size is ok
+         memset(ctx_cast->data, 0xBB, ctx_cast->size);
+         break;
+      case KIRK_SERVICE_1C:
+         ctx_cast->size = 0x33;  // 0x40 -> 0x33
+         memset(ctx_cast->data, 0xBB, ctx_cast->size);
+         break;
+      case KIRK_SERVICE_1D:
+         //size is ok
+         memset(ctx_cast->data, 0xBB, ctx_cast->size);
+         break;
+      case KIRK_SERVICE_1E:
+         ctx_cast->size = 0x33;  //0x51 -> 0x33
+         memset(ctx_cast->data, 0xBB, ctx_cast->size);
+         break;
+      case KIRK_SERVICE_1F:
+         ctx_cast->size = 0x20;  //0xB3 -> 0x20
+         memset(ctx_cast->data, 0xBB, ctx_cast->size);
+         break;
+      case KIRK_SERVICE_20:
+         ctx_cast->size = 0x34; //0x116 -> 0x34
+         memset(ctx_cast->data, 0xBB, ctx_cast->size);
+         break;
+      }
    }
 
    //more imitations
    smc_133_input in;
    in.size = 0x40 + size;
-   in.mode = mode;
+   in.service_id = service_id;
    in.smcArg0 = 0x00;
    in.unk = 0x00;
 
@@ -96,7 +101,7 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int mode, int* e
 // =============================
 
 
-int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id)
+int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id, std::pair<int, int>* res)
 {
    
    return 0;
