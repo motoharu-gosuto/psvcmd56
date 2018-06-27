@@ -602,8 +602,8 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
 
    memcpy(var968.data0, dword_CADC10, 0x90); //store to var960
 
-   var968.unk_4 = 0x02;
-   var968.unk_128 = 0x02;
+   var968.self_type = 0x02;
+   var968.pathId = 0x02;
 
    //it is important that arg1 and arg2 are initialized by imp_f10ab792
    //TODO: it is proved by many factors that this procedure shrinks the data and changes ctx.size field to the required size in sub_CAC924_command

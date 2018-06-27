@@ -168,10 +168,10 @@ struct memory_block_data_entry
 typedef struct sm_comm_ctx_130
 {
    uint32_t unk_0;
-   uint32_t unk_4; // 2
+   uint32_t self_type;
    char data0[0x90]; //hardcoded data
    char data1[0x90];
-   uint32_t unk_128; // 2
+   uint32_t pathId; 
    uint32_t unk_12C;   
 }sm_comm_ctx_130;
 
