@@ -3,7 +3,8 @@
 #include <iostream>
 
 #include "SceSblSsMgr.h"
-#include "SceSysmem.h"
+#include "SceKernelSuspend.h"
+#include "SceSblSsSmComm.h"
 
 typedef struct SceMsif_subctx
 {
@@ -73,6 +74,13 @@ int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd
    return 0;
 }
 
+int id_B9F9BC = 0;
+
+int food_start_F00D_communication_rmauth_sm_C8D880()
+{
+   return 0;
+}
+
 int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 {
    if (input == 0)
@@ -92,12 +100,12 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 
    int f00d_resp = 0;
 
-   if (SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommCallFunc_db9fc204(MEMORY[0xB9F9BC], 2, &f00d_resp, buffer, 32))
+   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 2, &f00d_resp, buffer, 32))
       f00d_resp = 0x800F1928;
    
-   sm_comm_pair res;
+   std::pair<int, int> res;
 
-   int res1 = SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommStopSm_0631f8ed(MEMORY[0xB9F9BC], &res);
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
    if (res1 != 0)
    {
       SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
