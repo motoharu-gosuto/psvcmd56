@@ -5,6 +5,7 @@
 #include "SceSblSsMgr.h"
 #include "SceKernelSuspend.h"
 #include "SceSblSsSmComm.h"
+#include "SceSysroot.h"
 
 typedef struct SceMsif_subctx
 {
@@ -76,39 +77,31 @@ int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd
 
 int id_B9F9BC = 0;
 
+char ctx_130_part_C904A8[0x90];
+
 int food_start_F00D_communication_rmauth_sm_C8D880()
 {
-   int result; // r0
-   elf_info_pair self; // [sp+Ch] [bp-154h]
-   SceSblSmCommContext130 ctx_130; // [sp+18h] [bp-148h]
-   int cookie; // [sp+14Ch] [bp-14h]
-
-   cookie = MEMORY[0x9EA004];
-   SceMsif_SceSysclibForDriver__imp_memset_0ab9bf5c(&ctx_130, 0, 0x130u);
-   SceMsif_SceSysclibForDriver__imp_memcpy_40c88316(ctx_130.data0, ctx_130_part_C904A8, 0x90u);
+   int result;
+   elf_info_pair self;
+   sm_comm_ctx_130 ctx_130;
+   
+   memset(&ctx_130, 0, 0x130u);
+   memcpy(ctx_130.data0, ctx_130_part_C904A8, 0x90u);
    self.elf_data = 0;
    ctx_130.pathId = 2;
    self.elf_size = 0;
    self.size = 0xC;
 
-   if ( SceMsif_SceSysrootForKernel__imp_sceSysrootGetElfInfo_f10ab792(1, &self) < 0 )
+   if (SceSysrootForKernel_f10ab792(1, &self) < 0)
    {
       result = 0x800F0016;
    }
    else
    {
       ctx_130.self_type = ctx_130.self_type & 0xFFFFFFF0 | 2;
-      result = SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommStartSm1_039c73b1(
-               0,
-               self.elf_data,
-               self.elf_size,
-               0,
-               &ctx_130,
-               (int *)0xB9F9BC);
+      result = SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
    }
 
-   if ( cookie != MEMORY[0x9EA004] )
-      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(result);
    return result;
 }
 
