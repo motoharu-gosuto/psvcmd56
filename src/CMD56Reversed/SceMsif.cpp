@@ -203,9 +203,11 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    unsigned char var_42;
    unsigned char var_41;
 
-   unsigned char value0 = ((char*)some_buffer)[0];
-   var_41 = ((value0 & 0x80) > 0) ? (a[0] ^ 0x1B) 
-                                  :  a[0];
+   //---
+
+   unsigned char value00 = ((char*)some_buffer)[0];
+   var_41 = ((value00 & 0x80) > 0) ? (a[0] ^ 0x1B) 
+                                   :  a[0];
    
    var_42 = (a[1] | b[3]);
    var_43 = (a[2] | b[2]);
@@ -215,19 +217,6 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    var_46 = b[1];
    var_47 = b[2];
    var_48 = b[3];
-
-   //---
-
-   //dont change order!
-   unsigned char var_40;
-   unsigned char var_3F;
-   unsigned char var_3E;
-   unsigned char var_3D;
-
-   unsigned char var_3C;
-   unsigned char var_3B;
-   unsigned char var_3A;
-   unsigned char var_39;
 
    //---- back reverse buffer ----
    
@@ -245,50 +234,51 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    //---- carry add buffer ----
 
    std::uint32_t carry1 = 0;
-   std::uint32_t r0 = adds(lo1, lo1, &carry1); //technically this is a multiplication by 2
-   std::uint32_t r1 = adcs(hi0, hi0, &carry1); //technically this is a multiplication by 2 (but also with carry)
+   std::uint32_t au1 = adds(lo1, lo1, &carry1); //technically this is a multiplication by 2
+   std::uint32_t bu1 = adcs(hi0, hi0, &carry1); //technically this is a multiplication by 2 (but also with carry)
+
+   //---- retrieve bytes
+
+   unsigned char c[4]; 
+   c[0] = (unsigned char)(au1);
+   c[1] = (unsigned char)(au1 >>  8);
+   c[2] = (unsigned char)(au1 >> 16);
+   c[3] = (unsigned char)(au1 >> 24);
+
+   unsigned char d[4]; 
+   d[0] = (unsigned char)(bu1);
+   d[1] = (unsigned char)(bu1 >>  8);
+   d[2] = (unsigned char)(bu1 >> 16);
+   d[3] = (unsigned char)(bu1 >> 24);
+
+   //---- mix bytes ----
+
+   //dont change order!
+   unsigned char var_40;
+   unsigned char var_3F;
+   unsigned char var_3E;
+   unsigned char var_3D;
+
+   unsigned char var_3C;
+   unsigned char var_3B;
+   unsigned char var_3A;
+   unsigned char var_39;
 
    //---
 
-   std::cout << std::endl;
+   unsigned char value01 = var_48;
+   var_39 = ((value01 & 0x80) > 0) ? (c[0] ^ 0x1B)
+                                   :  c[0];
 
-   //---
-   /*
-   r2 = r2 >> 24;
-   r6 = r1 >> 16;
-   r4 = (char)r0;
-   r3 = r1 >> 24;
-   r5 = r1 >> 8;
-   var_3F = (char)r6;
-   r6 = r0 >> 16;
-   r2 = r2 | (r1 << 8);
-   r6 = r6 | (r1 << 16);
-   r0 = r0 >> 8;
-   var_39 = (char)r4;
+   var_3A = c[1] | d[3];
+   var_3B = c[2] | d[2];
+   var_3C = c[3] | d[1];
 
-   lr = (char)var_48;
-
-   if(lr < 0)
-   {
-      r4 = r4 ^ 0x1B;
-   }
-
-   var_3D = (char)r1;
-   var_40 = (char)r3;
-   r0 = r0 | (r1 << 24);
-   var_3E = (char)r5;
-
-   var_3C = (char)r2;
-   var_3B = (char)r6;
-
-   if(lr < 0)
-   {
-      var_39 = (char)r4;
-   }
-   
-   var_3A = (char)r0;
-   
-   */
+   var_3D = d[0];
+   var_3E = d[1];
+   var_3F = d[2];
+   var_40 = d[3];
+ 
    return 0;
 }
 
