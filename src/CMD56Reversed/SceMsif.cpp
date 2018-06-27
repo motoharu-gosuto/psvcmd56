@@ -155,7 +155,7 @@ void process_back_inverse_tail(unsigned int& lo, unsigned int& hi, unsigned char
 
 //--------
 
-int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned int* var_48_res, unsigned int* var_40_res)
+int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned int* tweak0_res, unsigned int* tweak1_res)
 {
    //---- reverse input buffer ----
 
@@ -192,44 +192,33 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
 
    //---- mix bytes ----
 
-   //dont change order!
-   unsigned char var_48;
-   unsigned char var_47;
-   unsigned char var_46;
-   unsigned char var_45;
+   unsigned char tweak0[8];
 
-   unsigned char var_44;
-   unsigned char var_43;
-   unsigned char var_42;
-   unsigned char var_41;
+   tweak0[0] = b[3];
+   tweak0[1] = b[2];
+   tweak0[2] = b[1];
+   tweak0[3] = b[0];
 
-   //---
+   tweak0[4] = (a[3] | b[1]);
+   tweak0[5] = (a[2] | b[2]);
+   tweak0[6] = (a[1] | b[3]);
 
    unsigned char value00 = ((char*)some_buffer)[0];
-   var_41 = ((value00 & 0x80) > 0) ? (a[0] ^ 0x1B) 
-                                   :  a[0];
+   tweak0[7] = ((value00 & 0x80) > 0) ? (a[0] ^ 0x1B) 
+                                      :  a[0];
    
-   var_42 = (a[1] | b[3]);
-   var_43 = (a[2] | b[2]);
-   var_44 = (a[3] | b[1]);
-
-   var_45 = b[0];
-   var_46 = b[1];
-   var_47 = b[2];
-   var_48 = b[3];
-
    //---- back reverse buffer ----
    
    unsigned int hi1;
    unsigned int lo1;
-   process_back_inverse_head(lo1, hi1, var_48);
-   process_back_inverse_body(lo1, hi1, var_47);
-   process_back_inverse_body(lo1, hi1, var_46);
-   process_back_inverse_body(lo1, hi1, var_45);
-   process_back_inverse_body(lo1, hi1, var_44);
-   process_back_inverse_body(lo1, hi1, var_43);
-   process_back_inverse_body(lo1, hi1, var_42);
-   process_back_inverse_tail(lo1, hi1, var_41);
+   process_back_inverse_head(lo1, hi1, tweak0[0]);
+   process_back_inverse_body(lo1, hi1, tweak0[1]);
+   process_back_inverse_body(lo1, hi1, tweak0[2]);
+   process_back_inverse_body(lo1, hi1, tweak0[3]);
+   process_back_inverse_body(lo1, hi1, tweak0[4]);
+   process_back_inverse_body(lo1, hi1, tweak0[5]);
+   process_back_inverse_body(lo1, hi1, tweak0[6]);
+   process_back_inverse_tail(lo1, hi1, tweak0[7]);
 
    //---- carry add buffer ----
 
@@ -253,32 +242,26 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
 
    //---- mix bytes ----
 
-   //dont change order!
-   unsigned char var_40;
-   unsigned char var_3F;
-   unsigned char var_3E;
-   unsigned char var_3D;
+   unsigned char tweak1[8]; //var_40
 
-   unsigned char var_3C;
-   unsigned char var_3B;
-   unsigned char var_3A;
-   unsigned char var_39;
+   tweak1[0] = d[3];
+   tweak1[1] = d[2];
+   tweak1[2] = d[1];
+   tweak1[3] = d[0];
 
-   //---
+   tweak1[4] = c[3] | d[1];
+   tweak1[5] = c[2] | d[2];
+   tweak1[6] = c[1] | d[3];
 
-   unsigned char value01 = var_48;
-   var_39 = ((value01 & 0x80) > 0) ? (c[0] ^ 0x1B)
-                                   :  c[0];
-
-   var_3A = c[1] | d[3];
-   var_3B = c[2] | d[2];
-   var_3C = c[3] | d[1];
-
-   var_3D = d[0];
-   var_3E = d[1];
-   var_3F = d[2];
-   var_40 = d[3];
+   unsigned char value01 = tweak0[0];
+   tweak1[7] = ((value01 & 0x80) > 0) ? (c[0] ^ 0x1B)
+                                      :  c[0];
  
+   //---- copy results ----
+
+   memcpy((char*)tweak0_res, (char*)tweak0, 8);
+   memcpy((char*)tweak1_res, (char*)tweak1, 8);
+
    return 0;
 }
 
