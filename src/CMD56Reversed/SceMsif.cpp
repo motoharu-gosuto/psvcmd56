@@ -23,14 +23,21 @@ int SceKernelUtilsForDriver_ksceSha224Digest_9ea9d4dc(char* source, int size, ch
    return 0;
 }
 
-typedef struct dec_aes_key_msif_packet //size is 0x24
+typedef struct portability_input_data //size is 0x24
 {
   uint32_t size;
   uint8_t data_1[0x10];
   uint8_t data_2[0x10];
-} dec_aes_key_msif_packet;
+}portability_input_data;
 
-int SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(int num, char* arg1, dec_aes_key_msif_packet* in, dec_aes_key_msif_packet* out)
+typedef struct portability_output_data //size is 0x24
+{
+  uint32_t size;
+  uint8_t key_name[0x10];
+  uint8_t aes_key_14[0x10];
+}portability_output_data;
+
+int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, char *iv, portability_input_data* in, portability_output_data* out)
 {
    return 0;
 }
@@ -62,11 +69,13 @@ int SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(char *src,
 
 //--------
 
+//[NO NEED TO REVERSE]
 int ms_execute_ex_set_cmd_write_short_data_C8A3A8(SceMsif_subctx *subctx, int cmd, int size, const char* source, int delay)
 {
    return 0;
 }
 
+//[NO NEED TO REVERSE]
 int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd, int size, char* dest, int delay)
 {
    return 0;
@@ -552,17 +561,17 @@ int decrypt_sha224_table_internal_C8D09C()
 {
    //try to decrypt aes key 1
 
-   dec_aes_key_msif_packet dec_input_C90370;
+   portability_input_data dec_input_C90370;
    dec_input_C90370.size = 0x20;
    memcpy(dec_input_C90370.data_1, g_dec_input_C90370, 0x10);
    memcpy(dec_input_C90370.data_2, g_dec_input_C90370 + 0x10, 0x10);
 
-   dec_aes_key_msif_packet dec_data_464;
+   portability_output_data dec_data_464;
    dec_data_464.size = 0x20;
-   memset(dec_data_464.data_1, 0, 0x10);
-   memset(dec_data_464.data_2, 0, 0x10);
+   memset(dec_data_464.key_name, 0, 0x10);
+   memset(dec_data_464.aes_key_14, 0, 0x10);
 
-   int kget_res1 = SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(4, g_zero_array_C90498, &dec_input_C90370, &dec_data_464);   
+   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input_C90370, &dec_data_464);   
 
    if(kget_res1 != 0)
    {
@@ -570,17 +579,17 @@ int decrypt_sha224_table_internal_C8D09C()
       return -1; //returns not exactly this, but we dont care here
    }
 
-   int cmp_res = memcmp(dec_data_464.data_1, g_zero_array_C90498, 0x10);
+   int cmp_res = memcmp(dec_data_464.key_name, g_zero_array_C90498, 0x10);
 
    //try to decrypt aes key 2
 
    if(cmp_res != 0)
    {
-      dec_aes_key_msif_packet dec_input_C90394;
+      portability_input_data dec_input_C90394;
       memcpy(dec_input_C90394.data_1, g_dec_input_C90394, 0x10);
       memcpy(dec_input_C90394.data_2, g_dec_input_C90394 + 0x10, 0x10);      
 
-      int kget_res2 = SceSblSsMgrForDriver_dec_aes_key_msif_934db6b5(4, g_zero_array_C90498, &dec_input_C90394, &dec_data_464);
+      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input_C90394, &dec_data_464);
 
       if(kget_res2 != 0)
       {
@@ -593,7 +602,7 @@ int decrypt_sha224_table_internal_C8D09C()
    char xor_data1[0x10]; //offset 0x3D0
    char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
-   int ai_res = SceKernelUtilsForDriver_aes_init_f12b6451(&ctx, 0x80, 0x80, dec_data_464.data_2);
+   int ai_res = SceKernelUtilsForDriver_aes_init_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key_14);
 
    if(ai_res <= 0)
    {
