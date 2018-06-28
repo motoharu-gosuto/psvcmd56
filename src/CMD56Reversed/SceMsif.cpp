@@ -2,12 +2,17 @@
 #include <string.h>
 #include <iostream>
 
+#include "SceMsif.h"
+#include "SceMsifKeys.h"
+
 #include "SceSblSsMgr.h"
 #include "SceSblSsMgrDmac5Layer.h"
 #include "SceKernelSuspend.h"
 #include "SceSblSsSmComm.h"
 #include "SceSysroot.h"
 #include "SceKernelUtils.h"
+
+//--------
 
 typedef struct SceMsif_subctx
 {
@@ -456,7 +461,7 @@ int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx
    return 0;
 }
 
-int memxor(char* dest, const char* src1, const char* src2, int size)
+int memxor(unsigned char* dest, const unsigned char* src1, const unsigned char* src2, int size)
 {
    for(int i = 0; i < size; i++)
       dest[i] = src1[i] ^ src2[i];
@@ -468,47 +473,13 @@ int memxor(char* dest, const char* src1, const char* src2, int size)
 // flag that shows that static sha224 table is decrypted 
 int g_00B9F9B8 = 0;
 
-char g_zero_array_C90498[0x10] = 
+unsigned char g_zero_array_C90498[0x10] = 
 {
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-//encrypted key data 1
-
-char g_dec_input_C90370[0x20] =
-{
-   0xB0, 0x6C, 0xA2, 0x7E, 0xAF, 0xBE, 0x0C, 0x17, 
-   0x3D, 0x8F, 0xA7, 0x8F, 0xD4, 0xE1, 0xE6, 0xB6, 
-   0xF0, 0xC8, 0x91, 0x93, 0x6B, 0xB1, 0x95, 0x6E, 
-   0x54, 0x7C, 0xFC, 0xC8, 0x32, 0x5C, 0xC1, 0xE2
-};
-
-//encrypted key data 2
-
-char g_dec_input_C90394[0x20] =
-{
-   0x34, 0xCB, 0x9E, 0xF9, 0x3F, 0xDA, 0x96, 0x15, 
-   0x7A, 0xB2, 0x0C, 0x2A, 0xB4, 0x87, 0x36, 0x24,
-   0x21, 0xB4, 0x07, 0xF2, 0x4F, 0x61, 0x35, 0x85,
-   0x5F, 0x8E, 0xF7, 0x72, 0xB3, 0x9A, 0x08, 0x53
-};
-
-//encrypted table of sha224 hashes
-
-char g_enc_sha224_C903B8[0x1C * 8] = 
-{
-   0xF0, 0x8C, 0xF8, 0x29, 0xD7, 0x6E, 0x1B, 0x03, 0xFA, 0xC5, 0x62, 0xF3, 0x38, 0xDF, 0xB2, 0x2A, 0x1C, 0xDC, 0x38, 0x8B, 0x2C, 0x1B, 0xDA, 0x5D, 0x6F, 0x13, 0x8C, 0x0F,
-   0x1E, 0x5F, 0xD8, 0xB3, 0x26, 0x9D, 0x0E, 0xA4, 0xE6, 0x94, 0x97, 0xA5, 0x1E, 0x9A, 0x5D, 0x83, 0x56, 0x2D, 0xB9, 0x30, 0xCD, 0xE8, 0x9A, 0xE6, 0xBF, 0x52, 0x0F, 0x91,
-   0x60, 0x04, 0xA5, 0x74, 0x44, 0x17, 0x61, 0x03, 0xBD, 0x46, 0x30, 0x13, 0xFB, 0x86, 0x96, 0x2E, 0xC4, 0x3B, 0x09, 0x36, 0x72, 0x55, 0x44, 0x30, 0x6B, 0x57, 0x54, 0x09, 
-   0x41, 0xF6, 0xC2, 0xFF, 0x98, 0xF1, 0x16, 0xC8, 0x04, 0x15, 0x84, 0x3B, 0x83, 0xBC, 0xCE, 0xB0, 0xB2, 0x37, 0x2A, 0xE3, 0x65, 0xD5, 0xB1, 0xD8, 0x3C, 0xF7, 0x43, 0xD6, 
-   0x13, 0x9F, 0x11, 0xE7, 0x80, 0x75, 0x5A, 0xEC, 0x95, 0x66, 0x1C, 0xE7, 0xC4, 0x35, 0xD6, 0x57, 0x7F, 0xD6, 0xCB, 0x78, 0x52, 0x0A, 0x03, 0x70, 0xEA, 0x11, 0x7B, 0xA2, 
-   0xD2, 0x4E, 0x59, 0x87, 0x9B, 0xA0, 0xBB, 0xF1, 0x49, 0x86, 0x2C, 0x2D, 0xF9, 0x20, 0x77, 0x4C, 0xA9, 0x93, 0xAC, 0xD5, 0x5B, 0xB2, 0x9D, 0x93, 0x7E, 0xDB, 0xF7, 0xBF, 
-   0xB3, 0x90, 0xE9, 0x6A, 0x44, 0xA9, 0xD8, 0xDC, 0x04, 0x46, 0x19, 0x40, 0xD6, 0x60, 0x9D, 0x8D, 0x2B, 0xE7, 0xD8, 0x4E, 0x4E, 0xCF, 0x44, 0x32, 0x2B, 0x80, 0x0B, 0x00, 
-   0x5B, 0xC2, 0xA6, 0x67, 0xE7, 0x48, 0xBF, 0xAA, 0x05, 0x58, 0xE4, 0xDF, 0x7E, 0x91, 0xDF, 0x24, 0xBC, 0x2D, 0xE8, 0x99, 0xF4, 0x5F, 0x5C, 0x94, 0x58, 0x06, 0xFE, 0x30,
-};
-
 //decrypted table of sha224 hashes
-char g_00B9F8D8[0x1C * 8] = {0};
+unsigned char g_00B9F8D8[0x1C * 8] = {0};
 
 int decrypt_sha224_table_internal_C8D09C()
 {
@@ -552,8 +523,8 @@ int decrypt_sha224_table_internal_C8D09C()
    }
 
    aes_ctx ctx;
-   char xor_data1[0x10]; //offset 0x3D0
-   char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
+   unsigned char xor_data1[0x10]; //offset 0x3D0
+   unsigned char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
    int ai_res = SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key_14);
 
@@ -573,19 +544,19 @@ int decrypt_sha224_table_internal_C8D09C()
       memcpy(xor_data1, g_zero_array_C90498, some_size);
    }
 
-   char dec_dst[0x10]; //array for holding single aes dec desult
+   unsigned char dec_dst[0x10]; //array for holding single aes dec desult
 
-   char* next_enc_data = g_enc_sha224_C903B8 + 0x10;
-   char* next_dec_data = g_00B9F8D8 + 0x10; //0xB9F8E8
+   unsigned char* next_enc_data = g_enc_sha224_C903B8 + 0x10;
+   unsigned char* next_dec_data = g_00B9F8D8 + 0x10; //0xB9F8E8
 
-   char var_40[0x10]; // how is this initialized ?
+   unsigned char var_40[0x10]; // how is this initialized ?
 
-   const char* table_end = g_enc_sha224_C903B8 + sizeof(g_enc_sha224_C903B8) + 0x10; //pointer to end
+   const unsigned char* table_end = g_enc_sha224_C903B8 + sizeof(g_enc_sha224_C903B8) + 0x10; //pointer to end
 
    do
    {
-      char* curr_enc_data = next_enc_data - 0x10; //current enc data
-      char* curr_dec_data = next_dec_data - 0x10; //current result data
+      unsigned char* curr_enc_data = next_enc_data - 0x10; //current enc data
+      unsigned char* curr_dec_data = next_dec_data - 0x10; //current result data
 
       SceKernelUtilsForDriver_sceAesDecrypt1ForDriver_d8678061(&ctx, curr_enc_data, dec_dst);
 
@@ -646,7 +617,7 @@ int decrypt_sha224_table_internal_C8D09C()
    return 0;
 }
 
-int decrypt_sha224_table_C8D09C(char* ptr_pair[2], char* ptr_table[6])
+int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_table[6])
 {
    //check that tables is not already decrypted
 
@@ -682,7 +653,7 @@ typedef struct verify_hash_ctx
    char* ptr_20;
 }verify_hash_ctx;
 
-int verify_hashes_C8DBC0(verify_hash_ctx* ctx, char sha_224[0x1C], char* dec_ptr_pair[2], char* dec_ptr_table[6])
+int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char sha_224[0x1C], unsigned char* dec_ptr_pair[2], unsigned char* dec_ptr_table[6])
 {
    return 0;
 }
@@ -812,7 +783,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    return cmd49_resp.var_88[7];
 }
 
-int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, char sha224_digest_source[0x10])
+int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char sha224_digest_source[0x10])
 {
    //get response from card
 
@@ -828,8 +799,8 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, char sha224_d
 
    //decrypt static list of what is probably sha 224 hash table
 
-   char* dec_ptr_pair[2];
-   char* dec_ptr_table[6];
+   unsigned char* dec_ptr_pair[2];
+   unsigned char* dec_ptr_table[6];
 
    int dec_res = decrypt_sha224_table_C8D09C(dec_ptr_pair, dec_ptr_table);
    if(dec_res != 0)
@@ -837,7 +808,7 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, char sha224_d
 
    //calculate sha 224 digest from data that we aquired on first step of initialization
 
-   char sha_224_digest[0x1C];
+   unsigned char sha_224_digest[0x1C];
    memset(sha_224_digest, 0, 0x1C);
 
    int sha_res = SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(sha224_digest_source, 0x10, sha_224_digest);
