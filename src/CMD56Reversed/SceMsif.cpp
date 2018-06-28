@@ -362,7 +362,7 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
 
    unsigned int tmp_dst0[2];
 
-   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)tmp_src0, (char*)tmp_dst0, 8, 0x1C, 0xC0, 1);
+   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)tmp_src0, (unsigned char*)tmp_dst0, 8, 0x1C, 0xC0, 1);
    if(enc_res0 < 0)
       return enc_res0;
 
@@ -394,7 +394,7 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
       current_round[1] = (current_ptr - 2)[1] ^ round_buffer[1];
 
       //perform encryption, write back to round_buffer
-      int enc_res1 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)current_round, (char*)round_buffer, 8, 0x1C, 0xC0, 1);
+      int enc_res1 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)current_round, (unsigned char*)round_buffer, 8, 0x1C, 0xC0, 1);
       if(enc_res1 < 0)
          break;
 
@@ -453,7 +453,7 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
    final_round[1] = tail_tweak[1] ^ tail_data[1];
 
    //perform encryption - store result
-   int enc_res2 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((char*)final_round, (char*)result, 8, 0x1C, 0xC0, 1);
+   int enc_res2 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)final_round, (unsigned char*)result, 8, 0x1C, 0xC0, 1);
    if(enc_res2 < 0)
       return enc_res2;
 
@@ -677,6 +677,8 @@ typedef struct dmac5_41_req2 //size is 0x10
    char data1[0x8];
    char data2[0x8];
 }dmac5_41_req2;
+
+//need to add type to tpc_cmd48
 
 typedef struct tpc_cmd49_resp //size is 0x40
 {
