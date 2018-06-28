@@ -60,7 +60,7 @@ int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id
 
          //encrypt the key
          auto encryptor = F00DKeyEncryptorService::get();
-         if(encryptor->encrypt_key(key, key_size, drv_key) < 0)
+         if(encryptor->encrypt_key(key, key_size * 8, drv_key) < 0)
             return -1;
 
          return set_key(drv_key, key_size, slot_id);

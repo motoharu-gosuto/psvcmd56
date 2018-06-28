@@ -71,9 +71,11 @@ namespace f00d
    {
    public:
       //set key into slot directly - works for slots 0x0-0x7 and 0x1D
+      // key_size - in bytes
       static int set_key(unsigned char* key, int key_size, int slot_id);
 
       //encrypt the key with f00d key with key_id. then set result to slot_id
+      // key_size - in bytes
       static int set_key(unsigned char* key, int key_size, int slot_id, int key_id);
    };
 }
