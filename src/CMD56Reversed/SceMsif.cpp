@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "SceSblSsMgr.h"
+#include "SceSblSsMgrDmac5Layer.h"
 #include "SceKernelSuspend.h"
 #include "SceSblSsSmComm.h"
 #include "SceSysroot.h"
@@ -18,11 +19,6 @@ typedef struct SceMsif_subctx
 #define MS_TPC_49 0x49
 #define MS_TPC_4A 0x4A
 #define MS_TPC_4B 0x4B
-
-int SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(char *src, char *dst, int size, int slot_id, int key_size, int mask_enable)
-{
-   return 0;
-}
 
 //--------
 
