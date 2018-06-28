@@ -6,6 +6,7 @@
 #include "SceKernelSuspend.h"
 #include "SceSblSsSmComm.h"
 #include "SceSysroot.h"
+#include "SceKernelUtils.h"
 
 typedef struct SceMsif_subctx
 {
@@ -17,31 +18,6 @@ typedef struct SceMsif_subctx
 #define MS_TPC_49 0x49
 #define MS_TPC_4A 0x4A
 #define MS_TPC_4B 0x4B
-
-int SceKernelUtilsForDriver_ksceSha224Digest_9ea9d4dc(char* source, int size, char* result)
-{
-   return 0;
-}
-
-typedef struct aes_ctx
-{
-   uint32_t unk_0;
-   uint32_t unk_4;
-   uint32_t unk_8;
-   uint32_t unk_C;
-
-   char data[950]; //not sure about size
-}aes_ctx;
-
-int SceKernelUtilsForDriver_aes_init_f12b6451(aes_ctx* ctx, int blocksize, int keysize, const uint8_t* key)
-{
-   return 0;
-}
-
-int SceKernelUtilsForDriver_aes_decrypt_d8678061(aes_ctx* ctx, const char* src, char* dst)
-{
-   return 0;
-}
 
 int SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(char *src, char *dst, int size, int slot_id, int key_size, int mask_enable)
 {

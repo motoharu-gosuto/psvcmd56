@@ -7,8 +7,7 @@
 #include <string>
 
 #include "SceSblSsMgrDmac5Layer.h"
-
-#include "sha1.h"
+#include "SceKernelUtils.h"
 
 //----------------------
 
@@ -34,31 +33,7 @@ ctx_12f8d58e* SceIofilemgrForDriver_thread_related_12f8d58e()
    return 0;
 }
 
-int SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(const unsigned char *source, uint32_t size, unsigned char result[0x14])
-{
-   sha1(source, size, result);
-
-   return 0;
-}
-
-int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const unsigned char* key, uint32_t key_len, const unsigned char* data, uint32_t data_len, unsigned char digest[0x14])
-{
-   sha1_hmac(key, key_len, data, data_len, digest);
-
-   return 0;
-}
-
 //----------------------
-
-int SceKernelUtilsForDriver_aes_init_2_eda97d6d(void *ctx, uint32_t blocksize, uint32_t keysize, const unsigned char *key)
-{
-   return 0;
-}
-
-int SceKernelUtilsForDriver_aes_encrypt_2_302947b6(void* ctx, const unsigned char* src, unsigned char* dst)
-{
-   return 0;
-}
 
 //############## LEVEL 0 - CRYPTO PRIMITIVES ###############
 

@@ -4,6 +4,7 @@
 #include "SceIofilemgr.h"
 #include "SceSysclib.h"
 #include "ScePfsMgrDeriveKeys.h"
+#include "SceKernelUtils.h"
 
 typedef struct ctx_21A27B8_70 //size is 0x160
 {
@@ -195,20 +196,6 @@ void sub_21A0E3C(ctx_21A27B8_20* unk0, ctx_21A27B8_18* unk1, node_holder* unk2, 
 void proc_copy_14_bytes_219DE1C(unsigned char unk0[0x14], unsigned char unk1[0x14])
 {
    memcpy(unk0, unk1, 0x14);
-}
-
-int SceKernelUtilsForDriver_29a28957(ctx_21A27B8* base, int size1, ctx_21A27B8_70* data_base, int size2, unsigned char bytes14[0x14])
-{
-   //this function is powered by table of function pointers that are called indirectly
-
-   //wrapper for sub_9DD908
-
-   //SceSysmem.SceKernelUtilsForDriver._exp_87dc7f2f
-   //SceSysmem.SceKernelUtilsForDriver._exp_e4390ffa
-   //SceSysmem.SceKernelUtilsForDriver._exp_478a6f3c
-   //SceSysmem.SceKernelUtilsForDriver._exp_48f24106
-
-   return 0;
 }
 
 /*
@@ -439,7 +426,7 @@ int proc_crypto_stuff_219DE7C(unsigned char bytes14[0x14], ctx_21A27B8* base, ct
 
    if(size == 0)
    {
-      SceKernelUtilsForDriver_29a28957(base, 0x14, data_base, size, bytes14);
+      SceKernelUtilsForDriver_29a28957((unsigned char*)base, 0x14, (unsigned char*)data_base, size, bytes14);
 
       if(var_2C == var_009EA004)
          return 0;
