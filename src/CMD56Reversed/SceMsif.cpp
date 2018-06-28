@@ -112,54 +112,38 @@ int food_start_F00D_communication_rmauth_sm_C8D880()
 
 int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 {
-   int *food_data_local; // r5
-   int res0; // r0
-   signed int res1; // r6
-   int result; // r0
-   int f00d_resp; // [sp+8h] [bp-40h]
-   sm_comm_pair res; // [sp+Ch] [bp-3Ch]
-   char buffer[32]; // [sp+14h] [bp-34h]
-   int cookie; // [sp+34h] [bp-14h]
+   if(f00d_data == 0)
+      return 0x800F1916;
 
-   food_data_local = food_data;
-   cookie = MEMORY[0x9EA004];
-
-   if (food_data)
+   SceKernelSuspendForDriver_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0);
+   
+   int res0 = food_start_F00D_communication_rmauth_sm_C8D880();
+   if (res0 != 0)
    {
-      SceMsif_SceKernelSuspendForDriver__imp_call_func_008B808C_atomic_inc_008BF3FC_4df40893(0);
-      f00d_resp = 0;
-      res0 = food_start_F00D_communication_rmauth_sm_C8D880();
+      SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
+      return res0;
+   }
 
-      if ( res0 )
-         goto LABEL_15;
+   char buffer[0x20];
+
+   int f00d_resp = 0;
       
-      if ( SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommCallFunc_db9fc204(MEMORY[0xB9F9BC], 1, &f00d_resp, buffer, 0x20) )
-         f00d_resp = 0x800F1928;
+   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 1, &f00d_resp, buffer, 0x20))
+      f00d_resp = 0x800F1928;
 
-      res0 = SceMsif_SceSblSmCommForKernel__imp_sceSblSmCommStopSm_0631f8ed(MEMORY[0xB9F9BC], &res);
-      if ( res0 )
-      {
-         LABEL_15:
-         res1 = res0;
-      }
-      else
-      {
-         res1 = f00d_resp;
-         *food_data_local = *(_DWORD *)&buffer[16];
-      }
+   std::pair<int, int> res;
 
-      SceMsif_SceKernelSuspendForDriver__imp_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
-   }
-   else
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
+   if (res1 != 0)
    {
-      res1 = 0x800F1916;
+      SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
+      return res1;
    }
+   
+   *f00d_data = *(int*)(&buffer[0x10]);
 
-   result = res1;
-   if ( cookie != MEMORY[0x9EA004] )
-      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(res1);
-
-   return result;
+   SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
+   return f00d_resp;
 }
 
 int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
