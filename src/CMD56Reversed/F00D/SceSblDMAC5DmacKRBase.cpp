@@ -8,6 +8,23 @@ using namespace f00d;
 
 SceDmacmgrKeyringReg_t g_f00d_key_slots;
 
+int set_key_internal(unsigned char* key, int key_size, int slot_id)
+{
+   if(key == 0)
+      return -1;
+
+   if(key_size > DMAC5_KEYSIZE)
+      return -1;
+
+   if(slot_id > DMAC5_MAX_SLOT_ID)
+      return -1;
+
+   memset(g_f00d_key_slots.keys.all_slots.slots[slot_id], 0, DMAC5_KEYSIZE);
+   memcpy(g_f00d_key_slots.keys.all_slots.slots[slot_id], key, key_size);
+
+   return 0;
+}
+
 //set key into slot directly - works for slots 0x0-0x7 and 0x1D
 int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id)
 {
@@ -31,9 +48,7 @@ int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id
    case 6:
    case 7:
    case 0x1D:
-      memset(g_f00d_key_slots.keys.all_slots.slots[slot_id], 0, DMAC5_KEYSIZE);
-      memcpy(g_f00d_key_slots.keys.all_slots.slots[slot_id], key, key_size);
-      return 0;
+      return set_key_internal(key, key_size, slot_id);
    default:
       return -1;
    }
@@ -63,7 +78,7 @@ int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id
          if(encryptor->encrypt_key(key, key_size * 8, drv_key) < 0)
             return -1;
 
-         return set_key(drv_key, key_size, slot_id);
+         return set_key_internal(drv_key, key_size, slot_id);
       }
    default:
       throw std::runtime_error("not implemented");

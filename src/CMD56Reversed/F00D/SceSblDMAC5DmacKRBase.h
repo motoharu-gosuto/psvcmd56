@@ -69,6 +69,9 @@ namespace f00d
 
    class SceSblDMAC5DmacKRBase
    {
+   private:
+      static int set_key_internal(unsigned char* key, int key_size, int slot_id);
+
    public:
       //set key into slot directly - works for slots 0x0-0x7 and 0x1D
       // key_size - in bytes
