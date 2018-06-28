@@ -1,12 +1,9 @@
 #include "SceNpDrm.h"
 
+#include "SceSblAuthMgr.h"
+
 #include <string>
 #include <stdint.h>
-
-int sceSblAuthMgrDecBindData_41daea12(void *buffer, int num1, void *keypair, int num2, void *arg_0)
-{
-   return 0;
-}
 
 typedef struct dec_buffer
 {
@@ -24,7 +21,7 @@ typedef struct dec_buffer
 
 int dec_rif_key(dec_buffer* decbuf, char* klicensee)
 {
-   int r0 = sceSblAuthMgrDecBindData_41daea12(decbuf->rif_key, 0x10, decbuf->primary_keys, 0x90, 0);
+   int r0 = SceSblAuthMgr_sceSblAuthMgrDecBindDataForDriver_41daea12(decbuf->rif_key, 0x10, decbuf->primary_keys, 0x90, 0);
 
    if(r0 < 0)
       memset(klicensee, 0, 0x10);
