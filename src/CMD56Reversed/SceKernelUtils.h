@@ -20,8 +20,8 @@ int SceKernelUtilsForDriver_sceAesInit2ForDriver_eda97d6d(void *ctx, uint32_t bl
 
 int SceKernelUtilsForDriver_sceAesEncrypt2ForDriver_302947b6(void* ctx, const unsigned char* src, unsigned char* dst);
 
-int SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(char* source, int size, char* result);
+int SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(unsigned char* source, int size, unsigned char* result);
 
-int SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(aes_ctx* ctx, int blocksize, int keysize, const uint8_t* key);
+int SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(aes_ctx* ctx, int blocksize, int keysize, const unsigned char* key);
 
-int SceKernelUtilsForDriver_sceAesDecrypt1ForDriver_d8678061(aes_ctx* ctx, const char* src, char* dst);
+int SceKernelUtilsForDriver_sceAesDecrypt1ForDriver_d8678061(aes_ctx* ctx, const unsigned char* src, unsigned char* dst);
