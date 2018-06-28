@@ -89,6 +89,7 @@ char ctx_130_part_C904A8[0x90] =
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+//[REVERSED]
 int food_start_F00D_communication_rmauth_sm_C8D880()
 {
    elf_info_pair self;
@@ -110,6 +111,7 @@ int food_start_F00D_communication_rmauth_sm_C8D880()
    return SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
 }
 
+//[REVERSED]
 int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 {
    if(f00d_data == 0)
@@ -146,6 +148,7 @@ int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
    return f00d_resp;
 }
 
+//[REVERSED]
 int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 {
    if (input == 0)
@@ -183,12 +186,14 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 
 //--------
 
+//[REVERSED]
 void process_block_invert_head(unsigned int& lo, unsigned int& hi, unsigned char value)
 {
    lo = value << 8;
    hi = 0;
 }
 
+//[REVERSED]
 void process_block_invert_body(unsigned int& lo, unsigned int& hi, unsigned char value)
 {
    unsigned int v1 = hi | 0;
@@ -198,6 +203,7 @@ void process_block_invert_body(unsigned int& lo, unsigned int& hi, unsigned char
    lo = v4 << 8;
 }
 
+//[REVERSED]
 void process_block_invert_tail(unsigned int& lo, unsigned int& hi, unsigned char value)
 {
    lo = lo | value;
@@ -206,6 +212,7 @@ void process_block_invert_tail(unsigned int& lo, unsigned int& hi, unsigned char
 
 //--------
 
+//[REVERSED]
 std::uint32_t adds(std::uint32_t left, std::uint32_t right, std::uint32_t* carry)
 {
    std::uint64_t l64 = left;
@@ -220,6 +227,7 @@ std::uint32_t adds(std::uint32_t left, std::uint32_t right, std::uint32_t* carry
    return (std::uint32_t)res64;
 }
 
+//[REVERSED]
 std::uint32_t adcs(std::uint32_t left, std::uint32_t right, std::uint32_t* carry)
 {
    std::uint64_t l64 = left;
@@ -236,6 +244,7 @@ std::uint32_t adcs(std::uint32_t left, std::uint32_t right, std::uint32_t* carry
 
 //--------
 
+//[REVERSED]
 void process_back_inverse_body(unsigned int& lo, unsigned int& hi, unsigned char value)
 {
    unsigned int v1 = lo | value;
@@ -245,6 +254,7 @@ void process_back_inverse_body(unsigned int& lo, unsigned int& hi, unsigned char
    hi = v3 | 0;
 }
 
+//[REVERSED]
 void process_back_inverse_head(unsigned int& lo, unsigned int& hi, unsigned char value)
 {
    hi = 0;
@@ -253,6 +263,7 @@ void process_back_inverse_head(unsigned int& lo, unsigned int& hi, unsigned char
    process_back_inverse_body(lo, hi, value);
 }
 
+//[REVERSED]
 void process_back_inverse_tail(unsigned int& lo, unsigned int& hi, unsigned char value)
 {
    lo = lo | value;
@@ -260,6 +271,7 @@ void process_back_inverse_tail(unsigned int& lo, unsigned int& hi, unsigned char
 
 //--------
 
+//[REVERSED]
 int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned int* tweak0_res, unsigned int* tweak1_res)
 {
    //---- reverse input buffer ----
@@ -370,6 +382,7 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    return 0;
 }
 
+//[REVERSED]
 int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
 {
    int tmp_src0[2];
@@ -879,5 +892,10 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, char sha224_d
    if(vf_res != 0)
       return -1;
 
+   return 0;
+}
+
+int SceMsifForDriver__exp_get_sha224_digest_source_718bdfde(char *sha224_digest_source)
+{
    return 0;
 }
