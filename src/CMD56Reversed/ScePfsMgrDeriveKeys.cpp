@@ -414,9 +414,9 @@ int AESCMACDecryptSw_base_219D714(const unsigned char* subkey, const unsigned ch
    char aes_ctx[0x1F0] = {0};
    unsigned char drv_subkey[0x10] = {0};
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, subkey_key); //initialize aes ctx with iv_key
+   SceKernelUtilsForDriver_sceAesInit2ForDriver_eda97d6d(aes_ctx, 0x80, key_size, subkey_key); //initialize aes ctx with iv_key
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey); //encrypt 0x10 bytes of subkey to derive drv_subkey
+   SceKernelUtilsForDriver_sceAesEncrypt2ForDriver_302947b6(aes_ctx, subkey, drv_subkey); //encrypt 0x10 bytes of subkey to derive drv_subkey
 
    xor_219D624((int*)src, (int*)drv_subkey, (int*)dst, size); // xor src with drv_iv to get dst
 
@@ -432,9 +432,9 @@ int AESCMACEncryptSw_base_219D694(const unsigned char* subkey, const unsigned ch
    char aes_ctx[0x1F0] = {0};
    unsigned char drv_subkey[0x10] = {0};
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, key_size, subkey_key);
+   SceKernelUtilsForDriver_sceAesInit2ForDriver_eda97d6d(aes_ctx, 0x80, key_size, subkey_key);
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey);
+   SceKernelUtilsForDriver_sceAesEncrypt2ForDriver_302947b6(aes_ctx, subkey, drv_subkey);
 
    xor_219D624((int*)src, (int*)drv_subkey, (int*)dst, size);
 
@@ -484,9 +484,9 @@ int AESCMACSw_base_1_219D794(const unsigned char* subkey, const unsigned char* d
    unsigned char drv_subkey[0x10] = {0};
    unsigned char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
    
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
+   SceKernelUtilsForDriver_sceAesInit2ForDriver_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey);
+   SceKernelUtilsForDriver_sceAesEncrypt2ForDriver_302947b6(aes_ctx, subkey, drv_subkey);
 
    xor_219D65C((int*)src, (int*)drv_subkey, (int*)dst, size); // WHAT DOES THIS DO IF dst IS OVERWRITTEN BY NEXT CMAC CALL ANYWAY ?
 
@@ -503,9 +503,9 @@ int AESCMACSw_base_2_219D820(const unsigned char* subkey, const unsigned char* d
    unsigned char drv_subkey[0x10] = {0};
    unsigned char iv[0x10] = {0}; //HOW IV IS INITIALIZED ?
 
-   SceKernelUtilsForDriver_aes_init_2_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
+   SceKernelUtilsForDriver_sceAesInit2ForDriver_eda97d6d(aes_ctx, 0x80, keysize, subkey_key);
 
-   SceKernelUtilsForDriver_aes_encrypt_2_302947b6(aes_ctx, subkey, drv_subkey);
+   SceKernelUtilsForDriver_sceAesEncrypt2ForDriver_302947b6(aes_ctx, subkey, drv_subkey);
 
    xor_219D65C((int*)src, (int*)drv_subkey, (int*)dst, size); // WHAT DOES THIS DO IF dst IS OVERWRITTEN BY NEXT CMAC CALL ANYWAY ?
 
@@ -859,7 +859,7 @@ int pfs_encrypt_sw_219D00C(const unsigned char* key, const unsigned char* subkey
 
 int sha1Digest_219DE54(unsigned char *result, const unsigned char *source, int size)
 {
-   return SceKernelUtilsForDriverksceSha1Digest_87dc7f2f(source, size, result);
+   return SceKernelUtilsForDriver_sceSha1DigestForDriver_87dc7f2f(source, size, result);
 }
 
 int hmacSha1Digest_219DE68(unsigned char* digest, const unsigned char* key, const unsigned char* data, int data_len)

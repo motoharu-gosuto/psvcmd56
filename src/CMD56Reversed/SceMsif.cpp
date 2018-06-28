@@ -559,7 +559,7 @@ int decrypt_sha224_table_internal_C8D09C()
    char xor_data1[0x10]; //offset 0x3D0
    char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
-   int ai_res = SceKernelUtilsForDriver_aes_init_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key_14);
+   int ai_res = SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key_14);
 
    if(ai_res <= 0)
    {
@@ -591,7 +591,7 @@ int decrypt_sha224_table_internal_C8D09C()
       char* curr_enc_data = next_enc_data - 0x10; //current enc data
       char* curr_dec_data = next_dec_data - 0x10; //current result data
 
-      SceKernelUtilsForDriver_aes_decrypt_d8678061(&ctx, curr_enc_data, dec_dst);
+      SceKernelUtilsForDriver_sceAesDecrypt1ForDriver_d8678061(&ctx, curr_enc_data, dec_dst);
 
       //just check that there is still smth to copy
       int some_size2 = ctx.unk_8 << 2;
@@ -844,7 +844,7 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, char sha224_d
    char sha_224_digest[0x1C];
    memset(sha_224_digest, 0, 0x1C);
 
-   int sha_res = SceKernelUtilsForDriver_ksceSha224Digest_9ea9d4dc(sha224_digest_source, 0x10, sha_224_digest);
+   int sha_res = SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(sha224_digest_source, 0x10, sha_224_digest);
    if(sha_res != 0)
       return -1; //returns not exactly this, but we dont care here
 

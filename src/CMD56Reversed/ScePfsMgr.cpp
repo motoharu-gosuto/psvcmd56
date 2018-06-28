@@ -426,7 +426,7 @@ int proc_crypto_stuff_219DE7C(unsigned char bytes14[0x14], ctx_21A27B8* base, ct
 
    if(size == 0)
    {
-      SceKernelUtilsForDriver_29a28957((unsigned char*)base, 0x14, (unsigned char*)data_base, size, bytes14);
+      SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957((unsigned char*)base, 0x14, (unsigned char*)data_base, size, bytes14);
 
       if(var_2C == var_009EA004)
          return 0;
@@ -566,7 +566,7 @@ int proc_SCENGPFS_21A27B8(ctx_21A27B8* argument0, node_holder* argument1, char a
    //1 - file reading does not work - I do not think this is true since other files are read correctly on sector level in Sdif
    //2 - argument2 data is invalid - I need to check how this data is obtained.
    //                                It is obtained from sub_219E1D8 -> sub_219DE54 -> ScePfsMgr.SceKernelUtilsForDriver._imp_87dc7f2f
-   //                                What is interesting here is that 87dc7f2f is one of the functions from function table from SceKernelUtilsForDriver_29a28957 - which is an alternative for SceSblSsMgr call
+   //                                What is interesting here is that 87dc7f2f is one of the functions from function table from SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957 - which is an alternative for SceSblSsMgr call
    //                                478a6f3c and 48f24106 are also part of table but they also are called from 87dc7f2f
 
    //argument0->unk_70.unk_BC - is produced as the result by crypto procedure
