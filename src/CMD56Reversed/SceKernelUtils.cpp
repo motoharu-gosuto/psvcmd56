@@ -1,18 +1,19 @@
 #include "SceKernelUtils.h"
 
-#include "sha1.h"
+#include "Crypto/CryptoService.h""
+
 
 int SceKernelUtilsForDriver_sceSha1DigestForDriver_87dc7f2f(const unsigned char *source, uint32_t size, unsigned char result[0x14])
 {
-   sha1(source, size, result);
-
+   auto cryptops = CryptoService::get();
+   cryptops->sha1(source, result, size);
    return 0;
 }
 
 int SceKernelUtilsForDriver_sceHmacSha1DigestForDriver_29a28957(const unsigned char* key, uint32_t key_len, const unsigned char* data, uint32_t data_len, unsigned char digest[0x14])
 {
-   sha1_hmac(key, key_len, data, data_len, digest);
-
+   auto cryptops = CryptoService::get();
+   cryptops->hmac_sha1(data, digest, data_len, key, key_len);
    return 0;
 }
 

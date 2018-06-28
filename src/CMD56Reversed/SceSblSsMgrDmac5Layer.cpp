@@ -2,15 +2,13 @@
 
 #include "SceSblSsMgrDmac5Layer.h"
 
-#include "sha1.h"
-#include "aes.h"
-
 #include <windows.h>
 
 #include <Dmac5Client.h>
 #include <Dmac5ClientAPI.h>
 
 #include "F00DKeyEncryptor.h"
+#include "Crypto/CryptoService.h"
 
 #ifdef USE_PSVDMAC5
 SOCKET dmac5_socket = 0;
@@ -41,10 +39,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(co
    if(ec.encrypt_key(key, key_size, drv_key) < 0)
       return -1;
 
-   aes_context aes_ctx;
-   memset(&aes_ctx, 0, sizeof(aes_ctx));
-   aes_setkey_dec(&aes_ctx, drv_key, key_size);
-   aes_crypt_cbc(&aes_ctx, AES_DECRYPT, size, iv, src,dst);
+   auto cryptops = CryptoService::get();
+   cryptops->aes_cbc_decrypt(src, dst, size, drv_key, key_size, iv);
 
    return 0;
    #endif
@@ -61,10 +57,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptWithKeygenForDriver_711c057a(co
    if(ec.encrypt_key(key, key_size, drv_key) < 0)
       return -1;
 
-   aes_context aes_ctx;
-   memset(&aes_ctx, 0, sizeof(aes_ctx));
-   aes_setkey_enc(&aes_ctx, drv_key, key_size);
-   aes_crypt_cbc(&aes_ctx, AES_ENCRYPT, size, iv, src,dst);
+   auto cryptops = CryptoService::get();
+   cryptops->aes_cbc_encrypt(src, dst, size, drv_key, key_size, iv);
 
    return 0;
    #endif
@@ -81,10 +75,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(co
    if(ec.encrypt_key(key, key_size, drv_key) < 0)
       return -1;
 
-   aes_context aes_ctx;
-   memset(&aes_ctx, 0, sizeof(aes_ctx));
-   aes_setkey_enc(&aes_ctx, drv_key, key_size);
-   aes_crypt_ecb(&aes_ctx, AES_ENCRYPT, src, dst);
+   auto cryptops = CryptoService::get();
+   cryptops->aes_ecb_encrypt(src, dst, size, drv_key, key_size);
 
    return 0;
    #endif
@@ -131,14 +123,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(const un
    if(ec.encrypt_key(key, key_size, drv_key) < 0)
       return -1;
 
-   aes_context aes_ctx;
-   memset(&aes_ctx, 0, sizeof(aes_ctx));
-   aes_setkey_enc(&aes_ctx, drv_key, key_size);
-
-   unsigned char* src_cpy = new unsigned char[size];
-   memcpy(src_cpy, src, size);
-   aes_cmac(&aes_ctx, size, src_cpy, dst);
-   delete [] src_cpy;
+   auto cryptops = CryptoService::get();
+   cryptops->aes_cmac(src, dst, size, drv_key, key_size);
 
    return 0;
    #endif
@@ -155,7 +141,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrSHA1ForDriver_eb3af9b5(const unsigned char* 
    if(command_bit != 0)
       throw std::runtime_error("unsupported command_bit");
 
-   sha1(src, size, dst);
+   auto cryptops = CryptoService::get();
+   cryptops->sha1(src, dst, size);
 
    return 0;
 }
@@ -171,7 +158,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const unsigned ch
    if(command_bit != 0)
       throw std::runtime_error("unsupported command_bit");
 
-   sha1_hmac(key, 0x14, src, size, dst);
+   auto cryptops = CryptoService::get();
+   cryptops->hmac_sha1(src, dst, size, key, 0x14);
 
    return 0;
 }
