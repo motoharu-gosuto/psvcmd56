@@ -8,7 +8,7 @@ using namespace f00d;
 
 SceDmacmgrKeyringReg_t g_f00d_key_slots;
 
-int set_key_internal(const unsigned char* key, int key_size, int slot_id)
+int SceSblDMAC5DmacKRBase::set_key_internal(const unsigned char* key, int key_size, int slot_id)
 {
    if(key == 0)
       return -1;
@@ -85,7 +85,7 @@ int SceSblDMAC5DmacKRBase::set_key(const unsigned char* key, int key_size, int s
    }
 }
 
-int read_key(unsigned char* key, int key_size, int slot_id)
+int SceSblDMAC5DmacKRBase::read_key(unsigned char* key, int key_size, int slot_id)
 {
    if(key == 0)
       return -1;
