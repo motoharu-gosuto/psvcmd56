@@ -9,7 +9,9 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "Utils.h"
+#include "F00DUtils.h"
+
+using namespace f00d;
 
 F00DUrlKeyEncryptor::F00DUrlKeyEncryptor(const std::string& F00D_url)
    : m_F00D_url(F00D_url)

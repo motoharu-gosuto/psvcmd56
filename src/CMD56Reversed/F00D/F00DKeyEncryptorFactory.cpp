@@ -3,6 +3,8 @@
 #include "F00DUrlKeyEncryptor.h"
 #include "F00DFileKeyEncryptor.h"
 
+using namespace f00d;
+
 std::shared_ptr<IF00DKeyEncryptor> F00DKeyEncryptorFactory::create(F00DEncryptorTypes type, std::string arg)
 {
    switch(type)
