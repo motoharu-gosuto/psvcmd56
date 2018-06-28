@@ -70,15 +70,21 @@ namespace f00d
    class SceSblDMAC5DmacKRBase
    {
    private:
-      static int set_key_internal(unsigned char* key, int key_size, int slot_id);
+      static int set_key_internal(const unsigned char* key, int key_size, int slot_id);
 
    public:
       //set key into slot directly - works for slots 0x0-0x7 and 0x1D
       // key_size - in bytes
-      static int set_key(unsigned char* key, int key_size, int slot_id);
+      static int set_key(const unsigned char* key, int key_size, int slot_id);
 
       //encrypt the key with f00d key with key_id. then set result to slot_id
       // key_size - in bytes
-      static int set_key(unsigned char* key, int key_size, int slot_id, int key_id);
+      static int set_key(const unsigned char* key, int key_size, int slot_id, int key_id);
+
+   public:
+      //this is not allowed on vita, but we have it here for simplicity. 
+      //becase all crypto operations are imlemented as separate service
+      //and we need to pass the key there from keyring
+      static int read_key(unsigned char* key, int key_size, int slot_id);
    };
 }

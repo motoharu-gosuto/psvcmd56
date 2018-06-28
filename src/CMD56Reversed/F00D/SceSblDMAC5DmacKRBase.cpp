@@ -8,7 +8,7 @@ using namespace f00d;
 
 SceDmacmgrKeyringReg_t g_f00d_key_slots;
 
-int set_key_internal(unsigned char* key, int key_size, int slot_id)
+int set_key_internal(const unsigned char* key, int key_size, int slot_id)
 {
    if(key == 0)
       return -1;
@@ -26,7 +26,7 @@ int set_key_internal(unsigned char* key, int key_size, int slot_id)
 }
 
 //set key into slot directly - works for slots 0x0-0x7 and 0x1D
-int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id)
+int SceSblDMAC5DmacKRBase::set_key(const unsigned char* key, int key_size, int slot_id)
 {
    if(key == 0)
       return -1;
@@ -55,7 +55,7 @@ int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id
 }
 
 //encrypt the key with f00d key with key_id. then set result to slot_id
-int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id, int key_id)
+int SceSblDMAC5DmacKRBase::set_key(const unsigned char* key, int key_size, int slot_id, int key_id)
 {
    if(key == 0)
       return -1;
@@ -83,4 +83,19 @@ int SceSblDMAC5DmacKRBase::set_key(unsigned char* key, int key_size, int slot_id
    default:
       throw std::runtime_error("not implemented");
    }
+}
+
+int read_key(unsigned char* key, int key_size, int slot_id)
+{
+   if(key == 0)
+      return -1;
+
+   if(key_size > DMAC5_KEYSIZE)
+      return -1;
+
+   if(slot_id > DMAC5_MAX_SLOT_ID)
+      return -1;
+
+   memcpy(key, g_f00d_key_slots.keys.all_slots.slots[slot_id], key_size);
+   return 0;
 }
