@@ -12,7 +12,7 @@
 #include "SceSysroot.h"
 #include "SceKernelUtils.h"
 
-//--------
+//-------- memory card communication --------
 
 typedef struct SceMsif_subctx
 {
@@ -24,8 +24,6 @@ typedef struct SceMsif_subctx
 #define MS_TPC_49 0x49
 #define MS_TPC_4A 0x4A
 #define MS_TPC_4B 0x4B
-
-//--------
 
 //[NO NEED TO REVERSE]
 int ms_execute_ex_set_cmd_write_short_data_C8A3A8(SceMsif_subctx *subctx, int cmd, int size, const char* source, int delay)
@@ -39,7 +37,13 @@ int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd
    return 0;
 }
 
-//--------
+//[NO NEED TO REVERSE]
+int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx *subctx2, int delay)
+{
+   return 0;
+}
+
+//-------- f00d communication --------
 
 int id_B9F9BC = 0;
 
@@ -151,7 +155,7 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
    return f00d_resp;
 }
 
-//--------
+//-------- bit magic and des ecb --------
 
 //[REVERSED]
 void process_block_invert_head(unsigned int& lo, unsigned int& hi, unsigned char value)
@@ -456,10 +460,11 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
    return 0;
 }
 
-int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx *subctx2, int delay)
-{
-   return 0;
-}
+//=====================================================
+//=====================================================
+//=====================================================
+//=====================================================
+//=====================================================
 
 int memxor(unsigned char* dest, const unsigned char* src1, const unsigned char* src2, int size)
 {
