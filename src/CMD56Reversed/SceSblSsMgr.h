@@ -22,4 +22,4 @@ typedef struct portability_output_data //size is 0x24
   uint8_t aes_key_14[0x10];
 }portability_output_data;
 
-int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, char *iv, portability_input_data* in, portability_output_data* out);
+int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, unsigned char *iv, portability_input_data* in, portability_output_data* out);

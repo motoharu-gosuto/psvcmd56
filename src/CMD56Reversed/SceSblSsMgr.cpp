@@ -466,7 +466,7 @@ int SceSblSsMgrForDriver_sceKernelGetRandomNumberForDriver_4f9bfbe5(char* result
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, char *iv, portability_input_data* in, portability_output_data* out)
+int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, unsigned char *iv, portability_input_data* in, portability_output_data* out)
 {
    return 0;
 }
