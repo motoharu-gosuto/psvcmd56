@@ -7,7 +7,7 @@ int SceSblAuthMgr_sceSblAuthMgrDecBindDataForDriver_41daea12(void *buffer, int n
    return 0;
 }
 
-int SceSblAuthMgr_sceSblAuthMgrSetDmac5KeyForKernel(unsigned char *key, int key_size, int slot_id, int key_id)
+int SceSblAuthMgr_sceSblAuthMgrSetDmac5KeyForKernel_0x122acdea(const unsigned char *key, int key_size, int slot_id, int key_id)
 {
    return f00d::SceSblDMAC5DmacKRBase::set_key(key, key_size, slot_id, key_id);
 }
