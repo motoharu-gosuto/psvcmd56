@@ -90,6 +90,7 @@ int SceSblDMAC5DmacKRBase::set_key(const unsigned char* key, int key_size, int s
    }
 }
 
+//key_size in bytes
 int SceSblDMAC5DmacKRBase::read_key(unsigned char* key, int key_size, int slot_id)
 {
    if(key == 0)

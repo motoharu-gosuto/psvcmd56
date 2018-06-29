@@ -77,6 +77,7 @@ namespace f00d
       // key_size - in bytes
       static int set_key(const unsigned char* key, int key_size, int slot_id);
 
+      //key_size in bytes
       static int set_key_unrestricted(const unsigned char* key, int key_size, int slot_id);
 
       //encrypt the key with f00d key with key_id. then set result to slot_id
@@ -87,6 +88,7 @@ namespace f00d
       //this is not allowed on vita, but we have it here for simplicity. 
       //becase all crypto operations are imlemented as separate service
       //and we need to pass the key there from keyring
+      //key_size in bytes
       static int read_key(unsigned char* key, int key_size, int slot_id);
    };
 }
