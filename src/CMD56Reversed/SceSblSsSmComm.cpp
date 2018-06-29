@@ -30,8 +30,6 @@ int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_
 {
    //many calls and subroutines
 
-   
-
    return 0;
 }
 
@@ -44,6 +42,13 @@ int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_
 
 // =============================
 
+//this is added for the sake of emulation
+int SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(std::string service_name, int* id)
+{
+   return 0;
+}
+
+// =============================
 
 int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, int* f00d_resp, void* ctx, int size)
 {
