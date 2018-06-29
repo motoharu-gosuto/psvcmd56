@@ -294,7 +294,13 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    b[2] = (unsigned char)(bu0 >> 16);
    b[3] = (unsigned char)(bu0 >> 24);
 
-   //---- mix bytes ----
+   unsigned char c[4]; 
+   c[0] = (unsigned char)(bu0);
+   c[1] = (unsigned char)(bu0 <<  8);
+   c[2] = (unsigned char)(bu0 << 16);
+   c[3] = (unsigned char)(bu0 << 24);
+
+   //---- looks like all this code does is inverting the values (except for 0x1B handling) ----
 
    unsigned char tweak0[8];
 
@@ -303,9 +309,9 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
    tweak0[2] = b[1];
    tweak0[3] = b[0];
 
-   tweak0[4] = (a[3] | b[1]);
-   tweak0[5] = (a[2] | b[2]);
-   tweak0[6] = (a[1] | b[3]);
+   tweak0[4] = (a[3] | c[1]);
+   tweak0[5] = (a[2] | c[2]);
+   tweak0[6] = (a[1] | c[3]);
 
    unsigned char value00 = ((char*)some_buffer)[0];
    tweak0[7] = ((value00 & 0x80) > 0) ? (a[0] ^ 0x1B) 
@@ -328,38 +334,44 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
 
    std::uint32_t carry1 = 0;
    std::uint32_t au1 = adds(lo1, lo1, &carry1); //technically this is a multiplication by 2
-   std::uint32_t bu1 = adcs(hi0, hi0, &carry1); //technically this is a multiplication by 2 (but also with carry)
+   std::uint32_t bu1 = adcs(hi1, hi1, &carry1); //technically this is a multiplication by 2 (but also with carry)
 
    //---- retrieve bytes
 
-   unsigned char c[4]; 
-   c[0] = (unsigned char)(au1);
-   c[1] = (unsigned char)(au1 >>  8);
-   c[2] = (unsigned char)(au1 >> 16);
-   c[3] = (unsigned char)(au1 >> 24);
-
    unsigned char d[4]; 
-   d[0] = (unsigned char)(bu1);
-   d[1] = (unsigned char)(bu1 >>  8);
-   d[2] = (unsigned char)(bu1 >> 16);
-   d[3] = (unsigned char)(bu1 >> 24);
+   d[0] = (unsigned char)(au1);
+   d[1] = (unsigned char)(au1 >>  8);
+   d[2] = (unsigned char)(au1 >> 16);
+   d[3] = (unsigned char)(au1 >> 24);
 
-   //---- mix bytes ----
+   unsigned char e[4]; 
+   e[0] = (unsigned char)(bu1);
+   e[1] = (unsigned char)(bu1 >>  8);
+   e[2] = (unsigned char)(bu1 >> 16);
+   e[3] = (unsigned char)(bu1 >> 24);
 
-   unsigned char tweak1[8]; //var_40
+   unsigned char f[4]; 
+   f[0] = (unsigned char)(bu1);
+   f[1] = (unsigned char)(bu1 <<  8);
+   f[2] = (unsigned char)(bu1 << 16);
+   f[3] = (unsigned char)(bu1 << 24);
 
-   tweak1[0] = d[3];
-   tweak1[1] = d[2];
-   tweak1[2] = d[1];
-   tweak1[3] = d[0];
+   //---- looks like all this code does is inverting the values (except for 0x1B handling) ----
 
-   tweak1[4] = c[3] | d[1];
-   tweak1[5] = c[2] | d[2];
-   tweak1[6] = c[1] | d[3];
+   unsigned char tweak1[8];
+
+   tweak1[0] = e[3];
+   tweak1[1] = e[2];
+   tweak1[2] = e[1];
+   tweak1[3] = e[0];
+
+   tweak1[4] = d[3] | f[1];
+   tweak1[5] = d[2] | f[2];
+   tweak1[6] = d[1] | f[3];
 
    unsigned char value01 = tweak0[0];
-   tweak1[7] = ((value01 & 0x80) > 0) ? (c[0] ^ 0x1B)
-                                      :  c[0];
+   tweak1[7] = ((value01 & 0x80) > 0) ? (d[0] ^ 0x1B)
+                                      :  d[0];
  
    //---- copy results ----
 
