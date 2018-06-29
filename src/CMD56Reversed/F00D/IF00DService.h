@@ -163,6 +163,18 @@
 //They are related to interrupt 0xC8
 //Which stands for 'SceSblSmSchedCry2Arm0'
 
+struct context_db9fc204
+{
+   //this is a structure of size 0x814
+
+   int var838; // set to 1
+   int command; //var834
+   char data[0x800]; //var830
+   int packet6_de; //var30
+   int size; //var2C
+   int var28; //is set to 0
+};
+
 namespace f00d
 {
    class IF00DService

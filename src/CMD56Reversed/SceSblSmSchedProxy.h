@@ -35,18 +35,6 @@ struct input_1916509b
 //smcArg3 is element ptr in the array of elements of size 0x80
 int SceSblSmSchedProxyForKernel_smc_12D_1916509b(int smcArg0, int smcArg1, int smcArg2, input_1916509b* unk3);
 
-struct context_db9fc204
-{
-   //this is a structure of size 0x814
-
-   int var838; // set to 1
-   int command; //var834
-   char data[0x800]; //var830
-   int packet6_de; //var30
-   int size; //var2C
-   int var28; //is set to 0
-};
-
 //there is more info about this structure in https://wiki.henkaku.xyz/vita/F00D_Commands
 //however documentation starts from offset 0x40
 //which means it documents context_db9fc204
@@ -72,7 +60,7 @@ struct smc_133_input
    int unk_38;
    int unk_3C;
 
-   context_db9fc204 data; //request / response area
+   char data[]; //request / response area
 };
 
 //wrapper for a 133 smc call
