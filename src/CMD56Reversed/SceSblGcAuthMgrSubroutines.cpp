@@ -621,7 +621,8 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GC_AUTH_MGR_SERVICE_1000B, &var978, &ctx, 0x814);
+   //int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GC_AUTH_MGR_SERVICE_1000B, &var978, &ctx, 0x814);
+   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(var97C, GC_AUTH_MGR_SERVICE_1000B, &var978, &ctx, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 

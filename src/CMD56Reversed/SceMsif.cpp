@@ -110,7 +110,9 @@ int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 
    int f00d_resp = 0;
       
-   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 1, &f00d_resp, buffer, 0x20))
+   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 1, &f00d_resp, buffer, 0x20))
+   //   f00d_resp = 0x800F1928;
+   if(SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, 1, &f00d_resp, buffer, 0x20))
       f00d_resp = 0x800F1928;
 
    std::pair<int, int> res;
@@ -148,7 +150,10 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
 
    int f00d_resp = 0;
 
-   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 2, &f00d_resp, buffer, 0x20))
+   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 2, &f00d_resp, buffer, 0x20))
+   //   f00d_resp = 0x800F1928;
+
+   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, 2, &f00d_resp, buffer, 0x20))
       f00d_resp = 0x800F1928;
    
    std::pair<int, int> res;
