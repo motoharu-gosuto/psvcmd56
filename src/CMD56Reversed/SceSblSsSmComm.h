@@ -31,4 +31,8 @@ int SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(std::string service_name, int*
 
 int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, int* f00d_resp, void* ctx, int size);
 
+int SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(int id, int service_id, int* f00d_resp, void* ctx, int size);
+
 int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id, std::pair<int, int>* res);
+
+int SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(int id);

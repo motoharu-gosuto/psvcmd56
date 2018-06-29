@@ -61,10 +61,15 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, 
    in.smcArg0 = 0x00;
    in.unk = 0x00;
 
-   memcpy(&in.data, ctx, 0x814);
+   memcpy(&in.data, ctx, size);
 
    SceSblSmSchedProxyForKernel_smc_133_723b382f(&in, 1, &in);
 
+   return 0;
+}
+
+int SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(int id, int service_id, int* f00d_resp, void* ctx, int size)
+{
    return 0;
 }
 
@@ -74,5 +79,10 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, 
 int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id, std::pair<int, int>* res)
 {
    
+   return 0;
+}
+
+int SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(int id)
+{
    return 0;
 }
