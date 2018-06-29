@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "SceSblSsMgrDmac5Layer.h"
 
@@ -10,6 +11,7 @@
 #include "SceSblAuthMgr.h"
 #include "Crypto/CryptoService.h"
 #include "F00D/SceSblDMAC5DmacKRBase.h"
+#include "F00D/F00DUtils.h"
 
 #ifdef USE_PSVDMAC5
 SOCKET dmac5_socket = 0;
@@ -34,6 +36,8 @@ int deinitialize_dmac5_context()
 //this function operates on range of slots from 0xC to 0x17 including
 //for sake of simplicity we dont do this here
 //just select first available slot which is 0xC
+
+// key_size - in bytes
 int w_ksceSblAuthMgrSetDmac5Key_B9A874(const unsigned char *key, int key_size, int *slot_id, int key_id)
 {
    //set the key into slot
@@ -52,19 +56,22 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCBCDecryptWithKeygenForDriver_1901cb5e(co
    return dmac5::sceSblSsMgrAESCBCDecryptWithKeygen(dmac5_socket, src, dst,size, key, key_size,iv,key_id,mask_enable);
    #else
 
+   int key_size_bytes = key_size / 8;
+
    //set the key
    int slot_id = 0;
-   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size, &slot_id, key_id) < 0)
+   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size_bytes, &slot_id, key_id) < 0)
       return -1;
 
    //retrive the key
    unsigned char drv_key[0x20] = {0}; //use max possible buffer
-   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size, slot_id) < 0)
+   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size_bytes, slot_id) < 0)
       return -1;
 
    //invoke crypto operation
    auto cryptops = CryptoService::get();
-   cryptops->aes_cbc_decrypt(src, dst, size, drv_key, key_size, iv);
+   if(cryptops->aes_cbc_decrypt(src, dst, size, drv_key, key_size, iv) < 0)
+      return -1;
 
    return 0;
    #endif
@@ -77,19 +84,22 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCBCEncryptWithKeygenForDriver_711c057a(co
    return dmac5::sceSblSsMgrAESCBCEncryptWithKeygen(dmac5_socket, src, dst, size, key, key_size, iv, key_id, mask_enable);
    #else
 
+   int key_size_bytes = key_size / 8;
+
    //set the key
    int slot_id = 0;
-   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size, &slot_id, key_id) < 0)
+   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size_bytes, &slot_id, key_id) < 0)
       return -1;
 
    //retrive the key
    unsigned char drv_key[0x20] = {0}; //use max possible buffer
-   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size, slot_id) < 0)
+   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size_bytes, slot_id) < 0)
       return -1;
 
    //invoke crypto operation
    auto cryptops = CryptoService::get();
-   cryptops->aes_cbc_encrypt(src, dst, size, drv_key, key_size, iv);
+   if(cryptops->aes_cbc_encrypt(src, dst, size, drv_key, key_size, iv) < 0)
+      return -1;
 
    return 0;
    #endif
@@ -102,19 +112,22 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESECBEncryptWithKeygenForDriver_0f7d28af(co
    return dmac5::sceSblSsMgrAESECBEncryptWithKeygen(dmac5_socket, src, dst, size, key, key_size, key_id, mask_enable);
    #else
 
+   int key_size_bytes = key_size / 8;
+
    //set the key
    int slot_id = 0;
-   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size, &slot_id, key_id) < 0)
+   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size_bytes, &slot_id, key_id) < 0)
       return -1;
 
    //retrive the key
    unsigned char drv_key[0x20] = {0}; //use max possible buffer
-   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size, slot_id) < 0)
+   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size_bytes, slot_id) < 0)
       return -1;
 
    //invoke crypto operation
    auto cryptops = CryptoService::get();
-   cryptops->aes_ecb_encrypt(src, dst, size, drv_key, key_size);
+   if(cryptops->aes_ecb_encrypt(src, dst, size, drv_key, key_size) < 0)
+      return -1;
 
    return 0;
    #endif
@@ -157,19 +170,22 @@ int SceSblSsMgrForDriver_sceSblSsMgrAESCMACWithKeygenForDriver_83b058f5(const un
    return dmac5::sceSblSsMgrAESCMACWithKeygen(dmac5_socket, src, dst, size, key, key_size, iv, key_id, mask_enable, command_bit);
    #else
 
+   int key_size_bytes = key_size / 8;
+
    //set the key
    int slot_id = 0;
-   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size, &slot_id, key_id) < 0)
+   if(w_ksceSblAuthMgrSetDmac5Key_B9A874(key, key_size_bytes, &slot_id, key_id) < 0)
       return -1;
 
    //retrive the key
    unsigned char drv_key[0x20] = {0}; //use max possible buffer
-   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size, slot_id) < 0)
+   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size_bytes, slot_id) < 0)
       return -1;
 
    //invoke crypto operation
    auto cryptops = CryptoService::get();
-   cryptops->aes_cmac(src, dst, size, drv_key, key_size);
+   if(cryptops->aes_cmac(src, dst, size, drv_key, key_size) < 0)
+      return -1;
 
    return 0;
    #endif
@@ -187,7 +203,8 @@ int SceSblSsMgrForDriver_sceSblSsMgrSHA1ForDriver_eb3af9b5(const unsigned char* 
       throw std::runtime_error("unsupported command_bit");
 
    auto cryptops = CryptoService::get();
-   cryptops->sha1(src, dst, size);
+   if(cryptops->sha1(src, dst, size) < 0)
+      return -1;
 
    return 0;
 }
@@ -204,24 +221,59 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const unsigned ch
       throw std::runtime_error("unsupported command_bit");
 
    auto cryptops = CryptoService::get();
-   cryptops->hmac_sha1(src, dst, size, key, 0x14);
+   if(cryptops->hmac_sha1(src, dst, size, key, 0x14) < 0)
+      return -1;
 
    return 0;
 }
 
 int SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(const unsigned char *src, unsigned char *dst, int size, int slot_id, int key_size, int mask_enable)
 {
-   //ignore keysize argument it is always 8 for des. i think original function ignores it as well
+   if(mask_enable != 1)
+      throw std::runtime_error("unsupported mask_enable");
+
    //key should be already set in the slot with SceSblAuthMgr_sceSblAuthMgrSetDmac5KeyForKernel_0x122acdea prior to calling this function
 
-   //retrive the key
-   unsigned char drv_key[0x20] = {0}; //use max possible buffer
-   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, 8, slot_id) < 0)
-      return -1;
+   int key_size_bytes = key_size / 8;
 
-   //invoke crypto operation
-   auto cryptops = CryptoService::get();
-   cryptops->des_encrypt(src, dst, size, drv_key);
+   unsigned char drv_key[0x20] = {0}; //use max possible buffer
+   //retrive the key
+
+   switch(key_size)
+   {
+   case 0x40:
+   case 0xC0:
+      {
+         if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, key_size_bytes, slot_id) < 0)
+            return -1;
+      }
+      break;
+   default:
+      return -1;
+   }
+
+   
+   switch(key_size)
+   {
+   case 0x40:
+      {
+         //invoke crypto operation
+         auto cryptops = CryptoService::get();
+         if(cryptops->des_encrypt(src, dst, size, drv_key, key_size) < 0)
+            return -1;
+      }
+      break;
+   case 0xC0:
+      {
+         //invoke crypto operation
+         auto cryptops = CryptoService::get();
+         if(cryptops->des3_encrypt(src, dst, size, drv_key, key_size) < 0)
+            return -1;
+      }
+      break;
+   default:
+      return -1;
+   }
 
    return 0;
 }
