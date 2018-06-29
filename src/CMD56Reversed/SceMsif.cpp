@@ -368,7 +368,7 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
 }
 
 //[REVERSED]
-int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
+int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, int size)
 {
    int tmp_src0[2];
    tmp_src0[0] = 0;
@@ -391,7 +391,7 @@ int w_dmac5_command_0x41_C8D2F0(int* result, const int* data, int size)
    if(size <= 8)
       return r0;
 
-   const int* current_ptr = data;
+   const unsigned int* current_ptr = data;
    int current_size = size;
 
    int round_buffer[2];
@@ -760,7 +760,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    // execute dmac5 command 41
 
-   int dmc5res1 = w_dmac5_command_0x41_C8D2F0((int*)dmac5_result_1, (int*)&d5req1, 0x28); //send dmac5 request with 0x20 bytes of 0x49 response and 8 bytes of random data
+   int dmc5res1 = w_dmac5_command_0x41_C8D2F0((unsigned int*)dmac5_result_1, (unsigned int*)&d5req1, 0x28); //send dmac5 request with 0x20 bytes of 0x49 response and 8 bytes of random data
    if(dmc5res1 != 0)
       return dmc5res1;
 
@@ -780,7 +780,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    // execute dmac5 command 41
 
-   int dmc5res2 = w_dmac5_command_0x41_C8D2F0((int*)dmac_5_result_2, (int*)&d5req2, 0x10);
+   int dmc5res2 = w_dmac5_command_0x41_C8D2F0((unsigned int*)dmac_5_result_2, (unsigned int*)&d5req2, 0x10);
    if(dmc5res2 != 0)
       return dmc5res2;
    

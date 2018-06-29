@@ -77,6 +77,8 @@ namespace f00d
       // key_size - in bytes
       static int set_key(const unsigned char* key, int key_size, int slot_id);
 
+      static int set_key_unrestricted(const unsigned char* key, int key_size, int slot_id);
+
       //encrypt the key with f00d key with key_id. then set result to slot_id
       // key_size - in bytes
       static int set_key(const unsigned char* key, int key_size, int slot_id, int key_id);

@@ -54,6 +54,11 @@ int SceSblDMAC5DmacKRBase::set_key(const unsigned char* key, int key_size, int s
    }
 }
 
+int SceSblDMAC5DmacKRBase::set_key_unrestricted(const unsigned char* key, int key_size, int slot_id)
+{
+   return set_key_internal(key, key_size, slot_id);
+}
+
 //encrypt the key with f00d key with key_id. then set result to slot_id
 int SceSblDMAC5DmacKRBase::set_key(const unsigned char* key, int key_size, int slot_id, int key_id)
 {

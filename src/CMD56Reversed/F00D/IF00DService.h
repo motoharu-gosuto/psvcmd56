@@ -178,12 +178,12 @@ struct SceSblSmCommGcData_1000B
 
 struct SceSblSmCommMsifData_1
 {
-   char data[0x20];
+   unsigned char data[0x20];
 };
 
 struct SceSblSmCommMsifData_2
 {
-   char data[0x20];
+   unsigned char data[0x20];
 };
 
 namespace f00d
