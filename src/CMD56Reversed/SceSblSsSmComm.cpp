@@ -82,7 +82,6 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(int id, int service_id, int* 
 
 int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id, std::pair<int, int>* res)
 {
-   
    return 0;
 }
 

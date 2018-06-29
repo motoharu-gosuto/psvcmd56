@@ -117,7 +117,8 @@ int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 
    std::pair<int, int> res;
 
-   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
+   //int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id_B9F9BC);
    if (res1 != 0)
    {
       SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
@@ -158,7 +159,8 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
    
    std::pair<int, int> res;
 
-   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
+   //int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id_B9F9BC);
    if (res1 != 0)
    {
       SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);

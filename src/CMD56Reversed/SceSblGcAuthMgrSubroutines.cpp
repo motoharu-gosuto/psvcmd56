@@ -273,7 +273,8 @@ int sub_CAC8C0(int* var97C, std::pair<int, int>* arg1)
    {
       arg1->first = -1;
       arg1->second = -1;
-      return SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(*var97C, arg1);
+      //return SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(*var97C, arg1);
+      return SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(*var97C);
    }
    else
    {
