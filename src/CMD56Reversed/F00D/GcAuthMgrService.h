@@ -16,5 +16,8 @@ namespace f00d
 
    public:
       int dispatch(int service_id, int* f00d_resp, void* ctx, int size) const override;
+
+   private:
+      int service_0x1000B(int* f00d_resp, void* ctx, int size) const;
    };
 }

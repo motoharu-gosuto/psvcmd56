@@ -576,7 +576,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
 
    sm_comm_ctx_130 var968;
 
-   context_db9fc204 ctx;
+   SceSblSmCommGcData_1000B ctx;
    ctx.var838 = 0x01;
    ctx.command = command;
    ctx.packet6_de = packet6_de;

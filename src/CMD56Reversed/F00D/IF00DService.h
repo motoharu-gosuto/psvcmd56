@@ -3,7 +3,8 @@
 #include <string>
 
 #define RM_AUTH_SM_SERVICE "rmauth_sm"
-#define RM_AUTH_SM_SERVICE_1C 0x1C
+#define RM_AUTH_SM_SERVICE_1 0x1
+#define RM_AUTH_SM_SERVICE_2 0x2
 
 #define GC_AUTH_MGR_SERVICE "gcauthmgr_sm"
 #define GC_AUTH_MGR_SERVICE_1000B 0x1000B
@@ -163,7 +164,7 @@
 //They are related to interrupt 0xC8
 //Which stands for 'SceSblSmSchedCry2Arm0'
 
-struct context_db9fc204
+struct SceSblSmCommGcData_1000B
 {
    //this is a structure of size 0x814
 
@@ -173,6 +174,16 @@ struct context_db9fc204
    int packet6_de; //var30
    int size; //var2C
    int var28; //is set to 0
+};
+
+struct SceSblSmCommMsifData_1
+{
+   char data[0x20];
+};
+
+struct SceSblSmCommMsifData_2
+{
+   char data[0x20];
 };
 
 namespace f00d

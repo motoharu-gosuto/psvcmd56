@@ -106,13 +106,13 @@ int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
       return res0;
    }
 
-   char buffer[0x20];
+   SceSblSmCommMsifData_1 data;
 
    int f00d_resp = 0;
       
-   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 1, &f00d_resp, buffer, 0x20))
+   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, RM_AUTH_SM_SERVICE_1, &f00d_resp, &data, 0x20))
    //   f00d_resp = 0x800F1928;
-   if(SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, 1, &f00d_resp, buffer, 0x20))
+   if(SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, RM_AUTH_SM_SERVICE_1, &f00d_resp, &data, 0x20))
       f00d_resp = 0x800F1928;
 
    std::pair<int, int> res;
@@ -124,7 +124,7 @@ int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
       return res1;
    }
    
-   *f00d_data = *(int*)(&buffer[0x10]);
+   *f00d_data = *(int*)(&data.data[0x10]);
 
    SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
    return f00d_resp;
@@ -145,15 +145,15 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
       return res0;
    }
 
-   char buffer[0x20];
-   memcpy(buffer, input, 0x10);
+   SceSblSmCommMsifData_2 data;
+   memcpy(data.data, input, 0x10);
 
    int f00d_resp = 0;
 
-   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 2, &f00d_resp, buffer, 0x20))
+   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, RM_AUTH_SM_SERVICE_2, &f00d_resp, &data, 0x20))
    //   f00d_resp = 0x800F1928;
 
-   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, 2, &f00d_resp, buffer, 0x20))
+   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, RM_AUTH_SM_SERVICE_2, &f00d_resp, &data, 0x20))
       f00d_resp = 0x800F1928;
    
    std::pair<int, int> res;

@@ -2,11 +2,11 @@
 
 using namespace f00d;
 
-int GcAuthMgrService::dispatch(int service_id, int* f00d_resp, void* ctx, int size) const
+int GcAuthMgrService::service_0x1000B(int* f00d_resp, void* ctx, int size) const
 {
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
-   context_db9fc204* ctx_cast = (context_db9fc204*)ctx;
+   SceSblSmCommGcData_1000B* ctx_cast = (SceSblSmCommGcData_1000B*)ctx;
 
    switch(ctx_cast->command)
    {
@@ -35,7 +35,7 @@ int GcAuthMgrService::dispatch(int service_id, int* f00d_resp, void* ctx, int si
       memset(ctx_cast->data, 0xBB, ctx_cast->size);
       break;
    default:
-      //not implemented service
+      //not implemented command
       *f00d_resp = -1;
       return -1;
    }
@@ -54,4 +54,17 @@ int GcAuthMgrService::dispatch(int service_id, int* f00d_resp, void* ctx, int si
    */
 
    return 0;
+}
+
+int GcAuthMgrService::dispatch(int service_id, int* f00d_resp, void* ctx, int size) const
+{
+   switch(service_id)
+   {
+   case GC_AUTH_MGR_SERVICE_1000B:
+      return service_0x1000B(f00d_resp, ctx, size);
+   default:
+      //not implemented command
+      *f00d_resp = -1;
+      return -1;
+   }
 }

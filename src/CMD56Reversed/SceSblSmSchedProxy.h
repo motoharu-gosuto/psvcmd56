@@ -37,7 +37,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_1916509b(int smcArg0, int smcArg1, int s
 
 //there is more info about this structure in https://wiki.henkaku.xyz/vita/F00D_Commands
 //however documentation starts from offset 0x40
-//which means it documents context_db9fc204
+//which means it documents SceSblSmCommGcData_1000B
 struct smc_133_input
 {
    SceSize size; //0x40 + 0x814
