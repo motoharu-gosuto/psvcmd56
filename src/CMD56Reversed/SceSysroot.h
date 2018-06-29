@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string>
 
 #include "Constants.h"
 
@@ -27,7 +28,10 @@ typedef struct elf_info_pair
    uint32_t elf_size;
 } elf_info_pair;
 
-int SceSysrootForKernel_f10ab792(int arg0, elf_info_pair* arg1);
+int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(int index, elf_info_pair* info);
+
+//this is added for the sake of emulation
+int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(int index, std::string& self_name);
 
 //-------------------------------------------------
 

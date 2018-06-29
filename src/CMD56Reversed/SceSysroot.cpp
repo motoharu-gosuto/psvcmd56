@@ -3,6 +3,8 @@
 #include "Errors.h"
 #include "SceSysroot.h"
 
+#include "F00D/IF00DService.h"
+
 int SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615()
 {
    return 0;
@@ -269,7 +271,7 @@ _8BF5F8_global_1 _8BF5F8_g1;
 _8BF5F8_global_0 _8BF5F8_g0;
 
 //modifies input arg1
-int SceSysrootForKernel_f10ab792(int arg0, elf_info_pair* arg1)
+int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(int index, elf_info_pair* info)
 {
    if(arg0 > 2) // looks like there can be only 3 elements in the array
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
@@ -296,6 +298,25 @@ int SceSysrootForKernel_f10ab792(int arg0, elf_info_pair* arg1)
    arg1->elf_size = g2[arg0].elf_size;
    
    return 0;
+}
+
+//this is added for the sake of emulation
+int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(int index, std::string& self_name)
+{
+   switch(index)
+   {
+   case 0:
+      self_name = GC_AUTH_MGR_SERVICE;
+      return 0;
+   case 1:
+      self_name = RM_AUTH_SM_SERVICE;
+      return 0;
+   case 2:
+      self_name = ENCDEC_W_PORTABILITY_SERVICE;
+      return 0;
+   default:
+      return -1;
+   }
 }
 
 //=========================================
