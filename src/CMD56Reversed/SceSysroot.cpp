@@ -273,13 +273,13 @@ _8BF5F8_global_0 _8BF5F8_g0;
 //modifies input arg1
 int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(int index, elf_info_pair* info)
 {
-   if(arg0 > 2) // looks like there can be only 3 elements in the array
+   if(index > 2) // looks like there can be only 3 elements in the array
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   if(arg1 == 0)
+   if(info == 0)
       return SCE_KERNEL_ERROR_ILLEGAL_ADDR;
 
-   if(arg1->size != 0x0C) //must be 0x0C
+   if(info->size != 0x0C) //must be 0x0C
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
 
    _8BF5F8_global_0* g0 = &_8BF5F8_g0;
@@ -291,11 +291,11 @@ int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(int index, elf_i
 
    //this part looked differently originally, however it was obvious that it was an array access where array elements are of size 0x08
 
-   if(g2[arg0].elf_size == 0)
+   if(g2[index].elf_size == 0)
       return SCE_ERROR_ERRNO_ENOENT;
 
-   arg1->elf_data = g2[arg0].elf_data;
-   arg1->elf_size = g2[arg0].elf_size;
+   info->elf_data = g2[index].elf_data;
+   info->elf_size = g2[index].elf_size;
    
    return 0;
 }
