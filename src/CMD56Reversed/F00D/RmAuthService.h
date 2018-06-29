@@ -2,9 +2,6 @@
 
 #include "IF00DService.h"
 
-#define RM_AUTH_SM "rmauth_sm"
-#define RM_AUTH_SM_1C 0x1C
-
 namespace f00d
 {
    class RmAuthService : public IF00DService
