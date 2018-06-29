@@ -13,6 +13,8 @@
 
 #include "SceSysmemGlobalVariables.h"
 
+#include "F00D/IF00DService.h"
+
 //FULLY REVERSED
 
 //initializes cmd56 request packet
@@ -572,11 +574,6 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    int var97C = -1; //trigger for some cleanup on exit?
    int var978 = 0x00; // error state
 
-   elf_info_pair state;
-   state.size = 0x0C; //must be 0xC
-   state.elf_data = 0x00;
-   state.elf_size = 0x00;
-
    sm_comm_ctx_130 var968;
 
    context_db9fc204 ctx;
@@ -594,7 +591,19 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    if(source != 0)
       SceSysclibForDriver_memcpy_assert_8a0b0815(ctx.data, source, size, 0x80C); //debug memcpy - 0x800 buffer + 3 fields of size 0x0C
 
-   int res0 = SceSysrootForKernel_f10ab792(0, &state); //modify state structure
+   /*
+   elf_info_pair state;
+   state.size = 0x0C; //must be 0xC
+   state.elf_data = 0x00;
+   state.elf_size = 0x00;
+
+   int res0 = SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(0, &state); //modify state structure
+   if(res0 < 0)
+      return exit_loc_CACAB2(&var97C, var24);
+   */
+
+   std::string service_name;
+   int res0 = SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(0, service_name);
    if(res0 < 0)
       return exit_loc_CACAB2(&var97C, var24);
 
@@ -605,13 +614,14 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    var968.self_type = 0x02;
    var968.pathId = 0x02;
 
-   //it is important that arg1 and arg2 are initialized by imp_f10ab792
+   //it is important that arg1 and arg2 are initialized by SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792
    //TODO: it is proved by many factors that this procedure shrinks the data and changes ctx.size field to the required size in sub_CAC924_command
-   int res1 = SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0x00, state.elf_data, state.size, 0x00, &var968, &var97C);
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(service_name, &var97C);
+   //int res1 = SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0x00, state.elf_data, state.size, 0x00, &var968, &var97C);
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GC_AUTH_MODE_1000B, &var978, &ctx, 0x814);
+   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GC_AUTH_MGR_SERVICE_1000B, &var978, &ctx, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 

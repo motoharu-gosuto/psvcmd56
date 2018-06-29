@@ -12,6 +12,8 @@
 #include "SceSysroot.h"
 #include "SceKernelUtils.h"
 
+#include "F00D/IF00DService.h"
+
 //-------- memory card communication --------
 
 typedef struct SceMsif_subctx
@@ -63,12 +65,18 @@ char ctx_130_part_C904A8[0x90] =
 //[REVERSED]
 int food_start_F00D_communication_rmauth_sm_C8D880()
 {
+   /*
    elf_info_pair self;
    self.size = 0xC;
    self.elf_data = 0;
    self.elf_size = 0;
    
-   if (SceSysrootForKernel_f10ab792(1, &self) < 0)
+   if (SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(1, &self) < 0)
+      return 0x800F0016;
+   */
+
+   std::string service_name;
+   if(SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(1, service_name) < 0)
       return 0x800F0016;
 
    sm_comm_ctx_130 ctx_130;
@@ -79,11 +87,12 @@ int food_start_F00D_communication_rmauth_sm_C8D880()
    ctx_130.pathId = 2;
    ctx_130.self_type = 2;
 
-   return SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
+   return SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(service_name, &id_B9F9BC);
+   //return SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
 }
 
 //[REVERSED]
-int food_execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
+int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
 {
    if(f00d_data == 0)
       return 0x800F1916;
@@ -134,12 +143,12 @@ int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
       return res0;
    }
 
-   char buffer[32];
+   char buffer[0x20];
    memcpy(buffer, input, 0x10);
 
    int f00d_resp = 0;
 
-   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 2, &f00d_resp, buffer, 32))
+   if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, 2, &f00d_resp, buffer, 0x20))
       f00d_resp = 0x800F1928;
    
    std::pair<int, int> res;
@@ -696,7 +705,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    int f00d_cmd1_res = 0;
 
-   int fdres1 = food_execute_f00d_command_1_rmauth_sm_C8D908(&f00d_cmd1_res);
+   int fdres1 = execute_f00d_command_1_rmauth_sm_C8D908(&f00d_cmd1_res);
    if(fdres1 < 0)
       return fdres1;
 
