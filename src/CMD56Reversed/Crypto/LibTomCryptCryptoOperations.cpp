@@ -11,6 +11,8 @@ LibTomCryptCryptoOperations::LibTomCryptCryptoOperations()
 
    register_cipher(&des_desc);
 
+   register_cipher(&des3_desc);
+
    register_hash(&sha1_desc);
 
    register_hash(&sha256_desc);
@@ -21,6 +23,8 @@ LibTomCryptCryptoOperations::~LibTomCryptCryptoOperations()
    unregister_cipher(&aes_desc);
 
    unregister_cipher(&des_desc);
+
+   unregister_cipher(&des3_desc);
 
    unregister_hash(&sha1_desc);
 
@@ -157,14 +161,14 @@ int LibTomCryptCryptoOperations::aes_ecb_decrypt(const unsigned char* src, unsig
    return 0;
 }
 
-int LibTomCryptCryptoOperations::des_encrypt(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key) const
+int LibTomCryptCryptoOperations::des_encrypt(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size) const
 {
    int idx = find_cipher("des");
    if(idx < 0)
       return -1;
 
    symmetric_ECB ecb;
-   if(ecb_start(idx, key, 8, 0, &ecb) != CRYPT_OK)
+   if(ecb_start(idx, key, key_size / 8, 0, &ecb) != CRYPT_OK)
       return -1;
 
    if(ecb_encrypt(src, dst, size, &ecb) != CRYPT_OK)
@@ -176,14 +180,52 @@ int LibTomCryptCryptoOperations::des_encrypt(const unsigned char* src, unsigned 
    return 0;
 }
 
-int LibTomCryptCryptoOperations::des_decrypt(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key) const
+int LibTomCryptCryptoOperations::des_decrypt(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size) const
 {
    int idx = find_cipher("des");
    if(idx < 0)
       return -1;
 
    symmetric_ECB ecb;
-   if(ecb_start(idx, key, 8, 0, &ecb) != CRYPT_OK)
+   if(ecb_start(idx, key, key_size / 8, 0, &ecb) != CRYPT_OK)
+      return -1;
+
+   if(ecb_decrypt(src, dst, size, &ecb) != CRYPT_OK)
+      return -1;
+
+   if(ecb_done(&ecb) != CRYPT_OK)
+      return -1;
+
+   return 0;
+}
+
+int LibTomCryptCryptoOperations::des3_encrypt(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size) const
+{
+   int idx = find_cipher("3des");
+   if(idx < 0)
+      return -1;
+
+   symmetric_ECB ecb;
+   if(ecb_start(idx, key, key_size / 8, 0, &ecb) != CRYPT_OK)
+      return -1;
+
+   if(ecb_encrypt(src, dst, size, &ecb) != CRYPT_OK)
+      return -1;
+
+   if(ecb_done(&ecb) != CRYPT_OK)
+      return -1;
+
+   return 0;
+}
+
+int LibTomCryptCryptoOperations::des3_decrypt(const unsigned char* src, unsigned char* dst, int size, const unsigned char* key, int key_size) const
+{
+   int idx = find_cipher("3des");
+   if(idx < 0)
+      return -1;
+
+   symmetric_ECB ecb;
+   if(ecb_start(idx, key, key_size / 8, 0, &ecb) != CRYPT_OK)
       return -1;
 
    if(ecb_decrypt(src, dst, size, &ecb) != CRYPT_OK)
