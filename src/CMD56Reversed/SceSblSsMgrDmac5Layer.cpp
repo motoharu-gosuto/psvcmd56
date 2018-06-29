@@ -211,14 +211,17 @@ int SceSblSsMgrForDriver_sceSblSsMgrHMACSHA1ForDriver_6704d985(const unsigned ch
 
 int SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf(const unsigned char *src, unsigned char *dst, int size, int slot_id, int key_size, int mask_enable)
 {
-   /*
-   unsigned char key[8];
+   //ignore keysize argument it is always 8 for des. i think original function ignores it as well
+   //key should be already set in the slot with SceSblAuthMgr_sceSblAuthMgrSetDmac5KeyForKernel_0x122acdea prior to calling this function
 
+   //retrive the key
+   unsigned char drv_key[0x20] = {0}; //use max possible buffer
+   if(f00d::SceSblDMAC5DmacKRBase::read_key(drv_key, 8, slot_id) < 0)
+      return -1;
+
+   //invoke crypto operation
    auto cryptops = CryptoService::get();
-   cryptops->des_encrypt(src, dst, size, key);
+   cryptops->des_encrypt(src, dst, size, drv_key);
 
    return 0;
-   */
-
-   throw std::runtime_error("not implemented");
 }
