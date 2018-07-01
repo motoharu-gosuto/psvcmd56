@@ -274,14 +274,14 @@ void byte_array_to_uint64_t(unsigned char* x, std::uint64_t* y)
 
 void uint64_t_to_byte_array(std::uint64_t x, unsigned char* y)
 {
-   (y)[7] = (unsigned char)((x) >> 56); 
-   (y)[6] = (unsigned char)((x) >> 48); 
-   (y)[5] = (unsigned char)((x) >> 40);
-   (y)[4] = (unsigned char)((x) >> 32);
-   (y)[3] = (unsigned char)((x) >> 24); 
-   (y)[2] = (unsigned char)((x) >> 16);
-   (y)[1] = (unsigned char)((x) >> 8); 
-   (y)[0] = (unsigned char)(x);
+   (y)[0] = (unsigned char)((x) >> 56); 
+   (y)[1] = (unsigned char)((x) >> 48); 
+   (y)[2] = (unsigned char)((x) >> 40);
+   (y)[3] = (unsigned char)((x) >> 32);
+   (y)[4] = (unsigned char)((x) >> 24); 
+   (y)[5] = (unsigned char)((x) >> 16);
+   (y)[6] = (unsigned char)((x) >> 8); 
+   (y)[7] = (unsigned char)(x);
 }
 
 //[REVERSED]
