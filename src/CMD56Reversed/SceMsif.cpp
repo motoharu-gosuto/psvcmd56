@@ -13,6 +13,7 @@
 #include "SceKernelUtils.h"
 
 #include "F00D/IF00DService.h"
+#include "F00D/F00DUtils.h"
 
 //-------- memory card communication --------
 
@@ -258,8 +259,62 @@ void process_back_inverse_tail(unsigned int& lo, unsigned int& hi, unsigned char
 
 //--------
 
+void byte_array_to_uint64_t(unsigned char* x, std::uint64_t* y)
+{
+   std::uint64_t c0 = (((std::uint64_t)x[0]) << 56);
+   std::uint64_t c1 = (((std::uint64_t)x[1]) << 48);
+   std::uint64_t c2 = (((std::uint64_t)x[2]) << 40);
+   std::uint64_t c3 = (((std::uint64_t)x[3]) << 32);
+   std::uint64_t c4 = (((std::uint64_t)x[4]) << 24);
+   std::uint64_t c5 = (((std::uint64_t)x[5]) << 16);
+   std::uint64_t c6 = (((std::uint64_t)x[6]) <<  8);
+   std::uint64_t c7 = (((std::uint64_t)x[7]) <<  0);
+   *y = c0 | c1 | c2 | c3 | c4 | c5 | c6 | c7;
+}
+
+void uint64_t_to_byte_array(std::uint64_t x, unsigned char* y)
+{
+   (y)[7] = (unsigned char)((x) >> 56); 
+   (y)[6] = (unsigned char)((x) >> 48); 
+   (y)[5] = (unsigned char)((x) >> 40);
+   (y)[4] = (unsigned char)((x) >> 32);
+   (y)[3] = (unsigned char)((x) >> 24); 
+   (y)[2] = (unsigned char)((x) >> 16);
+   (y)[1] = (unsigned char)((x) >> 8); 
+   (y)[0] = (unsigned char)(x);
+}
+
 //[REVERSED]
-int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned int* tweak0_res, unsigned int* tweak1_res)
+int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned char* tweak_input, unsigned char* tweak0_res, unsigned char* tweak1_res)
+{
+   //first round - multiply by 2
+
+   std::uint64_t i64_0;
+   byte_array_to_uint64_t(tweak_input, &i64_0);
+
+   std::uint64_t mul64_0 = i64_0 * 2;
+
+   uint64_t_to_byte_array(mul64_0, tweak0_res);
+
+   tweak0_res[7] = ((tweak_input[0] & 0x80) > 0) ? (tweak0_res[7] ^ 0x1B) 
+                                                 :  tweak0_res[7];
+   
+   //second round - multiply by 2
+
+   std::uint64_t i64_1;
+   byte_array_to_uint64_t(tweak0_res, &i64_1);
+
+   std::uint64_t mul64_1 = i64_1 * 2;
+
+   uint64_t_to_byte_array(mul64_1, tweak1_res);
+
+   tweak1_res[7] = ((tweak0_res[0] & 0x80) > 0) ? (tweak1_res[7] ^ 0x1B) 
+                                                :  tweak1_res[7];
+
+   return 0;
+}
+
+int w_dmac5_command_0x41_bit_magic_C8D2F0_orig(unsigned int* some_buffer, unsigned int* tweak0_res, unsigned int* tweak1_res)
 {
    //---- reverse input buffer ----
 
@@ -384,13 +439,12 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned int* some_buffer, unsigned in
 //[REVERSED]
 int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, int size)
 {
-   int tmp_src0[2];
-   tmp_src0[0] = 0;
-   tmp_src0[1] = 0;
+   unsigned char tmp_src0[8];
+   memset(tmp_src0, 0, 8);
 
-   unsigned int tmp_dst0[2];
+   unsigned char tmp_dst0[8];
 
-   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)tmp_src0, (unsigned char*)tmp_dst0, 8, 0x1C, 0xC0, 1);
+   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)tmp_src0, tmp_dst0, 8, 0x1C, 0xC0, 1);
    if(enc_res0 < 0)
       return enc_res0;
 
@@ -398,7 +452,7 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
 
    unsigned int tweak_key0[2];
    unsigned int tweak_key1[2];
-   int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, tweak_key0, tweak_key1);
+   int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, (unsigned char*)tweak_key0, (unsigned char*)tweak_key1);
 
    //---- process data in blocks of 8 bytes ----
 
