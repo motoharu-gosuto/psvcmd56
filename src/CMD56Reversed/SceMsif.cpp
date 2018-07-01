@@ -49,7 +49,7 @@ int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx
 
 int id_B9F9BC = 0;
 
-char ctx_130_part_C904A8[0x90] = 
+unsigned char ctx_130_part_C904A8[0x90] =
 {
    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x80, 0x00, 0x00, 0x00, 0xC0, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 
@@ -412,14 +412,14 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
    round_buffer[0] = 0;
    round_buffer[1] = 0;
 
-   while(true)
+   while(current_size > 8)
    {
-      current_ptr = current_ptr + 2;
-      
       //perform xor operation with input data
       int current_round[2];
-      current_round[0] = (current_ptr - 2)[0] ^ round_buffer[0];
-      current_round[1] = (current_ptr - 2)[1] ^ round_buffer[1];
+      current_round[0] = current_ptr[0] ^ round_buffer[0];
+      current_round[1] = current_ptr[1] ^ round_buffer[1];
+
+      current_ptr = current_ptr + 2;
 
       //perform encryption, write back to round_buffer
       int enc_res1 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)current_round, (unsigned char*)round_buffer, 8, 0x1C, 0xC0, 1);
@@ -427,8 +427,6 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
          break;
 
       current_size = current_size - 8;
-      if(current_size <= 8)
-         break;
    }
 
    //---- process tail of the data (is this cipher text stealing?) ----
@@ -448,27 +446,12 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
    }
    else
    {
-      //I assume this code pads the tail with zeroes (but not sure)
-
-      int temp_src2[2];
-      temp_src2[0] = current_ptr[0];
-      temp_src2[1] = current_ptr[1];
+      //write last chunk of data
+      tail_data[0] = current_ptr[0];
+      tail_data[1] = current_ptr[1];
       
-      //zero first byte of tail
-      char* ptr1 = ((char*)temp_src2) + current_size;
-      ptr1[0] = 0;
-
-      //not sure how this code works !
-      int size1 = current_size + 1;
-      if(size1 != 0)
-      {
-         char* ptr3 = ((char*)temp_src2) + size1;
-         memset(ptr3, 0, 7 - current_size);
-      }
-      
-      //write last padded chunk of data
-      tail_data[0] = temp_src2[0];
-      tail_data[1] = temp_src2[1];
+      //pad the tail with zeroes
+      memset(((char*)tail_data) + current_size, 0, 8 - current_size);
       
       //perform xor operation of current buffer with some data
       tail_tweak[0] = round_buffer[0] ^ tweak_key1[0];
