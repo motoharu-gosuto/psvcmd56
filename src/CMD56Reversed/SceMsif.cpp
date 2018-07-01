@@ -287,6 +287,9 @@ void uint64_t_to_byte_array(std::uint64_t x, unsigned char* y)
 //[REVERSED]
 int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned char* tweak_input, unsigned char* tweak0_res, unsigned char* tweak1_res)
 {
+   //read about 0x1B xor here:
+   //https://en.wikipedia.org/wiki/Finite_field_arithmetic#Rijndael%27s_finite_field
+
    //first round - multiply by 2
 
    std::uint64_t i64_0;
@@ -310,128 +313,6 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned char* tweak_input, unsigned c
 
    tweak1_res[7] = ((tweak0_res[0] & 0x80) > 0) ? (tweak1_res[7] ^ 0x1B) 
                                                 :  tweak1_res[7];
-
-   return 0;
-}
-
-int w_dmac5_command_0x41_bit_magic_C8D2F0_orig(unsigned int* some_buffer, unsigned int* tweak0_res, unsigned int* tweak1_res)
-{
-   //---- reverse input buffer ----
-
-   unsigned int lo0;
-   unsigned int hi0;
-   process_block_invert_head(lo0, hi0, ((unsigned char*)some_buffer)[0]);
-   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[1]);
-   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[2]);
-   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[3]);
-   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[4]);
-   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[5]);
-   process_block_invert_body(lo0, hi0, ((unsigned char*)some_buffer)[6]);
-   process_block_invert_tail(lo0, hi0, ((unsigned char*)some_buffer)[7]);
-
-   //---- carry add input buffer ----
-
-   std::uint32_t carry0 = 0;
-   std::uint32_t au0 = adds(lo0, lo0, &carry0); //technically this is a multiplication by 2
-   std::uint32_t bu0 = adcs(hi0, hi0, &carry0); //technically this is a multiplication by 2 (but also with carry)
-
-   //---- retrieve bytes
-
-   unsigned char a[4]; 
-   a[0] = (unsigned char)(au0);
-   a[1] = (unsigned char)(au0 >>  8);
-   a[2] = (unsigned char)(au0 >> 16);
-   a[3] = (unsigned char)(au0 >> 24);
-
-   unsigned char b[4]; 
-   b[0] = (unsigned char)(bu0);
-   b[1] = (unsigned char)(bu0 >>  8);
-   b[2] = (unsigned char)(bu0 >> 16);
-   b[3] = (unsigned char)(bu0 >> 24);
-
-   unsigned char c[4]; 
-   c[0] = (unsigned char)(bu0);
-   c[1] = (unsigned char)(bu0 <<  8);
-   c[2] = (unsigned char)(bu0 << 16);
-   c[3] = (unsigned char)(bu0 << 24);
-
-   //---- looks like all this code does is inverting the values (except for 0x1B handling) ----
-
-   unsigned char tweak0[8];
-
-   tweak0[0] = b[3];
-   tweak0[1] = b[2];
-   tweak0[2] = b[1];
-   tweak0[3] = b[0];
-
-   tweak0[4] = (a[3] | c[1]);
-   tweak0[5] = (a[2] | c[2]);
-   tweak0[6] = (a[1] | c[3]);
-
-   unsigned char value00 = ((char*)some_buffer)[0];
-   tweak0[7] = ((value00 & 0x80) > 0) ? (a[0] ^ 0x1B) 
-                                      :  a[0];
-   
-   //---- back reverse buffer ----
-   
-   unsigned int hi1;
-   unsigned int lo1;
-   process_back_inverse_head(lo1, hi1, tweak0[0]);
-   process_back_inverse_body(lo1, hi1, tweak0[1]);
-   process_back_inverse_body(lo1, hi1, tweak0[2]);
-   process_back_inverse_body(lo1, hi1, tweak0[3]);
-   process_back_inverse_body(lo1, hi1, tweak0[4]);
-   process_back_inverse_body(lo1, hi1, tweak0[5]);
-   process_back_inverse_body(lo1, hi1, tweak0[6]);
-   process_back_inverse_tail(lo1, hi1, tweak0[7]);
-
-   //---- carry add buffer ----
-
-   std::uint32_t carry1 = 0;
-   std::uint32_t au1 = adds(lo1, lo1, &carry1); //technically this is a multiplication by 2
-   std::uint32_t bu1 = adcs(hi1, hi1, &carry1); //technically this is a multiplication by 2 (but also with carry)
-
-   //---- retrieve bytes
-
-   unsigned char d[4]; 
-   d[0] = (unsigned char)(au1);
-   d[1] = (unsigned char)(au1 >>  8);
-   d[2] = (unsigned char)(au1 >> 16);
-   d[3] = (unsigned char)(au1 >> 24);
-
-   unsigned char e[4]; 
-   e[0] = (unsigned char)(bu1);
-   e[1] = (unsigned char)(bu1 >>  8);
-   e[2] = (unsigned char)(bu1 >> 16);
-   e[3] = (unsigned char)(bu1 >> 24);
-
-   unsigned char f[4]; 
-   f[0] = (unsigned char)(bu1);
-   f[1] = (unsigned char)(bu1 <<  8);
-   f[2] = (unsigned char)(bu1 << 16);
-   f[3] = (unsigned char)(bu1 << 24);
-
-   //---- looks like all this code does is inverting the values (except for 0x1B handling) ----
-
-   unsigned char tweak1[8];
-
-   tweak1[0] = e[3];
-   tweak1[1] = e[2];
-   tweak1[2] = e[1];
-   tweak1[3] = e[0];
-
-   tweak1[4] = d[3] | f[1];
-   tweak1[5] = d[2] | f[2];
-   tweak1[6] = d[1] | f[3];
-
-   unsigned char value01 = tweak0[0];
-   tweak1[7] = ((value01 & 0x80) > 0) ? (d[0] ^ 0x1B)
-                                      :  d[0];
- 
-   //---- copy results ----
-
-   memcpy((char*)tweak0_res, (char*)tweak0, 8);
-   memcpy((char*)tweak1_res, (char*)tweak1, 8);
 
    return 0;
 }
