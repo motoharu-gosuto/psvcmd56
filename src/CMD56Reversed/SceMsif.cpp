@@ -92,7 +92,7 @@ int food_start_F00D_communication_rmauth_sm_C8D880()
 }
 
 //[REVERSED]
-int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
+int execute_f00d_command_1_rmauth_sm_C8D908(unsigned int* f00d_data)
 {
    if(f00d_data == 0)
       return 0x800F1916;
@@ -125,14 +125,14 @@ int execute_f00d_command_1_rmauth_sm_C8D908(int* f00d_data)
       return res1;
    }
    
-   *f00d_data = *(int*)(&data.data[0x10]);
+   *f00d_data = *(unsigned int*)(&data.data[0x10]);
 
    SceKernelSuspendForDriver_call_func_008B8084_atomic_dec_008BF3FC_2bb92967(0);
    return f00d_resp;
 }
 
 //[REVERSED]
-int execute_f00d_command_2_rmauth_sm_C8D988(const char input[0x10])
+int execute_f00d_command_2_rmauth_sm_C8D988(unsigned const char input[0x10])
 {
    if (input == 0)
       return 0x800F1916;
@@ -678,25 +678,25 @@ int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char sha_224[0x1C], unsi
 
 typedef struct dmac5_41_req1 //size is 0x28
 {
-   char f00d_cmd2_buffer[0x10];
-   char var_88[0x10];
-   char rand_value[8];
+   unsigned char f00d_cmd2_buffer[0x10];
+   unsigned char var_88[0x10];
+   unsigned char rand_value[8];
 }dmac5_41_req1;
 
 typedef struct dmac5_41_req2 //size is 0x10
 {
-   char data1[0x8];
-   char data2[0x8];
+   unsigned char data1[0x8];
+   unsigned char data2[0x8];
 }dmac5_41_req2;
 
 //need to add type to tpc_cmd48
 
 typedef struct tpc_cmd49_resp //size is 0x40
 {
-   char f00d_cmd2_buffer[0x10];
-   char var_88[0x10];
-   char signature[0x08];
-   char reserved[0x18];
+   unsigned char f00d_cmd2_buffer[0x10];
+   unsigned char var_88[0x10];
+   unsigned char signature[0x08];
+   unsigned char reserved[0x18];
 }tpc_cmd49_resp;
 
 #pragma pack(pop)
@@ -705,7 +705,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 {
    // execute f00d command 1
 
-   int f00d_cmd1_res = 0;
+   unsigned int f00d_cmd1_res = 0;
 
    int fdres1 = execute_f00d_command_1_rmauth_sm_C8D908(&f00d_cmd1_res);
    if(fdres1 < 0)
