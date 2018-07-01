@@ -12,6 +12,7 @@ int F00DServiceDispatcher::start(std::string service_name, int* id)
 {  
    //allocate new id for corresponding service name
    m_ids.insert(std::make_pair(m_current_id, service_name));
+   *id = m_current_id;
    m_current_id++;
    return 0;
 }
