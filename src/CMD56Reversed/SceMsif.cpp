@@ -640,8 +640,8 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    memset(des3_iv_2, 0, 0x8);
 
    dmac5_41_req2 d5req2;
-   memcpy(d5req2.session_id, d5req1.session_id, 8);
-   memcpy(d5req2.data2, d5req1.var_88 + 8, 8);
+   memcpy(d5req2.session_id, d5req1.session_id, 8); //copy session id
+   memcpy(d5req2.data2, cmd49_resp.var_88 + 8, 8); //copy 8 bytes of tpc 0x49 response
 
    // encrypt prepared buffer with 3des-cbc-cts and obtain IV
    int dmc5res2 = w_dmac5_3des_cbc_cts_iv_C8D2F0((unsigned int*)des3_iv_2, (const unsigned int*)&d5req2, 0x10);
