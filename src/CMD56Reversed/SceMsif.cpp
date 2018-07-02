@@ -236,8 +236,12 @@ int w_dmac5_command_0x41_derive_iv_tweak_C8D2F0(unsigned char* tweak_seed, unsig
 //I am still not sure how tweak keys are calculated
 //it looks like to be related to a multiplication by 2 in Galois Field GF(2^64)
 
+//result of this function looks like to be IV of the 3DES
+
+//this function executes dmac5 0x41 command under the hood
+
 //[REVERSED]
-int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, int size)
+int w_dmac5_3des_cbc_cts_iv_C8D2F0(unsigned int* result, const unsigned int* data, int size)
 {
    //calculate tweak keys
 
@@ -532,131 +536,134 @@ int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char sha_224[0x1C], unsi
 
 typedef struct dmac5_41_req1 //size is 0x28
 {
-   unsigned char f00d_cmd2_buffer[0x10];
+   unsigned char f00d_1C_key[0x10];
    unsigned char var_88[0x10];
-   unsigned char rand_value[8];
+   unsigned char session_id[8];
 }dmac5_41_req1;
 
 typedef struct dmac5_41_req2 //size is 0x10
 {
-   unsigned char data1[0x8];
+   unsigned char session_id[0x8];
    unsigned char data2[0x8];
 }dmac5_41_req2;
 
 typedef struct tpc_cmd48_req //size is 0x20
 {
-   unsigned char rand[0x8];
+   unsigned char session_id[0x8];
    unsigned char f00d_cmd1_data;
    unsigned char reserved[0x17];
 }tpc_cmd48_req;
 
 typedef struct tpc_cmd49_resp //size is 0x40
 {
-   unsigned char f00d_cmd2_buffer[0x10];
+   unsigned char f00d_1C_key[0x10];
    unsigned char var_88[0x10];
-   unsigned char signature[0x08];
+   unsigned char iv[0x08];
    unsigned char reserved[0x18];
 }tpc_cmd49_resp;
 
+typedef struct tpc_cmd4A_req //size is 0x20
+{
+   unsigned char iv[0x8];
+   unsigned char reserved[0x18];
+}tpc_cmd4A_req;
+
 #pragma pack(pop)
 
-int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char sha224_digest_source[0x10])
+int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char mc_1C_key[0x10])
 {
    // execute f00d rm auth cmd 1
-
+   // this probably gets some session ID or smth - have to confirm
    unsigned int f00d_cmd1_res = 0;
 
    int fdres1 = execute_f00d_command_1_rmauth_sm_C8D908(&f00d_cmd1_res);
    if(fdres1 < 0)
       return fdres1;
 
-   // generate random number
-   char rand_value[8];
-   memset(rand_value, 0, 8);
+   // generate random number - this should be some session ID or smth
+   char session_id[8];
+   memset(session_id, 0, 8);
 
-   int rdgenres1 = SceSblSsMgrForDriver_sceSblSsMgrGetRandomDataCropForDriver_4dd1b2e5(rand_value, 8, 1);
+   int rdgenres1 = SceSblSsMgrForDriver_sceSblSsMgrGetRandomDataCropForDriver_4dd1b2e5(session_id, 8, 1);
    if(rdgenres1 < 0)
       return rdgenres1;   
 
-   // prepare tpc cmd 0x48 request
+   // execute tpc cmd 48 - send request - probably establish session with memory card
 
-   // 8 + 1 + 0x17 = 0x20 total in bytes
    tpc_cmd48_req cmd48_req;
-   memcpy(cmd48_req.rand, rand_value, 8); //copy rand
+   memcpy(cmd48_req.session_id, session_id, 8); //copy session_id
    cmd48_req.f00d_cmd1_data = f00d_cmd1_res; //copy f00d rm auth cmd1 resp 1 byte
    memset(cmd48_req.reserved, 0, 0x17); //fill rest with 0
 
-   // execute tpc cmd 48
    int res48 = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_48, 0x20, (char*)&cmd48_req, 1000);
    if(res48 != 0)
       return res48; //returns not exactly this, but we dont care here
 
-   // execute tpc cmd 49
+   // execute tpc cmd 49 - get response - probably result of establishing session with memory card
 
    tpc_cmd49_resp cmd49_resp;
    memset(&cmd49_resp, 0, 0x40);
    
-   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, (char*)&cmd49_resp, 1000); //gets 0x40 bytes of response
+   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, (char*)&cmd49_resp, 1000);
+   if(res49 != 0)
+      return res49; //returns not exactly this, but we dont care here
 
    // execute f00d rm auth cmd 2
-
-   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(cmd49_resp.f00d_cmd2_buffer); //sends first 0x10 bytes of 0x49 resp to f00d, probably gets response
+   // this call sets the key that was obtained from memory card into slot 0x1C
+   int fdres2 = execute_f00d_command_2_rmauth_sm_C8D988(cmd49_resp.f00d_1C_key);
    if(fdres2 < 0)
       return fdres2;
 
-   // prepare dmac5 cmd 0x41 request data
+   // prepare 3des-cbc-cts (dmac5 cmd 0x41 request) data
 
-   char dmac5_result_1[0x8];
-   memset(dmac5_result_1, 0, 0x8);
+   char des3_iv_1[0x8];
+   memset(des3_iv_1, 0, 0x8);
 
    dmac5_41_req1 d5req1;
-   memcpy(d5req1.f00d_cmd2_buffer, cmd49_resp.f00d_cmd2_buffer, 0x10);
-   memcpy(d5req1.var_88, cmd49_resp.var_88, 0x10); //copy second 0x10 bytes of tpc 0x49 resp  
-   memcpy(d5req1.rand_value, rand_value, 0x8);
+   memcpy(d5req1.f00d_1C_key, cmd49_resp.f00d_1C_key, 0x10); //copy 0x1C slot key from tpc 0x49 response
+   memcpy(d5req1.var_88, cmd49_resp.var_88, 0x10); //copy second 0x10 bytes of tpc 0x49 response
+   memcpy(d5req1.session_id, session_id, 0x8); //copy session id sent in tpc 0x49 request
 
-   // execute dmac5 cmd 0x41
-   // send dmac5 request with 0x20 bytes of tpc 0x49 response 
-   // and 8 bytes of random data used in tpc 0x48 request
-   int dmc5res1 = w_dmac5_command_0x41_C8D2F0((unsigned int*)dmac5_result_1, (unsigned int*)&d5req1, 0x28);
+   // encrypt prepared buffer with 3des-cbc-cts and obtain IV
+   int dmc5res1 = w_dmac5_3des_cbc_cts_iv_C8D2F0((unsigned int*)des3_iv_1, (const unsigned int*)&d5req1, 0x28);
    if(dmc5res1 != 0)
       return dmc5res1;
 
-   // verify hash, signature ?
+   // verify that IV matches to the one, given in tpc 0x49 response
 
-   if(memcmp(dmac5_result_1, cmd49_resp.signature, 8) != 0) //verify against last 8 bytes of 0x49 resp
+   if(memcmp(des3_iv_1, cmd49_resp.iv, 8) != 0)
       return -1; //returns not exactly this, but we dont care here
 
-   // prepare dmac5 cmd 0x41 request data
+   // prepare 3des-cbc-cts (dmac5 cmd 0x41 request) data
  
-   char dmac_5_result_2[0x8];
-   memset(dmac_5_result_2, 0, 0x8);
+   char des3_iv_2[0x8];
+   memset(des3_iv_2, 0, 0x8);
 
    dmac5_41_req2 d5req2;
-   memcpy(d5req2.data1, d5req1.rand_value, 8);
+   memcpy(d5req2.session_id, d5req1.session_id, 8);
    memcpy(d5req2.data2, d5req1.var_88 + 8, 8);
 
-   // execute dmac5 cmd 0x41
-
-   int dmc5res2 = w_dmac5_command_0x41_C8D2F0((unsigned int*)dmac_5_result_2, (unsigned int*)&d5req2, 0x10);
+   // encrypt prepared buffer with 3des-cbc-cts and obtain IV
+   int dmc5res2 = w_dmac5_3des_cbc_cts_iv_C8D2F0((unsigned int*)des3_iv_2, (const unsigned int*)&d5req2, 0x10);
    if(dmc5res2 != 0)
       return dmc5res2;
    
-   // execute tpc cmd 4A
+   // execute tpc cmd 4A - send request - what does it do with the card ?
 
-   char cmd4A_src[0x20];
-   memcpy(cmd4A_src, dmac_5_result_2, 8); //copy dmac5 result 2 to request
-   memset(cmd4A_src + 8, 0, 0x20); //all bytes should be cleared except for first 8 bytes
-   
-   int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, cmd4A_src, 1000);
+   tpc_cmd4A_req cmd4A_req;
+   memcpy(cmd4A_req.iv, des3_iv_2, 8); //copy IV from second 3des-cbc-cts encryption
+   memset(cmd4A_req.reserved, 0, 0x18); //clear all other bytes
+
+   int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, (char*)&cmd4A_req, 1000);
    if(res4A < 0)
       return res4A; //returns not exactly this, but we dont care here
    
-   // copy result
+   // copy result - return key that was obtained from the memory card and set to 0x1C slot with f00d rm auth 2 service call
 
-   if(sha224_digest_source == 0)
+   if(mc_1C_key == 0)
       return -1; //returns not exactly this, but we dont care here
 
-   memcpy(sha224_digest_source, d5req1.f00d_cmd2_buffer, 0x10); //copy result
+   memcpy(mc_1C_key, d5req1.f00d_1C_key, 0x10);
    
    return cmd49_resp.var_88[7];
 }
