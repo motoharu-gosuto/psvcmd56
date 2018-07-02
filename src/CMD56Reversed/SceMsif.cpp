@@ -317,9 +317,15 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned char* tweak_input, unsigned c
    return 0;
 }
 
+//looks like this function is doing 3-DES CBC with ciphertext stealing
+//I am still not sure how tweak keys are calculated
+//it looks like to be related to a multiplication by 2 in Galois Field GF(2^64)
+
 //[REVERSED]
 int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, int size)
 {
+   //calculate tweak keys
+
    unsigned char tmp_src0[8];
    memset(tmp_src0, 0, 8);
 
@@ -329,13 +335,11 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
    if(enc_res0 < 0)
       return enc_res0;
 
-   //calculate tweak keys?
-
    unsigned int tweak_key0[2];
    unsigned int tweak_key1[2];
    int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, (unsigned char*)tweak_key0, (unsigned char*)tweak_key1);
 
-   //---- process data in blocks of 8 bytes ----
+   //---- process data in blocks of 8 bytes (calculate 3-DES CBC)----
 
    if(size <= 8)
       return r0;
@@ -343,30 +347,30 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
    const unsigned int* current_ptr = data;
    int current_size = size;
 
-   int round_buffer[2];
-   round_buffer[0] = 0;
-   round_buffer[1] = 0;
+   int IV[2];
+   IV[0] = 0;
+   IV[1] = 0;
 
    while(current_size > 8)
    {
       //perform xor operation with input data
       int current_round[2];
-      current_round[0] = current_ptr[0] ^ round_buffer[0];
-      current_round[1] = current_ptr[1] ^ round_buffer[1];
+      current_round[0] = current_ptr[0] ^ IV[0];
+      current_round[1] = current_ptr[1] ^ IV[1];
 
       current_ptr = current_ptr + 2;
 
       //perform encryption, write back to round_buffer
-      int enc_res1 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)current_round, (unsigned char*)round_buffer, 8, 0x1C, 0xC0, 1);
+      int enc_res1 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)current_round, (unsigned char*)IV, 8, 0x1C, 0xC0, 1);
       if(enc_res1 < 0)
          break;
 
       current_size = current_size - 8;
    }
 
-   //---- process tail of the data (is this cipher text stealing?) ----
+   //---- process tail of the data (looks like with ciphertext stealing) ----
 
-   int tail_tweak[2];
+   int IV_mod[2];
    int tail_data[2];
 
    if(current_size == 8)
@@ -376,8 +380,8 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
       tail_data[1] = current_ptr[1];
       
       //perform xor operation of current buffer with some data
-      tail_tweak[0] = round_buffer[0] ^ tweak_key0[0];
-      tail_tweak[1] = round_buffer[1] ^ tweak_key0[1];
+      IV_mod[0] = IV[0] ^ tweak_key0[0];
+      IV_mod[1] = IV[1] ^ tweak_key0[1];
    }
    else
    {
@@ -389,14 +393,14 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
       memset(((char*)tail_data) + current_size, 0, 8 - current_size);
       
       //perform xor operation of current buffer with some data
-      tail_tweak[0] = round_buffer[0] ^ tweak_key1[0];
-      tail_tweak[1] = round_buffer[1] ^ tweak_key1[1];
+      IV_mod[0] = IV[0] ^ tweak_key1[0];
+      IV_mod[1] = IV[1] ^ tweak_key1[1];
    }
 
    //perform xor operation with input data
    int final_round[2];
-   final_round[0] = tail_tweak[0] ^ tail_data[0];
-   final_round[1] = tail_tweak[1] ^ tail_data[1];
+   final_round[0] = tail_data[0] ^ IV_mod[0];
+   final_round[1] = tail_data[1] ^ IV_mod[1];
 
    //perform encryption - store result
    int enc_res2 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)final_round, (unsigned char*)result, 8, 0x1C, 0xC0, 1);
