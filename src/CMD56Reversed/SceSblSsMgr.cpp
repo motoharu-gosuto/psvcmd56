@@ -406,7 +406,7 @@ int exit_loc_B99C0A(int r0, int cookie)
 //assume - gen/buffer shift
 //size - in our case is always 0x40 because passed by wrapper
 //unk - in our case is always 0x01 because passed by wrapper
-int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
+int SceSblSsMgrForDriver_sceSblSsMgrGetRandomDataCropForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
 {
    char sourceBuffer[0x40];   
    int cookie = var_009EA004;
@@ -444,7 +444,7 @@ int SceSblSsMgrForDriver_4dd1b2e5(char* outputBuffer, int size, int unk)
 //wrapper
 int SceSblSsMgrForDriver_ac57f4f0(char* buffer)
 {
-   return SceSblSsMgrForDriver_4dd1b2e5(buffer, 0x40, 0x01);
+   return SceSblSsMgrForDriver_sceSblSsMgrGetRandomDataCropForDriver_4dd1b2e5(buffer, 0x40, 0x01);
 }
 
 void SceSblSsMgrForDriver_cd98cc92(char* dest, char value, int size)

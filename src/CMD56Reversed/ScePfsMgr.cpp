@@ -397,7 +397,7 @@ int sub_B99E8C(ctx_21A27B8_70* data_base, char* dest, int size, char* src, int a
 
    //proc_copy_to_from_B9A578
 
-   //sub_B99C40 -> sub_B99674 - this is generic dmac procedure that is used for example in SceSblSsMgrForDriver_4dd1b2e5 to generate 0x40 random byte sequence
+   //sub_B99C40 -> sub_B99674 - this is generic dmac procedure that is used for example in SceSblSsMgrForDriver_sceSblSsMgrGetRandomDataCropForDriver_4dd1b2e5 to generate 0x40 random byte sequence
 
    //proc_copy_from_to_B9A5D8
 

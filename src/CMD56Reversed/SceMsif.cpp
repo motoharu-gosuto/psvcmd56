@@ -569,7 +569,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    char rand_value[8];
    memset(rand_value, 0, 8);
 
-   int rdgenres1 = SceSblSsMgrForDriver_4dd1b2e5(rand_value, 8, 1);
+   int rdgenres1 = SceSblSsMgrForDriver_sceSblSsMgrGetRandomDataCropForDriver_4dd1b2e5(rand_value, 8, 1);
    if(rdgenres1 < 0)
       return rdgenres1;   
 
