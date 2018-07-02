@@ -537,14 +537,15 @@ int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char sha_224[0x1C], unsi
 typedef struct dmac5_41_req1 //size is 0x28
 {
    unsigned char f00d_1C_key[0x10];
-   unsigned char var_88[0x10];
+   unsigned char card_info[0x8];
+   unsigned char challenge[0x8];
    unsigned char session_id[8];
 }dmac5_41_req1;
 
 typedef struct dmac5_41_req2 //size is 0x10
 {
    unsigned char session_id[0x8];
-   unsigned char data2[0x8];
+   unsigned char challenge[0x8];
 }dmac5_41_req2;
 
 typedef struct tpc_cmd48_req //size is 0x20
@@ -556,9 +557,10 @@ typedef struct tpc_cmd48_req //size is 0x20
 
 typedef struct tpc_cmd49_resp //size is 0x40
 {
-   unsigned char f00d_1C_key[0x10];
-   unsigned char var_88[0x10];
-   unsigned char iv[0x08];
+   unsigned char f00d_1C_key[0x10]; // this data is constant. it looks like it contains some string and binary numbers (maybe name and serial number, or manufacturing date?)
+   unsigned char card_info[0x8]; // this data looks like to be constant. only last byte is not equal to zero
+   unsigned char challenge[0x8]; // this data is random each time - i am assuming it depends on session_id
+   unsigned char iv[0x08]; // this data is different each time - thats because var_88 and session_id are part of cryptographic material, given to 3des-cbc-cts
    unsigned char reserved[0x18];
 }tpc_cmd49_resp;
 
@@ -621,7 +623,8 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    dmac5_41_req1 d5req1;
    memcpy(d5req1.f00d_1C_key, cmd49_resp.f00d_1C_key, 0x10); //copy 0x1C slot key from tpc 0x49 response
-   memcpy(d5req1.var_88, cmd49_resp.var_88, 0x10); //copy second 0x10 bytes of tpc 0x49 response
+   memcpy(d5req1.card_info, cmd49_resp.card_info, 0x8); //copy 8 bytes of card info
+   memcpy(d5req1.challenge, cmd49_resp.challenge, 0x8); //copy 8 bytes of challenge
    memcpy(d5req1.session_id, session_id, 0x8); //copy session id sent in tpc 0x49 request
 
    // encrypt prepared buffer with 3des-cbc-cts and obtain IV
@@ -641,7 +644,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    dmac5_41_req2 d5req2;
    memcpy(d5req2.session_id, d5req1.session_id, 8); //copy session id
-   memcpy(d5req2.data2, cmd49_resp.var_88 + 8, 8); //copy 8 bytes of tpc 0x49 response
+   memcpy(d5req2.challenge, cmd49_resp.challenge, 8); //copy 8 bytes of chalenge from tpc 0x49 response
 
    // encrypt prepared buffer with 3des-cbc-cts and obtain IV
    int dmc5res2 = w_dmac5_3des_cbc_cts_iv_C8D2F0((unsigned int*)des3_iv_2, (const unsigned int*)&d5req2, 0x10);
@@ -665,7 +668,7 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
 
    memcpy(mc_1C_key, d5req1.f00d_1C_key, 0x10);
    
-   return cmd49_resp.var_88[7];
+   return cmd49_resp.card_info[7]; //interestingly enough this is the only byte in lower part of challenge that is not equal to 0
 }
 
 int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char sha224_digest_source[0x10])
