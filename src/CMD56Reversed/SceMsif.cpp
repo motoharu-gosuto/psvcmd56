@@ -285,7 +285,7 @@ void uint64_t_to_byte_array(std::uint64_t x, unsigned char* y)
 }
 
 //[REVERSED]
-int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned char* tweak_input, unsigned char* tweak0_res, unsigned char* tweak1_res)
+int w_dmac5_command_0x41_derive_iv_tweak_C8D2F0(unsigned char* tweak_seed, unsigned char* tweak_key0, unsigned char* tweak_key1)
 {
    //read about 0x1B xor here:
    //https://en.wikipedia.org/wiki/Finite_field_arithmetic#Rijndael%27s_finite_field
@@ -293,26 +293,26 @@ int w_dmac5_command_0x41_bit_magic_C8D2F0(unsigned char* tweak_input, unsigned c
    //first round - multiply by 2
 
    std::uint64_t i64_0;
-   byte_array_to_uint64_t(tweak_input, &i64_0);
+   byte_array_to_uint64_t(tweak_seed, &i64_0);
 
    std::uint64_t mul64_0 = i64_0 * 2;
 
-   uint64_t_to_byte_array(mul64_0, tweak0_res);
+   uint64_t_to_byte_array(mul64_0, tweak_key0);
 
-   tweak0_res[7] = ((tweak_input[0] & 0x80) > 0) ? (tweak0_res[7] ^ 0x1B) 
-                                                 :  tweak0_res[7];
+   tweak_key0[7] = ((tweak_seed[0] & 0x80) > 0) ? (tweak_key0[7] ^ 0x1B) 
+                                                :  tweak_key0[7];
    
    //second round - multiply by 2
 
    std::uint64_t i64_1;
-   byte_array_to_uint64_t(tweak0_res, &i64_1);
+   byte_array_to_uint64_t(tweak_key0, &i64_1);
 
    std::uint64_t mul64_1 = i64_1 * 2;
 
-   uint64_t_to_byte_array(mul64_1, tweak1_res);
+   uint64_t_to_byte_array(mul64_1, tweak_key1);
 
-   tweak1_res[7] = ((tweak0_res[0] & 0x80) > 0) ? (tweak1_res[7] ^ 0x1B) 
-                                                :  tweak1_res[7];
+   tweak_key1[7] = ((tweak_key0[0] & 0x80) > 0) ? (tweak_key1[7] ^ 0x1B) 
+                                                :  tweak_key1[7];
 
    return 0;
 }
@@ -326,18 +326,18 @@ int w_dmac5_command_0x41_C8D2F0(unsigned int* result, const unsigned int* data, 
 {
    //calculate tweak keys
 
-   unsigned char tmp_src0[8];
-   memset(tmp_src0, 0, 8);
+   unsigned char tweak_seed[8];
+   memset(tweak_seed, 0, 8);
 
-   unsigned char tmp_dst0[8];
+   unsigned char tweak_seed_enc[8];
 
-   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)tmp_src0, tmp_dst0, 8, 0x1C, 0xC0, 1);
+   int enc_res0 = SceSblSsMgrForDriver_sceSblSsMgrDES64ECBEncryptForDriver_37dd5cbf((unsigned char*)tweak_seed, tweak_seed_enc, 8, 0x1C, 0xC0, 1);
    if(enc_res0 < 0)
       return enc_res0;
 
    unsigned int tweak_key0[2];
    unsigned int tweak_key1[2];
-   int r0 = w_dmac5_command_0x41_bit_magic_C8D2F0(tmp_dst0, (unsigned char*)tweak_key0, (unsigned char*)tweak_key1);
+   int r0 = w_dmac5_command_0x41_derive_iv_tweak_C8D2F0(tweak_seed_enc, (unsigned char*)tweak_key0, (unsigned char*)tweak_key1);
 
    //---- process data in blocks of 8 bytes (calculate 3-DES CBC)----
 
