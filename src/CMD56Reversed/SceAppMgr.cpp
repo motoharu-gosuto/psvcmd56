@@ -2495,6 +2495,13 @@ int check_short_titleId(const char * titleId)
 
 //=======================
 
+int special_mount_0x12C_23D8908(SceUID pid, const char *titleId, appmgr_mount_holder_t *appmgr_holder_other_proces, appmgr_mount_holder_t *appmgr_holder_current_process, char *mountPoint)
+{
+   return 0;
+}
+
+//=======================
+
 int cleanup_23E1014(int mountId, global_ctx_item* gctxi)
 {
    if (gctxi->unk_558.phys_ctx_30.flag_160 & 0x30)
@@ -4159,11 +4166,6 @@ int cleanup_23E00B8(int mountId, global_ctx_item *gctxi)
 }
 
 //--------------------------
-
-int special_mount_0x12C_23D8908(SceUID pid, const char *titleId, appmgr_mount_holder_t *appmgr_holder_other_proces, appmgr_mount_holder_t *appmgr_holder_current_process, char *mountPoint)
-{
-   return 0;
-}
 
 int mount_base_23E00B8(int mountId, const char *keystone_data, global_ctx_item *gctxi, const char* titleId, const char* physical_path, const char* mount_drive, char* mountPoint)
 {
