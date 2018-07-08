@@ -1,5 +1,28 @@
 # psvcmd56  
-Reversed code of PS Vita SD card and related drivers  
+
+# Introduction
+
+When this repo was created, it was only intended to have reversed code, related to PS Vita SD card (SceSdif) and card auth (SceGcAuthMgr) drivers. Especially related to cmd56 protocol that is used to initialize game cards. However time went on and now this repo is the main code storage for all reversing that is done. 
+
+Currently it includes:
+
+* SceSdif, SceGcAuthMgr - game card initialization. SD card functionality in Vita.
+
+* SceSdStor, SceIofilemgr - low level functionality related to filesystem (including VFS).
+
+* SceSblSsSmComm, SceSblSmschedProxy - communication with F00D.
+
+* SceSblSsMgr, SceSblAuthMgr - communication with DMAC5. Low level cryptographic routines, implemented in hardware.
+
+* ScePfsMgr - implementation of encrypted filesystem used by Vita. This evolved into separate project: https://github.com/motoharu-gosuto/psvpfstools .
+
+* SceNpDrm - rif/self protection layer. Not much code is here, but everything was documented on wiki: https://wiki.henkaku.xyz/vita/SceNpDrm . Creator of NoNpDrm could at least said thanks for reversing this info.
+
+* SceMsif - auth protocol of memory card, used in Vita.
+
+* SceAppMgr - high level filesystem code. Creation of mount points for transitioning from AppMgr to ScePfsMgr.
+
+* Other drivers that contain basic functionality.
   
 # Description of CMD56 protocol  
   
