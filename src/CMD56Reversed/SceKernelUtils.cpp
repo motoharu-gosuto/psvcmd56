@@ -1,5 +1,7 @@
 #include "SceKernelUtils.h"
 
+#include <stdexcept>
+
 #include "Crypto/CryptoService.h""
 
 
@@ -29,6 +31,8 @@ int SceKernelUtilsForDriver_sceAesEncrypt2ForDriver_302947b6(void* ctx, const un
 
 int SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(unsigned char* source, int size, unsigned char* result)
 {
+   throw std::runtime_error("Not implemented");
+
    return 0;
 }
 

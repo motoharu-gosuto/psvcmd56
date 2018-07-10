@@ -19,8 +19,9 @@
 
 typedef struct SceMsif_subctx
 {
-   char resp_buffer[0x200]; //some buffer of unknown size
-
+   char error_code[4];
+   char resp_buffer0[0x1C];
+   char resp_buffer1[0x1C];
 }SceMsif_subctx;
 
 #define MS_TPC_48 0x48
@@ -572,7 +573,8 @@ typedef struct tpc_cmd4A_req //size is 0x20
 
 #pragma pack(pop)
 
-int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subctx, char mc_1C_key[0x10])
+//[REVERSED]
+int get_card_key_C8D5FC(SceMsif_subctx* subctx, unsigned char mc_1C_key[0x10])
 {
    // execute f00d rm auth cmd 1
    // this probably gets some session ID or smth - have to confirm
@@ -671,17 +673,24 @@ int get_sha224_digest_source_validate_card_init_f00D_C8D5FC(SceMsif_subctx* subc
    return cmd49_resp.card_info[7]; //interestingly enough this is the only byte in lower part of challenge that is not equal to 0
 }
 
-int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char sha224_digest_source[0x10])
+//[REVERSED]
+int _byteswap_ulong_C8D78C(char* bytes)
 {
-   //get response from card
+   return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | (bytes[3]);
+}
+
+//[REVERSED]
+int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char master_key[0x10])
+{
+   //get response from the card
 
    int res4B = ms_execute_ex_set_cmd_C8A4E8(subctx, MS_TPC_4B, subctx, 1000);
    if(res4B != 0)
       return res4B;
 
-   //check some field
+   //probably check error code
 
-   int data_inv =  (subctx->resp_buffer[0] << 24) | (subctx->resp_buffer[1] << 16) | (subctx->resp_buffer[2] << 8) | (subctx->resp_buffer[3]);
+   int data_inv = _byteswap_ulong_C8D78C(subctx->error_code);
    if(data_inv != 1)
       return -1; //returns not exactly this, but we dont care here
 
@@ -694,22 +703,22 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char
    if(dec_res != 0)
       return -1; //returns not exactly this, but we dont care here
 
-   //calculate sha 224 digest from data that we aquired on first step of initialization
+   //derive secret key from master key that we get during card initialization (use sha 224 for derivation)
 
-   unsigned char sha_224_digest[0x1C];
-   memset(sha_224_digest, 0, 0x1C);
+   unsigned char secret_key[0x1C];
+   memset(secret_key, 0, 0x1C);
 
-   int sha_res = SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(sha224_digest_source, 0x10, sha_224_digest);
+   int sha_res = SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(master_key, 0x10, secret_key);
    if(sha_res != 0)
       return -1; //returns not exactly this, but we dont care here
 
    //verify the data
 
    verify_hash_ctx vfh_ctx;
-   vfh_ctx.ptr_4 = subctx->resp_buffer + 4; 
-   vfh_ctx.ptr_20 = subctx->resp_buffer + 0x20;
+   vfh_ctx.ptr_4 = subctx->resp_buffer0; 
+   vfh_ctx.ptr_20 = subctx->resp_buffer1;
 
-   int vf_res = verify_hashes_C8DBC0(&vfh_ctx, sha_224_digest, dec_ptr_pair, dec_ptr_table);
+   int vf_res = verify_hashes_C8DBC0(&vfh_ctx, secret_key, dec_ptr_pair, dec_ptr_table);
    if(vf_res != 0)
       return -1;
 
