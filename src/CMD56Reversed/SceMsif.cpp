@@ -498,13 +498,15 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
 
    if(g_00B9F9B8 == 0)
    {
+      //decrypt of not already decrypted
+
       int dec_res = decrypt_sha224_table_internal_C8D09C();
       if(dec_res < 0)
          return dec_res;
-   }
 
-   //set decryption success flag
-   g_00B9F9B8 = 1;
+      //set decryption success flag
+      g_00B9F9B8 = 1;
+   }
 
    //construct pointer table
    ptr_pair[0] = g_00B9F8D8;
@@ -520,8 +522,9 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
    return 0;
 }
 
-int decrypt_sha224_table_C8D09C_doublecheck(unsigned __int8 *ptr_pair[2], unsigned __int8 *ptr_table[6])
+int decrypt_sha224_table_C8D09C_doublecheck_internal()
 {
+   /*
    unsigned __int8 **__attribute__((__org_arrdim(0,6))) ptr_table_local; // r9
    int result; // r0
    unsigned __int8 *ptrt_vals[2]; // r1
@@ -553,27 +556,7 @@ int decrypt_sha224_table_C8D09C_doublecheck(unsigned __int8 *ptr_pair[2], unsign
    unsigned __int64 v30; // [sp+430h] [bp-48h]
    unsigned __int64 v31; // [sp+438h] [bp-40h]
    unsigned __int64 v32; // [sp+440h] [bp-38h]
-   int cookie; // [sp+44Ch] [bp-2Ch]
-
-   ptr_table_local = ptr_table;
-   ptr_pair_local = ptr_pair;
-   cookie = MEMORY[0x9EA004];
-
-   if ( MEMORY[0xB9F9B8] )
-   {
-LABEL_2:
-      result = 0;
-      ptrt_vals[0] = (unsigned __int8 *)0xB9F980;
-      ptrt_vals[1] = (unsigned __int8 *)0xB9F99C;
-      *ptr_pair_local = (unsigned __int8 *)0xB9F8D8;
-      ptr_pair_local[1] = (unsigned __int8 *)0xB9F8F4;
-      *ptr_table_local = (unsigned __int8 *)0xB9F910;
-      ptr_table_local[1] = (unsigned __int8 *)0xB9F92C;
-      ptr_table_local[2] = (unsigned __int8 *)0xB9F948;
-      ptr_table_local[3] = (unsigned __int8 *)0xB9F964;
-      *((_QWORD *)ptr_table_local + 2) = *(_QWORD *)ptrt_vals;
-      goto LABEL_3;
-   }
+   */
 
    pod_res.size = 0x20;
    *(_DWORD *)pod_res.key_name = MEMORY[0xB9F9B8];// assign to zero
@@ -607,7 +590,7 @@ LABEL_2:
       *(_DWORD *)&pod_res.aes_key[4] = 0;
       *(_DWORD *)&pod_res.aes_key[8] = 0;
       *(_DWORD *)&pod_res.aes_key[12] = 0;
-      goto LABEL_3;
+      return result;
    }
 
    if ( SceMsif_SceKernelUtilsForDriver__imp_aes_init_f12b6451(&ctx, 0x80, 0x80, (const char *)pod_res.aes_key) >= 0 )
@@ -699,8 +682,8 @@ LABEL_2:
             *(_DWORD *)&pod_res.aes_key[8] = 0;
             *(_DWORD *)&pod_res.aes_key[12] = 0;
             SceMsif_SceSysclibForDriver__imp_memset_0ab9bf5c(&ctx, 0, 0x3F0u);
-            MEMORY[0xB9F9B8] = 1;
-            goto LABEL_2;
+
+            return 0;
          }
       }
    }
@@ -717,11 +700,34 @@ LABEL_2:
    SceMsif_SceSysclibForDriver__imp_memset_0ab9bf5c(&ctx, 0, 0x3F0u);
    result = 0xFFFFFF34;
 
-LABEL_3:
-   if ( cookie != MEMORY[0x9EA004] )
-      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(result);
+   return result;
+}
 
-  return result;
+int decrypt_sha224_table_C8D09C_doublecheck(unsigned __int8 *ptr_pair[2], unsigned __int8 *ptr_table[6])
+{
+   ptr_table_local = ptr_table;
+   ptr_pair_local = ptr_pair;
+   
+   if ( MEMORY[0xB9F9B8] == 0)
+   {
+      int dec_res = decrypt_sha224_table_C8D09C_doublecheck_internal();
+      if(dec_res < 0)
+         return dec_res;
+
+      MEMORY[0xB9F9B8] = 1;
+   }
+
+   ptrt_vals[0] = (unsigned __int8 *)0xB9F980;
+   ptrt_vals[1] = (unsigned __int8 *)0xB9F99C;
+   *ptr_pair_local = (unsigned __int8 *)0xB9F8D8;
+   ptr_pair_local[1] = (unsigned __int8 *)0xB9F8F4;
+   *ptr_table_local = (unsigned __int8 *)0xB9F910;
+   ptr_table_local[1] = (unsigned __int8 *)0xB9F92C;
+   ptr_table_local[2] = (unsigned __int8 *)0xB9F948;
+   ptr_table_local[3] = (unsigned __int8 *)0xB9F964;
+   *((_QWORD *)ptr_table_local + 2) = *(_QWORD *)ptrt_vals;
+
+   return 0;
 }
 
 //----------------
