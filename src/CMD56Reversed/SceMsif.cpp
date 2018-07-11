@@ -360,57 +360,61 @@ int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
 {
    //try to decrypt aes key 1
 
-   portability_input_data dec_input_C90370;
-   dec_input_C90370.size = 0x20;
-   memcpy(dec_input_C90370.data_1, g_dec_input_C90370, 0x10);
-   memcpy(dec_input_C90370.data_2, g_dec_input_C90370 + 0x10, 0x10);
+   portability_input_data dec_input1;
+   dec_input1.size = 0x20;
+   memcpy(dec_input1.data_1, g_dec_input_C90370, 0x10);
+   memcpy(dec_input1.data_2, g_dec_input_C90370 + 0x10, 0x10);
 
-   portability_output_data dec_data_464;
-   dec_data_464.size = 0x20;
-   memset(dec_data_464.key_name, 0, 0x10);
-   memset(dec_data_464.aes_key, 0, 0x10);
+   portability_output_data dec_output;
+   dec_output.size = 0x20;
+   memset(dec_output.key_name, 0, 0x10);
+   memset(dec_output.aes_key, 0, 0x10);
 
-   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input_C90370, &dec_data_464);   
-
+   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input1, &dec_output);   
    if(kget_res1 != 0)
    {
-      memset(&dec_data_464, 0, 0x24);
+      memset(&dec_output, 0, 0x24);
       return -1; //returns not exactly this, but we dont care here
    }
 
-   int cmp_res = memcmp(dec_data_464.key_name, g_zero_array_C90498, 0x10);
+   //check key name
 
-   //try to decrypt aes key 2
-
+   int cmp_res = memcmp(dec_output.key_name, g_zero_array_C90498, 0x10);
    if(cmp_res != 0)
    {
-      portability_input_data dec_input_C90394;
-      memcpy(dec_input_C90394.data_1, g_dec_input_C90394, 0x10);
-      memcpy(dec_input_C90394.data_2, g_dec_input_C90394 + 0x10, 0x10);      
+      //try to decrypt aes key 2
 
-      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input_C90394, &dec_data_464);
+      portability_input_data dec_input2;
+      dec_input2.size = 0x20;
+      memcpy(dec_input2.data_1, g_dec_input_C90394, 0x10);
+      memcpy(dec_input2.data_2, g_dec_input_C90394 + 0x10, 0x10);      
 
+      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input2, &dec_output);
       if(kget_res2 != 0)
       {
-         memset(&dec_data_464, 0, 0x24);
+         memset(&dec_output, 0, 0x24);
          return -1; //returns not exactly this, but we dont care here
       }
    }
 
-   memcpy(aes_key, dec_data_464.aes_key, 0x10);
+   memcpy(aes_key, dec_output.aes_key, 0x10);
 
    //clear sensitive data
-   memset(&dec_data_464, 0, 0x24);
+   memset(&dec_output, 0, 0x24);
 
    return 0;
 }
 
 int decrypt_sha224_table_internal_C8D09C()
 {
+   //get aes key
+
    unsigned char aes_key[0x10];
    int aes_key_res = decrypt_sha224_table_get_key_internal_C8D09C(aes_key);
    if(aes_key_res < 0)
       return aes_key_res;
+   
+   //perform some data operations
 
    aes_ctx ctx;
    unsigned char xor_data1[0x10]; //offset 0x3D0
@@ -537,6 +541,51 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
    return 0;
 }
 
+//================
+
+int decrypt_sha224_table_C8D09C_doublecheck_get_key_internal(unsigned char* aes_key)
+{
+   portability_input_data dec_input1;
+   dec_input1.size = 0x20;
+   memcpy(dec_input1.data_1, g_dec_input_C90370, 0x10);
+   memcpy(dec_input1.data_2, g_dec_input_C90370 + 0x10, 0x10);
+
+   portability_output_data dec_output;
+   dec_output.size = 0x20;
+   memset(dec_output.key_name, 0, 0x10);
+   memset(dec_output.aes_key, 0, 0x10);
+
+   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input1, &dec_output);
+   if(kget_res1 != 0)
+   {
+      memset(&dec_output, 0, 0x24);
+      return -1;
+   }
+
+   int cmp_res = memcmp(dec_output.key_name, g_zero_array_C90498, 0x10);
+   if(cmp_res != 0)
+   {
+      portability_input_data dec_input2;
+      dec_input2.size = 0x20;
+      memcpy(dec_input2.data_1, g_dec_input_C90394, 0x10);
+      memcpy(dec_input2.data_2, g_dec_input_C90394 + 0x10, 0x10);
+
+      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input2, &dec_output);
+      if(kget_res2 != 0)
+      {
+         memset(&dec_output, 0, 0x24);
+         return -1;
+      }
+   }
+
+   memcpy(aes_key, dec_output.aes_key, 0x10);
+
+   //clear sensitive data
+   memset(&dec_output, 0, 0x24);
+
+   return 0;
+}
+
 int decrypt_sha224_table_C8D09C_doublecheck_internal()
 {
    /*
@@ -573,42 +622,14 @@ int decrypt_sha224_table_C8D09C_doublecheck_internal()
    unsigned __int64 v32; // [sp+440h] [bp-38h]
    */
 
-   pod_res.size = 0x20;
-   *(_DWORD *)pod_res.key_name = MEMORY[0xB9F9B8];// assign to zero
-   *(_DWORD *)&pod_res.key_name[4] = MEMORY[0xB9F9B8];
-   *(_DWORD *)&pod_res.key_name[8] = MEMORY[0xB9F9B8];// assign to zero
-   *(_DWORD *)&pod_res.key_name[12] = MEMORY[0xB9F9B8];
-   *(_DWORD *)pod_res.aes_key = MEMORY[0xB9F9B8];// assign to zero
-   *(_DWORD *)&pod_res.aes_key[4] = MEMORY[0xB9F9B8];
-   *(_DWORD *)&pod_res.aes_key[8] = MEMORY[0xB9F9B8];// assign to zero
-   *(_DWORD *)&pod_res.aes_key[12] = MEMORY[0xB9F9B8];
+   unsigned char aes_key[0x10];
+   int aes_key_res = decrypt_sha224_table_C8D09C_doublecheck_get_key_internal(aes_key);
+   if(aes_key_res < 0)
+      return aes_key_res;
 
-   if ( SceMsif_SceSblSsMgrForDriver__imp_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(
-         4,
-         zero_array_C90498,
-         (unsigned __int8 *)&dec_input_C90370,
-         (unsigned __int8 *)&pod_res)
-      || SceMsif_SceSysclibForDriver__imp_memcmp_f939e83d(pod_res.key_name, zero_array_C90498, 0x10u)
-      && SceMsif_SceSblSsMgrForDriver__imp_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(
-         4,
-         zero_array_C90498,
-         (unsigned __int8 *)&dec_input_C90394,
-         (unsigned __int8 *)&pod_res) )
-   {
-      result = 0xFFFFFF34;
-      pod_res.size = 0;
-      *(_DWORD *)pod_res.key_name = 0;
-      *(_DWORD *)&pod_res.key_name[4] = 0;
-      *(_DWORD *)&pod_res.key_name[8] = 0;
-      *(_DWORD *)&pod_res.key_name[12] = 0;
-      *(_DWORD *)pod_res.aes_key = 0;
-      *(_DWORD *)&pod_res.aes_key[4] = 0;
-      *(_DWORD *)&pod_res.aes_key[8] = 0;
-      *(_DWORD *)&pod_res.aes_key[12] = 0;
-      return result;
-   }
+   //perform some data operations
 
-   if ( SceMsif_SceKernelUtilsForDriver__imp_aes_init_f12b6451(&ctx, 0x80, 0x80, (const char *)pod_res.aes_key) >= 0 )
+   if ( SceMsif_SceKernelUtilsForDriver__imp_aes_init_f12b6451(&ctx, 0x80, 0x80, aes_key) >= 0 )
    {
       if ( 4 * ctx.unk_8 )
       {
