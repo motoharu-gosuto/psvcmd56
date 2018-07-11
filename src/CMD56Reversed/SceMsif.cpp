@@ -399,6 +399,9 @@ int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
 
    memcpy(aes_key, dec_data_464.aes_key, 0x10);
 
+   //clear sensitive data
+   memset(&dec_data_464, 0, 0x24);
+
    return 0;
 }
 
@@ -418,7 +421,7 @@ int decrypt_sha224_table_internal_C8D09C()
    if(ai_res <= 0)
    {
       //clear sensitive data
-      memset(&dec_data_464, 0, 0x24);
+      memset(aes_key, 0, 0x10);
       memset(&ctx, 0, 0x3C0);
       memset(xor_data1, 0, 0x10);
       memset(xor_data2, 0, 0x10);
@@ -496,7 +499,7 @@ int decrypt_sha224_table_internal_C8D09C()
    while(next_enc_data != table_end);
 
    //clear sensitive data
-   memset(&dec_data_464, 0, 0x24);
+   memset(&aes_key, 0, 0x10);
    memset(&ctx, 0, 0x3C0);
    memset(xor_data1, 0, 0x10);
    memset(xor_data2, 0, 0x10);
