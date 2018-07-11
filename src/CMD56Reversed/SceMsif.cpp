@@ -356,7 +356,7 @@ unsigned char g_zero_array_C90498[0x10] =
 //decrypted table of sha224 hashes
 unsigned char g_00B9F8D8[0x1C * 8] = {0};
 
-int decrypt_sha224_table_internal_C8D09C()
+int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
 {
    //try to decrypt aes key 1
 
@@ -397,11 +397,23 @@ int decrypt_sha224_table_internal_C8D09C()
       }
    }
 
+   memcpy(aes_key, dec_data_464.aes_key, 0x10);
+
+   return 0;
+}
+
+int decrypt_sha224_table_internal_C8D09C()
+{
+   unsigned char aes_key[0x10];
+   int aes_key_res = decrypt_sha224_table_get_key_internal_C8D09C(aes_key);
+   if(aes_key_res < 0)
+      return aes_key_res;
+
    aes_ctx ctx;
    unsigned char xor_data1[0x10]; //offset 0x3D0
    unsigned char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
-   int ai_res = SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key);
+   int ai_res = SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(&ctx, 0x80, 0x80, aes_key);
 
    if(ai_res <= 0)
    {
