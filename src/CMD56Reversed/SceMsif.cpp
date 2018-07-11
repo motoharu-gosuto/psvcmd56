@@ -496,7 +496,7 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
 {
    //check that tables is not already decrypted
 
-   if(g_00B9F9B8 == 0)
+   if (g_00B9F9B8 == 0)
    {
       //decrypt of not already decrypted
 
@@ -703,29 +703,27 @@ int decrypt_sha224_table_C8D09C_doublecheck_internal()
    return result;
 }
 
+//this code is same
 int decrypt_sha224_table_C8D09C_doublecheck(unsigned __int8 *ptr_pair[2], unsigned __int8 *ptr_table[6])
 {
-   ptr_table_local = ptr_table;
-   ptr_pair_local = ptr_pair;
-   
-   if ( MEMORY[0xB9F9B8] == 0)
+   if (g_00B9F9B8 == 0)
    {
       int dec_res = decrypt_sha224_table_C8D09C_doublecheck_internal();
       if(dec_res < 0)
          return dec_res;
 
-      MEMORY[0xB9F9B8] = 1;
+      g_00B9F9B8 = 1;
    }
 
-   ptrt_vals[0] = (unsigned __int8 *)0xB9F980;
-   ptrt_vals[1] = (unsigned __int8 *)0xB9F99C;
-   *ptr_pair_local = (unsigned __int8 *)0xB9F8D8;
-   ptr_pair_local[1] = (unsigned __int8 *)0xB9F8F4;
-   *ptr_table_local = (unsigned __int8 *)0xB9F910;
-   ptr_table_local[1] = (unsigned __int8 *)0xB9F92C;
-   ptr_table_local[2] = (unsigned __int8 *)0xB9F948;
-   ptr_table_local[3] = (unsigned __int8 *)0xB9F964;
-   *((_QWORD *)ptr_table_local + 2) = *(_QWORD *)ptrt_vals;
+   ptr_pair[0] = g_00B9F8D8;
+   ptr_pair[1] = g_00B9F8D8 + 0x1C;
+
+   ptr_table[0] = g_00B9F8D8 + 0x38;
+   ptr_table[1] = g_00B9F8D8 + 0x54;
+   ptr_table[2] = g_00B9F8D8 + 0x70;
+   ptr_table[3] = g_00B9F8D8 + 0x8C;
+   ptr_table[4] = g_00B9F8D8 + 0xA8;
+   ptr_table[5] = g_00B9F8D8 + 0xC4;
 
    return 0;
 }
