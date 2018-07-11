@@ -750,107 +750,106 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[28], uns
 {
    //order of stack variables can be important here because of buffers!
 
-    unsigned __int8 **dec_ptr_table_local; // r7
-  unsigned __int8 **dec_ptr_pair_local; // r9
-  unsigned __int8 *secret_key_local; // r11
-  verify_hash_ctx *ctx_local; // r8
-  unsigned __int8 *dec_ptr0; // r1
-  int counter0; // r3
-  int counter1; // r0
-  int result; // r0
-  unsigned __int8 *sha224_i3_ptr; // [sp+10h] [bp-1E8h]
-  unsigned __int8 *sha224_i4_ptr; // [sp+14h] [bp-1E4h]
-  char *sha224_unused0_ptr; // [sp+18h] [bp-1E0h]
-  unsigned __int8 *sha224_i6_ptr; // [sp+1Ch] [bp-1DCh]
-  unsigned __int8 *sha224_i7_ptr; // [sp+20h] [bp-1D8h]
-  char *sha224_unused1_ptr; // [sp+24h] [bp-1D4h]
-  unsigned __int8 sha224_i0[28]; // [sp+28h] [bp-1D0h]
-  unsigned __int8 sha224_i1[28]; // [sp+44h] [bp-1B4h]
-  unsigned __int8 sha224_i2[28]; // [sp+60h] [bp-198h]
-  unsigned __int8 sha224_i8[28]; // [sp+7Ch] [bp-17Ch]
-  unsigned __int8 sha224_i9[28]; // [sp+98h] [bp-160h]
-  unsigned __int8 sha224_i5[28]; // [sp+B4h] [bp-144h]
-  unsigned __int8 sha224_i3[28]; // [sp+D0h] [bp-128h]
-  unsigned __int8 sha224_i4[28]; // [sp+ECh] [bp-10Ch]
-  char sha224_unused0[28]; // [sp+108h] [bp-F0h]
-  unsigned __int8 sha224_i6[28]; // [sp+124h] [bp-D4h]
-  unsigned __int8 sha224_i7[28]; // [sp+140h] [bp-B8h]
-  char sha224_unused1[28]; // [sp+15Ch] [bp-9Ch]
-  locals_C8DA14 sha224_n; // [sp+178h] [bp-80h]
+   unsigned __int8 **dec_ptr_table_local; // r7
+   unsigned __int8 **dec_ptr_pair_local; // r9
+   unsigned __int8 *secret_key_local; // r11
+   verify_hash_ctx *ctx_local; // r8
+   unsigned __int8 *dec_ptr0; // r1
+   int counter0; // r3
+   int counter1; // r0
+   int result; // r0
+   unsigned __int8 *sha224_i3_ptr; // [sp+10h] [bp-1E8h]
+   unsigned __int8 *sha224_i4_ptr; // [sp+14h] [bp-1E4h]
+   char *sha224_unused0_ptr; // [sp+18h] [bp-1E0h]
+   unsigned __int8 *sha224_i6_ptr; // [sp+1Ch] [bp-1DCh]
+   unsigned __int8 *sha224_i7_ptr; // [sp+20h] [bp-1D8h]
+   char *sha224_unused1_ptr; // [sp+24h] [bp-1D4h]
+   unsigned __int8 sha224_i0[28]; // [sp+28h] [bp-1D0h]
+   unsigned __int8 sha224_i1[28]; // [sp+44h] [bp-1B4h]
+   unsigned __int8 sha224_i2[28]; // [sp+60h] [bp-198h]
+   unsigned __int8 sha224_i8[28]; // [sp+7Ch] [bp-17Ch]
+   unsigned __int8 sha224_i9[28]; // [sp+98h] [bp-160h]
+   unsigned __int8 sha224_i5[28]; // [sp+B4h] [bp-144h]
+   unsigned __int8 sha224_i3[28]; // [sp+D0h] [bp-128h]
+   unsigned __int8 sha224_i4[28]; // [sp+ECh] [bp-10Ch]
+   char sha224_unused0[28]; // [sp+108h] [bp-F0h]
+   unsigned __int8 sha224_i6[28]; // [sp+124h] [bp-D4h]
+   unsigned __int8 sha224_i7[28]; // [sp+140h] [bp-B8h]
+   char sha224_unused1[28]; // [sp+15Ch] [bp-9Ch]
+   locals_C8DA14 sha224_n; // [sp+178h] [bp-80h]
 
-  dec_ptr_table_local = dec_ptr_table;
-  dec_ptr_pair_local = dec_ptr_pair;
-  secret_key_local = secret_key;
-  ctx_local = ctx;
-  dec_ptr0 = *dec_ptr_table;
+   dec_ptr_table_local = dec_ptr_table;
+   dec_ptr_pair_local = dec_ptr_pair;
+   secret_key_local = secret_key;
+   ctx_local = ctx;
+   dec_ptr0 = *dec_ptr_table;
   
-  sha224_i3_ptr = sha224_i3;
-  sha224_i4_ptr = sha224_i4;
-  sha224_unused0_ptr = sha224_unused0;
-  sha224_i6_ptr = sha224_i6;
-  sha224_i7_ptr = sha224_i7;
-  sha224_unused1_ptr = sha224_unused1;
+   sha224_i3_ptr = sha224_i3;
+   sha224_i4_ptr = sha224_i4;
+   sha224_unused0_ptr = sha224_unused0;
+   sha224_i6_ptr = sha224_i6;
+   sha224_i7_ptr = sha224_i7;
+   sha224_unused1_ptr = sha224_unused1;
 
-  do_smth_with_hashes_1_C8E3AA(sha224_i0, dec_ptr0, key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i1, dec_ptr_table_local[1], key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i2, dec_ptr_table_local[3], key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i3, dec_ptr_table_local[4], key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i4, dec_ptr_table_local[5], key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i5, secret_key_local, key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i6, *dec_ptr_pair_local, key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i7, dec_ptr_pair_local[1], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i0, dec_ptr0, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i1, dec_ptr_table_local[1], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i2, dec_ptr_table_local[3], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i3, dec_ptr_table_local[4], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i4, dec_ptr_table_local[5], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i5, secret_key_local, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i6, *dec_ptr_pair_local, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i7, dec_ptr_pair_local[1], key_size_bytes);
 
-  // tricky check on zero vector
+   // tricky check on zero vector
 
-  counter0 = key_size_blocks;
+   counter0 = key_size_blocks;
 
-  do
-  {
-    --counter0;
-  }
-  while ( counter0 + 1 > 0 && !*(int*)&sha224_i0[4 * counter0] );
-  if ( counter0 < 0 )
-  {
-    return -1;
-  }
+   do
+   {
+      --counter0;
+   }
+   while ( counter0 + 1 > 0 && !*(int*)&sha224_i0[4 * counter0] );
+   if ( counter0 < 0 )
+   {
+      return -1;
+   }
 
-  do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i0, key_size_blocks);
-  do_smth_with_hashes_2_C8E084(sha224_i7_ptr, sha224_i7_ptr, key_size_blocks, sha224_i0, key_size_blocks);
-  do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx_local->ptr_4, key_size_bytes);
-  do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx_local->ptr_20, key_size_bytes);
+   do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i0, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(sha224_i7_ptr, sha224_i7_ptr, key_size_blocks, sha224_i0, key_size_blocks);
+   do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx_local->ptr_4, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx_local->ptr_20, key_size_bytes);
   
-  if ( !do_smth_with_hashes_3_C8E3EE(sha224_i8, sha224_i2, key_size_blocks) || !do_smth_with_hashes_3_C8E3EE(sha224_i9, sha224_i2, key_size_blocks) )
-  {
-    return -1;
-  }
+   if ( !do_smth_with_hashes_3_C8E3EE(sha224_i8, sha224_i2, key_size_blocks) || !do_smth_with_hashes_3_C8E3EE(sha224_i9, sha224_i2, key_size_blocks) )
+   {
+      return -1;
+   }
 
-  do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
-  do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i5, key_size_blocks, sha224_i9, key_size_blocks); // that would be offset to data1 (because key_size_blocks is fixed)
-  do_smth_with_hashes_2_C8E084(sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], 2 * key_size_blocks, sha224_i2, key_size_blocks); // that would be offset to data0 // that would be offset to data1 (because key_size_blocks is fixed)
-  do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i8, key_size_blocks, sha224_i9, key_size_blocks); // that would be offset to data1 (because key_size_blocks is fixed)
-  do_smth_with_hashes_2_C8E084(&sha224_n.data0[4 * key_size_blocks], &sha224_n.data0[4 * key_size_blocks], 2 * key_size_blocks, sha224_i2, key_size_blocks); // that would be offset to data1 (because key_size_blocks is fixed) // that would be offset to data1 (because key_size_blocks is fixed)
-  do_smth_with_hashes_7_C8E420(&sha224_i6_ptr, &sha224_i3_ptr, &sha224_i6_ptr, sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], sha224_i0, sha224_i1, key_size_blocks); // that would be offset to data0 // that would be offset to data1 (because key_size_blocks is fixed)
-  do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i2, key_size_blocks);
+   do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
+   do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i5, key_size_blocks, sha224_i9, key_size_blocks); // that would be offset to data1 (because key_size_blocks is fixed)
+   do_smth_with_hashes_2_C8E084(sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], 2 * key_size_blocks, sha224_i2, key_size_blocks); // that would be offset to data0 // that would be offset to data1 (because key_size_blocks is fixed)
+   do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i8, key_size_blocks, sha224_i9, key_size_blocks); // that would be offset to data1 (because key_size_blocks is fixed)
+   do_smth_with_hashes_2_C8E084(&sha224_n.data0[4 * key_size_blocks], &sha224_n.data0[4 * key_size_blocks], 2 * key_size_blocks, sha224_i2, key_size_blocks); // that would be offset to data1 (because key_size_blocks is fixed) // that would be offset to data1 (because key_size_blocks is fixed)
+   do_smth_with_hashes_7_C8E420(&sha224_i6_ptr, &sha224_i3_ptr, &sha224_i6_ptr, sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], sha224_i0, sha224_i1, key_size_blocks); // that would be offset to data0 // that would be offset to data1 (because key_size_blocks is fixed)
+   do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i2, key_size_blocks);
   
-  // block wise equality check
-  for ( counter1 = 0; counter1 < key_size_blocks && *(int*)&sha224_i6_ptr[4 * counter1] == *(int*)&sha224_i8[4 * counter1]; ++counter1 )
-  {
-    ;
-  }
+   // block wise equality check
+   for ( counter1 = 0; counter1 < key_size_blocks && *(int*)&sha224_i6_ptr[4 * counter1] == *(int*)&sha224_i8[4 * counter1]; ++counter1 )
+   {
+      ;
+   }
 
-  if ( key_size_blocks > 0 )
-  {
-    result = key_size_blocks - counter1;
-    if ( result )
+   if ( key_size_blocks > 0 )
+   {
+      result = key_size_blocks - counter1;
+      if ( result )
+         result = -1;
+   }
+   else
+   {
       result = -1;
-  }
-  else
-  {
-    result = -1;
-  }
+   }
 
-  
-  return result;
+   return result;
 }
 
 int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char secret_key[0x1C], unsigned char* dec_ptr_pair[2], unsigned char* dec_ptr_table[6])
