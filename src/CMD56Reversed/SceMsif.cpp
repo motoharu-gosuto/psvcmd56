@@ -406,7 +406,7 @@ int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
    return 0;
 }
 
-//this has to be checked
+//this has to be checked!
 int decrypt_sha224_table_internal_C8D09C()
 {
    //get aes key
@@ -546,6 +546,7 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
 
 //================
 
+//this has to be checked!
 int decrypt_sha224_table_C8D09C_doublecheck_internal()
 {
    /*
@@ -694,12 +695,12 @@ int decrypt_sha224_table_C8D09C_doublecheck_internal()
    return -1;
 }
 
-//----------------
+//================
 
 typedef struct verify_hash_ctx
 {
-   char* ptr_4;
-   char* ptr_20;
+   char* ptr_4[0x1C]; //most likely the right size
+   char* ptr_20[0x1C]; //most likely the right size
 }verify_hash_ctx;
 
 int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char sha_224[0x1C], unsigned char* dec_ptr_pair[2], unsigned char* dec_ptr_table[6])
