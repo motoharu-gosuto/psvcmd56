@@ -711,9 +711,32 @@ struct locals_C8DA14
   unsigned __int8 data2[28];
 };
 
-int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
+unsigned char * do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
 {
-   return 0;
+   int key_size_blocks; // r5
+   unsigned __int8 *current_block; // r1
+   int counter0; // r2
+   int counter1; // r3
+
+   key_size_blocks = key_size_bytes / 4;
+   current_block = &sha_224_1[key_size_bytes];
+   counter0 = 0;
+
+   while ( counter0 < key_size_blocks )
+   {
+      *(int*)sha_224_0 = *(current_block - 1);
+      sha_224_0 += 4;
+      
+      for ( counter1 = 0; --counter1 != -4; *((int*)sha_224_0 - 1) |= current_block[counter1 - 1] << -8 * counter1 )
+      {
+         ;
+      }
+
+      ++counter0;
+      current_block -= 4;
+   }
+
+   return sha_224_0;
 }
 
 int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_1, int key_size_blocks0, unsigned char *sha224_2, int key_size_blocks1)
