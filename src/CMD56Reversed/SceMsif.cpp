@@ -368,7 +368,7 @@ int decrypt_sha224_table_internal_C8D09C()
    portability_output_data dec_data_464;
    dec_data_464.size = 0x20;
    memset(dec_data_464.key_name, 0, 0x10);
-   memset(dec_data_464.aes_key_14, 0, 0x10);
+   memset(dec_data_464.aes_key, 0, 0x10);
 
    int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input_C90370, &dec_data_464);   
 
@@ -401,7 +401,7 @@ int decrypt_sha224_table_internal_C8D09C()
    unsigned char xor_data1[0x10]; //offset 0x3D0
    unsigned char xor_data2[0x10]; //offset 0x3E0 // how is this initialized ?
 
-   int ai_res = SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key_14);
+   int ai_res = SceKernelUtilsForDriver_sceAesInit1ForDriver_f12b6451(&ctx, 0x80, 0x80, dec_data_464.aes_key);
 
    if(ai_res <= 0)
    {
@@ -518,6 +518,210 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
    ptr_table[5] = g_00B9F8D8 + 0xC4;
 
    return 0;
+}
+
+int decrypt_sha224_table_C8D09C_doublecheck(unsigned __int8 *ptr_pair[2], unsigned __int8 *ptr_table[6])
+{
+   unsigned __int8 **__attribute__((__org_arrdim(0,6))) ptr_table_local; // r9
+   int result; // r0
+   unsigned __int8 *ptrt_vals[2]; // r1
+   unsigned __int8 *data0; // r8
+   unsigned __int8 *data1; // r11
+   uint32_t some_size; // r7
+   unsigned int some_size3; // r2
+   char check0; // cf
+   char check1; // zf
+   unsigned int some_size4; // r3
+   int64x2_t v12; // q10
+   unsigned __int64 v13; // d19
+   int64x2_t v14; // q8
+   int64x2_t v15; // q8
+   int64x2_t v16; // q10
+   unsigned __int64 v17; // d19
+   int64x2_t v18; // q8
+   int64x2_t v19; // q8
+   char *v20; // r2
+   char v21; // r1
+   unsigned __int8 **__attribute__((__org_arrdim(0,2))) ptr_pair_local; // [sp+Ch] [bp-46Ch]
+   portability_output_data pod_res; // [sp+14h] [bp-464h]
+   aes_ctx ctx; // [sp+38h] [bp-440h]
+   char destination; // [sp+408h] [bp-70h]
+   unsigned __int64 v26; // [sp+410h] [bp-68h]
+   unsigned __int64 v27; // [sp+418h] [bp-60h]
+   unsigned __int64 v28; // [sp+420h] [bp-58h]
+   char dst[8]; // [sp+428h] [bp-50h]
+   unsigned __int64 v30; // [sp+430h] [bp-48h]
+   unsigned __int64 v31; // [sp+438h] [bp-40h]
+   unsigned __int64 v32; // [sp+440h] [bp-38h]
+   int cookie; // [sp+44Ch] [bp-2Ch]
+
+   ptr_table_local = ptr_table;
+   ptr_pair_local = ptr_pair;
+   cookie = MEMORY[0x9EA004];
+
+   if ( MEMORY[0xB9F9B8] )
+   {
+LABEL_2:
+      result = 0;
+      ptrt_vals[0] = (unsigned __int8 *)0xB9F980;
+      ptrt_vals[1] = (unsigned __int8 *)0xB9F99C;
+      *ptr_pair_local = (unsigned __int8 *)0xB9F8D8;
+      ptr_pair_local[1] = (unsigned __int8 *)0xB9F8F4;
+      *ptr_table_local = (unsigned __int8 *)0xB9F910;
+      ptr_table_local[1] = (unsigned __int8 *)0xB9F92C;
+      ptr_table_local[2] = (unsigned __int8 *)0xB9F948;
+      ptr_table_local[3] = (unsigned __int8 *)0xB9F964;
+      *((_QWORD *)ptr_table_local + 2) = *(_QWORD *)ptrt_vals;
+      goto LABEL_3;
+   }
+
+   pod_res.size = 0x20;
+   *(_DWORD *)pod_res.key_name = MEMORY[0xB9F9B8];// assign to zero
+   *(_DWORD *)&pod_res.key_name[4] = MEMORY[0xB9F9B8];
+   *(_DWORD *)&pod_res.key_name[8] = MEMORY[0xB9F9B8];// assign to zero
+   *(_DWORD *)&pod_res.key_name[12] = MEMORY[0xB9F9B8];
+   *(_DWORD *)pod_res.aes_key = MEMORY[0xB9F9B8];// assign to zero
+   *(_DWORD *)&pod_res.aes_key[4] = MEMORY[0xB9F9B8];
+   *(_DWORD *)&pod_res.aes_key[8] = MEMORY[0xB9F9B8];// assign to zero
+   *(_DWORD *)&pod_res.aes_key[12] = MEMORY[0xB9F9B8];
+
+   if ( SceMsif_SceSblSsMgrForDriver__imp_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(
+         4,
+         zero_array_C90498,
+         (unsigned __int8 *)&dec_input_C90370,
+         (unsigned __int8 *)&pod_res)
+      || SceMsif_SceSysclibForDriver__imp_memcmp_f939e83d(pod_res.key_name, zero_array_C90498, 0x10u)
+      && SceMsif_SceSblSsMgrForDriver__imp_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(
+         4,
+         zero_array_C90498,
+         (unsigned __int8 *)&dec_input_C90394,
+         (unsigned __int8 *)&pod_res) )
+   {
+      result = 0xFFFFFF34;
+      pod_res.size = 0;
+      *(_DWORD *)pod_res.key_name = 0;
+      *(_DWORD *)&pod_res.key_name[4] = 0;
+      *(_DWORD *)&pod_res.key_name[8] = 0;
+      *(_DWORD *)&pod_res.key_name[12] = 0;
+      *(_DWORD *)pod_res.aes_key = 0;
+      *(_DWORD *)&pod_res.aes_key[4] = 0;
+      *(_DWORD *)&pod_res.aes_key[8] = 0;
+      *(_DWORD *)&pod_res.aes_key[12] = 0;
+      goto LABEL_3;
+   }
+
+   if ( SceMsif_SceKernelUtilsForDriver__imp_aes_init_f12b6451(&ctx, 0x80, 0x80, (const char *)pod_res.aes_key) >= 0 )
+   {
+      if ( 4 * ctx.unk_8 )
+      {
+         SceMsif_SceSysclibForDriver__imp_memcpy_40c88316(&destination, zero_array_C90498, 4 * ctx.unk_8);
+      }
+
+      data0 = (unsigned __int8 *)(enc_sha224_C903B8 + 16);
+      data1 = (unsigned __int8 *)0xB9F8E8;
+   
+      while ( 1 )
+      {
+         SceMsif_SceKernelUtilsForDriver__imp_aes_decrypt_d8678061(&ctx, (const char *)data0 + 0xFFFFFFF0, dst);
+         some_size = 4 * ctx.unk_8;
+
+         if ( 4 * ctx.unk_8 )
+         {
+            some_size3 = some_size >> 4;
+            check0 = 1;
+            check1 = some_size >> 4 == 0;
+
+            if ( some_size >> 4 )
+            {
+               check0 = some_size >= 0xF;
+               check1 = some_size == 0xF;
+            }
+
+            some_size4 = 0x10 * some_size3;
+            if ( !check1 & (unsigned __int8)check0 )
+            {
+               v12.n128_u64[0] = *(_QWORD *)&destination;
+               v12.n128_u64[1] = v26;
+               v13 = *((_QWORD *)data0 - 1);
+               v14.n128_u64[0] = *(_QWORD *)dst;
+               v14.n128_u64[1] = v30;
+               *(_QWORD *)&destination = *((_QWORD *)data0 - 2);
+               v26 = v13;
+               v15 = veorq_s64(v14, v12);
+               *((_QWORD *)data1 - 2) = v15.n128_u64[0];
+               *((_QWORD *)data1 - 1) = v15.n128_u64[1];
+
+               if ( some_size3 > 1 )
+               {
+                  v16.n128_u64[0] = v27;
+                  v16.n128_u64[1] = v28;
+                  v17 = *((_QWORD *)data0 + 1);
+                  v18.n128_u64[0] = v31;
+                  v18.n128_u64[1] = v32;
+                  v27 = *(_QWORD *)data0;
+                  v28 = v17;
+                  v19 = veorq_s64(v18, v16);
+                  *(_QWORD *)data1 = v19.n128_u64[0];
+                  *((_QWORD *)data1 + 1) = v19.n128_u64[1];
+               }
+
+               if ( some_size4 == some_size )
+                  goto LABEL_20;
+            }
+            else
+            {
+               some_size4 = 0;
+            }
+            do
+            {
+               v20 = (char *)&ctx + some_size4;
+               v21 = data0[-16 + some_size4];
+               data1[-16 + some_size4] = dst[some_size4] ^ *((_BYTE *)&ctx + some_size4 + 0x3D0);
+               ++some_size4;
+               v20[0x3D0] = v21;
+            }
+            while ( some_size4 < some_size );
+         }
+
+         LABEL_20:
+         data0 += 0x10;
+         data1 += 0x10;
+
+         if ( data0 == (unsigned __int8 *)ctx_130_part_C904A8 )
+         {
+            pod_res.size = 0;
+            *(_DWORD *)pod_res.key_name = 0;
+            *(_DWORD *)&pod_res.key_name[4] = 0;
+            *(_DWORD *)&pod_res.key_name[8] = 0;
+            *(_DWORD *)&pod_res.key_name[12] = 0;
+            *(_DWORD *)pod_res.aes_key = 0;
+            *(_DWORD *)&pod_res.aes_key[4] = 0;
+            *(_DWORD *)&pod_res.aes_key[8] = 0;
+            *(_DWORD *)&pod_res.aes_key[12] = 0;
+            SceMsif_SceSysclibForDriver__imp_memset_0ab9bf5c(&ctx, 0, 0x3F0u);
+            MEMORY[0xB9F9B8] = 1;
+            goto LABEL_2;
+         }
+      }
+   }
+
+   pod_res.size = 0;
+   *(_DWORD *)pod_res.key_name = 0;
+   *(_DWORD *)&pod_res.key_name[4] = 0;
+   *(_DWORD *)&pod_res.key_name[8] = 0;
+   *(_DWORD *)&pod_res.key_name[12] = 0;
+   *(_DWORD *)pod_res.aes_key = 0;
+   *(_DWORD *)&pod_res.aes_key[4] = 0;
+   *(_DWORD *)&pod_res.aes_key[8] = 0;
+   *(_DWORD *)&pod_res.aes_key[12] = 0;
+   SceMsif_SceSysclibForDriver__imp_memset_0ab9bf5c(&ctx, 0, 0x3F0u);
+   result = 0xFFFFFF34;
+
+LABEL_3:
+   if ( cookie != MEMORY[0x9EA004] )
+      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(result);
+
+  return result;
 }
 
 //----------------
