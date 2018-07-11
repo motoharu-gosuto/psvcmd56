@@ -356,6 +356,7 @@ unsigned char g_zero_array_C90498[0x10] =
 //decrypted table of sha224 hashes
 unsigned char g_00B9F8D8[0x1C * 8] = {0};
 
+//[REVERSED]
 int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
 {
    //try to decrypt aes key 1
@@ -405,6 +406,7 @@ int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
    return 0;
 }
 
+//this has to be checked
 int decrypt_sha224_table_internal_C8D09C()
 {
    //get aes key
@@ -511,6 +513,7 @@ int decrypt_sha224_table_internal_C8D09C()
    return 0;
 }
 
+//[REVERSED]
 int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_table[6])
 {
    //check that tables is not already decrypted
@@ -542,49 +545,6 @@ int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_t
 }
 
 //================
-
-int decrypt_sha224_table_C8D09C_doublecheck_get_key_internal(unsigned char* aes_key)
-{
-   portability_input_data dec_input1;
-   dec_input1.size = 0x20;
-   memcpy(dec_input1.data_1, g_dec_input_C90370, 0x10);
-   memcpy(dec_input1.data_2, g_dec_input_C90370 + 0x10, 0x10);
-
-   portability_output_data dec_output;
-   dec_output.size = 0x20;
-   memset(dec_output.key_name, 0, 0x10);
-   memset(dec_output.aes_key, 0, 0x10);
-
-   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input1, &dec_output);
-   if(kget_res1 != 0)
-   {
-      memset(&dec_output, 0, 0x24);
-      return -1;
-   }
-
-   int cmp_res = memcmp(dec_output.key_name, g_zero_array_C90498, 0x10);
-   if(cmp_res != 0)
-   {
-      portability_input_data dec_input2;
-      dec_input2.size = 0x20;
-      memcpy(dec_input2.data_1, g_dec_input_C90394, 0x10);
-      memcpy(dec_input2.data_2, g_dec_input_C90394 + 0x10, 0x10);
-
-      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input2, &dec_output);
-      if(kget_res2 != 0)
-      {
-         memset(&dec_output, 0, 0x24);
-         return -1;
-      }
-   }
-
-   memcpy(aes_key, dec_output.aes_key, 0x10);
-
-   //clear sensitive data
-   memset(&dec_output, 0, 0x24);
-
-   return 0;
-}
 
 int decrypt_sha224_table_C8D09C_doublecheck_internal()
 {
@@ -623,12 +583,15 @@ int decrypt_sha224_table_C8D09C_doublecheck_internal()
    */
 
    unsigned char aes_key[0x10];
+   /*
    int aes_key_res = decrypt_sha224_table_C8D09C_doublecheck_get_key_internal(aes_key);
    if(aes_key_res < 0)
       return aes_key_res;
+   */
 
-   //perform some data operations
+   //perform decryption
 
+   /*
    if ( SceMsif_SceKernelUtilsForDriver__imp_aes_init_f12b6451(&ctx, 0x80, 0x80, aes_key) >= 0 )
    {
       if ( 4 * ctx.unk_8 )
@@ -724,44 +687,11 @@ int decrypt_sha224_table_C8D09C_doublecheck_internal()
       }
    }
 
-   pod_res.size = 0;
-   *(_DWORD *)pod_res.key_name = 0;
-   *(_DWORD *)&pod_res.key_name[4] = 0;
-   *(_DWORD *)&pod_res.key_name[8] = 0;
-   *(_DWORD *)&pod_res.key_name[12] = 0;
-   *(_DWORD *)pod_res.aes_key = 0;
-   *(_DWORD *)&pod_res.aes_key[4] = 0;
-   *(_DWORD *)&pod_res.aes_key[8] = 0;
-   *(_DWORD *)&pod_res.aes_key[12] = 0;
+   memset(aes_key, 0, 0x10);
    SceMsif_SceSysclibForDriver__imp_memset_0ab9bf5c(&ctx, 0, 0x3F0u);
-   result = 0xFFFFFF34;
+   */
 
-   return result;
-}
-
-//this code is same
-int decrypt_sha224_table_C8D09C_doublecheck(unsigned __int8 *ptr_pair[2], unsigned __int8 *ptr_table[6])
-{
-   if (g_00B9F9B8 == 0)
-   {
-      int dec_res = decrypt_sha224_table_C8D09C_doublecheck_internal();
-      if(dec_res < 0)
-         return dec_res;
-
-      g_00B9F9B8 = 1;
-   }
-
-   ptr_pair[0] = g_00B9F8D8;
-   ptr_pair[1] = g_00B9F8D8 + 0x1C;
-
-   ptr_table[0] = g_00B9F8D8 + 0x38;
-   ptr_table[1] = g_00B9F8D8 + 0x54;
-   ptr_table[2] = g_00B9F8D8 + 0x70;
-   ptr_table[3] = g_00B9F8D8 + 0x8C;
-   ptr_table[4] = g_00B9F8D8 + 0xA8;
-   ptr_table[5] = g_00B9F8D8 + 0xC4;
-
-   return 0;
+   return -1;
 }
 
 //----------------
