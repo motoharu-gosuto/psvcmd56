@@ -746,7 +746,32 @@ int do_smth_with_hashes_4_C8EADC(unsigned char *sha_224_0, unsigned char *sha_22
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
 {
-   return 0;
+   int byte_size_aligned_local; // r3
+   unsigned int accumulator; // r5
+   int block_counter; // r4
+   unsigned int cur_block; // r6
+
+   byte_size_aligned_local = byte_size_aligned & 0x3F;
+   if ( byte_size_aligned_local )
+   {
+      accumulator = 0;
+      for ( block_counter = 0; block_counter < block_size; ++block_counter )
+      {
+         cur_block = *(int *)&buffer1[4 * block_counter];
+         *(int *)&buffer0[4 * block_counter] = accumulator | (cur_block << byte_size_aligned_local);
+         accumulator = cur_block >> (0x20 - byte_size_aligned_local);
+      }
+   }
+   else
+   {
+      while ( byte_size_aligned_local < block_size )
+      {
+         *(int *)&buffer0[4 * byte_size_aligned_local] = *(int *)&buffer1[4 * byte_size_aligned_local];
+         ++byte_size_aligned_local;
+      }
+   }
+
+   return (int)buffer0;
 }
 
 int sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int unk3)
