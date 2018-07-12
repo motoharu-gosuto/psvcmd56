@@ -774,9 +774,47 @@ int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, i
    return (int)buffer0;
 }
 
-int sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int unk3)
+int sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
 {
-   return 0;
+   int byte_counter; // r4
+   unsigned int v5; // r8
+   int byte_size; // r10
+   unsigned int v7; // r5
+   unsigned int cur_block; // r2
+   unsigned int v9; // r9
+   int v10; // r6
+   int v11; // r7
+   unsigned int v12; // lr
+   int v13; // r6
+
+   if ( block_size > 0 )
+   {
+      byte_counter = 0;
+      v5 = (unsigned int)arg3 >> 0x10;
+      byte_size = 4 * block_size;
+      v7 = 0;
+
+      do
+      {
+         cur_block = *(int *)&buffer1[byte_counter];
+         v9 = (unsigned __int16)arg3 * (unsigned __int16)cur_block;
+         v10 = (unsigned __int16)arg3 * (cur_block >> 0x10);
+         v11 = v5 * (unsigned __int16)cur_block;
+         v12 = v10 + (v9 >> 0x10);
+         v13 = v9 + ((v10 + v11) << 16);
+         *(int *)&buffer0[byte_counter] = v13 + v7;
+         byte_counter += 4;
+         v7 = v5 * (cur_block >> 0x10)
+            + (v12 >> 0x10)
+            + ((v11 + (unsigned int)(unsigned __int16)v12) >> 0x10)
+            + (((v13 | v7) & ~(v13 + v7) | v13 & v7) >> 0x1F);
+      }
+      while ( byte_counter != byte_size );
+
+      *(int *)&buffer0[byte_counter] = v7;
+   }
+
+   return (int)buffer0;
 }
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
