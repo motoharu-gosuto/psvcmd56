@@ -741,7 +741,38 @@ int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_22
 
 int do_smth_with_hashes_4_C8EADC(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks)
 {
-   return 0;
+   unsigned __int8 *block_ptr0; // r3
+   unsigned __int8 *block_ptr1; // r1
+   int block_val0_copy; // r5
+   int block_val0; // t1
+   int block_val1; // t1
+   int result; // r0
+
+   block_ptr0 = &sha_224_0[4 * key_size_blocks];
+   block_ptr1 = &sha_224_1[4 * key_size_blocks];
+   do
+   {
+      if ( block_ptr0 <= sha_224_0 )
+         break;
+
+      block_val0 = *((int *)block_ptr0 - 1);
+      block_ptr0 -= 4;
+      block_val0_copy = block_val0;
+      block_val1 = *((int *)block_ptr1 - 1);
+      block_ptr1 -= 4;
+   }
+   while ( block_val0_copy == block_val1 );
+   
+   if ( key_size_blocks <= 0 )
+   {
+      result = 0;
+   }
+   else
+   {
+      result = *(int *)block_ptr0 > *(int *)block_ptr1;
+   }
+
+   return result;
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
