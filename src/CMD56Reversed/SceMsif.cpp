@@ -819,7 +819,30 @@ int sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, i
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
 {
-   return 0;
+   unsigned __int8 *buffer0_local; // r12
+   int result; // r0
+   int byte_counter; // r4
+   int block_counter; // r5
+   unsigned int cur_block1; // r6
+   int cur_block0; // lr
+   int block_res; // r7
+
+   buffer0_local = buffer0;
+   result = arg_0 & 1;
+   byte_counter = 0;
+   block_counter = 0;
+
+   while ( block_counter < block_size )
+   {
+      cur_block1 = *(int *)&buffer2[byte_counter];
+      ++block_counter;
+      cur_block0 = *(int *)&buffer1[byte_counter];
+      block_res = cur_block0 - cur_block1 - result;
+      *(int *)&buffer0_local[byte_counter] = block_res;
+      result = ((~cur_block0 | cur_block1) & block_res | ~cur_block0 & cur_block1) >> 0x1F;
+      byte_counter += 4;
+   }
+   return result;
 }
 
 int sub_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
