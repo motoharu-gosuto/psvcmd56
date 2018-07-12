@@ -877,7 +877,47 @@ int sub_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
 
 int sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int byte_size_aligned)
 {
-   return 0;
+   int byte_size_aligned_local; // r3
+   int key_size_blocks_local; // r5
+   int byte_size; // r2
+   int block_index0; // r4
+   unsigned __int8 *cur_block0_ptr; // r1
+   int accumulator; // r6
+   unsigned __int8 *cur_block1_ptr; // r2
+   unsigned int cur_block0; // r7
+
+   byte_size_aligned_local = byte_size_aligned & 0x3F;
+
+   if ( byte_size_aligned_local )
+   {
+      key_size_blocks_local = key_size_blocks - 1;
+      byte_size = 4 * key_size_blocks;
+      block_index0 = 0;
+      cur_block0_ptr = &buffer1[byte_size];
+      accumulator = 0;
+      cur_block1_ptr = &buffer0[byte_size];
+      while ( 1 )
+      {
+         block_index0 -= 4;
+         if ( key_size_blocks_local < 0 )
+            break;
+         cur_block0 = *(int *)&cur_block0_ptr[block_index0];
+         --key_size_blocks_local;
+         buffer0 = (unsigned __int8 *)(cur_block0 >> byte_size_aligned_local);
+         *(int *)&cur_block1_ptr[block_index0] = accumulator | (cur_block0 >> byte_size_aligned_local);
+         accumulator = cur_block0 << (0x20 - byte_size_aligned_local);
+      }
+   }
+   else
+   {
+      while ( byte_size_aligned_local < key_size_blocks )
+      {
+         *(int *)&buffer0[4 * byte_size_aligned_local] = *(int *)&buffer1[4 * byte_size_aligned_local];
+         ++byte_size_aligned_local;
+      }
+   }
+
+   return (int)buffer0;
 }
 
 int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_1, int key_size_blocks0, unsigned char *sha224_2, int key_size_blocks1)
