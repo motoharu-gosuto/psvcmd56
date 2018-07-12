@@ -1182,7 +1182,27 @@ int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_
 
 int do_smth_with_hashes_3_C8E3EE(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks)
 {
-   return 0;
+   int block_counter; // r3
+   int result; // r0
+
+   block_counter = key_size_blocks;
+
+   do
+   {
+      --block_counter;
+   }
+   while ( block_counter + 1 > 0 && !*(int*)&sha_224_0[4 * block_counter]);
+
+   if ( block_counter >= 0 )
+   {
+      result = (unsigned int)(do_smth_with_hashes_4_C8EADC(sha_224_1, sha_224_0, key_size_blocks) - 1) <= 0;
+   }
+   else
+   {
+      result = 0;
+   }
+
+   return result;
 }
 
 int do_smth_with_hashes_5_C8DBD4(unsigned char *sha224_0, unsigned char *sha_224_1, unsigned char *sha_224_2, int key_size_blocks)
