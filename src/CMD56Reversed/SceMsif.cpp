@@ -1536,6 +1536,75 @@ int do_smth_with_hashes_6_C8DF74(unsigned char *sha_224_0, unsigned char *sha_22
    return (int)sha_224_0;
 }
 
+int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks, int arg4)
+{
+   unsigned __int8 *buffer3_local; // r6
+   unsigned __int8 *buffer0_local; // r9
+   unsigned __int8 *buffer2_local; // r8
+   int block_index0; // r5
+   unsigned __int8 *buffer1_local; // r11
+   int block_counter0; // r12
+   int block_counter1; // ST0C_4
+   int buffer1_val; // t1
+   int res0; // r10
+   int res1; // r0
+   int block_index1; // r3
+
+   unsigned __int8 data00[4]; // [sp+18h] [bp-338h]
+   unsigned __int8 data01[256]; // [sp+1Ch] [bp-334h]
+   unsigned __int8 data20[260]; // [sp+11Ch] [bp-234h]
+   unsigned __int8 data30[4]; // [sp+220h] [bp-130h]
+   unsigned __int8 data31[256]; // [sp+224h] [bp-12Ch]
+
+   buffer3_local = buffer3;
+   buffer0_local = buffer0;
+   buffer2_local = buffer2;
+
+   if ( (key_size_blocks - 1) <= 0x3F )
+   {
+      block_index0 = 0;
+
+      do
+      {
+         *&data00[4 * block_index0++] = 0;
+      }
+      while ( key_size_blocks >= block_index0 );
+
+      buffer1_local = buffer1;
+      block_counter0 = 0;
+
+      do
+      {
+         block_counter1 = block_counter0;
+         sub_C8E01C(data30, buffer3_local, key_size_blocks, (*data00 + *buffer2_local * *buffer1_local) * arg4);
+         buffer1_val = *buffer1_local;
+         buffer1_local += 4;
+         sub_C8E01C(data20, buffer2_local, key_size_blocks, buffer1_val);
+         res0 = sub_C8EB4A(data30, data30, data20, key_size_blocks + 1, 0);
+         res1 = sub_C8EB4A(data00, data01, data31, key_size_blocks, (*data00 | *data30) != 0) + res0;
+         *&data00[4 * key_size_blocks] = res1;
+         block_counter0 = block_counter1 + 1;
+      }
+      while ( block_counter1 + 1 != key_size_blocks );
+
+      if ( res1 || (buffer0 = (unsigned char *)do_smth_with_hashes_4_C8EADC(buffer3_local, data00, key_size_blocks)) == 0 )
+      {
+         buffer0 = (unsigned char *)sub_C8E36E(data00, data00, buffer3_local, key_size_blocks, 0);
+      }
+
+      block_index1 = 0;
+
+      do
+      {
+         *&buffer0_local[block_index1] = *&data00[block_index1];
+         block_index1 += 4;
+      }
+      while ( block_index1 != 4 * key_size_blocks );
+   }
+  
+   return (int)buffer0;
+}
+
 int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
 {
    return 0;
