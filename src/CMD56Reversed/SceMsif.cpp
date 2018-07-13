@@ -1207,7 +1207,272 @@ int do_smth_with_hashes_3_C8E3EE(unsigned char *sha_224_0, unsigned char *sha_22
 
 int do_smth_with_hashes_5_C8DBD4(unsigned char *sha224_0, unsigned char *sha_224_1, unsigned char *sha_224_2, int key_size_blocks)
 {
-   return 0;
+   int key_size_blocks_local; // r4
+   unsigned __int8 *sha_224_1_local; // r10
+   unsigned __int8 *sha_224_2_local; // r6
+   unsigned int block_size0; // r3
+   int result; // r0
+   unsigned int block_size1; // r11
+   int byte_index0; // r3
+   int block_val3; // r2
+   int block_val1; // r1
+   int block_val0; // r7
+   int block_val2; // r0
+   int res0; // ST08_4
+   int res1; // r0
+   int block_val4; // r0
+   int block_val5; // r2
+   int block_val6; // r1
+   int byte_index1; // r3
+   int byte_index2; // r2
+   int block_val11; // r12
+   unsigned __int8 *block_ptr6; // r0
+   unsigned int block_val8; // lr
+   unsigned int block_val9; // r9
+   unsigned int block_val10; // r0
+   int check0; // ST08_4
+   int res2; // ST28_4
+   int res3; // r0
+   int block_val12; // lr
+   int block_val13; // r2
+   int block_val15; // r1
+   int byte_index3; // r3
+   int byte_index4; // r2
+   int block_val16; // r12
+   unsigned __int8 *block_ptr7; // r0
+   unsigned int block_val17; // lr
+   unsigned int block_val18; // r9
+   unsigned int block_val19; // r0
+   unsigned int block_size3; // r3
+   char check1; // cf
+   int block_index0; // r3
+   int res4; // r0
+   unsigned __int8 *block_ptr2; // [sp+Ch] [bp-664h]
+   unsigned __int8 *block_ptr1; // [sp+10h] [bp-660h]
+   unsigned __int8 *block_ptr0; // [sp+14h] [bp-65Ch]
+   unsigned __int8 *block_ptr3; // [sp+18h] [bp-658h]
+   unsigned __int8 *block_ptr4; // [sp+1Ch] [bp-654h]
+   unsigned __int8 *block_ptr5; // [sp+20h] [bp-650h]
+   int block_size2; // [sp+24h] [bp-64Ch]
+   int block_val7; // [sp+28h] [bp-648h]
+   int block_val14; // [sp+28h] [bp-648h]
+   unsigned __int8 *sha224_0_local; // [sp+2Ch] [bp-644h]
+   unsigned __int8 buffer0[256]; // [sp+34h] [bp-63Ch]
+   unsigned __int8 buffer1[256]; // [sp+134h] [bp-53Ch]
+   unsigned __int8 buffer2[260]; // [sp+234h] [bp-43Ch]
+   unsigned __int8 buffer3[260]; // [sp+338h] [bp-338h]
+   unsigned __int8 buffer4[260]; // [sp+43Ch] [bp-234h]
+   unsigned __int8 buffer5[260]; // [sp+540h] [bp-130h]
+   
+   key_size_blocks_local = key_size_blocks;
+   sha_224_1_local = sha_224_1;
+   sha_224_2_local = sha_224_2;
+   sha224_0_local = sha224_0;
+
+   block_size0 = key_size_blocks - 1;
+
+   if ( block_size0 > 0x3F )
+   {
+      goto LABEL_2;
+   }
+
+   if ( !((*sha_224_2 | *sha_224_1) & 1) )
+   {
+      goto LABEL_2;
+   }
+
+   block_size1 = block_size0;
+   block_size2 = -4 * key_size_blocks_local;
+   block_ptr0 = &buffer0[4 * key_size_blocks_local];
+   block_ptr1 = &buffer1[4 * key_size_blocks_local];
+   block_ptr2 = &buffer2[4 * key_size_blocks_local];
+   block_ptr3 = &buffer3[4 * key_size_blocks_local];
+   block_ptr4 = &buffer4[4 * key_size_blocks_local];
+   byte_index0 = 0;
+   block_val3 = 0;
+   block_val1 = 0;
+   block_ptr5 = &buffer5[4 * key_size_blocks_local];
+
+   do
+   {
+      block_val0 = *&sha_224_1_local[4 * key_size_blocks_local - 4 + byte_index0];
+      block_val1 |= block_val0;
+      *&block_ptr0[byte_index0 - 4] = block_val0;
+      block_val2 = *&sha_224_2_local[4 * key_size_blocks_local - 4 + byte_index0];
+      *&block_ptr1[byte_index0 - 4] = block_val2;
+      block_val3 |= block_val2;
+      *&block_ptr2[byte_index0] = 0;
+      *&block_ptr3[byte_index0] = 0;
+      *&block_ptr4[byte_index0] = 0;
+      *&block_ptr5[byte_index0] = 0;
+      byte_index0 -= 4;
+   }
+   while ( byte_index0 != block_size2 );
+
+   *buffer3 = 0;
+   *buffer2 = 1;
+   *buffer4 = 0;
+   *buffer5 = 1;
+
+   if ( !block_val1 || !block_val3 )
+   {
+LABEL_2:
+      result = 0;
+      goto LABEL_40;
+   }
+
+LABEL_8:
+   while ( !(buffer1[0] & 1) )
+   {
+      if ( (*buffer2 | *buffer3) & 1 )
+      {
+         res0 = sub_C8EB4A(buffer2, buffer2, sha_224_1_local, key_size_blocks_local, buffer1[0] & 1);
+         res1 = sub_C8E36E(buffer3, buffer3, sha_224_2_local, key_size_blocks_local, 0);
+         *&buffer2[4 * key_size_blocks_local] += res0;
+         *&buffer3[4 * key_size_blocks_local] -= res1;
+      }
+
+      block_val4 = *&buffer2[4 * key_size_blocks_local];
+      block_val5 = *&buffer3[4 * key_size_blocks_local];
+      block_val6 = block_val5 << 31;
+      block_val7 = block_val4 << 31;
+      *&buffer3[4 * key_size_blocks_local] = block_val5 >> 1;
+      byte_index1 = 0;
+      byte_index2 = 0;
+      block_val11 = 0;
+      *&buffer2[4 * key_size_blocks_local] = block_val4 >> 1;
+
+      do
+      {
+         byte_index1 -= 4;
+         block_ptr6 = &block_ptr1[byte_index2];
+         byte_index2 -= 4;
+         block_val8 = *&block_ptr2[byte_index1];
+         block_val9 = *(block_ptr6 - 1);
+         block_val10 = *&block_ptr3[byte_index1];
+         *&block_ptr1[byte_index1] = block_val11 | (block_val9 >> 1);
+         *&block_ptr2[byte_index1] = block_val7 | (block_val8 >> 1);
+         block_val11 = block_val9 << 31;
+         block_val7 = block_val8 << 31;
+         *&block_ptr3[byte_index1] = block_val6 | (block_val10 >> 1);
+         block_val6 = block_val10 << 31;
+      }
+      while ( byte_index2 != block_size2 );
+   }
+
+   while ( !(buffer0[0] & 1) )
+   {
+      if ( (*buffer4 | *buffer5) & 1 )
+      {
+         check0 = buffer0[0] & 1;
+         res2 = sub_C8EB4A(buffer4, buffer4, sha_224_1_local, key_size_blocks_local, check0);
+         res3 = sub_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, check0);
+         *&buffer4[4 * key_size_blocks_local] += res2;
+         *&buffer5[4 * key_size_blocks_local] -= res3;
+      }
+
+      block_val12 = *&buffer4[4 * key_size_blocks_local];
+      block_val13 = *&buffer5[4 * key_size_blocks_local];
+      block_val14 = block_val12 << 31;
+      block_val15 = block_val13 << 31;
+      *&buffer4[4 * key_size_blocks_local] = block_val12 >> 1;
+      *&buffer5[4 * key_size_blocks_local] = block_val13 >> 1;
+      byte_index3 = 0;
+      byte_index4 = 0;
+      block_val16 = 0;
+
+      do
+      {
+         byte_index3 -= 4;
+         block_ptr7 = &block_ptr0[byte_index4];
+         byte_index4 -= 4;
+         block_val17 = *&block_ptr4[byte_index3];
+         block_val18 = *(block_ptr7 - 1);
+         block_val19 = *&block_ptr5[byte_index3];
+         *&block_ptr0[byte_index3] = block_val16 | (block_val18 >> 1);
+         *&block_ptr4[byte_index3] = block_val14 | (block_val17 >> 1);
+         block_val16 = block_val18 << 31;
+         block_val14 = block_val17 << 31;
+         *&block_ptr5[byte_index3] = block_val15 | (block_val19 >> 1);
+         block_val15 = block_val19 << 31;
+      }
+      while ( byte_index4 != block_size2 );
+  }
+
+   if ( do_smth_with_hashes_4_C8EADC(buffer0, buffer1, key_size_blocks_local) )
+   {
+      sub_C8E36E(buffer0, buffer0, buffer1, key_size_blocks_local, 0);
+      sub_C8E36E(buffer4, buffer4, buffer2, key_size_blocks_local + 1, 0);
+      sub_C8E36E(buffer5, buffer5, buffer3, key_size_blocks_local + 1, 0);
+   }
+   else
+   {
+      sub_C8E36E(buffer1, buffer1, buffer0, key_size_blocks_local, 0);
+      sub_C8E36E(buffer2, buffer2, buffer4, key_size_blocks_local + 1, 0);
+      sub_C8E36E(buffer3, buffer3, buffer5, key_size_blocks_local + 1, 0);
+   }
+
+   block_size3 = key_size_blocks_local;
+
+   while ( 1 )
+   {
+      check1 = block_size3-- >= 1;
+
+      if ( !check1 )
+      {
+         break;
+      }
+
+      if ( *&buffer1[4 * block_size3] )
+      {
+         goto LABEL_8;
+      }
+   }
+
+   do
+   {
+      check1 = block_size1-- >= 1;
+   }
+   while ( check1 && !*&buffer0[4 * block_size1 + 4] );
+
+   if ( (block_size1 & 0x80000000) == 0 || *buffer0 != 1 )
+   {
+      goto LABEL_2;
+   }
+
+   if ( *&buffer5[4 * key_size_blocks_local] < 0 )
+   {
+      do
+      {
+         res4 = sub_C8EB4A(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, 0)
+               + *&buffer5[4 * key_size_blocks_local];
+
+         *&buffer5[4 * key_size_blocks_local] = res4;
+      }
+      while ( res4 );
+   }
+   else
+   {
+      while ( *&buffer5[4 * key_size_blocks_local] || !do_smth_with_hashes_4_C8EADC(sha_224_2_local, buffer5, key_size_blocks_local) )
+      {
+         *&buffer5[4 * key_size_blocks_local] -= sub_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, 0);
+      }
+   }
+
+   block_index0 = 0;
+
+   do
+   {
+      *&sha224_0_local[4 * block_index0] = *&buffer5[4 * block_index0];
+      ++block_index0;
+   }
+   while ( block_index0 < key_size_blocks_local );
+
+  result = 1;
+
+LABEL_40:
+
+   return result;
 }
 
 int do_smth_with_hashes_6_C8DF74(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks0, unsigned char *sha_224_2, int key_size_blocks1)
