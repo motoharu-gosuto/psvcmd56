@@ -1605,6 +1605,83 @@ int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
    return (int)buffer0;
 }
 
+int sub_C8EC70(unsigned char *buffer0, unsigned char *buffer1, int block_size_arg0, unsigned char *buffer3, int block_size_arg1, int arg_4)
+{
+   unsigned __int8 *buffer3_local; // r9
+   unsigned __int8 *buffer0_local; // r11
+   int byte_counter0; // r3
+   unsigned __int8 *block_ptr0; // r8
+   unsigned __int8 *block_ptr2; // r1
+   int block_size0; // r2
+   int byte_counter1; // r3
+   unsigned __int8 *block_ptr1; // r7
+   int block_counter1; // r6
+   int block_val0; // t1
+   int block_val1; // r5
+   int byte_counter2; // r3
+   int block_index0; // [sp+8h] [bp-440h]
+   unsigned __int8 data10[256]; // [sp+18h] [bp-430h]
+   unsigned __int8 data20[256]; // [sp+118h] [bp-330h]
+   unsigned __int8 data30[4]; // [sp+218h] [bp-230h]
+   unsigned __int8 data31[512]; // [sp+21Ch] [bp-22Ch]
+
+   buffer3_local = buffer3;
+   buffer0_local = buffer0;
+
+   if ( (block_size_arg1 - 1) <= 0x3F && block_size_arg0 >= block_size_arg1 && block_size_arg0 <= 2 * block_size_arg1 )
+   {
+      byte_counter0 = 0;
+      block_index0 = 4 * block_size_arg1;
+      block_ptr0 = &data31[4 * block_size_arg1];
+
+      do
+      {
+         *&data31[byte_counter0] = *&buffer1[byte_counter0];
+         *&block_ptr0[byte_counter0] = 0;
+         byte_counter0 += 4;
+      }
+      while ( byte_counter0 != block_index0 );
+
+      block_ptr2 = &buffer1[block_index0];
+      block_size0 = 4 * (block_size_arg0 - block_size_arg1);
+
+      for ( byte_counter1 = 0; byte_counter1 != block_size0; byte_counter1 += 4 )
+      {
+         *&block_ptr0[byte_counter1] = *&block_ptr2[byte_counter1];
+      }
+
+      block_ptr1 = data30;
+      block_counter1 = 0;
+
+      do
+      {
+         block_val0 = *(block_ptr1 + 1);
+         block_ptr1 += 4;
+         sub_C8E01C(data20, buffer3_local, block_size_arg1, block_val0 * arg_4);
+         block_val1 = *&data20[4 * block_size_arg1];
+         *&data10[4 * block_counter1++] = sub_C8EB4A(block_ptr1, block_ptr1, data20, block_size_arg1, 0) + block_val1;
+      }
+      while ( block_counter1 != block_size_arg1 );
+
+      if ( sub_C8EB4A(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], data10, block_size_arg1, 0)
+         || (buffer0 = (unsigned char *)do_smth_with_hashes_4_C8EADC(buffer3_local, &data31[4 * block_size_arg1], block_size_arg1)) == 0 )
+      {
+         buffer0 = (unsigned char *)sub_C8E36E(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], buffer3_local, block_size_arg1, 0);
+      }
+
+      byte_counter2 = 0;
+
+      do
+      {
+         *&buffer0_local[byte_counter2] = *&block_ptr0[byte_counter2];
+         byte_counter2 += 4;
+      }
+      while ( byte_counter2 != block_index0 );
+   }
+
+   return (int)buffer0;
+}
+
 int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
 {
    return 0;
