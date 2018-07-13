@@ -1682,6 +1682,67 @@ int sub_C8EC70(unsigned char *buffer0, unsigned char *buffer1, int block_size_ar
    return (int)buffer0;
 }
 
+int sub_C8EA10(unsigned char **buffer_ptrs0, unsigned char **buffer_ptrs1, unsigned char *buffer2, int block_size, int arg_0)
+{
+   int block_size_local; // r4
+   unsigned __int8 *buffer2_local; // r5
+   unsigned __int8 **buffer_ptrs0_local; // r8
+   unsigned __int8 **buffer_ptrs1_local; // r7
+   char check0; // cf
+   unsigned __int8 *block_ptr1; // r1
+   int byte_size0; // r4
+   unsigned int byte_counter0; // r3
+   unsigned __int8 *block_ptr0; // r1
+   unsigned __int8 data0[28]; // [sp+8h] [bp-40h]
+
+   block_size_local = block_size;
+   buffer2_local = buffer2;
+   buffer_ptrs0_local = buffer_ptrs0;
+   buffer_ptrs1_local = buffer_ptrs1;
+
+   if ( (block_size - 1) <= 6 )
+   {
+      while ( 1 )
+      {
+         check0 = block_size-- >= 1;
+
+         if ( !check0 )
+           break;
+
+         block_ptr0 = buffer_ptrs1_local[2];
+
+         if ( *&block_ptr0[4 * block_size] )
+         {
+            sub_C8EB80(data0, block_ptr0, buffer_ptrs1_local[2], buffer2, block_size_local, arg_0);
+            sub_C8EB80(data0, data0, buffer_ptrs1_local[2], buffer2_local, block_size_local, arg_0);
+            sub_C8EC70(data0, data0, block_size_local, buffer2_local, block_size_local, arg_0);
+            do_smth_with_hashes_5_C8DBD4(data0, data0, buffer2_local, block_size_local);
+            sub_C8EB80(buffer_ptrs0_local[1], buffer_ptrs1_local[1], data0, buffer2_local, block_size_local, arg_0);
+            sub_C8EB80(data0, data0, buffer_ptrs1_local[2], buffer2_local, block_size_local, arg_0);
+            buffer_ptrs0 = (unsigned char **)sub_C8EB80(*buffer_ptrs0_local, *buffer_ptrs1_local, data0, buffer2_local, block_size_local, arg_0);
+            goto LABEL_7;
+         }
+      }
+
+      buffer_ptrs0 = (unsigned char **)*buffer_ptrs0;
+      block_ptr1 = buffer_ptrs0_local[1];
+      byte_size0 = 4 * block_size_local;
+      byte_counter0 = 0;
+
+      do
+      {
+         buffer_ptrs0[byte_counter0 / 4] = 0;
+         *&block_ptr1[byte_counter0] = 0;
+         byte_counter0 += 4;
+      }
+      while ( byte_counter0 != byte_size0 );
+   }
+
+LABEL_7:
+
+   return (int)buffer_ptrs0;
+}
+
 int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
 {
    return 0;
