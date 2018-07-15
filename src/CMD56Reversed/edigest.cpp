@@ -85,7 +85,7 @@ void do_block2(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[12]
 //calculate carry
-void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr, int& v10)
+void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr, int& carry)
 {
    int v9;
 
@@ -99,20 +99,20 @@ void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr
                   + (__ROL4__(digest_permu[11], 10) ^ __ROL4__(digest_permu[11], 19) ^ __ROL4__(digest_permu[11], 30))
                   + v9;
 
-   v10 = v9 + digest_permu[0];
+   carry = v9 + digest_permu[0];
 }
 
 //change digest_permu[9]
 //change digest_permu[13]
-void do_block4(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int v10)
+void do_block4(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
 {
    int v11;
 
    v11 = work_buffer[res_item_ctr + 4]
             + dword_4054F4[res_item_ctr + 4]
-            + (digest_permu[14] ^ v10 & (digest_permu[14] ^ digest_permu[15]))
+            + (digest_permu[14] ^ carry & (digest_permu[14] ^ digest_permu[15]))
             + digest_permu[13]
-            + (__ROL4__(v10, 7) ^ __ROL4__(v10, 21) ^ __ROL4__(v10, 26));
+            + (__ROL4__(carry, 7) ^ __ROL4__(carry, 21) ^ __ROL4__(carry, 26));
 
    digest_permu[9] += v11;
 
@@ -123,13 +123,13 @@ void do_block4(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[10]
 //change digest_permu[14]
-void do_block5(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int v10)
+void do_block5(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
 {
    int v12;
 
    v12 = work_buffer[res_item_ctr + 5]
             + dword_4054F4[res_item_ctr + 5]
-            + (digest_permu[15] ^ digest_permu[9] & (v10 ^ digest_permu[15]))
+            + (digest_permu[15] ^ digest_permu[9] & (carry ^ digest_permu[15]))
             + digest_permu[14]
             + (__ROL4__(digest_permu[9], 7) ^ __ROL4__(digest_permu[9], 21) ^ __ROL4__(digest_permu[9], 26));
 
@@ -142,13 +142,13 @@ void do_block5(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[11]
 //change digest_permu[15]
-void do_block6(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int v10)
+void do_block6(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
 {
    int v13;
 
    v13 = work_buffer[res_item_ctr + 6]
             + dword_4054F4[res_item_ctr + 6]
-            + (v10 ^ digest_permu[10] & (v10 ^ digest_permu[9]))
+            + (carry ^ digest_permu[10] & (carry ^ digest_permu[9]))
             + digest_permu[15]
             + (__ROL4__(digest_permu[10], 7) ^ __ROL4__(digest_permu[10], 21) ^ __ROL4__(digest_permu[10], 26));
 
@@ -161,7 +161,7 @@ void do_block6(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[12]
 //change digest_permu[0]
-void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int v10)
+void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
 {
    int v14;
 
@@ -169,7 +169,7 @@ void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr
             + dword_4054F4[res_item_ctr + 7]
             + (digest_permu[9] ^ digest_permu[11] & (digest_permu[9] ^ digest_permu[10]))
             + (__ROL4__(digest_permu[11], 7) ^ __ROL4__(digest_permu[11], 21) ^ __ROL4__(digest_permu[11], 26))
-            + v10;
+            + carry;
 
    digest_permu[12] += v14;
 
@@ -264,17 +264,17 @@ void process_blocks(const int* work_buffer, int* digest_permu)
 
    do
    {
-      int v10;
+      int carry;
 
       do_block0(work_buffer, digest_permu, res_item_ctr);
       do_block1(work_buffer, digest_permu, res_item_ctr);
       do_block2(work_buffer, digest_permu, res_item_ctr);
-      do_block3(work_buffer, digest_permu, res_item_ctr, v10);
+      do_block3(work_buffer, digest_permu, res_item_ctr, carry);
 
-      do_block4(work_buffer, digest_permu, res_item_ctr, v10);
-      do_block5(work_buffer, digest_permu, res_item_ctr, v10);
-      do_block6(work_buffer, digest_permu, res_item_ctr, v10);
-      do_block7(work_buffer, digest_permu, res_item_ctr, v10);
+      do_block4(work_buffer, digest_permu, res_item_ctr, carry);
+      do_block5(work_buffer, digest_permu, res_item_ctr, carry);
+      do_block6(work_buffer, digest_permu, res_item_ctr, carry);
+      do_block7(work_buffer, digest_permu, res_item_ctr, carry);
 
       res_item_ctr += 8;
    }
