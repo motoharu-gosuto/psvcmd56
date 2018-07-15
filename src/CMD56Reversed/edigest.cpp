@@ -24,12 +24,70 @@ int dword_4054F4[64] =
    0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2,
 };
 
+//input buffer is 0x40 bytes (0x10 integers)
 void __cdecl crypto_or_hash_primitive_40D468(const int *input, int *digest2_result)
 {
-   unsigned int input_counter;
-   int dgr_val0;
-   unsigned int op_ctr0;
-   unsigned int res_item_ctr;
+   //peform permutation of digest2
+   int digest_permu[16];
+
+   digest_permu[1] =  digest2_result[7];
+   digest_permu[9] =  digest2_result[7];
+
+   digest_permu[2] =  digest2_result[6];
+   digest_permu[10] = digest2_result[6];
+
+   digest_permu[3] =  digest2_result[5];
+   digest_permu[11] = digest2_result[5];
+
+   digest_permu[4] =  digest2_result[4];
+   digest_permu[12] = digest2_result[4];
+
+   digest_permu[6] =  digest2_result[3];
+   digest_permu[13] = digest2_result[3];
+
+   digest_permu[7] =  digest2_result[2];
+   digest_permu[14] = digest2_result[2];
+
+   digest_permu[8] =  digest2_result[1];
+   digest_permu[15] = digest2_result[1];
+
+   digest_permu[5] =  digest2_result[0];
+   int dgr_val0 = digest2_result[0]; //maybe this acts as a digest_permu[0]
+
+   //copy input to head of the work buffer
+   int work_buffer[64];
+
+   int in_ctr = 0;
+   do
+   {
+      work_buffer[in_ctr] = input[in_ctr];
+      in_ctr++;
+   }
+   while (in_ctr <= 0xF);
+
+   //derive tail of work buffer
+
+   int wb_ctr = 0;
+
+   do
+   {
+      unsigned int val0 = work_buffer[wb_ctr];
+      unsigned int val1 = work_buffer[wb_ctr + 1];
+      unsigned int val2 = work_buffer[wb_ctr + 9];
+      unsigned int val3 = work_buffer[wb_ctr + 14];
+
+      unsigned int term0 = val0;
+      unsigned int term1 = (val1 >> 3) ^ __ROL4__(val1, 14) ^ __ROL4__(val1, 25);
+      unsigned int term2 = val2;
+      unsigned int term3 = (val3 >> 10) ^ __ROL4__(val3, 13) ^ __ROL4__(val3, 15);
+
+      work_buffer[wb_ctr + 16] = term0 + term1 + term2 + term3;
+
+      wb_ctr++;
+   }
+   while (wb_ctr <= 0x2F);
+
+   //==================================
    int cycle_acc;
    int v7;
    int v8;
@@ -48,47 +106,8 @@ void __cdecl crypto_or_hash_primitive_40D468(const int *input, int *digest2_resu
    int res_acc6;
    int res_acc7;
    int res_acc8;
-   int digest_permu[16];
-   int work_buffer[64];
 
-   input_counter = 0;
-   dgr_val0 = *digest2_result;
-   digest_permu[15] = digest2_result[1];
-   digest_permu[8] = digest_permu[15];
-   digest_permu[5] = dgr_val0;
-   digest_permu[14] = digest2_result[2];
-   digest_permu[7] = digest_permu[14];
-   digest_permu[13] = digest2_result[3];
-   digest_permu[6] = digest_permu[13];
-   digest_permu[12] = digest2_result[4];
-   digest_permu[4] = digest_permu[12];
-   digest_permu[11] = digest2_result[5];
-   digest_permu[3] = digest_permu[11];
-   digest_permu[10] = digest2_result[6];
-   digest_permu[2] = digest_permu[10];
-   digest_permu[9] = digest2_result[7];
-   digest_permu[1] = digest_permu[9];
-
-   do
-   {
-      work_buffer[input_counter] = input[input_counter];
-      ++input_counter;
-   }
-   while ( input_counter <= 0xF );
-
-   op_ctr0 = 0x10;
-
-   do
-   {
-      work_buffer[op_ctr0] = (((unsigned int)digest_permu[op_ctr0 + 14] >> 10) ^ __ROL4__(digest_permu[op_ctr0 + 14], 13) ^ __ROL4__(digest_permu[op_ctr0 + 14], 0xF))
-                           + (((unsigned int)digest_permu[op_ctr0 + 1] >> 3) ^ __ROL4__(digest_permu[op_ctr0 + 1], 14) ^ __ROL4__(digest_permu[op_ctr0 + 1], 0x19))
-                           + digest_permu[op_ctr0]
-                           + digest_permu[op_ctr0 + 9];
-      ++op_ctr0;
-   }
-   while ( op_ctr0 <= 0x3F );
-
-   res_item_ctr = 0;
+   int res_item_ctr = 0;
 
    do
    {
