@@ -102,38 +102,20 @@ void do_block2(const unsigned int* work_buffer, unsigned int* digest_permu, cons
 
 //change digest_permu[12]
 //calculate carry
-void do_block3(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, unsigned int& carry)
+void do_block3(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, unsigned int* carry)
 {
-   int val30 = work_buffer[res_item_ctr + 3];
-   int val31 = dword_4054F4[res_item_ctr + 3];
-
-   int val0 = digest_permu[12];
-   int val1 = digest_permu[13];
-   int val2 = digest_permu[14];
-   int val3 = digest_permu[15];
-
-   int term0 = val30;
-   int term1 = val31;
-   int term2 = val0;
-   int term3 = val1 ^ (val3 & (val1 ^ val2)); 
-   int term4 = __ROL4__(val3, 7) ^ __ROL4__(val3, 21) ^ __ROL4__(val3, 26); 
-
-   int acc0 = term0+ term1 + term2 + term3 + term4;
-
-   int val4 = digest_permu[11];
-   int val5 = digest_permu[9];
-   int val6 = digest_permu[10];
-   int val7 = digest_permu[0];
-
-   int term5 = (val4 & val6) | (val5 & (val4 | val6));
-   int term6 = __ROL4__(val4, 10) ^ __ROL4__(val4, 19) ^ __ROL4__(val4, 30);
-   int term7 = acc0;
-
-   int acc1 = term5 + term6 + term7;
-
-   digest_permu[12] = acc1;
-
-   carry = val7 + acc0;
+   block_function(digest_permu[12], 
+                  digest_permu[13], 
+                  digest_permu[14], 
+                  digest_permu[15], 
+                  work_buffer[res_item_ctr + 3], 
+                  dword_4054F4[res_item_ctr + 3], 
+                  digest_permu[11], 
+                  digest_permu[9], 
+                  digest_permu[10], 
+                  digest_permu[0], 
+                  carry, 
+                  &digest_permu[12]);
 }
 
 //change digest_permu[9]
@@ -303,7 +285,7 @@ void process_blocks(const unsigned int* work_buffer, unsigned int* digest_permu)
       do_block0(work_buffer, digest_permu, res_item_ctr);
       do_block1(work_buffer, digest_permu, res_item_ctr);
       do_block2(work_buffer, digest_permu, res_item_ctr);
-      do_block3(work_buffer, digest_permu, res_item_ctr, carry);
+      do_block3(work_buffer, digest_permu, res_item_ctr, &carry);
 
       do_block4(work_buffer, digest_permu, res_item_ctr, carry);
       do_block5(work_buffer, digest_permu, res_item_ctr, carry);
