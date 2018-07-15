@@ -46,78 +46,6 @@ void block_function(unsigned int val0, unsigned int val1, unsigned int val2, uns
    *res1 = acc1;
 }
 
-//change digest_permu[13], digest_permu[9]
-void do_block0(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr)
-{
-   block_function(digest_permu[9], digest_permu[10], digest_permu[11], digest_permu[12], 
-                  work_buffer[res_item_ctr], dword_4054F4[res_item_ctr], 
-                  digest_permu[0], digest_permu[14], digest_permu[15], digest_permu[13],
-                  &digest_permu[13], &digest_permu[9]);
-}
-
-//change change digest_permu[14], digest_permu[10]
-void do_block1(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr)
-{
-   block_function(digest_permu[10], digest_permu[11], digest_permu[12], digest_permu[13], 
-                  work_buffer[res_item_ctr + 1], dword_4054F4[res_item_ctr + 1],
-                  digest_permu[9], digest_permu[15], digest_permu[0], digest_permu[14],
-                  &digest_permu[14], &digest_permu[10]);
-}
-
-//change change digest_permu[15], digest_permu[11],
-void do_block2(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr)
-{
-   block_function(digest_permu[11], digest_permu[12], digest_permu[13], digest_permu[14], 
-                  work_buffer[res_item_ctr + 2], dword_4054F4[res_item_ctr + 2],
-                  digest_permu[10], digest_permu[0], digest_permu[9], digest_permu[15],
-                  &digest_permu[15], &digest_permu[11]);
-}
-
-//change carry, digest_permu[12]
-void do_block3(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, unsigned int* carry)
-{
-   block_function(digest_permu[12], digest_permu[13], digest_permu[14], digest_permu[15], 
-                  work_buffer[res_item_ctr + 3], dword_4054F4[res_item_ctr + 3], 
-                  digest_permu[11], digest_permu[9], digest_permu[10], digest_permu[0], 
-                  carry, &digest_permu[12]);
-}
-
-//change digest_permu[9], digest_permu[13]
-void do_block4(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
-{
-   block_function(digest_permu[13], digest_permu[14], digest_permu[15], carry, 
-                  work_buffer[res_item_ctr + 4], dword_4054F4[res_item_ctr + 4], 
-                  digest_permu[12], digest_permu[10], digest_permu[11], digest_permu[9], 
-                  &digest_permu[9], &digest_permu[13]);
-}
-
-//change digest_permu[10], digest_permu[14]
-void do_block5(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
-{
-   block_function(digest_permu[14], digest_permu[15], carry, digest_permu[9], 
-                  work_buffer[res_item_ctr + 5], dword_4054F4[res_item_ctr + 5], 
-                  digest_permu[13], digest_permu[11], digest_permu[12], digest_permu[10], 
-                  &digest_permu[10], &digest_permu[14]);
-}
-
-//change digest_permu[11], change digest_permu[15]
-void do_block6(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
-{
-   block_function(digest_permu[15], carry, digest_permu[9], digest_permu[10], 
-                  work_buffer[res_item_ctr + 6], dword_4054F4[res_item_ctr + 6],
-                  digest_permu[14], digest_permu[12], digest_permu[13], digest_permu[11], 
-                  &digest_permu[11], &digest_permu[15]);
-}
-
-//change digest_permu[12], change digest_permu[0]
-void do_block7(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
-{
-   block_function(carry, digest_permu[9], digest_permu[10], digest_permu[11], 
-                  work_buffer[res_item_ctr + 7], dword_4054F4[res_item_ctr + 7],
-                  digest_permu[15], digest_permu[13], digest_permu[14], digest_permu[12], 
-                  &digest_permu[12], &digest_permu[0]);
-}
-
 //------
 
 void digest_decomposition(const unsigned int *digest2_result, unsigned int* digest_permu)
@@ -206,15 +134,45 @@ void process_blocks(const unsigned int* work_buffer, unsigned int* digest_permu)
    {
       unsigned int carry;
 
-      do_block0(work_buffer, digest_permu, res_item_ctr);
-      do_block1(work_buffer, digest_permu, res_item_ctr);
-      do_block2(work_buffer, digest_permu, res_item_ctr);
-      do_block3(work_buffer, digest_permu, res_item_ctr, &carry);
+      block_function(digest_permu[9], digest_permu[10], digest_permu[11], digest_permu[12], 
+                     work_buffer[res_item_ctr], dword_4054F4[res_item_ctr], 
+                     digest_permu[0], digest_permu[14], digest_permu[15], digest_permu[13],
+                     &digest_permu[13], &digest_permu[9]);
 
-      do_block4(work_buffer, digest_permu, res_item_ctr, carry);
-      do_block5(work_buffer, digest_permu, res_item_ctr, carry);
-      do_block6(work_buffer, digest_permu, res_item_ctr, carry);
-      do_block7(work_buffer, digest_permu, res_item_ctr, carry);
+      block_function(digest_permu[10], digest_permu[11], digest_permu[12], digest_permu[13], 
+                     work_buffer[res_item_ctr + 1], dword_4054F4[res_item_ctr + 1],
+                     digest_permu[9], digest_permu[15], digest_permu[0], digest_permu[14],
+                     &digest_permu[14], &digest_permu[10]);
+
+      block_function(digest_permu[11], digest_permu[12], digest_permu[13], digest_permu[14], 
+                     work_buffer[res_item_ctr + 2], dword_4054F4[res_item_ctr + 2],
+                     digest_permu[10], digest_permu[0], digest_permu[9], digest_permu[15],
+                     &digest_permu[15], &digest_permu[11]);
+
+      block_function(digest_permu[12], digest_permu[13], digest_permu[14], digest_permu[15], 
+                     work_buffer[res_item_ctr + 3], dword_4054F4[res_item_ctr + 3], 
+                     digest_permu[11], digest_permu[9], digest_permu[10], digest_permu[0], 
+                     &carry, &digest_permu[12]);
+      
+      block_function(digest_permu[13], digest_permu[14], digest_permu[15], carry, 
+                     work_buffer[res_item_ctr + 4], dword_4054F4[res_item_ctr + 4], 
+                     digest_permu[12], digest_permu[10], digest_permu[11], digest_permu[9], 
+                     &digest_permu[9], &digest_permu[13]);
+
+      block_function(digest_permu[14], digest_permu[15], carry, digest_permu[9], 
+                     work_buffer[res_item_ctr + 5], dword_4054F4[res_item_ctr + 5], 
+                     digest_permu[13], digest_permu[11], digest_permu[12], digest_permu[10], 
+                     &digest_permu[10], &digest_permu[14]);
+      
+      block_function(digest_permu[15], carry, digest_permu[9], digest_permu[10], 
+                     work_buffer[res_item_ctr + 6], dword_4054F4[res_item_ctr + 6],
+                     digest_permu[14], digest_permu[12], digest_permu[13], digest_permu[11], 
+                     &digest_permu[11], &digest_permu[15]);
+      
+      block_function(carry, digest_permu[9], digest_permu[10], digest_permu[11], 
+                     work_buffer[res_item_ctr + 7], dword_4054F4[res_item_ctr + 7],
+                     digest_permu[15], digest_permu[13], digest_permu[14], digest_permu[12], 
+                     &digest_permu[12], &digest_permu[0]);
 
       res_item_ctr += 8;
    }
