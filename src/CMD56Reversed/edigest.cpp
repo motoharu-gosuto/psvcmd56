@@ -28,7 +28,7 @@ const int dword_4054F4[64] =
 
 //change digest_permu[9]
 //change digest_permu[13]
-void do_block0(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int dgr_val0)
+void do_block0(const int* work_buffer, int* digest_permu, const int res_item_ctr)
 {
    int cycle_acc;
 
@@ -40,14 +40,14 @@ void do_block0(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
    digest_permu[13] += cycle_acc;
 
-   digest_permu[9] = (dgr_val0 & digest_permu[15] | digest_permu[14] & (dgr_val0 | digest_permu[15]))
-                  + (__ROL4__(dgr_val0, 10) ^ __ROL4__(dgr_val0, 19) ^ __ROL4__(dgr_val0, 30))
+   digest_permu[9] = (digest_permu[0] & digest_permu[15] | digest_permu[14] & (digest_permu[0] | digest_permu[15]))
+                  + (__ROL4__(digest_permu[0], 10) ^ __ROL4__(digest_permu[0], 19) ^ __ROL4__(digest_permu[0], 30))
                   + cycle_acc;
 }
 
 //change digest_permu[10]
 //change digest_permu[14]
-void do_block1(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int dgr_val0)
+void do_block1(const int* work_buffer, int* digest_permu, const int res_item_ctr)
 {
    int v7;
 
@@ -59,14 +59,14 @@ void do_block1(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
    digest_permu[14] += v7;
 
-   digest_permu[10] = (dgr_val0 & digest_permu[9] | digest_permu[15] & (dgr_val0 | digest_permu[9]))
+   digest_permu[10] = (digest_permu[0] & digest_permu[9] | digest_permu[15] & (digest_permu[0] | digest_permu[9]))
                   + (__ROL4__(digest_permu[9], 10) ^ __ROL4__(digest_permu[9], 19) ^ __ROL4__(digest_permu[9], 30))
                   + v7;
 }
 
 //change digest_permu[11]
 //change digest_permu[15]
-void do_block2(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int dgr_val0)
+void do_block2(const int* work_buffer, int* digest_permu, const int res_item_ctr)
 {
    int v8;
 
@@ -78,13 +78,14 @@ void do_block2(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
    digest_permu[15] += v8;
 
-   digest_permu[11] = (digest_permu[9] & digest_permu[10] | dgr_val0 & (digest_permu[9] | digest_permu[10]))
+   digest_permu[11] = (digest_permu[9] & digest_permu[10] | digest_permu[0] & (digest_permu[9] | digest_permu[10]))
                   + (__ROL4__(digest_permu[10], 10) ^ __ROL4__(digest_permu[10], 19) ^ __ROL4__(digest_permu[10], 30))
                   + v8;
 }
 
 //change digest_permu[12]
-void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int dgr_val0, int& v10)
+//calculate carry
+void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr, int& v10)
 {
    int v9;
 
@@ -98,7 +99,7 @@ void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr
                   + (__ROL4__(digest_permu[11], 10) ^ __ROL4__(digest_permu[11], 19) ^ __ROL4__(digest_permu[11], 30))
                   + v9;
 
-   v10 = v9 + dgr_val0;
+   v10 = v9 + digest_permu[0];
 }
 
 //change digest_permu[9]
@@ -159,7 +160,8 @@ void do_block6(const int* work_buffer, int* digest_permu, const int res_item_ctr
 }
 
 //change digest_permu[12]
-void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int v10, int& dgr_val0)
+//change digest_permu[0]
+void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int v10)
 {
    int v14;
 
@@ -171,14 +173,14 @@ void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
    digest_permu[12] += v14;
 
-   dgr_val0 = (digest_permu[14] & digest_permu[15] | digest_permu[13] & (digest_permu[14] | digest_permu[15]))
+   digest_permu[0] = (digest_permu[14] & digest_permu[15] | digest_permu[13] & (digest_permu[14] | digest_permu[15]))
             + (__ROL4__(digest_permu[15], 10) ^ __ROL4__(digest_permu[15], 19) ^ __ROL4__(digest_permu[15], 30))
             + v14;
 }
 
 //------
 
-void digest_decomposition(const int *digest2_result, int* digest_permu, int& dgr_val0)
+void digest_decomposition(const int *digest2_result, int* digest_permu)
 {
    digest_permu[1] =  digest2_result[7];
    digest_permu[9] =  digest2_result[7];
@@ -202,12 +204,12 @@ void digest_decomposition(const int *digest2_result, int* digest_permu, int& dgr
    digest_permu[15] = digest2_result[1];
 
    digest_permu[5] =  digest2_result[0];
-   dgr_val0 = digest2_result[0];
+   digest_permu[0] = digest2_result[0];
 }
 
-void digest_composition(int *digest2_result, const int* digest_permu, const int dgr_val0)
+void digest_composition(int *digest2_result, const int* digest_permu)
 {
-   digest2_result[0] = dgr_val0 + digest_permu[5];
+   digest2_result[0] = digest_permu[0] + digest_permu[5];
    digest2_result[1] = digest_permu[15] + digest_permu[8];
    digest2_result[2] = digest_permu[14] + digest_permu[7];
    digest2_result[3] = digest_permu[13] + digest_permu[6];
@@ -256,7 +258,7 @@ void construct_work_buffer(const int *input, int* work_buffer)
 
 //------
 
-void process_blocks(const int* work_buffer, int* digest_permu, int& dgr_val0)
+void process_blocks(const int* work_buffer, int* digest_permu)
 {
    int res_item_ctr = 0;
 
@@ -264,15 +266,15 @@ void process_blocks(const int* work_buffer, int* digest_permu, int& dgr_val0)
    {
       int v10;
 
-      do_block0(work_buffer, digest_permu, res_item_ctr, dgr_val0);
-      do_block1(work_buffer, digest_permu, res_item_ctr, dgr_val0);
-      do_block2(work_buffer, digest_permu, res_item_ctr, dgr_val0);
-      do_block3(work_buffer, digest_permu, res_item_ctr, dgr_val0, v10);
+      do_block0(work_buffer, digest_permu, res_item_ctr);
+      do_block1(work_buffer, digest_permu, res_item_ctr);
+      do_block2(work_buffer, digest_permu, res_item_ctr);
+      do_block3(work_buffer, digest_permu, res_item_ctr, v10);
 
       do_block4(work_buffer, digest_permu, res_item_ctr, v10);
       do_block5(work_buffer, digest_permu, res_item_ctr, v10);
       do_block6(work_buffer, digest_permu, res_item_ctr, v10);
-      do_block7(work_buffer, digest_permu, res_item_ctr, v10, dgr_val0);
+      do_block7(work_buffer, digest_permu, res_item_ctr, v10);
 
       res_item_ctr += 8;
    }
@@ -287,16 +289,15 @@ void crypto_or_hash_primitive_40D468(const int *input, int *digest2_result)
 {
    //peform decomposition of digest2
    int digest_permu[16];
-   int dgr_val0;
-   digest_decomposition(digest2_result, digest_permu, dgr_val0);
+   digest_decomposition(digest2_result, digest_permu);
    
    //construct work buffer
    int work_buffer[64];
    construct_work_buffer(input, work_buffer);
    
    //main processing - this will change digest_permu
-   process_blocks(work_buffer, digest_permu, dgr_val0);
+   process_blocks(work_buffer, digest_permu);
 
    //perform composition of digest2
-   digest_composition(digest2_result, digest_permu, dgr_val0);
+   digest_composition(digest2_result, digest_permu);
 }
