@@ -158,19 +158,33 @@ void do_block5(const unsigned int* work_buffer, unsigned int* digest_permu, cons
 //change digest_permu[15]
 void do_block6(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
 {
-   int v13;
+   int val30 = work_buffer[res_item_ctr + 6];
+   int val31 = dword_4054F4[res_item_ctr + 6];
+   int val0 = digest_permu[15];
+   int val1 = carry;
+   int val2 = digest_permu[9];
+   int val3 = digest_permu[10];
 
-   v13 = work_buffer[res_item_ctr + 6]
-            + dword_4054F4[res_item_ctr + 6]
-            + (carry ^ digest_permu[10] & (carry ^ digest_permu[9]))
-            + digest_permu[15]
-            + (__ROL4__(digest_permu[10], 7) ^ __ROL4__(digest_permu[10], 21) ^ __ROL4__(digest_permu[10], 26));
+   int term0 = val30;
+   int term1 = val31;
+   int term2 = val0;
 
-   digest_permu[11] += v13;
+   int term3 = val1 ^ (val3 & (val1 ^ val2));
+   int term4 = __ROL4__(val3, 7) ^ __ROL4__(val3, 21) ^ __ROL4__(val3, 26);
 
-   digest_permu[15] = (digest_permu[13] & digest_permu[14] | digest_permu[12] & (digest_permu[13] | digest_permu[14]))
-                  + (__ROL4__(digest_permu[14], 10) ^ __ROL4__(digest_permu[14], 19) ^ __ROL4__(digest_permu[14], 30))
-                  + v13;
+   int acc0 = term0 + term1 + term2 + term3 + term4;
+
+   int val4 = digest_permu[14];
+   int val5 = digest_permu[12];
+   int val6 = digest_permu[13];
+   int val7 = digest_permu[11];
+
+   int term5 = (val4 & val6) | (val5 & (val4 | val6));
+   int term6 = __ROL4__(val4, 10) ^ __ROL4__(val4, 19) ^ __ROL4__(val4, 30);
+   int term7 = acc0;
+
+   digest_permu[11] = val7 + acc0;
+   digest_permu[15] = term5 + term6 + term7;
 }
 
 //change digest_permu[12]
