@@ -28,7 +28,7 @@ const int dword_4054F4[64] =
 
 //change digest_permu[9]
 //change digest_permu[13]
-void do_block0(const int* work_buffer, int* digest_permu, const int res_item_ctr)
+void do_block0(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr)
 {
    int val0 = digest_permu[9];
    int val1 = digest_permu[10];
@@ -60,7 +60,7 @@ void do_block0(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[10]
 //change digest_permu[14]
-void do_block1(const int* work_buffer, int* digest_permu, const int res_item_ctr)
+void do_block1(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr)
 {
    int val0 = digest_permu[10];
    int val1 = digest_permu[11];
@@ -92,7 +92,7 @@ void do_block1(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[11]
 //change digest_permu[15]
-void do_block2(const int* work_buffer, int* digest_permu, const int res_item_ctr)
+void do_block2(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr)
 {
    int v8;
 
@@ -111,7 +111,7 @@ void do_block2(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[12]
 //calculate carry
-void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr, int& carry)
+void do_block3(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, unsigned int& carry)
 {
    int v9;
 
@@ -130,7 +130,7 @@ void do_block3(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[9]
 //change digest_permu[13]
-void do_block4(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
+void do_block4(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
 {
    int v11;
 
@@ -149,7 +149,7 @@ void do_block4(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[10]
 //change digest_permu[14]
-void do_block5(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
+void do_block5(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
 {
    int v12;
 
@@ -168,7 +168,7 @@ void do_block5(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[11]
 //change digest_permu[15]
-void do_block6(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
+void do_block6(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
 {
    int v13;
 
@@ -187,7 +187,7 @@ void do_block6(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //change digest_permu[12]
 //change digest_permu[0]
-void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int carry)
+void do_block7(const unsigned int* work_buffer, unsigned int* digest_permu, const unsigned int res_item_ctr, const unsigned int carry)
 {
    int v14;
 
@@ -206,7 +206,7 @@ void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr
 
 //------
 
-void digest_decomposition(const int *digest2_result, int* digest_permu)
+void digest_decomposition(const unsigned int *digest2_result, unsigned int* digest_permu)
 {
    digest_permu[1] =  digest2_result[7];
    digest_permu[9] =  digest2_result[7];
@@ -233,7 +233,7 @@ void digest_decomposition(const int *digest2_result, int* digest_permu)
    digest_permu[0] = digest2_result[0];
 }
 
-void digest_composition(int *digest2_result, const int* digest_permu)
+void digest_composition(unsigned int *digest2_result, const unsigned int* digest_permu)
 {
    digest2_result[0] = digest_permu[0] + digest_permu[5];
    digest2_result[1] = digest_permu[15] + digest_permu[8];
@@ -247,7 +247,7 @@ void digest_composition(int *digest2_result, const int* digest_permu)
 
 //------
 
-void construct_work_buffer(const int *input, int* work_buffer)
+void construct_work_buffer(const unsigned int *input, unsigned int* work_buffer)
 {
    //copy input to head of the work buffer
 
@@ -284,13 +284,13 @@ void construct_work_buffer(const int *input, int* work_buffer)
 
 //------
 
-void process_blocks(const int* work_buffer, int* digest_permu)
+void process_blocks(const unsigned int* work_buffer, unsigned int* digest_permu)
 {
    int res_item_ctr = 0;
 
    do
    {
-      int carry;
+      unsigned int carry;
 
       do_block0(work_buffer, digest_permu, res_item_ctr);
       do_block1(work_buffer, digest_permu, res_item_ctr);
@@ -311,14 +311,14 @@ void process_blocks(const int* work_buffer, int* digest_permu)
 
 //input buffer is 0x40 bytes (0x10 integers)
 //digest2_result is 0x20 bytes (0x8 integers)
-void crypto_or_hash_primitive_40D468(const int *input, int *digest2_result)
+void crypto_or_hash_primitive_40D468(const unsigned int *input, unsigned int *digest2_result)
 {
    //peform decomposition of digest2
-   int digest_permu[16];
+   unsigned int digest_permu[16];
    digest_decomposition(digest2_result, digest_permu);
    
    //construct work buffer
-   int work_buffer[64];
+   unsigned int work_buffer[64];
    construct_work_buffer(input, work_buffer);
    
    //main processing - this will change digest_permu
