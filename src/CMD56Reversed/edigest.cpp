@@ -24,6 +24,8 @@ const int dword_4054F4[64] =
    0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2,
 };
 
+//------
+
 //change digest_permu[9]
 //change digest_permu[13]
 void do_block0(const int* work_buffer, int* digest_permu, const int res_item_ctr, const int dgr_val0)
@@ -174,7 +176,9 @@ void do_block7(const int* work_buffer, int* digest_permu, const int res_item_ctr
             + v14;
 }
 
-void digest_permutation(const int *digest2_result, int* digest_permu)
+//------
+
+void digest_decomposition(const int *digest2_result, int* digest_permu, int& dgr_val0)
 {
    digest_permu[1] =  digest2_result[7];
    digest_permu[9] =  digest2_result[7];
@@ -198,7 +202,22 @@ void digest_permutation(const int *digest2_result, int* digest_permu)
    digest_permu[15] = digest2_result[1];
 
    digest_permu[5] =  digest2_result[0];
+   dgr_val0 = digest2_result[0];
 }
+
+void digest_composition(int *digest2_result, const int* digest_permu, const int dgr_val0)
+{
+   digest2_result[0] = dgr_val0 + digest_permu[5];
+   digest2_result[1] = digest_permu[15] + digest_permu[8];
+   digest2_result[2] = digest_permu[14] + digest_permu[7];
+   digest2_result[3] = digest_permu[13] + digest_permu[6];
+   digest2_result[4] = digest_permu[12] + digest_permu[4];
+   digest2_result[5] = digest_permu[11] + digest_permu[3];
+   digest2_result[6] = digest_permu[10] + digest_permu[2];
+   digest2_result[7] = digest_permu[9] + digest_permu[1];
+}
+
+//------
 
 void construct_work_buffer(const int *input, int* work_buffer)
 {
@@ -235,22 +254,10 @@ void construct_work_buffer(const int *input, int* work_buffer)
    while (wb_ctr <= 0x2F);
 }
 
-//input buffer is 0x40 bytes (0x10 integers)
-//digest2_result is 0x20 bytes (0x8 integers)
-void crypto_or_hash_primitive_40D468(const int *input, int *digest2_result)
+//------
+
+void process_blocks(const int* work_buffer, int* digest_permu, int& dgr_val0)
 {
-   //peform permutation of digest2
-   int digest_permu[16];
-   digest_permutation(digest2_result, digest_permu);
-   
-   //construct work buffer
-   int work_buffer[64];
-   construct_work_buffer(input, work_buffer);
-   
-   //main processing - this will change digest_permu
-
-   int dgr_val0 = digest2_result[0];
-
    int res_item_ctr = 0;
 
    do
@@ -270,33 +277,26 @@ void crypto_or_hash_primitive_40D468(const int *input, int *digest2_result)
       res_item_ctr += 8;
    }
    while (res_item_ctr <= 0x3F);
+}
 
+//------
 
-   int res_acc0;
-   int res_acc1;
-   int res_acc2;
-   int res_acc3;
-   int res_acc4;
-   int res_acc5;
-   int res_acc6;
-   int res_acc7;
-   int res_acc8;
+//input buffer is 0x40 bytes (0x10 integers)
+//digest2_result is 0x20 bytes (0x8 integers)
+void crypto_or_hash_primitive_40D468(const int *input, int *digest2_result)
+{
+   //peform decomposition of digest2
+   int digest_permu[16];
+   int dgr_val0;
+   digest_decomposition(digest2_result, digest_permu, dgr_val0);
+   
+   //construct work buffer
+   int work_buffer[64];
+   construct_work_buffer(input, work_buffer);
+   
+   //main processing - this will change digest_permu
+   process_blocks(work_buffer, digest_permu, dgr_val0);
 
-   res_acc0 = digest_permu[15];
-   *digest2_result = dgr_val0 + digest_permu[5];
-   res_acc1 = digest_permu[14];
-   res_acc2 = digest_permu[13];
-   res_acc3 = digest_permu[12];
-   digest2_result[1] = res_acc0 + digest_permu[8];
-   res_acc4 = digest_permu[11];
-   res_acc5 = res_acc1 + digest_permu[7];
-   res_acc6 = digest_permu[10];
-   digest2_result[2] = res_acc5;
-   res_acc7 = res_acc2 + digest_permu[6];
-   res_acc8 = digest_permu[9];
-   digest2_result[3] = res_acc7;
-   digest2_result[4] = res_acc3 + digest_permu[4];
-   digest2_result[5] = res_acc4 + digest_permu[3];
-   digest2_result[6] = res_acc6 + digest_permu[2];
-   digest2_result[7] = res_acc8 + digest_permu[1];
+   //perform composition of digest2
+   digest_composition(digest2_result, digest_permu, dgr_val0);
 }
