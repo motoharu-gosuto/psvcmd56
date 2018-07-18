@@ -7,12 +7,12 @@ int SceSblACMgrForDriver_sceSblACMgrGetSelfAuthInfoOrDefaultForDriver_96af69bd(S
    if ( !authid)
       return 0x800F0916;
 
-   SceSelfAuthInfo self_info;
+   SceSelfInfo self_info;
    
    if (SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(pid, &self_info) != 0)
       return 0x800F0916;
 
-   *authid = self_info.auth_id;
+   *authid = self_info.program_authority_id;
    
    return 0;
 }
@@ -88,22 +88,26 @@ int SceSblACMgrForDriver_sceSblACMgrIsSomething_f5ae24ac(SceUID a1)
    return 0;
 }
 
+typedef struct locals_c2d1f2fc
+{
+   SceSelfInfo self_info; //-000000A8 - offset 0
+   int padding_18; //-00000018 - offset 0x90
+   int cookie; //-00000014 - offset 0x94
+   char var_10; //-00000010 - offset 0x98
+}locals_c2d1f2fc;
+
 int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, int bit)
 {
-   SceSelfAuthInfo self_info; //-000000A8
-   int padding_18; //-00000018
-   int cookie; //-00000014
-   int var_10; //-00000010
+   locals_c2d1f2fc lc;
    
-   int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(pid, &self_info);
+   int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(pid, &lc.self_info);
    if(r0 != 0)
       return 0;
 
-   int* r2 = &var_10;
-   int* r3 = r2 + (bit >> 3);
-   int* ptr = r3 - 0x88;
-   char* ptrc = (char*)ptr;
-   char bt = *ptrc;
+   int bytePosition = (bit >> 3); // divide by 8
+
+   char* ptr = &lc.var_10 - 0x88 + bytePosition; //start from offset 8
+   char bt = *ptr;
    int v0 = bt >> ((~bit) & 7);
    int v1 = v0 & 1;
 
