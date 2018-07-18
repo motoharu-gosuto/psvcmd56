@@ -99,17 +99,13 @@ int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, 
    if(r0 != 0)
       return 0;
 
-   int r5 = bit;
+   int* r2 = &var_10;
+   int* r3 = r2 + (bit >> 3);
+   int* ptr = r3 - 0x88;
+   char* ptrc = (char*)ptr;
+   char bt = *ptrc;
+   int v0 = bt >> ((~bit) & 7);
+   int v1 = v0 & 1;
 
-   /*
-   ADD             R2, SP, #0xA8+var_10
-   ADD.W           R3, R2, R5,ASR#3
-   MVNS            R5, R5
-   AND.W           R5, R5, #7
-   LDRB.W          R0, [R3,#-0x88]
-   ASRS            R0, R5
-   AND.W           R0, R0, #1
-   */
-
-   return r0;
+   return v1;
 }
