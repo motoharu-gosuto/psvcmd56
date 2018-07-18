@@ -87,3 +87,45 @@ int SceSblACMgrForDriver_sceSblACMgrIsSomething_f5ae24ac(SceUID a1)
 {
    return 0;
 }
+
+int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, int bit)
+{
+   PUSH            {R4,R5,LR}
+   MOV             R4, #0x9EA004
+   SUB             SP, SP, #0x9C
+   MOV             R5, R1
+   MOV             R1, SP  ; self_info
+   LDR             R3, [R4]
+   STR             R3, [SP,#0xA8+cookie]
+   BLX             SceSblACMgr.SceSysrootForKernel._imp_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066
+   
+   if(r0 != 0)
+   {
+      MOVS            R0, #0
+   }
+   else
+   {
+      ADD             R2, SP, #0xA8+var_10
+      ADD.W           R3, R2, R5,ASR#3
+      MVNS            R5, R5
+      AND.W           R5, R5, #7
+      LDRB.W          R0, [R3,#-0x88]
+      ASRS            R0, R5
+      AND.W           R0, R0, #1
+   }
+
+   LDR             R2, [SP,#0xA8+cookie]
+   LDR             R3, [R4]
+   
+   if(r2 != r3)
+   {
+      SceSblACMgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
+   }
+   else
+   {
+      ADD             SP, SP, #0x9C
+      POP             {R4,R5,PC}
+   }
+
+   return r0;
+}
