@@ -1743,6 +1743,214 @@ LABEL_7:
    return (int)buffer_ptrs0;
 }
 
+int sub_C8ED80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks)
+{
+   int block_index0; // r4
+   unsigned int block_val0; // r5
+   int block_counter; // r7
+   unsigned int v8; // lr
+   int blockval11; // r12
+   int blockval12; // r8
+   int block_counter1; // r2
+   unsigned __int8 *block_ptr0; // lr
+   unsigned __int8 *block_ptr1; // r7
+   int block_index1; // r1
+   unsigned __int8 *block_val1; // r4
+   unsigned int block_val5; // r1
+   int block_index2; // r2
+   int block_val2; // r4
+   int block_val3; // r5
+   unsigned int block_val4; // r1
+
+   block_index0 = 0;
+   block_val0 = 0;
+   block_counter = 0;
+
+   while ( block_counter < key_size_blocks )
+   {
+      v8 = *(int *)&buffer1[block_index0];
+      ++block_counter;
+      blockval11 = *(int *)&buffer2[block_index0];
+      blockval12 = v8 + blockval11 + block_val0;
+      *(int *)&buffer0[block_index0] = blockval12;
+      block_val0 = ((blockval11 | v8) & ~blockval12 | blockval11 & v8) >> 31;
+      block_index0 += 4;
+   }
+
+   block_counter1 = key_size_blocks & ~(key_size_blocks >> 31);
+   if ( block_val0 )
+      goto LABEL_16;
+
+   block_ptr0 = &buffer0[4 * block_counter1];
+   block_ptr1 = &buffer3[4 * block_counter1];
+   block_index1 = 0;
+
+   do
+   {
+      if ( --block_counter1 + 1 <= 0 )
+      break;
+      block_val1 = &block_ptr0[block_index1];
+      block_index1 -= 4;
+   }
+   while ( *((int *)block_val1 - 1) == *(int *)&block_ptr1[block_index1] );
+
+   if ( block_counter1 < 0 || *(int *)&buffer0[4 * block_counter1] >= *(int *)&buffer3[4 * block_counter1] )
+   {
+   LABEL_16:
+      block_val5 = 0;
+      block_index2 = 0;
+      while ( block_index2 < key_size_blocks )
+      {
+         block_val2 = *(int *)&buffer3[4 * block_index2++];
+         block_val3 = *(int *)buffer0 - block_val2 - block_val5;
+         block_val4 = (~*(int *)buffer0 | block_val2) & block_val3 | block_val2 & ~*(int *)buffer0;
+         *(int *)buffer0 = block_val3;
+         buffer0 += 4;
+         block_val5 = block_val4 >> 31;
+      }
+   }
+
+   return (int)buffer0;
+}
+
+int sub_C8EE20(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks)
+{
+   int block_index0; // r4
+   unsigned int acc0; // r5
+   int block_counter0; // r6
+   unsigned int block_val0; // r7
+   int block_val1; // r8
+   int block_val2; // r12
+   unsigned int acc1; // r1
+   int block_counter1; // r2
+   int block_val3; // r5
+   int block_val4; // r6
+   unsigned int block_val6; // r1
+
+   block_index0 = 0;
+   acc0 = 0;
+   block_counter0 = 0;
+
+   while ( block_counter0 < key_size_blocks )
+   {
+      block_val0 = *(int *)&buffer2[block_index0];
+      ++block_counter0;
+      block_val1 = *(int *)&buffer1[block_index0];
+      block_val2 = block_val1 - block_val0 - acc0;
+      *(int *)&buffer0[block_index0] = block_val2;
+      acc0 = ((~block_val1 | block_val0) & block_val2 | ~block_val1 & block_val0) >> 31;
+      block_index0 += 4;
+   }
+
+   if ( acc0 )
+   {
+      acc1 = 0;
+      block_counter1 = 0;
+
+      while ( block_counter1 < key_size_blocks )
+      {
+         block_val3 = *(int *)&buffer3[4 * block_counter1++];
+         block_val4 = block_val3 + *(int *)buffer0 + acc1;
+         block_val6 = (block_val3 | *(int *)buffer0) & ~block_val4 | *(int *)buffer0 & block_val3;
+         *(int *)buffer0 = block_val4;
+         buffer0 += 4;
+         acc1 = block_val6 >> 31;
+      }
+   }
+
+   return (int)buffer0;
+}
+
+int sub_C8E728(unsigned char **ptr_table, int unused, unsigned char *buffer0, unsigned int key_size_blocks, int arg_0)
+{
+   int key_size_blocks0; // r4
+   unsigned char *buffer0_ptr; // r5
+   unsigned char **ptr_table_local; // r6
+   int *cookie_addr; // r8
+   char block_counter0; // cf
+   unsigned char *buffer_ptr0; // r1
+   unsigned char buffer_local0[28]; // [sp+Ch] [bp-8Ch]
+   unsigned char buffer_local1[28]; // [sp+28h] [bp-70h]
+   unsigned char buffer_local2[28]; // [sp+44h] [bp-54h]
+   unsigned char buffer_local3[28]; // [sp+60h] [bp-38h]
+   int cookie; // [sp+7Ch] [bp-1Ch]
+
+   key_size_blocks0 = key_size_blocks;
+   buffer0_ptr = buffer0;
+   ptr_table_local = ptr_table;
+
+   /*
+   cookie_addr = (int *)cookie_addr_C8E8C0;
+   cookie = *(_DWORD *)cookie_addr_C8E8C0;
+   */
+
+   if ( key_size_blocks - 1 <= 6 )
+   {
+      while ( 1 )
+      {
+         block_counter0 = key_size_blocks-- >= 1;
+         if ( !block_counter0 )
+            break;
+
+         buffer_ptr0 = ptr_table[2];
+         if ( *(int *)&buffer_ptr0[4 * key_size_blocks] )
+         {
+            sub_C8EB80(buffer_local0, buffer_ptr0, ptr_table[2], buffer0, key_size_blocks0, arg_0);
+            sub_C8ED80(buffer_local1, *ptr_table_local, buffer_local0, buffer0_ptr, key_size_blocks0);
+            sub_C8EE20(buffer_local2, *ptr_table_local, buffer_local0, buffer0_ptr, key_size_blocks0);
+            sub_C8EB80(buffer_local0, buffer_local1, buffer_local2, buffer0_ptr, key_size_blocks0, arg_0);
+            sub_C8ED80(buffer_local2, buffer_local0, buffer_local0, buffer0_ptr, key_size_blocks0);
+            sub_C8ED80(buffer_local0, buffer_local2, buffer_local0, buffer0_ptr, key_size_blocks0);
+
+            sub_C8EB80(
+               buffer_local2,
+               (unsigned char *)*(unsigned long long *)(ptr_table_local + 1),
+               (unsigned char *)(*(unsigned long long *)(ptr_table_local + 1) >> 32),
+               buffer0_ptr,
+               key_size_blocks0,
+               arg_0);
+
+            sub_C8ED80(ptr_table_local[2], buffer_local2, buffer_local2, buffer0_ptr, key_size_blocks0);
+            sub_C8EB80(buffer_local1, *ptr_table_local, ptr_table_local[1], buffer0_ptr, key_size_blocks0, arg_0);
+            sub_C8EB80(buffer_local1, buffer_local1, ptr_table_local[1], buffer0_ptr, key_size_blocks0, arg_0);
+            sub_C8ED80(buffer_local1, buffer_local1, buffer_local1, buffer0_ptr, key_size_blocks0);
+            sub_C8ED80(buffer_local1, buffer_local1, buffer_local1, buffer0_ptr, key_size_blocks0);
+            sub_C8EB80(buffer_local3, buffer_local0, buffer_local0, buffer0_ptr, key_size_blocks0, arg_0);
+            sub_C8ED80(buffer_local2, buffer_local1, buffer_local1, buffer0_ptr, key_size_blocks0);
+            sub_C8EE20(*ptr_table_local, buffer_local3, buffer_local2, buffer0_ptr, key_size_blocks0);
+            sub_C8EB80(buffer_local2, ptr_table_local[1], ptr_table_local[1], buffer0_ptr, key_size_blocks0, arg_0);
+            sub_C8EB80(buffer_local2, buffer_local2, buffer_local2, buffer0_ptr, key_size_blocks0, arg_0);
+            sub_C8ED80(buffer_local2, buffer_local2, buffer_local2, buffer0_ptr, key_size_blocks0);
+            sub_C8ED80(buffer_local2, buffer_local2, buffer_local2, buffer0_ptr, key_size_blocks0);
+            sub_C8ED80(buffer_local2, buffer_local2, buffer_local2, buffer0_ptr, key_size_blocks0);
+            sub_C8EE20(buffer_local1, buffer_local1, *ptr_table_local, buffer0_ptr, key_size_blocks0);
+            sub_C8EB80(buffer_local0, buffer_local0, buffer_local1, buffer0_ptr, key_size_blocks0, arg_0);
+
+            ptr_table = (unsigned __int8 **)sub_C8EE20(
+                                             ptr_table_local[1],
+                                             buffer_local0,
+                                             buffer_local2,
+                                             buffer0_ptr,
+                                             key_size_blocks0);
+            break;
+         }
+      }
+   }
+  /*
+   if ( cookie != *cookie_addr )
+      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(ptr_table);
+  */
+   return (int)ptr_table;
+}
+
+   
+   //sub_C8ED80
+   //sub_C8F130
+//sub_C8EE88
+
+   //sub_C8E8C4
+//sub_C8E95C
+
 int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
 {
    return 0;
