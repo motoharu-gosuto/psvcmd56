@@ -419,12 +419,12 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mou
       return false;
    }
 
-   SceSelfAuthInfo auth_ctx;
+   SceSelfInfo auth_ctx;
 
    int res0 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
    if(res0 >= 0)
    {
-      res0 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(glb_mpd_entry0->pfs_rnd_drive_id, auth_ctx.auth_id);
+      res0 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(glb_mpd_entry0->pfs_rnd_drive_id, auth_ctx.program_authority_id);
 
       if(res0 == 0x80010011 || res0 >= 0)
       {
@@ -602,7 +602,7 @@ int create_pfs_mount_raw(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, ap
 
    //pfs mount
 
-   SceSelfAuthInfo auth_ctx0;
+   SceSelfInfo auth_ctx0;
 
    int prev_perm2 = SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(0x80);
    int auth_res = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx0);
@@ -621,7 +621,7 @@ int create_pfs_mount_raw(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, ap
       klicensee1 = klicensee0[15] ? klicensee0 : 0;
    }
 
-   int mnt_res = ScePfsMgrForKernel_mount_a772209c(pfs_mount->path, pfs_mount->pfs_rnd_drive_id, auth_ctx0.auth_id, klicensee1, mode_index);
+   int mnt_res = ScePfsMgrForKernel_mount_a772209c(pfs_mount->path, pfs_mount->pfs_rnd_drive_id, auth_ctx0.program_authority_id, klicensee1, mode_index);
    SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(prev_perm2);
    if (mnt_res)
       return mpd_cleanup(pid, mount_ctx_holder, virt_mount, pfs_mount, physical_path, mount_point_result, mnt_res != 0x80800003, mnt_res);
@@ -993,7 +993,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
       return false;
    }
 
-   SceSelfAuthInfo auth_ctx;
+   SceSelfInfo auth_ctx;
 
    int res1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx);
    if(res1 < 0)
@@ -1002,7 +1002,7 @@ bool maybe_find_mount(SceUID pid, const appmgr_mount_holder_t *mount_ctx_holder,
       return false;
    }
 
-   int res2 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(mpd_entry0->pfs_rnd_drive_id, auth_ctx.auth_id);
+   int res2 = ScePfsMgrForKernel_find_pmi_check_auth_id_d8d0fee5(mpd_entry0->pfs_rnd_drive_id, auth_ctx.program_authority_id);
    if(res2 == 0x80010011 || res2 >= 0)
    {
       error_code = 0x80800003;
@@ -1330,7 +1330,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, appmgr_mount_holder_t *mount_ctx_
 
    //===========================================
 
-   SceSelfAuthInfo auth_ctx0;
+   SceSelfInfo auth_ctx0;
 
    int res1 = SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(pid, &auth_ctx0);
    if (res1 < 0)
@@ -1341,7 +1341,7 @@ int create_mountpoint_base_23D9B50(SceUID pid, appmgr_mount_holder_t *mount_ctx_
          return label_113_cleanup(pid, mount_id, mount_ctx_holder, virt_mount, physical_path_local, mount_point_result);
    }
 
-   SceUInt64 auth_id = auth_ctx0.auth_id;
+   SceUInt64 auth_id = auth_ctx0.program_authority_id;
 
    //=========================================== 
 

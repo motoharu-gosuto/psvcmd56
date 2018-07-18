@@ -91,4 +91,4 @@ int SceProcessmgr_sceKernelGetStderr_fa5e3ada();
 
 process_param* SceProcessmgr_sceKernelGetProcessParam_2be3e066();
 
-int SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(SceUID pid, SceSelfAuthInfo* self_auth_info);
+int SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(SceUID pid, SceSelfInfo* self_auth_info);

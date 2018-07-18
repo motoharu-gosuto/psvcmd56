@@ -44,26 +44,24 @@ int SceSysrootForDriver_check_boot_type_indicator_50fe3b4d();
 
 int SceSysrootForDriver_check_sysroot_buffer_84_8aa268d6();
 
-typedef struct SceSelfAuthInfo // size is 0x90
+struct SceSelfInfo // size is 0x90
 {
-   SceUInt64 auth_id;
-   
-   uint32_t unk_10[20];
-   
-   uint32_t unk_60;
-   uint32_t unk_64;
-   char klicensee[0x10]; // offset 0x68
-   
-   uint32_t unk_78;
-   uint32_t unk_7C;
-   
-   uint32_t unk_80;
-   uint32_t unk_84;
-   uint32_t unk_88;
-   uint32_t unk_8C;
-   
-   uint32_t unk_90;
-   uint32_t unk_94;
-} SceSelfAuthInfo;
+  SceUInt64 program_authority_id;
+  SceUInt64 padding1;     //0x8
+  uint8_t capability[32]; //0x10
+  uint8_t attribute[32];  //0x30
+  uint8_t padding2[16];   //0x50
+  uint8_t klicensee[16];  //0x60
+  uint32_t unk_70;
+  uint32_t unk_74;
+  uint32_t unk_78;
+  uint32_t unk_7C;
+  uint32_t unk_80;
+  uint32_t unk_84;
+  uint32_t unk_88;
+  uint32_t unk_8C;
+};
 
-int SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(SceUID pid, SceSelfAuthInfo *self_info);
+
+
+int SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(SceUID pid, SceSelfInfo *self_info);

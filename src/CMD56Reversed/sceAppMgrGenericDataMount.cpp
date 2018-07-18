@@ -783,9 +783,9 @@ int sub_23E1014_label_8(SceUID pid, int mountId, char* mountPoint)
    }
 }
 
-int sub_23E1014_label_100(SceSelfAuthInfo& auth_ctx, SceUID pid, int mountId, char* mountPoint)
+int sub_23E1014_label_100(SceSelfInfo& auth_ctx, SceUID pid, int mountId, char* mountPoint)
 {
-   if(auth_ctx.auth_id == 0x2800000000000001)
+   if(auth_ctx.program_authority_id == 0x2800000000000001)
    {
       return sub_23E1014_label_8(pid, mountId, mountPoint);
    }
@@ -800,9 +800,9 @@ int sub_23E1014_label_100(SceSelfAuthInfo& auth_ctx, SceUID pid, int mountId, ch
 
 int sub_23E1014_auth_check_mount(SceUID pid, int mountId, char *mountPoint)
 {
-   SceSelfAuthInfo auth_ctx;
+   SceSelfInfo auth_ctx;
 
-   if (SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(0, (SceSelfAuthInfo*)&auth_ctx) < 0 )
+   if (SceProcessmgrForKernel_sceKernelGetSelfAuthInfoForKernel_e4c83b0d(0, (SceSelfInfo*)&auth_ctx) < 0 )
    {
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return 0x80800009;
@@ -839,7 +839,7 @@ int sub_23E1014_auth_check_mount(SceUID pid, int mountId, char *mountPoint)
 
          int authid_check_res0;
 
-         if(auth_ctx.auth_id == 0x2808000000000001)
+         if(auth_ctx.program_authority_id == 0x2808000000000001)
          {
             authid_check_res0 = 1;
          }
@@ -897,7 +897,7 @@ int sub_23E1014_auth_check_mount(SceUID pid, int mountId, char *mountPoint)
 
          int v23;
 
-         if(auth_ctx.auth_id == 0x2800000000000001)
+         if(auth_ctx.program_authority_id == 0x2800000000000001)
          {
             v23 = 0;
          }
@@ -908,7 +908,7 @@ int sub_23E1014_auth_check_mount(SceUID pid, int mountId, char *mountPoint)
 
          int check4;
 
-         if(auth_ctx.auth_id == 0x280000000000002D)
+         if(auth_ctx.program_authority_id == 0x280000000000002D)
          {
             check4 = 0;
          }
