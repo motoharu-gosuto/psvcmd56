@@ -23,3 +23,5 @@ int SceSblACMgrForDriver_sceSblACMgrIsShell_8612b243(SceUID pid);
 int SceSblACMgrForDriver_sceSblACMgrIsNonGameProgram_6c5ab07f(SceUID pid);
 
 int SceSblACMgrForDriver_sceSblACMgrIsSomething_f5ae24ac(SceUID a1);
+
+int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, int bit);
