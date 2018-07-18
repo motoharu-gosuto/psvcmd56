@@ -46,7 +46,7 @@ int SceSysrootForDriver_check_sysroot_buffer_84_8aa268d6();
 
 struct SceSelfInfo // size is 0x90
 {
-  SceUInt64 program_authority_id;
+  SceUInt64 program_authority_id; //0x0
   SceUInt64 padding1;     //0x8
   uint8_t capability[32]; //0x10
   uint8_t attribute[32];  //0x30

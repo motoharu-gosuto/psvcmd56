@@ -97,10 +97,11 @@ int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, 
       return 0;
 
    int bytePosition = (bit >> 3); // divide by 8
-   unsigned char cp_byte = *(self_info.capability + bytePosition); //start from offset 0x10
+   unsigned char cpByte = *(self_info.capability + bytePosition); //start from offset 0x10
 
-   int v0 = cp_byte >> ((~bit) & 7);
-   int v1 = v0 & 1;
+   int shiftValue = ((~bit) & 7); // number of bits to shift to get proper bit in big endian style
+   int cpBit = cpByte >> shiftValue; // place bit at proper place by shifting
+   int cpBitMasked = cpBit & 1; // apply masking to extract bit
 
-   return v1;
+   return cpBitMasked;
 }
