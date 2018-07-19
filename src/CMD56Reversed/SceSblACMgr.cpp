@@ -110,7 +110,7 @@ int sub_8F8570(SceUID pid, int bit)
 {
    SceSelfInfo self_info;
 
-   int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(bit, &self_info);
+   int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(pid, &self_info);
    if(r0 != 0)
       return r0;
 
