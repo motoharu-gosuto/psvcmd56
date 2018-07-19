@@ -109,16 +109,13 @@ int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, 
 int sub_8F8570(SceUID pid, int bit)
 {
    SceSelfInfo self_info;
-   int padding;
-   int cookie;
-   char dummy;
 
    int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(bit, &self_info);
    if(r0 != 0)
       return r0;
 
    int bytePosition = (bit >> 3); // divide by 8
-   unsigned char cpByte = *((&dummy) -0x68 + bytePosition);
+   unsigned char cpByte = *(self_info.attribute + bytePosition); //start from offset 0x30
 
    int shiftValue = ((~bit) & 7); // number of bits to shift to get proper bit in big endian style
    int cpBit = cpByte >> shiftValue; // place bit at proper place by shifting
