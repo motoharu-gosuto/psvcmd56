@@ -119,13 +119,15 @@ int sub_8F8570(SceUID pid, int bit)
    if(r0 != 0)
       return r0;
    
-   ADD             R2, SP, #0xA8+dummy
-   ADD.W           R3, R2, R5,ASR#3
-   MVNS            R5, R5
-   AND.W           R5, R5, #7
-   LDRB.W          R0, [R3,#-0x68]
-   ASRS            R0, R5
-   AND.W           R0, R0, #1
+   char* r2 = &dummy;
+   int r3 = r2 + (r5 >> 3);
+   int r5 = ~r5;
+   int r5 = r5 & 7;
+   int r0 = r3[-0x68];
+   int r0 = r0 >> r5;
+   int r0 = r0 & 1;   
+   
+   
 
    return r0;
 }
