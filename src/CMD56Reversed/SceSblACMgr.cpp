@@ -108,50 +108,24 @@ int SceSblACMgrForDriver_sceSblACMgrHasCapabilityForDriver_c2d1f2fc(SceUID pid, 
 
 int sub_8F8570(SceUID pid, int bit)
 {
-   /*
-   -000000A8 info            DCB 144 dup(?)
-   -00000018 padding_18      DCD ?
-   -00000014 cookie          DCD ?
-   -00000010 dummy           DCB ?
-   */
+   SceSelfInfo self_info;
+   int padding;
+   int cookie;
+   char dummy;
 
-   PUSH            {R4,R5,LR}
-   MOV             R4, #0x9EA004
-   SUB             SP, SP, #0x9C
-   MOV             R5, R1
-   MOV             R1, SP  ; self_info
-   LDR             R3, [R4]
-   STR             R3, [SP,#0xA8+cookie]
-   BLX             SceSblACMgr.SceSysrootForKernel._imp_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066
-   CBNZ            R0, loc_8F85AC
-
+   int r5 = bit;
+   
+   int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(bit, &self_info);
    if(r0 != 0)
-   {
-      MOVS            R0, #0
-   }
-   else
-   {
-      ADD             R2, SP, #0xA8+dummy
-      ADD.W           R3, R2, R5,ASR#3
-      MVNS            R5, R5
-      AND.W           R5, R5, #7
-      LDRB.W          R0, [R3,#-0x68]
-      ASRS            R0, R5
-      AND.W           R0, R0, #1
-   }
-
-   LDR             R2, [SP,#0xA8+cookie]
-   LDR             R3, [R4]
-
-   if(r2 != r3)
-   {
-      BLX             SceSblACMgr.SceSysclibForDriver._imp_sceKernelStackCheckFail_b997493d
-   }
-   else
-   {
-      ADD             SP, SP, #0x9C
-      POP             {R4,R5,PC}
-   }
+      return r0;
+   
+   ADD             R2, SP, #0xA8+dummy
+   ADD.W           R3, R2, R5,ASR#3
+   MVNS            R5, R5
+   AND.W           R5, R5, #7
+   LDRB.W          R0, [R3,#-0x68]
+   ASRS            R0, R5
+   AND.W           R0, R0, #1
 
    return r0;
 }
