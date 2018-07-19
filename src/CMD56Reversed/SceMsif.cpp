@@ -2013,8 +2013,187 @@ int sub_C8F130(unsigned char **ptr_table, unsigned char *buffer1, unsigned char 
    return (int)ptr_table;
 }
    
-   
-//sub_C8EE88
+int sub_C8EE88(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int arg4)
+{
+   unsigned char *buffer1_local_ptr; // r5
+   unsigned char **ptr_table0_local; // r7
+   unsigned char **ptr_table1_local; // r8
+   unsigned char *buffer0_local_ptr; // r11
+   int v10; // r3
+   unsigned char *ptr0; // r1
+   unsigned char *ptr1; // r2
+   unsigned char *ptr2; // r12
+   unsigned int block_index0; // r3
+   unsigned char *ptr3; // r5
+   unsigned char *ptr4; // r6
+   unsigned int key_size_blocks0; // r3
+   char check0; // cf
+   unsigned int key_size_blocks1; // r3
+   unsigned int key_size_blocks2; // r3
+   signed int block_index1; // r3
+   unsigned char *ptr5; // r5
+   unsigned char *ptr6; // r1
+   unsigned char *ptr7; // r4
+   int block_index2; // r3
+   unsigned char *ptr8; // r5
+   unsigned int block_val0; // r2
+   unsigned __int8 buffer0_local[28]; // [sp+Ch] [bp-D4h]
+   unsigned __int8 buffer1_local[28]; // [sp+28h] [bp-B8h]
+   unsigned __int8 buffer2_local[28]; // [sp+44h] [bp-9Ch]
+   unsigned __int8 buffer3_local[28]; // [sp+60h] [bp-80h]
+   unsigned __int8 buffer4_local[28]; // [sp+7Ch] [bp-64h]
+   unsigned __int8 buffer5_local[28]; // [sp+98h] [bp-48h]
+   int cookie; // [sp+B4h] [bp-2Ch]
+
+   buffer1_local_ptr = buffer1;
+   ptr_table0_local = ptr_table0;
+   ptr_table1_local = ptr_table1;
+   buffer0_local_ptr = buffer0;
+
+  //cookie = *(int *)cookie_address_C8F12C;
+
+   if ( (unsigned int)(key_size_blocks - 1) <= 6 )
+   {
+      v10 = key_size_blocks;
+
+      do
+      {
+         --v10;
+         ptr0 = ptr_table0[2];
+         if ( v10 == -1 )
+         {
+            ptr1 = *ptr_table0;
+            ptr2 = *ptr_table1_local;
+            block_index0 = 0;
+            ptr3 = ptr_table0[1];
+            ptr_table0 = (unsigned __int8 **)(*(long long *)(ptr_table1_local + 1) >> 32);
+            ptr4 = (unsigned __int8 *)*(long long *)(ptr_table1_local + 1);
+
+            do
+            {
+               *(int *)&ptr1[block_index0] = *(int *)&ptr2[block_index0];
+               *(int *)&ptr3[block_index0] = *(int *)&ptr4[block_index0];
+               *(int *)&ptr0[block_index0] = (int)ptr_table0[block_index0 / 4]; //this is bad
+               block_index0 += 4;
+            }
+            while ( block_index0 != 4 * key_size_blocks );
+
+            goto LABEL_27;
+         }
+      }
+      while ( !*(int *)&ptr0[4 * v10] );
+
+      key_size_blocks0 = key_size_blocks;
+
+      while ( 1 )
+      {
+         check0 = key_size_blocks0-- >= 1;
+         if ( !check0 )
+            break;
+
+         if ( *(int *)&ptr_table1_local[2][4 * key_size_blocks0] )
+         {
+            sub_C8EB80(buffer3_local, ptr0, ptr_table0[2], buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EB80(buffer4_local, ptr_table1_local[2], ptr_table1_local[2], buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EB80(buffer0_local, *ptr_table1_local, buffer3_local, buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EB80(buffer1_local, *ptr_table0_local, buffer4_local, buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EE20(buffer2_local, buffer0_local, buffer1_local, buffer1_local_ptr, key_size_blocks);
+            sub_C8EB80(buffer3_local, buffer3_local, ptr_table0_local[2], buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EB80(buffer4_local, buffer4_local, ptr_table1_local[2], buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EB80(buffer3_local, buffer3_local, ptr_table1_local[1], buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EB80(buffer4_local, buffer4_local, ptr_table0_local[1], buffer1_local_ptr, key_size_blocks, arg4);
+            sub_C8EE20(buffer5_local, buffer3_local, buffer4_local, buffer1_local_ptr, key_size_blocks);
+            key_size_blocks1 = key_size_blocks;
+
+            while ( 1 )
+            {
+               check0 = key_size_blocks1-- >= 1;
+               if ( !check0 )
+                  break;
+
+               if ( *(int *)&buffer2_local[4 * key_size_blocks1] )
+               {
+                  sub_C8ED80(buffer0_local, buffer0_local, buffer1_local, buffer1_local_ptr, key_size_blocks);
+                  sub_C8ED80(buffer3_local, buffer3_local, buffer4_local, buffer1_local_ptr, key_size_blocks);
+                  sub_C8EB80(buffer4_local, ptr_table1_local[2], ptr_table0_local[2], buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EB80(ptr_table0_local[2], buffer4_local, buffer2_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EB80(buffer1_local, buffer5_local, buffer5_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EB80(buffer4_local, buffer2_local, buffer2_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EB80(buffer0_local, buffer0_local, buffer4_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EE20(*ptr_table0_local, buffer1_local, buffer0_local, buffer1_local_ptr, key_size_blocks);
+                  sub_C8EE20(buffer0_local, buffer0_local, *ptr_table0_local, buffer1_local_ptr, key_size_blocks);
+                  sub_C8EE20(buffer0_local, buffer0_local, *ptr_table0_local, buffer1_local_ptr, key_size_blocks);
+                  sub_C8EB80(buffer0_local, buffer0_local, buffer5_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EB80(buffer4_local, buffer4_local, buffer2_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EB80(buffer3_local, buffer3_local, buffer4_local, buffer1_local_ptr, key_size_blocks, arg4);
+                  sub_C8EE20(buffer4_local, buffer0_local, buffer3_local, buffer1_local_ptr, key_size_blocks);
+                  ptr_table0 = (unsigned __int8 **)(buffer4_local[0] & 1);
+
+                  if ( buffer4_local[0] & 1 )
+                     ptr_table0 = (unsigned __int8 **)(sub_C8EB4A(buffer4_local, buffer4_local, buffer1_local_ptr, key_size_blocks, 0) << 31);
+
+                  ptr7 = &ptr_table0_local[1][4 * key_size_blocks];
+                  block_index2 = 0;
+
+                  do
+                  {
+                     ptr8 = &ptr7[block_index2];
+                     block_val0 = *(int *)&buffer4_local[4 * key_size_blocks - 4 + block_index2];
+                     block_index2 -= 4;
+                     *((int *)ptr8 - 1) = (unsigned int)ptr_table0 | (block_val0 >> 1);
+                     ptr_table0 = (unsigned __int8 **)(block_val0 << 31);
+                  }
+                  while ( block_index2 != -4 * key_size_blocks );
+
+                  goto LABEL_27;
+               }
+            }
+
+            key_size_blocks2 = key_size_blocks;
+
+            do
+            {
+               check0 = key_size_blocks2-- >= 1;
+               if ( !check0 )
+               {
+                  ptr_table0 = (unsigned __int8 **)sub_C8F130(ptr_table0_local, buffer0_local_ptr, buffer1_local_ptr, key_size_blocks, arg4);
+                  goto LABEL_27;
+               }
+            }
+            while ( !*(int *)&buffer5_local[4 * key_size_blocks2] );
+
+            for ( block_index1 = 1; ; ++block_index1 )
+            {
+               ptr_table0 = (unsigned __int8 **)(*(long long *)ptr_table0_local >> 32);
+               ptr5 = (unsigned __int8 *)*(long long *)ptr_table0_local;
+               ptr6 = ptr_table0_local[2];
+
+               if ( block_index1 == key_size_blocks )
+                  break;
+
+               *(int *)&ptr5[4 * block_index1] = 0;
+               ptr_table0[block_index1] = 0;
+               *(int *)&ptr6[4 * block_index1] = 0;
+            }
+
+            *(int *)ptr5 = 1;
+            *ptr_table0 = (unsigned __int8 *)1;
+            *(int *)ptr6 = 0;
+
+            break;
+         }
+      }
+   }
+LABEL_27:
+  
+   /*
+   if ( cookie != *(_DWORD *)cookie_address_C8F12C )
+      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(ptr_table0);
+   */
+
+  return (int)ptr_table0;
+}   
+
 
    //sub_C8E8C4
 //sub_C8E95C
