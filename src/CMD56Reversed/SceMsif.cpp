@@ -1926,12 +1926,7 @@ int sub_C8E728(unsigned char **ptr_table, int unused, unsigned char *buffer0, un
             sub_C8EE20(buffer_local1, buffer_local1, *ptr_table_local, buffer0_ptr, key_size_blocks0);
             sub_C8EB80(buffer_local0, buffer_local0, buffer_local1, buffer0_ptr, key_size_blocks0, arg_0);
 
-            ptr_table = (unsigned __int8 **)sub_C8EE20(
-                                             ptr_table_local[1],
-                                             buffer_local0,
-                                             buffer_local2,
-                                             buffer0_ptr,
-                                             key_size_blocks0);
+            ptr_table = (unsigned __int8 **)sub_C8EE20(ptr_table_local[1], buffer_local0, buffer_local2, buffer0_ptr, key_size_blocks0);
             break;
          }
       }
@@ -1943,9 +1938,82 @@ int sub_C8E728(unsigned char **ptr_table, int unused, unsigned char *buffer0, un
    return (int)ptr_table;
 }
 
+int sub_C8F130(unsigned char **ptr_table, unsigned char *buffer1, unsigned char *buffer2, int key_size_blocks, int arg_0)
+{
+   int key_size_blocks_local; // r4
+   unsigned char *buffer2_ptr_local; // r5
+   unsigned char **ptr_table_local; // r6
+   unsigned char *buffer1_ptr_local; // r9
+   //int *cookie_addr; // r8
+   char check0; // cf
+   unsigned char buffer_local0[28]; // [sp+Ch] [bp-94h]
+   unsigned char buffer_local1[28]; // [sp+28h] [bp-78h]
+   unsigned char buffer_local2[28]; // [sp+44h] [bp-5Ch]
+   unsigned char buffer_local3[28]; // [sp+60h] [bp-40h]
+   //int cookie; // [sp+7Ch] [bp-24h]
+
+   key_size_blocks_local = key_size_blocks;
+   buffer2_ptr_local = buffer2;
+   ptr_table_local = ptr_table;
+   buffer1_ptr_local = buffer1;
+   //cookie_addr = (int *)cookie_address_C8F2DC;
+   //cookie = *(int *)cookie_address_C8F2DC;
+
+   if ( (unsigned int)(key_size_blocks - 1) <= 6 )
+   {
+      while ( 1 )
+      {
+         check0 = (unsigned int)key_size_blocks-- >= 1;
+         if ( !check0 )
+            break;
+
+         if ( *(int *)&ptr_table[2][4 * key_size_blocks] )
+         {
+            sub_C8EB80(buffer_local0, *ptr_table, *ptr_table, buffer2, key_size_blocks_local, arg_0);
+            sub_C8EB80(buffer_local1, ptr_table_local[2], ptr_table_local[2], buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8EB80(buffer_local1, buffer_local1, buffer_local1, buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8ED80(buffer_local2, buffer_local0, buffer_local0, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8ED80(buffer_local0, buffer_local0, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EB80(buffer_local1, buffer1_ptr_local, buffer_local1, buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8ED80(buffer_local0, buffer_local0, buffer_local1, buffer2_ptr_local, key_size_blocks_local);
+
+            sub_C8EB80(
+               buffer_local2,
+               (unsigned __int8 *)*(long long *)(ptr_table_local + 1),
+               (unsigned __int8 *)(*(long long *)(ptr_table_local + 1) >> 32),
+               buffer2_ptr_local,
+               key_size_blocks_local,
+               arg_0);
+
+            sub_C8ED80(ptr_table_local[2], buffer_local2, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EB80(buffer_local1, *ptr_table_local, ptr_table_local[1], buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8EB80(buffer_local1, buffer_local1, ptr_table_local[1], buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8ED80(buffer_local1, buffer_local1, buffer_local1, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8ED80(buffer_local1, buffer_local1, buffer_local1, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EB80(buffer_local3, buffer_local0, buffer_local0, buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8ED80(buffer_local2, buffer_local1, buffer_local1, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EE20(*ptr_table_local, buffer_local3, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EB80(buffer_local2, ptr_table_local[1], ptr_table_local[1], buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8EB80(buffer_local2, buffer_local2, buffer_local2, buffer2_ptr_local, key_size_blocks_local, arg_0);
+            sub_C8ED80(buffer_local2, buffer_local2, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8ED80(buffer_local2, buffer_local2, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8ED80(buffer_local2, buffer_local2, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EE20(buffer_local1, buffer_local1, *ptr_table_local, buffer2_ptr_local, key_size_blocks_local);
+            sub_C8EB80(buffer_local0, buffer_local0, buffer_local1, buffer2_ptr_local, key_size_blocks_local, arg_0);
+
+            ptr_table = (unsigned char **)sub_C8EE20(ptr_table_local[1], buffer_local0, buffer_local2, buffer2_ptr_local, key_size_blocks_local);
+            break;
+         }
+      }
+   }
+   /*
+   if ( cookie != *cookie_addr )
+      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(ptr_table);
+   */
+   return (int)ptr_table;
+}
    
-   //sub_C8ED80
-   //sub_C8F130
+   
 //sub_C8EE88
 
    //sub_C8E8C4
