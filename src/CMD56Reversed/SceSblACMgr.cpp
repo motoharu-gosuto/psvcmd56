@@ -113,21 +113,16 @@ int sub_8F8570(SceUID pid, int bit)
    int cookie;
    char dummy;
 
-   int r5 = bit;
-   
    int r0 = SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(bit, &self_info);
    if(r0 != 0)
       return r0;
-   
-   char* r2 = &dummy;
-   int r3 = r2 + (r5 >> 3);
-   int r5 = ~r5;
-   int r5 = r5 & 7;
-   int r0 = r3[-0x68];
-   int r0 = r0 >> r5;
-   int r0 = r0 & 1;   
-   
-   
 
-   return r0;
+   int bytePosition = (bit >> 3); // divide by 8
+   unsigned char cpByte = *((&dummy) -0x68 + bytePosition);
+
+   int shiftValue = ((~bit) & 7); // number of bits to shift to get proper bit in big endian style
+   int cpBit = cpByte >> shiftValue; // place bit at proper place by shifting
+   int cpBitMasked = cpBit & 1; // apply masking to extract bit
+
+   return cpBitMasked;
 }
