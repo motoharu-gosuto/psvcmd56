@@ -2246,8 +2246,53 @@ int sub_C8E8C4(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned 
    return result;
 }
 
-   
-//sub_C8E95C
+int sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned char *buffer0, unsigned char **ptr_table2, unsigned char **ptr_table3, unsigned char *buffer1, unsigned char *buffer2, unsigned int key_size_blocks1, int arg_10)
+{
+   unsigned __int8 **v9; // r10
+   unsigned __int8 **v10; // r11
+   signed int size1; // r2
+   signed int counter0; // r3
+   unsigned __int8 **ptr_table_local; // [sp+8h] [bp-70h]
+   unsigned __int8 *buffer0_local; // [sp+Ch] [bp-6Ch]
+   unsigned __int8 buffer1_local[56]; // [sp+10h] [bp-68h]
+   int cookie; // [sp+4Ch] [bp-2Ch]
+   char dummy; // [sp+50h] [bp-28h]
+
+   v9 = ptr_table2;
+   v10 = ptr_table1;
+   buffer0_local = buffer0;
+  
+   //cookie = *(_DWORD *)cookie_address_C8EA0C;
+
+   if ( key_size_blocks1 - 1 <= 6 )
+   {
+      size1 = 2 * key_size_blocks1;
+      counter0 = 0;
+
+      do
+         *(int *)&buffer1_local[4 * counter0++] = 0;
+      while ( counter0 < size1 );
+      
+      *((int *)&dummy + 2 * key_size_blocks1 - 0x10) = 1;
+      
+      ptr_table_local = ptr_table0;
+      ptr_table0 = (unsigned __int8 **)do_smth_with_hashes_2_C8E084(buffer1_local, buffer1_local, size1 + 1, buffer2, key_size_blocks1);
+
+      if ( v9 )
+         ptr_table0 = (unsigned __int8 **)sub_C8E8C4(ptr_table_local, v9, buffer1_local, buffer2, key_size_blocks1, arg_10);
+      if ( ptr_table3 )
+         ptr_table0 = (unsigned __int8 **)sub_C8E8C4(v10, ptr_table3, buffer1_local, buffer2, key_size_blocks1, arg_10);
+      if ( buffer1 )
+         ptr_table0 = (unsigned __int8 **)sub_C8EB80(buffer0_local, buffer1_local, buffer1, buffer2, key_size_blocks1, arg_10);
+   }
+
+   /*
+   if ( cookie != *(_DWORD *)cookie_address_C8EA0C )
+      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(ptr_table0);
+   */
+   return (int)ptr_table0;
+}   
+
 
 int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
 {
