@@ -2194,8 +2194,59 @@ LABEL_27:
   return (int)ptr_table0;
 }   
 
+int sub_C8E8C4(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int arg_4)
+{
+   unsigned char **ptr_table0_local; // r5
+   unsigned char **ptr_table1_local; // r6
+   unsigned char *buffer0_local; // r9
+   unsigned char *buffer1_local; // r8
+   int key_size_blocks_local; // r0
+   int block_index0; // r3
+   int result; // r0
+   unsigned char *ptr0; // r6
+   unsigned char *ptr1; // r1
 
-   //sub_C8E8C4
+   ptr_table0_local = ptr_table0;
+   ptr_table1_local = ptr_table1;
+   buffer0_local = buffer0;
+   buffer1_local = buffer1;
+   key_size_blocks_local = key_size_blocks;
+
+   do
+      --key_size_blocks_local;
+   while ( key_size_blocks_local + 1 > 0
+       && !*(int *)&(*ptr_table1)[4 * key_size_blocks_local]
+       && !*(int *)&ptr_table1[1][4 * key_size_blocks_local] );
+
+   if ( key_size_blocks_local >= 0 )
+   {
+      sub_C8EB80(*ptr_table0_local, *ptr_table1, buffer0, buffer1, key_size_blocks, arg_4);
+      sub_C8EB80(ptr_table0_local[1], ptr_table1_local[1], buffer0_local, buffer1_local, key_size_blocks, arg_4);
+      result = sub_C8EC70(ptr_table0_local[2], buffer0_local, key_size_blocks, buffer1_local, key_size_blocks, arg_4);
+   }
+   else
+   {
+      for ( block_index0 = 1; ; ++block_index0 )
+      {
+         result = *(long long *)ptr_table0_local >> 32;
+         ptr0 = (unsigned __int8 *)*(long long *)ptr_table0_local;
+         ptr1 = ptr_table0_local[2];
+         if ( block_index0 >= key_size_blocks )
+            break;
+         *(int *)&ptr0[4 * block_index0] = 0;
+         *(int *)(result + 4 * block_index0) = 0;
+         *(int *)&ptr1[4 * block_index0] = 0;
+      }
+
+      *(int *)ptr0 = 1;
+      *(int *)result = 1;
+      *(int *)ptr1 = 0;
+   }
+
+   return result;
+}
+
+   
 //sub_C8E95C
 
 int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
