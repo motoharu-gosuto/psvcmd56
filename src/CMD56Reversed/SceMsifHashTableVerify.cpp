@@ -1582,11 +1582,6 @@ int sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned 
    return (int)ptr_table0;
 }   
 
-int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
-{
-   return 0;
-}
-
 typedef int hsub_hash_fun7(unsigned char **ptr_table, unsigned char *buffer0, unsigned char *buffer1, unsigned int key_size_blocks, int arg_0);
 
 hsub_hash_fun7 *off_C8E720 = sub_C8E728;
@@ -1695,169 +1690,195 @@ int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_
    ptr_table3[2] = buffer9;
    block_val0 = 3;
 
-  do
-  {
-    block_val1 = *(int *)&sha_224_6[4 * block_counter0];
-    if ( block_val1 + block_val0 != *(int *)&sha_224_5[4 * block_counter0] )
-    {
-      if ( block_val0 || key_size_blocks != block_counter0 )
-        goto LABEL_10;
+   do
+   {
+      block_val1 = *(int *)&sha_224_6[4 * block_counter0];
+      if ( block_val1 + block_val0 != *(int *)&sha_224_5[4 * block_counter0] )
+      {
+         if ( block_val0 || key_size_blocks != block_counter0 )
+            goto LABEL_10;
+
 LABEL_9:
-      func7 = off_C8E720;
-      goto LABEL_11;
-    }
-    ++block_counter0;
-    block_val2 = block_val1 + block_val0;
-    block_val0 = (block_val1 & ~(block_val1 + block_val0)) >> 31;
-  }
-  while ( block_counter0 != key_size_blocks );
-  if ( (block_val1 & ~block_val2) >= 0 )
-    goto LABEL_9;
+         func7 = off_C8E720;
+         goto LABEL_11;
+      }
+
+      ++block_counter0;
+      block_val2 = block_val1 + block_val0;
+      block_val0 = (block_val1 & ~(block_val1 + block_val0)) >> 31;
+   }
+   while ( block_counter0 != key_size_blocks );
+
+   if ( (block_val1 & ~block_val2) >= 0 )
+      goto LABEL_9;
+
 LABEL_10:
-  func7 = off_C8E724;
+   func7 = off_C8E724;
+
 LABEL_11:
-  bit_counter0 = 31;
-  bit_val0 = 1;
-  bit_val1 = 2;
-  do
-  {
-    --bit_counter0;
-    block_val3 = -*(int *)sha_224_5 * bit_val0 & bit_val1;
-    bit_val1 *= 2;
-    bit_val0 |= block_val3;
-  }
-  while ( bit_counter0 );
-  ptr_table7 = ptr_table6;
-  key_size_total0 = 4 * key_size_blocks;
-  sub_C8E95C(
-    (unsigned char **)ptr_table2,
-    ptr_table3,
-    buffer0,
-    ptr_table7,
-    sha_224_2,
-    sha_224_6,
-    sha_224_5,
-    key_size_blocks,
-    bit_val0);
-  ptr_table4[0] = buffer10;
-  ptr_table4[1] = buffer11;
-  ptr_table4[2] = buffer12;
-  ptr_table5[0] = buffer13;
-  ptr_table5[1] = buffer14;
-  ptr_table5[2] = buffer15;
-  byte_counter0 = 0x20;
-  block_counter1 = 0;
-  byte_counter1 = 0;
-  do
-  {
-    ++block_counter1;
-    if ( byte_counter0 != 32 )
-      break;
-    block_val4 = *(int *)&buffer_ptr5[key_size_total0 + -4 * block_counter1];
-    block_val5 = (-(block_val4 >> 16) >> 16) & 0x10;
-    block_val6 = 0x10 - block_val5;
-    block_val7 = block_val4 >> block_val5;
-    block_val8 = ((block_val7 - 0x100) >> 16) & 8;
-    block_val9 = block_val7 << block_val8;
-    block_val10 = block_val6 + block_val8;
-    block_val11 = ((unsigned int)(block_val9 - 0x1000) >> 16) & 4;
-    block_val12 = block_val9 << block_val11;
-    block_val13 = block_val10 + block_val11;
-    block_val14 = ((unsigned int)(block_val12 - 0x4000) >> 16) & 2;
-    byte_counter0 = block_val13
+   bit_counter0 = 31;
+   bit_val0 = 1;
+   bit_val1 = 2;
+
+   do
+   {
+      --bit_counter0;
+      block_val3 = -*(int *)sha_224_5 * bit_val0 & bit_val1;
+      bit_val1 *= 2;
+      bit_val0 |= block_val3;
+   }
+   while ( bit_counter0 );
+
+   ptr_table7 = ptr_table6;
+   key_size_total0 = 4 * key_size_blocks;
+
+   sub_C8E95C((unsigned char **)ptr_table2, ptr_table3, buffer0, ptr_table7, sha_224_2, sha_224_6, sha_224_5, key_size_blocks, bit_val0);
+
+   ptr_table4[0] = buffer10;
+   ptr_table4[1] = buffer11;
+   ptr_table4[2] = buffer12;
+   ptr_table5[0] = buffer13;
+   ptr_table5[1] = buffer14;
+   ptr_table5[2] = buffer15;
+   byte_counter0 = 0x20;
+   block_counter1 = 0;
+   byte_counter1 = 0;
+
+   do
+   {
+      ++block_counter1;
+
+      if ( byte_counter0 != 32 )
+         break;
+
+      block_val4 = *(int *)&buffer_ptr5[key_size_total0 + -4 * block_counter1];
+      block_val5 = (-(block_val4 >> 16) >> 16) & 0x10;
+      block_val6 = 0x10 - block_val5;
+      block_val7 = block_val4 >> block_val5;
+      block_val8 = ((block_val7 - 0x100) >> 16) & 8;
+      block_val9 = block_val7 << block_val8;
+      block_val10 = block_val6 + block_val8;
+      block_val11 = ((unsigned int)(block_val9 - 0x1000) >> 16) & 4;
+      block_val12 = block_val9 << block_val11;
+      block_val13 = block_val10 + block_val11;
+      block_val14 = ((unsigned int)(block_val12 - 0x4000) >> 16) & 2;
+
+      byte_counter0 = block_val13
                   + block_val14
                   + 2
                   - (((unsigned int)(block_val12 << block_val14) >> 14) & ~((unsigned int)(block_val12 << block_val14) >> 15));
-    byte_counter1 += byte_counter0;
-  }
-  while ( block_counter1 != key_size_blocks );
-  block_counter2 = 0;
-  byte_counter2 = 32;
-  byte_counter3 = 0;
-  do
-  {
-    ++block_counter2;
-    if ( byte_counter2 != 32 )
-      break;
-    block_val15 = *(int *)&sha_224_4[key_size_total0 + -4 * block_counter2];
-    block_val16 = (-(block_val15 >> 16) >> 16) & 0x10;
-    block_val17 = 16 - block_val16;
-    block_val18 = block_val15 >> block_val16;
-    block_val19 = ((block_val18 - 256) >> 16) & 8;
-    block_val20 = block_val18 << block_val19;
-    block_val21 = block_val17 + block_val19;
-    block_val22 = ((unsigned int)(block_val20 - 0x1000) >> 16) & 4;
-    block_val23 = block_val20 << block_val22;
-    block_val24 = block_val21 + block_val22;
-    block_val25 = ((unsigned int)(block_val23 - 0x4000) >> 16) & 2;
-    byte_counter2 = block_val24
+
+      byte_counter1 += byte_counter0;
+   }
+   while ( block_counter1 != key_size_blocks );
+
+   block_counter2 = 0;
+   byte_counter2 = 32;
+   byte_counter3 = 0;
+
+   do
+   {
+      ++block_counter2;
+
+      if ( byte_counter2 != 32 )
+         break;
+
+      block_val15 = *(int *)&sha_224_4[key_size_total0 + -4 * block_counter2];
+      block_val16 = (-(block_val15 >> 16) >> 16) & 0x10;
+      block_val17 = 16 - block_val16;
+      block_val18 = block_val15 >> block_val16;
+      block_val19 = ((block_val18 - 256) >> 16) & 8;
+      block_val20 = block_val18 << block_val19;
+      block_val21 = block_val17 + block_val19;
+      block_val22 = ((unsigned int)(block_val20 - 0x1000) >> 16) & 4;
+      block_val23 = block_val20 << block_val22;
+      block_val24 = block_val21 + block_val22;
+      block_val25 = ((unsigned int)(block_val23 - 0x4000) >> 16) & 2;
+
+      byte_counter2 = block_val24
                   + block_val25
                   + 2
                   - (((unsigned int)(block_val23 << block_val25) >> 14) & ~((unsigned int)(block_val23 << block_val25) >> 15));
-    byte_counter3 += byte_counter2;
-  }
-  while ( block_counter2 != key_size_blocks );
-  if ( byte_counter3 < byte_counter1 )
-    byte_counter1 = byte_counter3;
-  *(long long *)ptr_table8 = *(long long *)ptr_table2;
-  block_counter3 = 0;
-  total_byte_size0 = 32 * key_size_blocks - byte_counter1;
-  buffer_ptr7 = ptr_table2[2];
-  do
-  {
-    *(int *)&buffer10[block_counter3] = *(int *)&ptr_table8[0][block_counter3];
-    *(int *)&buffer11[block_counter3] = *(int *)&ptr_table8[1][block_counter3];
-    *(int *)&buffer12[block_counter3] = *(int *)&buffer_ptr7[block_counter3];
-    block_counter3 += 4;
-  }
-  while ( block_counter3 != key_size_total0 );
-  sub_C8EE88(ptr_table4, ptr_table3, buffer0, sha_224_5, key_size_blocks, bit_val0);
-  *(long long *)ptr_table9 = *(long long *)ptr_table5;
-  block_counter4 = 0;
-  for ( buffer_ptr8 = ptr_table5[2]; ; *(int *)&buffer_ptr8[block_counter4] = 0 )
-  {
-    block_counter4 += 4;
-    if ( block_counter4 == key_size_total0 )
-      break;
-    *(int *)&ptr_table9[0][block_counter4] = 0;
-    *(int *)&ptr_table9[1][block_counter4] = 0;
-  }
-  *(int *)ptr_table5[0] = 1;
-  *(int *)ptr_table5[1] = 1;
-  *(int *)ptr_table5[2] = 0;
-  while ( (--total_byte_size0 & 0x80000000) == 0 )
-  {
-    func7(ptr_table5, buffer0, sha_224_5, key_size_blocks, bit_val0);
-    maybe_tail_size0 = (*(int *)&sha_224_4[4 * (total_byte_size0 >> 5)] >> (total_byte_size0 & 0x1F)) & 1 | 2 * ((*(int *)&buffer_ptr5[4 * (total_byte_size0 >> 5)] >> (total_byte_size0 & 0x1F)) & 1);
-    switch ( maybe_tail_size0 )
-    {
+
+      byte_counter3 += byte_counter2;
+   }
+   while ( block_counter2 != key_size_blocks );
+
+   if ( byte_counter3 < byte_counter1 )
+      byte_counter1 = byte_counter3;
+
+   *(long long *)ptr_table8 = *(long long *)ptr_table2;
+   block_counter3 = 0;
+   total_byte_size0 = 32 * key_size_blocks - byte_counter1;
+   buffer_ptr7 = ptr_table2[2];
+
+   do
+   {
+      *(int *)&buffer10[block_counter3] = *(int *)&ptr_table8[0][block_counter3];
+      *(int *)&buffer11[block_counter3] = *(int *)&ptr_table8[1][block_counter3];
+      *(int *)&buffer12[block_counter3] = *(int *)&buffer_ptr7[block_counter3];
+      block_counter3 += 4;
+   }
+   while ( block_counter3 != key_size_total0 );
+
+   sub_C8EE88(ptr_table4, ptr_table3, buffer0, sha_224_5, key_size_blocks, bit_val0);
+   *(long long *)ptr_table9 = *(long long *)ptr_table5;
+   block_counter4 = 0;
+
+   for ( buffer_ptr8 = ptr_table5[2]; ; *(int *)&buffer_ptr8[block_counter4] = 0 )
+   {
+      block_counter4 += 4;
+      
+      if ( block_counter4 == key_size_total0 )
+         break;
+
+      *(int *)&ptr_table9[0][block_counter4] = 0;
+      *(int *)&ptr_table9[1][block_counter4] = 0;
+   }
+
+   *(int *)ptr_table5[0] = 1;
+   *(int *)ptr_table5[1] = 1;
+   *(int *)ptr_table5[2] = 0;
+
+   while ( (--total_byte_size0 & 0x80000000) == 0 )
+   {
+      func7(ptr_table5, buffer0, sha_224_5, key_size_blocks, bit_val0);
+
+      maybe_tail_size0 = (*(int *)&sha_224_4[4 * (total_byte_size0 >> 5)] >> (total_byte_size0 & 0x1F)) & 1 | 2 * ((*(int *)&buffer_ptr5[4 * (total_byte_size0 >> 5)] >> (total_byte_size0 & 0x1F)) & 1);
+
+      switch ( maybe_tail_size0 )
+      {
       case 2:
-        sub_C8EE88(ptr_table5, ptr_table2, buffer0, sha_224_5, key_size_blocks, bit_val0);
-        break;
+         sub_C8EE88(ptr_table5, ptr_table2, buffer0, sha_224_5, key_size_blocks, bit_val0);
+         break;
       case 3:
-        sub_C8EE88(ptr_table5, ptr_table4, buffer0, sha_224_5, key_size_blocks, bit_val0);
-        break;
+         sub_C8EE88(ptr_table5, ptr_table4, buffer0, sha_224_5, key_size_blocks, bit_val0);
+         break;
       case 1:
-        sub_C8EE88(ptr_table5, ptr_table3, buffer0, sha_224_5, key_size_blocks, bit_val0);
-        break;
-    }
-  }
-  buffer_ptr9 = ptr_table1[0];
-  block_counter5 = 0;
-  buffer_ptr0 = ptr_table5[0];
-  buffer_ptr1 = ptr_table1[1];
-  buffer_ptr2 = ptr_table5[1];
-  buffer_ptr3 = ptr_table1[2];
-  buffer_ptr4 = ptr_table5[2];
-  do
-  {
-    *(int *)&buffer_ptr9[block_counter5] = *(int *)&buffer_ptr0[block_counter5];
-    *(int *)&buffer_ptr1[block_counter5] = *(int *)&buffer_ptr2[block_counter5];
-    *(int *)&buffer_ptr3[block_counter5] = *(int *)&buffer_ptr4[block_counter5];
-    block_counter5 += 4;
-  }
-  while ( block_counter5 != key_size_total0 );
-  sha_224_0 = (unsigned __int8 **)sub_C8EA10(ptr_table0, ptr_table1, sha_224_5, key_size_blocks, bit_val0);
+         sub_C8EE88(ptr_table5, ptr_table3, buffer0, sha_224_5, key_size_blocks, bit_val0);
+         break;
+      }
+   }
+
+   buffer_ptr9 = ptr_table1[0];
+   block_counter5 = 0;
+   buffer_ptr0 = ptr_table5[0];
+   buffer_ptr1 = ptr_table1[1];
+   buffer_ptr2 = ptr_table5[1];
+   buffer_ptr3 = ptr_table1[2];
+   buffer_ptr4 = ptr_table5[2];
+
+   do
+   {
+      *(int *)&buffer_ptr9[block_counter5] = *(int *)&buffer_ptr0[block_counter5];
+      *(int *)&buffer_ptr1[block_counter5] = *(int *)&buffer_ptr2[block_counter5];
+      *(int *)&buffer_ptr3[block_counter5] = *(int *)&buffer_ptr4[block_counter5];
+      block_counter5 += 4;
+   }
+   while ( block_counter5 != key_size_total0 );
+
+   sha_224_0 = (unsigned __int8 **)sub_C8EA10(ptr_table0, ptr_table1, sha_224_5, key_size_blocks, bit_val0);
+
 LABEL_38:
 
   //if ( cookie != *(int *)cookie_address_C8E71C )
