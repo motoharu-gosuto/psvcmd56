@@ -1904,9 +1904,9 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    unsigned char *secret_key_local; // r11
    verify_hash_ctx *ctx_local; // r8
    unsigned char *dec_ptr0; // r1
-   int counter0; // r3
+   //int counter0; // r3
    int counter1; // r0
-   int result; // r0
+   //int result; // r0
    unsigned char *sha224_i3_ptr; // [sp+10h] [bp-1E8h]
    unsigned char *sha224_i4_ptr; // [sp+14h] [bp-1E4h]
    unsigned char *sha224_unused0_ptr; // [sp+18h] [bp-1E0h]
@@ -1948,28 +1948,26 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_1_C8E3AA(sha224_i5, secret_key_local, key_size_bytes);
    do_smth_with_hashes_1_C8E3AA(sha224_i6, *dec_ptr_pair_local, key_size_bytes);
    do_smth_with_hashes_1_C8E3AA(sha224_i7, dec_ptr_pair_local[1], key_size_bytes);
-   counter0 = key_size_blocks;
+   
+   // tricky check on zero vector   
+   int counter0 = key_size_blocks;
 
-   // tricky check on zero vector
    do
    {
       --counter0;
    }
-   while ( counter0 + 1 > 0 && !*(unsigned int *)&sha224_i0[4 * counter0] ); 
+   while (counter0 + 1 > 0 && !*(unsigned int *)&sha224_i0[4 * counter0]);
 
-   if ( counter0 < 0 )
-      goto LABEL_21;
+   if (counter0 < 0)
+      return -1;
 
    do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i0, key_size_blocks);
    do_smth_with_hashes_2_C8E084(sha224_i7_ptr, sha224_i7_ptr, key_size_blocks, sha224_i0, key_size_blocks);
    do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx_local->ptr_4, key_size_bytes);
    do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx_local->ptr_20, key_size_bytes);
 
-   if ( !do_smth_with_hashes_3_C8E3EE(sha224_i8, sha224_i2, key_size_blocks)
-      || !do_smth_with_hashes_3_C8E3EE(sha224_i9, sha224_i2, key_size_blocks) )
-   {
-      goto LABEL_21;
-   }
+   if (!do_smth_with_hashes_3_C8E3EE(sha224_i8, sha224_i2, key_size_blocks) || !do_smth_with_hashes_3_C8E3EE(sha224_i9, sha224_i2, key_size_blocks))
+      return -1;
 
    do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
    do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i5, key_size_blocks, sha224_i9, key_size_blocks);
@@ -1985,17 +1983,13 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
       ;
    }
 
-   if ( key_size_blocks > 0 )
-   {
-      result = key_size_blocks - counter1;
-      if ( result )
-         result = -1;
-   }
-   else
-   {
-   LABEL_21:
-      result = -1;
-   }
+   if(key_size_blocks <= 0)
+      return -1;
+
+   int result = key_size_blocks - counter1;
+
+   if (result)
+      return  -1;
 
    return result;
 }
