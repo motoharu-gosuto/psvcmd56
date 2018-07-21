@@ -27,12 +27,13 @@ int block_memcmp_C8EADC(const unsigned char* buffer0, const unsigned char* buffe
    return res0 <= 0 ? 0 : 1;
 }
 
-//=================
-
-void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int key_size_bytes)
+//[REVERSED]
+void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int byte_size)
 {
-   reverse_byte_order(dst, src, key_size_bytes);
+   reverse_byte_order(dst, src, byte_size);
 }
+
+//=================
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
 {
@@ -1866,7 +1867,7 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    pointer_table1[1] = pointer_table1_item1;
    pointer_table1[2] = pointer_table1_item2;
 
-   if(key_size_blocks <=0)
+   if(key_size_blocks <= 0)
       return -1;
 
    reverse_byte_order_C8E3AA(dec_ptr_table_item0_rev, dec_ptr_table[0], key_size_bytes);
@@ -1880,6 +1881,9 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 
    reverse_byte_order_C8E3AA(pointer_table1[0], dec_ptr_pair[0], key_size_bytes);
    reverse_byte_order_C8E3AA(pointer_table1[1], dec_ptr_pair[1], key_size_bytes);
+
+   reverse_byte_order_C8E3AA(verify_ptr0_rev, ctx->ptr_4, key_size_bytes);
+   reverse_byte_order_C8E3AA(verify_ptr1_rev, ctx->ptr_20, key_size_bytes);
    
    if(memory_is_all_zeroes(dec_ptr_table_item0_rev, key_size_blocks * 4))
       return -1;
@@ -1887,8 +1891,7 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
    do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
 
-   reverse_byte_order_C8E3AA(verify_ptr0_rev, ctx->ptr_4, key_size_bytes);
-   reverse_byte_order_C8E3AA(verify_ptr1_rev, ctx->ptr_20, key_size_bytes);
+   
 
    if(memory_is_all_zeroes(verify_ptr0_rev, key_size_blocks * 4))
       return -1;
