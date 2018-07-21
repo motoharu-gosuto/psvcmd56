@@ -8,7 +8,7 @@ bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const by
    return std::all_of( begin, begin + bytes, [](unsigned char const byte) { return byte == 0; } );
 }
 
-//[REVERSED]
+//[REVERSED] - [TESTED]
 //returns 0 if sequences are equal
 //returns 0 if first unmatching block in first sequence is less than first unmatching block in second sequence
 //returns 1 if first unmatching block in first sequence is greater than first unmatching block in second sequence
@@ -21,8 +21,8 @@ int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlo
    return res0 <= 0 ? 0 : 1;
 }
 
-//[REVERSED]
-//if all bytes in first sequence are zero - returns zero
+//[REVERSED] - [TESTED]
+//returns 0 if all bytes in first sequence are zero
 //returns 0 if sequences are equal
 //returns 1 if first unmatching block in first sequence is less than first unmatching block in second sequence (because of changing order of args)
 //returns 0 if first unmatching block in first sequence is greater than first unmatching block in second sequence (because of changing order of args)
@@ -30,11 +30,12 @@ int block_is_zero_or_memcmp_C8E3EE(unsigned char *buffer0, unsigned char *buffer
 {
    if(memory_is_all_zeroes(buffer0, nBlocks * 4))
       return 0;
+
+   if (nBlocks <= 0)
+      return 0;
    
-   int b1 = block_memcmp_C8EADC(buffer1, buffer0, nBlocks);
-   unsigned int r0 = b1 - 1;
-   unsigned int r1 = r0 <= 0;
-   return r1;
+   int res0 = memcmp(buffer0, buffer1, nBlocks * 4);
+   return res0 >= 0 ? 0 : 1;
 }
 
 //=================
