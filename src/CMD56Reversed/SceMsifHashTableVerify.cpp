@@ -29,9 +29,9 @@ int block_memcmp_C8EADC(const unsigned char* buffer0, const unsigned char* buffe
 
 //=================
 
-void reverse_byte_order_C8E3AA(unsigned char* sha_224_0, const unsigned char* sha_224_1, int key_size_bytes)
+void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int key_size_bytes)
 {
-   reverse_byte_order(sha_224_0, sha_224_1, key_size_bytes);
+   reverse_byte_order(dst, src, key_size_bytes);
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
