@@ -1920,33 +1920,27 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx_local->ptr_20, key_size_bytes);
 
    {
-      int cond = 0;
       if(memory_is_all_zeroes(sha224_i8, key_size_blocks * 4))
-         cond = 0;
+         return -1;
 
       if(key_size_blocks <=0)
-         cond = 0;
+         return -1;
 
       int res0 = memcmp(sha224_i8, sha224_i2, key_size_blocks * 4);
-      cond = res0 >= 0 ? 0 : 1;
-
-      if(!cond)
+      if(res0 >= 0)
          return -1;
    }
 
    {
-      int cond = 0;
       if(memory_is_all_zeroes(sha224_i9, key_size_blocks * 4))
-         cond = 0;
+         return -1;
 
       if(key_size_blocks <=0)
-         cond = 0;
+         return -1;
 
       int res0 = memcmp(sha224_i9, sha224_i2, key_size_blocks * 4);
-      cond = res0 >= 0 ? 0 : 1;
-
-      if(!cond)
-         return -1;
+      if(res0 >= 0)
+         return -1;   
    }
 
    do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
