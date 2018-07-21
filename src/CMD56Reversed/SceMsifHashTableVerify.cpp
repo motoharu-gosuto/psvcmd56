@@ -1860,21 +1860,12 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 {
    //order of variables may be important
 
-   unsigned char **dec_ptr_table_local; // r7
-   //int *cookie_addr0; // r10
-   unsigned char **dec_ptr_pair_local; // r9
-   unsigned char *secret_key_local; // r11
-   verify_hash_ctx *ctx_local; // r8
-   unsigned char *dec_ptr0; // r1
-   //int counter0; // r3
-   //int counter1; // r0
-   //int result; // r0
-   unsigned char *sha224_i3_ptr; // [sp+10h] [bp-1E8h]
-   unsigned char *sha224_i4_ptr; // [sp+14h] [bp-1E4h]
-   unsigned char *sha224_unused0_ptr; // [sp+18h] [bp-1E0h]
-   unsigned char *sha224_i6_ptr; // [sp+1Ch] [bp-1DCh]
-   unsigned char *sha224_i7_ptr; // [sp+20h] [bp-1D8h]
-   unsigned char *sha224_unused1_ptr; // [sp+24h] [bp-1D4h]
+   unsigned char* sha224_i3_ptr; // [sp+10h] [bp-1E8h]
+   unsigned char* sha224_i4_ptr; // [sp+14h] [bp-1E4h]
+   unsigned char* sha224_unused0_ptr; // [sp+18h] [bp-1E0h]
+   unsigned char* sha224_i6_ptr; // [sp+1Ch] [bp-1DCh]
+   unsigned char* sha224_i7_ptr; // [sp+20h] [bp-1D8h]
+   unsigned char* sha224_unused1_ptr; // [sp+24h] [bp-1D4h]
    unsigned char sha224_i0[28]; // [sp+28h] [bp-1D0h]
    unsigned char sha224_i1[28]; // [sp+44h] [bp-1B4h]
    unsigned char sha224_i2[28]; // [sp+60h] [bp-198h]
@@ -1888,13 +1879,7 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    unsigned char sha224_i7[28]; // [sp+140h] [bp-B8h]
    unsigned char sha224_unused1[28]; // [sp+15Ch] [bp-9Ch]
    locals_C8DA14 sha224_n; // [sp+178h] [bp-80h]
-   //int cookie; // [sp+1CCh] [bp-2Ch]
 
-   dec_ptr_table_local = dec_ptr_table;
-   dec_ptr_pair_local = dec_ptr_pair;
-   secret_key_local = secret_key;
-   ctx_local = ctx;
-   dec_ptr0 = *dec_ptr_table;
    sha224_i3_ptr = sha224_i3;
    sha224_i4_ptr = sha224_i4;
    sha224_unused0_ptr = sha224_unused0;
@@ -1903,37 +1888,35 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    sha224_unused1_ptr = sha224_unused1;
 
    if(key_size_blocks <=0)
-         return -1;
+      return -1;
 
-   do_smth_with_hashes_1_C8E3AA(sha224_i0, dec_ptr0, key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i1, dec_ptr_table_local[1], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i2, dec_ptr_table_local[3], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i3, dec_ptr_table_local[4], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i4, dec_ptr_table_local[5], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i5, secret_key_local, key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i6, *dec_ptr_pair_local, key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i7, dec_ptr_pair_local[1], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i0, dec_ptr_table[0], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i1, dec_ptr_table[1], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i2, dec_ptr_table[3], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i3, dec_ptr_table[4], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i4, dec_ptr_table[5], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i5, secret_key, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i6, dec_ptr_pair[0], key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i7, dec_ptr_pair[1], key_size_bytes);
    
    if(memory_is_all_zeroes(sha224_i0, key_size_blocks * 4))
       return -1;
 
    do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i0, key_size_blocks);
    do_smth_with_hashes_2_C8E084(sha224_i7_ptr, sha224_i7_ptr, key_size_blocks, sha224_i0, key_size_blocks);
-   do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx_local->ptr_4, key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx_local->ptr_20, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx->ptr_4, key_size_bytes);
+   do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx->ptr_20, key_size_bytes);
 
    if(memory_is_all_zeroes(sha224_i8, key_size_blocks * 4))
       return -1;
 
-   int res0 = memcmp(sha224_i8, sha224_i2, key_size_blocks * 4);
-   if(res0 >= 0)
+   if(memcmp(sha224_i8, sha224_i2, key_size_blocks * 4) >= 0)
       return -1;
 
    if(memory_is_all_zeroes(sha224_i9, key_size_blocks * 4))
       return -1;
 
-   int res0 = memcmp(sha224_i9, sha224_i2, key_size_blocks * 4);
-   if(res0 >= 0)
+   if(memcmp(sha224_i9, sha224_i2, key_size_blocks * 4) >= 0)
       return -1;   
 
    do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
