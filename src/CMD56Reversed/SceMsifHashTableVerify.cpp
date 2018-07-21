@@ -21,23 +21,6 @@ int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlo
    return res0 <= 0 ? 0 : 1;
 }
 
-//[REVERSED] - [TESTED]
-//returns 0 if all bytes in first sequence are zero
-//returns 0 if sequences are equal
-//returns 1 if first unmatching block in first sequence is less than first unmatching block in second sequence (because of changing order of args)
-//returns 0 if first unmatching block in first sequence is greater than first unmatching block in second sequence (because of changing order of args)
-int block_is_zero_or_memcmp_C8E3EE(unsigned char *buffer0, unsigned char *buffer1, int nBlocks)
-{
-   if(memory_is_all_zeroes(buffer0, nBlocks * 4))
-      return 0;
-
-   if (nBlocks <= 0)
-      return 0;
-   
-   int res0 = memcmp(buffer0, buffer1, nBlocks * 4);
-   return res0 >= 0 ? 0 : 1;
-}
-
 //=================
 
 int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
@@ -1936,11 +1919,35 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx_local->ptr_4, key_size_bytes);
    do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx_local->ptr_20, key_size_bytes);
 
-   if(!block_is_zero_or_memcmp_C8E3EE(sha224_i8, sha224_i2, key_size_blocks))
-      return -1;
+   {
+      int cond = 0;
+      if(memory_is_all_zeroes(sha224_i8, key_size_blocks * 4))
+         cond = 0;
 
-   if (!block_is_zero_or_memcmp_C8E3EE(sha224_i9, sha224_i2, key_size_blocks))
-      return -1;
+      if(key_size_blocks <=0)
+         cond = 0;
+
+      int res0 = memcmp(sha224_i8, sha224_i2, key_size_blocks * 4);
+      cond = res0 >= 0 ? 0 : 1;
+
+      if(!cond)
+         return -1;
+   }
+
+   {
+      int cond = 0;
+      if(memory_is_all_zeroes(sha224_i9, key_size_blocks * 4))
+         cond = 0;
+
+      if(key_size_blocks <=0)
+         cond = 0;
+
+      int res0 = memcmp(sha224_i9, sha224_i2, key_size_blocks * 4);
+      cond = res0 >= 0 ? 0 : 1;
+
+      if(!cond)
+         return -1;
+   }
 
    do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
    do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i5, key_size_blocks, sha224_i9, key_size_blocks);
