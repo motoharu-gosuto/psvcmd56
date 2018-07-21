@@ -3,6 +3,11 @@
 #include <algorithm>
 #include <cstdint>
 
+bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const bytes)
+{
+   return std::all_of( begin, begin + bytes, [](unsigned char const byte) { return byte == 0; } );
+}
+
 int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
 {
    int key_size_blocks; // r5
@@ -472,29 +477,14 @@ int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_
    return (int)sha224_0;
 }
 
+//
 int do_smth_with_hashes_3_C8E3EE(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks)
 {
-   int block_counter; // r3
-   int result; // r0
-
-   block_counter = key_size_blocks;
-
-   do
-   {
-      --block_counter;
-   }
-   while ( block_counter + 1 > 0 && !*(int*)&sha_224_0[4 * block_counter]);
-
-   if ( block_counter >= 0 )
-   {
-      result = (unsigned int)(do_smth_with_hashes_4_C8EADC(sha_224_1, sha_224_0, key_size_blocks) - 1) <= 0;
-   }
-   else
-   {
-      result = 0;
-   }
-
-   return result;
+   if(memory_is_all_zeroes(sha_224_0, key_size_blocks * 4))
+      return 0;
+   
+   unsigned int r0 = do_smth_with_hashes_4_C8EADC(sha_224_1, sha_224_0, key_size_blocks) - 1;
+   return r0 <= 0;
 }
 
 int do_smth_with_hashes_5_C8DBD4(unsigned char *sha224_0, unsigned char *sha_224_1, unsigned char *sha_224_2, int key_size_blocks)
@@ -1896,11 +1886,6 @@ struct locals_C8DA14
   unsigned __int8 data1[28];
   unsigned __int8 data2[28];
 };
-
-bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const bytes)
-{
-    return std::all_of( begin, begin + bytes, [](unsigned char const byte) { return byte == 0; } );
-}
 
 int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], unsigned char *dec_ptr_pair[2], unsigned char *dec_ptr_table[6], int key_size_blocks, int key_size_bytes)
 {
