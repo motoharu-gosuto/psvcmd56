@@ -1859,6 +1859,8 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 
    unsigned char buffer_table0[3][28];
 
+   //prepare pointer tables
+
    pointer_table0[0] = pointer_table0_item0;
    pointer_table0[1] = pointer_table0_item1;
    pointer_table0[2] = pointer_table0_item2;
@@ -1869,6 +1871,8 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 
    if(key_size_blocks <= 0)
       return -1;
+
+   //reverse all required buffers
 
    reverse_byte_order_C8E3AA(dec_ptr_table_item0_rev, dec_ptr_table[0], key_size_bytes);
    reverse_byte_order_C8E3AA(dec_ptr_table_item1_rev, dec_ptr_table[1], key_size_bytes);
@@ -1885,13 +1889,15 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    reverse_byte_order_C8E3AA(verify_ptr0_rev, ctx->ptr_4, key_size_bytes);
    reverse_byte_order_C8E3AA(verify_ptr1_rev, ctx->ptr_20, key_size_bytes);
    
+   //check dec_ptr_table_item0_rev and derive something from it
+
    if(memory_is_all_zeroes(dec_ptr_table_item0_rev, key_size_blocks * 4))
       return -1;
 
    do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
    do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
 
-   
+   //verify ctx pointers
 
    if(memory_is_all_zeroes(verify_ptr0_rev, key_size_blocks * 4))
       return -1;
@@ -1903,7 +1909,9 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
       return -1;
 
    if(memcmp(verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks * 4) >= 0)
-      return -1;   
+      return -1;
+
+   //some hash magic
 
    do_smth_with_hashes_5_C8DBD4(verify_ptr1_rev, verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks);
    do_smth_with_hashes_6_C8DF74(buffer_table0[1], secret_key_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
@@ -1912,6 +1920,8 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_2_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
    do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, buffer_table0[0], buffer_table0[1], dec_ptr_table_item0_rev, dec_ptr_table_item1_rev, key_size_blocks);
    do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+
+   //verify ctx pointer
 
    if(memcmp(pointer_table1[0], verify_ptr0_rev, key_size_blocks * 4) != 0)
       return -1;
