@@ -38,30 +38,11 @@ int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_22
 
 int do_smth_with_hashes_4_C8EADC(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks)
 {
-   unsigned char * block_ptr0 = &sha_224_0[4 * key_size_blocks];
-   unsigned char * block_ptr1 = &sha_224_1[4 * key_size_blocks];
-
-   bool equ = false;
-   do
-   {
-      if ( block_ptr0 <= sha_224_0 )
-         break;
-
-      unsigned int block_val0 = *((unsigned int *)block_ptr0 - 1);
-      unsigned int block_val1 = *((unsigned int *)block_ptr1 - 1);
-      equ = block_val0 == block_val1;
-
-      block_ptr0 -= 4;
-      block_ptr1 -= 4;
-   }
-   while (equ);
-
    if (key_size_blocks <= 0)
       return 0;
-   
-   int result = *(unsigned int *)block_ptr0 > *(unsigned int *)block_ptr1;
 
-   return result;
+   int res0 = memcmp(sha_224_0, sha_224_1, key_size_blocks * 4);
+   return res0 <= 0 ? 0 : 1;
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
