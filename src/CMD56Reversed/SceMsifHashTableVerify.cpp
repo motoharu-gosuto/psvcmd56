@@ -12,7 +12,7 @@ bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const by
 //returns 0 if sequences are equal
 //returns 0 if first unmatching block in first sequence is less than first unmatching block in second sequence
 //returns 1 if first unmatching block in first sequence is greater than first unmatching block in second sequence
-int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlocks)
+int block_memcmp_C8EADC(const unsigned char* buffer0, const unsigned char* buffer1, int nBlocks)
 {
    if (nBlocks <= 0)
       return 0;
@@ -23,16 +23,10 @@ int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlo
 
 //=================
 
-union local_union1
-{
-  unsigned __int8 *ptr;
-  int value;
-};
-
-int do_smth_with_hashes_1_C8E3AA(local_union1 sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
+void do_smth_with_hashes_1_C8E3AA(unsigned char* sha_224_0, const unsigned char* sha_224_1, int key_size_bytes)
 {
    int key_size_blocks; // r5
-   unsigned __int8 *current_block; // r1
+   const unsigned char *current_block; // r1
    int counter0; // r2
    int counter1; // r3
 
@@ -42,10 +36,10 @@ int do_smth_with_hashes_1_C8E3AA(local_union1 sha_224_0, unsigned char *sha_224_
 
    while ( counter0 < key_size_blocks )
    {
-      *(unsigned int *)sha_224_0.ptr = *(current_block - 1);
-      sha_224_0.ptr += 4;
+      *(unsigned int *)sha_224_0 = *(current_block - 1);
+      sha_224_0 += 4;
       
-      for ( counter1 = 0; --counter1 != -4; *((unsigned int *)sha_224_0.ptr - 1) |= current_block[counter1 - 1] << -8 * counter1 )
+      for ( counter1 = 0; --counter1 != -4; *((unsigned int *)sha_224_0 - 1) |= current_block[counter1 - 1] << -8 * counter1 )
       {
          ;
       }
@@ -53,8 +47,6 @@ int do_smth_with_hashes_1_C8E3AA(local_union1 sha_224_0, unsigned char *sha_224_
       ++counter0;
       current_block -= 4;
    }
-
-   return sha_224_0.value;
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
