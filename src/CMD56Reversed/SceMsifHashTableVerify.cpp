@@ -8,6 +8,37 @@ bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const by
    return std::all_of( begin, begin + bytes, [](unsigned char const byte) { return byte == 0; } );
 }
 
+//[REVERSED]
+//returns 0 if sequences are equal
+//returns 0 if first unmatching block in first sequence is less than first unmatching block in second sequence
+//returns 1 if first unmatching block in first sequence is greater than first unmatching block in second sequence
+int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlocks)
+{
+   if (nBlocks <= 0)
+      return 0;
+
+   int res0 = memcmp(buffer0, buffer1, nBlocks * 4);
+   return res0 <= 0 ? 0 : 1;
+}
+
+//[REVERSED]
+//if all bytes in first sequence are zero - returns zero
+//returns 0 if sequences are equal
+//returns 1 if first unmatching block in first sequence is less than first unmatching block in second sequence (because of changing order of args)
+//returns 0 if first unmatching block in first sequence is greater than first unmatching block in second sequence (because of changing order of args)
+int block_is_zero_or_memcmp_C8E3EE(unsigned char *buffer0, unsigned char *buffer1, int nBlocks)
+{
+   if(memory_is_all_zeroes(buffer0, nBlocks * 4))
+      return 0;
+   
+   int b1 = block_memcmp_C8EADC(buffer1, buffer0, nBlocks);
+   unsigned int r0 = b1 - 1;
+   unsigned int r1 = r0 <= 0;
+   return r1;
+}
+
+//=================
+
 int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
 {
    int key_size_blocks; // r5
@@ -34,18 +65,6 @@ int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_22
    }
 
    return (int)sha_224_0;
-}
-
-//returns 0 if sequences are equal
-//returns 0 if first unmatching block in first sequence is less than first unmatching block in second sequence
-//returns 1 if first unmatching block in first sequence is greater than first unmatching block in second sequence
-int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlocks)
-{
-   if (nBlocks <= 0)
-      return 0;
-
-   int res0 = memcmp(buffer0, buffer1, nBlocks * 4);
-   return res0 <= 0 ? 0 : 1;
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
@@ -451,21 +470,6 @@ int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_
    }
 
    return (int)sha224_0;
-}
-
-//if all bytes in first sequence are zero - returns zero
-//returns 0 if sequences are equal
-//returns 1 if first unmatching block in first sequence is less than first unmatching block in second sequence (because of changing order of args)
-//returns 0 if first unmatching block in first sequence is greater than first unmatching block in second sequence (because of changing order of args)
-int block_is_zero_or_memcmp_C8E3EE(unsigned char *buffer0, unsigned char *buffer1, int nBlocks)
-{
-   if(memory_is_all_zeroes(buffer0, nBlocks * 4))
-      return 0;
-   
-   int b1 = block_memcmp_C8EADC(buffer1, buffer0, nBlocks);
-   unsigned int r0 = b1 - 1;
-   unsigned int r1 = r0 <= 0;
-   return r1;
 }
 
 int do_smth_with_hashes_5_C8DBD4(unsigned char *sha224_0, unsigned char *sha_224_1, unsigned char *sha_224_2, int key_size_blocks)
