@@ -1860,12 +1860,9 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 {
    //order of variables may be important
 
-   unsigned char* sha224_i3_ptr; // [sp+10h] [bp-1E8h]
-   unsigned char* sha224_i4_ptr; // [sp+14h] [bp-1E4h]
-   unsigned char* sha224_unused0_ptr; // [sp+18h] [bp-1E0h]
-   unsigned char* sha224_i6_ptr; // [sp+1Ch] [bp-1DCh]
-   unsigned char* sha224_i7_ptr; // [sp+20h] [bp-1D8h]
-   unsigned char* sha224_unused1_ptr; // [sp+24h] [bp-1D4h]
+   unsigned char* pointer_table0[3];
+   unsigned char* pointer_table1[3];
+
    unsigned char sha224_i0[28]; // [sp+28h] [bp-1D0h]
    unsigned char sha224_i1[28]; // [sp+44h] [bp-1B4h]
    unsigned char sha224_i2[28]; // [sp+60h] [bp-198h]
@@ -1880,12 +1877,13 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    unsigned char sha224_unused1[28]; // [sp+15Ch] [bp-9Ch]
    locals_C8DA14 sha224_n; // [sp+178h] [bp-80h]
 
-   sha224_i3_ptr = sha224_i3;
-   sha224_i4_ptr = sha224_i4;
-   sha224_unused0_ptr = sha224_unused0;
-   sha224_i6_ptr = sha224_i6;
-   sha224_i7_ptr = sha224_i7;
-   sha224_unused1_ptr = sha224_unused1;
+   pointer_table0[0] = sha224_i3;
+   pointer_table0[1] = sha224_i4;
+   pointer_table0[2] = sha224_unused0;
+   
+   pointer_table1[0] = sha224_i6;
+   pointer_table1[1] = sha224_i7;
+   pointer_table1[2] = sha224_unused1;
 
    if(key_size_blocks <=0)
       return -1;
@@ -1902,8 +1900,8 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    if(memory_is_all_zeroes(sha224_i0, key_size_blocks * 4))
       return -1;
 
-   do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i0, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(sha224_i7_ptr, sha224_i7_ptr, key_size_blocks, sha224_i0, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, sha224_i0, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, sha224_i0, key_size_blocks);
    do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx->ptr_4, key_size_bytes);
    do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx->ptr_20, key_size_bytes);
 
@@ -1924,10 +1922,10 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_2_C8E084(sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], 2 * key_size_blocks, sha224_i2, key_size_blocks);
    do_smth_with_hashes_6_C8DF74(&sha224_n.data0[4 * key_size_blocks], sha224_i8, key_size_blocks, sha224_i9, key_size_blocks);
    do_smth_with_hashes_2_C8E084(&sha224_n.data0[4 * key_size_blocks], &sha224_n.data0[4 * key_size_blocks], 2 * key_size_blocks, sha224_i2, key_size_blocks);
-   do_smth_with_hashes_7_C8E420(&sha224_i6_ptr, &sha224_i3_ptr, &sha224_i6_ptr, sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], sha224_i0, sha224_i1, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(sha224_i6_ptr, sha224_i6_ptr, key_size_blocks, sha224_i2, key_size_blocks);
+   do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, sha224_n.data0, &sha224_n.data0[4 * key_size_blocks], sha224_i0, sha224_i1, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, sha224_i2, key_size_blocks);
 
-   if(memcmp(sha224_i6_ptr, sha224_i8, key_size_blocks * 4) != 0)
+   if(memcmp(pointer_table1[0], sha224_i8, key_size_blocks * 4) != 0)
       return -1;
 
    return 0;
