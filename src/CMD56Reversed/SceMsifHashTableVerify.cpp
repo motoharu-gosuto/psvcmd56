@@ -36,6 +36,9 @@ int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_22
    return (int)sha_224_0;
 }
 
+//returns 0 if sequences are equal
+//returns 0 if first unmatching block in first sequence is less than first unmatching block in second sequence
+//returns 1 if first unmatching block in first sequence is greater than first unmatching block in second sequence
 int block_memcmp_C8EADC(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks)
 {
    if (key_size_blocks <= 0)
@@ -450,14 +453,19 @@ int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_
    return (int)sha224_0;
 }
 
-//
+//if all bytes in first sequence are zero - returns zero
+//returns 0 if sequences are equal
+//returns 1 if first unmatching block in first sequence is less than first unmatching block in second sequence (because of changing order of args)
+//returns 0 if first unmatching block in first sequence is greater than first unmatching block in second sequence (because of changing order of args)
 int do_smth_with_hashes_3_C8E3EE(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_blocks)
 {
    if(memory_is_all_zeroes(sha_224_0, key_size_blocks * 4))
       return 0;
    
-   unsigned int r0 = block_memcmp_C8EADC(sha_224_1, sha_224_0, key_size_blocks) - 1;
-   return r0 <= 0;
+   int b1 = block_memcmp_C8EADC(sha_224_1, sha_224_0, key_size_blocks);
+   unsigned int r0 = b1 - 1;
+   unsigned int r1 = r0 <= 0;
+   return r1;
 }
 
 int do_smth_with_hashes_5_C8DBD4(unsigned char *sha224_0, unsigned char *sha_224_1, unsigned char *sha_224_2, int key_size_blocks)
