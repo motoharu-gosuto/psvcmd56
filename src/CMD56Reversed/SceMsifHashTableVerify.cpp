@@ -8,6 +8,12 @@ bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const by
    return std::all_of( begin, begin + bytes, [](unsigned char const byte) { return byte == 0; } );
 }
 
+void reverse_byte_order(unsigned char* dst, const unsigned char* src, int size)
+{
+   memcpy(dst, src, size);
+   std::reverse(dst, dst + size);
+}
+
 //[REVERSED] - [TESTED]
 //returns 0 if sequences are equal
 //returns 0 if first unmatching block in first sequence is less than first unmatching block in second sequence
@@ -23,30 +29,9 @@ int block_memcmp_C8EADC(const unsigned char* buffer0, const unsigned char* buffe
 
 //=================
 
-void do_smth_with_hashes_1_C8E3AA(unsigned char* sha_224_0, const unsigned char* sha_224_1, int key_size_bytes)
+void reverse_byte_order_C8E3AA(unsigned char* sha_224_0, const unsigned char* sha_224_1, int key_size_bytes)
 {
-   int key_size_blocks; // r5
-   const unsigned char *current_block; // r1
-   int counter0; // r2
-   int counter1; // r3
-
-   key_size_blocks = key_size_bytes / 4;
-   current_block = &sha_224_1[key_size_bytes];
-   counter0 = 0;
-
-   while ( counter0 < key_size_blocks )
-   {
-      *(unsigned int *)sha_224_0 = *(current_block - 1);
-      sha_224_0 += 4;
-      
-      for ( counter1 = 0; --counter1 != -4; *((unsigned int *)sha_224_0 - 1) |= current_block[counter1 - 1] << -8 * counter1 )
-      {
-         ;
-      }
-
-      ++counter0;
-      current_block -= 4;
-   }
+   reverse_byte_order(sha_224_0, sha_224_1, key_size_bytes);
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
@@ -1884,17 +1869,17 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    if(key_size_blocks <=0)
       return -1;
 
-   do_smth_with_hashes_1_C8E3AA(sha224_i0, dec_ptr_table[0], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i1, dec_ptr_table[1], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i2, dec_ptr_table[3], key_size_bytes);
+   reverse_byte_order_C8E3AA(sha224_i0, dec_ptr_table[0], key_size_bytes);
+   reverse_byte_order_C8E3AA(sha224_i1, dec_ptr_table[1], key_size_bytes);
+   reverse_byte_order_C8E3AA(sha224_i2, dec_ptr_table[3], key_size_bytes);
 
-   do_smth_with_hashes_1_C8E3AA(pointer_table0[0], dec_ptr_table[4], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(pointer_table0[1], dec_ptr_table[5], key_size_bytes);
+   reverse_byte_order_C8E3AA(pointer_table0[0], dec_ptr_table[4], key_size_bytes);
+   reverse_byte_order_C8E3AA(pointer_table0[1], dec_ptr_table[5], key_size_bytes);
 
-   do_smth_with_hashes_1_C8E3AA(sha224_i5, secret_key, key_size_bytes);
+   reverse_byte_order_C8E3AA(sha224_i5, secret_key, key_size_bytes);
 
-   do_smth_with_hashes_1_C8E3AA(pointer_table1[0], dec_ptr_pair[0], key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(pointer_table1[1], dec_ptr_pair[1], key_size_bytes);
+   reverse_byte_order_C8E3AA(pointer_table1[0], dec_ptr_pair[0], key_size_bytes);
+   reverse_byte_order_C8E3AA(pointer_table1[1], dec_ptr_pair[1], key_size_bytes);
    
    if(memory_is_all_zeroes(sha224_i0, key_size_blocks * 4))
       return -1;
@@ -1902,8 +1887,8 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, sha224_i0, key_size_blocks);
    do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, sha224_i0, key_size_blocks);
 
-   do_smth_with_hashes_1_C8E3AA(sha224_i8, ctx->ptr_4, key_size_bytes);
-   do_smth_with_hashes_1_C8E3AA(sha224_i9, ctx->ptr_20, key_size_bytes);
+   reverse_byte_order_C8E3AA(sha224_i8, ctx->ptr_4, key_size_bytes);
+   reverse_byte_order_C8E3AA(sha224_i9, ctx->ptr_20, key_size_bytes);
 
    if(memory_is_all_zeroes(sha224_i8, key_size_blocks * 4))
       return -1;
