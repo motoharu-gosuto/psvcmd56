@@ -35,8 +35,9 @@ void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int
 
 //=================
 
-int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
+void sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
 {
+   /*
    int byte_size_aligned_local; // r3
    unsigned int accumulator; // r5
    int block_counter; // r4
@@ -63,10 +64,12 @@ int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, i
    }
 
    return (int)buffer0;
+   */
 }
 
-int sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
+void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
 {
+   /*
    int byte_counter; // r4
    unsigned int v5; // r8
    int byte_size; // r10
@@ -106,6 +109,7 @@ int sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, i
    }
 
    return (int)buffer0;
+   */
 }
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
@@ -166,8 +170,9 @@ int sub_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
    return result;
 }
 
-int sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int byte_size_aligned)
+void sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int byte_size_aligned)
 {
+   /*
    int byte_size_aligned_local; // r3
    int key_size_blocks_local; // r5
    int byte_size; // r2
@@ -209,10 +214,12 @@ int sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_bloc
    }
 
    return (int)buffer0;
+   */
 }
 
-int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_1, int key_size_blocks0, unsigned char *sha224_2, int key_size_blocks1)
+void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_1, int key_size_blocks0, unsigned char *sha224_2, int key_size_blocks1)
 {
+   /*
    unsigned __int8 *sha224_1_local; // r10
    unsigned __int8 *sha224_0_local; // r11
    int block_counter3; // r1
@@ -438,6 +445,7 @@ int do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_
    }
 
    return (int)sha224_0;
+   */
 }
 
 int do_smth_with_hashes_5_C8DBD4(unsigned char *sha224_0, unsigned char *sha_224_1, unsigned char *sha_224_2, int key_size_blocks)
@@ -1481,8 +1489,9 @@ int sub_C8E8C4(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned 
    return result;
 }
 
-int sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned char *buffer0, unsigned char **ptr_table2, unsigned char **ptr_table3, unsigned char *buffer1, unsigned char *buffer2, unsigned int key_size_blocks1, int arg_10)
+void sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned char *buffer0, unsigned char **ptr_table2, unsigned char **ptr_table3, unsigned char *buffer1, unsigned char *buffer2, unsigned int key_size_blocks1, int arg_10)
 {
+   /*
    unsigned __int8 **v9; // r10
    unsigned __int8 **v10; // r11
    signed int size1; // r2
@@ -1521,11 +1530,12 @@ int sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned 
          ptr_table0 = (unsigned __int8 **)sub_C8EB80(buffer0_local, buffer1_local, buffer1, buffer2, key_size_blocks1, arg_10);
    }
 
-   /*
-   if ( cookie != *(_DWORD *)cookie_address_C8EA0C )
-      SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(ptr_table0);
-   */
+   
+   //if ( cookie != *(_DWORD *)cookie_address_C8EA0C )
+   //   SceMsif_SceSysclibForDriver__imp___stack_chk_fail_b997493d(ptr_table0);
+   
    return (int)ptr_table0;
+   */
 }   
 
 typedef int hsub_hash_fun7(unsigned char **ptr_table, unsigned char *buffer0, unsigned char *buffer1, unsigned int key_size_blocks, int arg_0);
