@@ -23,7 +23,13 @@ int block_memcmp_C8EADC(unsigned char *buffer0, unsigned char *buffer1, int nBlo
 
 //=================
 
-int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
+union local_union1
+{
+  unsigned __int8 *ptr;
+  int value;
+};
+
+int do_smth_with_hashes_1_C8E3AA(local_union1 sha_224_0, unsigned char *sha_224_1, int key_size_bytes)
 {
    int key_size_blocks; // r5
    unsigned __int8 *current_block; // r1
@@ -36,10 +42,10 @@ int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_22
 
    while ( counter0 < key_size_blocks )
    {
-      *(int*)sha_224_0 = *(current_block - 1);
-      sha_224_0 += 4;
+      *(unsigned int *)sha_224_0.ptr = *(current_block - 1);
+      sha_224_0.ptr += 4;
       
-      for ( counter1 = 0; --counter1 != -4; *((int*)sha_224_0 - 1) |= current_block[counter1 - 1] << -8 * counter1 )
+      for ( counter1 = 0; --counter1 != -4; *((unsigned int *)sha_224_0.ptr - 1) |= current_block[counter1 - 1] << -8 * counter1 )
       {
          ;
       }
@@ -48,7 +54,7 @@ int do_smth_with_hashes_1_C8E3AA(unsigned char *sha_224_0, unsigned char *sha_22
       current_block -= 4;
    }
 
-   return (int)sha_224_0;
+   return sha_224_0.value;
 }
 
 int sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
