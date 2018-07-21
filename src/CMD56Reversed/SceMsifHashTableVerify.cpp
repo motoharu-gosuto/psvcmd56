@@ -1839,78 +1839,78 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    unsigned char* pointer_table0[3];
    unsigned char* pointer_table1[3];
 
-   unsigned char sha224_i0[28];
-   unsigned char sha224_i1[28];
-   unsigned char sha224_i2[28];
+   unsigned char dec_ptr_table_item0_rev[28];
+   unsigned char dec_ptr_table_item1_rev[28];
+   unsigned char dec_ptr_table_item2_rev[28];
 
-   unsigned char sha224_i8[28];
-   unsigned char sha224_i9[28];
+   unsigned char verify_ptr0_rev[28];
+   unsigned char verify_ptr1_rev[28];
 
-   unsigned char sha224_i5[28];
+   unsigned char secret_key_rev[28];
 
-   unsigned char sha224_i3[28];
-   unsigned char sha224_i4[28];
-   unsigned char sha224_unused0[28];
+   unsigned char pointer_table0_item0[28];
+   unsigned char pointer_table0_item1[28];
+   unsigned char pointer_table0_item2[28];
 
-   unsigned char sha224_i6[28];
-   unsigned char sha224_i7[28];
-   unsigned char sha224_unused1[28];
+   unsigned char pointer_table1_item0[28];
+   unsigned char pointer_table1_item1[28];
+   unsigned char pointer_table1_item2[28];
 
    unsigned char buffer_table0[3][28];
 
-   pointer_table0[0] = sha224_i3;
-   pointer_table0[1] = sha224_i4;
-   pointer_table0[2] = sha224_unused0;
+   pointer_table0[0] = pointer_table0_item0;
+   pointer_table0[1] = pointer_table0_item1;
+   pointer_table0[2] = pointer_table0_item2;
    
-   pointer_table1[0] = sha224_i6;
-   pointer_table1[1] = sha224_i7;
-   pointer_table1[2] = sha224_unused1;
+   pointer_table1[0] = pointer_table1_item0;
+   pointer_table1[1] = pointer_table1_item1;
+   pointer_table1[2] = pointer_table1_item2;
 
    if(key_size_blocks <=0)
       return -1;
 
-   reverse_byte_order_C8E3AA(sha224_i0, dec_ptr_table[0], key_size_bytes);
-   reverse_byte_order_C8E3AA(sha224_i1, dec_ptr_table[1], key_size_bytes);
-   reverse_byte_order_C8E3AA(sha224_i2, dec_ptr_table[3], key_size_bytes);
+   reverse_byte_order_C8E3AA(dec_ptr_table_item0_rev, dec_ptr_table[0], key_size_bytes);
+   reverse_byte_order_C8E3AA(dec_ptr_table_item1_rev, dec_ptr_table[1], key_size_bytes);
+   reverse_byte_order_C8E3AA(dec_ptr_table_item2_rev, dec_ptr_table[3], key_size_bytes);
 
    reverse_byte_order_C8E3AA(pointer_table0[0], dec_ptr_table[4], key_size_bytes);
    reverse_byte_order_C8E3AA(pointer_table0[1], dec_ptr_table[5], key_size_bytes);
 
-   reverse_byte_order_C8E3AA(sha224_i5, secret_key, key_size_bytes);
+   reverse_byte_order_C8E3AA(secret_key_rev, secret_key, key_size_bytes);
 
    reverse_byte_order_C8E3AA(pointer_table1[0], dec_ptr_pair[0], key_size_bytes);
    reverse_byte_order_C8E3AA(pointer_table1[1], dec_ptr_pair[1], key_size_bytes);
    
-   if(memory_is_all_zeroes(sha224_i0, key_size_blocks * 4))
+   if(memory_is_all_zeroes(dec_ptr_table_item0_rev, key_size_blocks * 4))
       return -1;
 
-   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, sha224_i0, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, sha224_i0, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
 
-   reverse_byte_order_C8E3AA(sha224_i8, ctx->ptr_4, key_size_bytes);
-   reverse_byte_order_C8E3AA(sha224_i9, ctx->ptr_20, key_size_bytes);
+   reverse_byte_order_C8E3AA(verify_ptr0_rev, ctx->ptr_4, key_size_bytes);
+   reverse_byte_order_C8E3AA(verify_ptr1_rev, ctx->ptr_20, key_size_bytes);
 
-   if(memory_is_all_zeroes(sha224_i8, key_size_blocks * 4))
+   if(memory_is_all_zeroes(verify_ptr0_rev, key_size_blocks * 4))
       return -1;
 
-   if(memcmp(sha224_i8, sha224_i2, key_size_blocks * 4) >= 0)
+   if(memcmp(verify_ptr0_rev, dec_ptr_table_item2_rev, key_size_blocks * 4) >= 0)
       return -1;
 
-   if(memory_is_all_zeroes(sha224_i9, key_size_blocks * 4))
+   if(memory_is_all_zeroes(verify_ptr1_rev, key_size_blocks * 4))
       return -1;
 
-   if(memcmp(sha224_i9, sha224_i2, key_size_blocks * 4) >= 0)
+   if(memcmp(verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks * 4) >= 0)
       return -1;   
 
-   do_smth_with_hashes_5_C8DBD4(sha224_i9, sha224_i9, sha224_i2, key_size_blocks);
-   do_smth_with_hashes_6_C8DF74(buffer_table0[1], sha224_i5, key_size_blocks, sha224_i9, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(buffer_table0[0], buffer_table0[1], 2 * key_size_blocks, sha224_i2, key_size_blocks);
-   do_smth_with_hashes_6_C8DF74(buffer_table0[1], sha224_i8, key_size_blocks, sha224_i9, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, sha224_i2, key_size_blocks);
-   do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, buffer_table0[0], buffer_table0[1], sha224_i0, sha224_i1, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, sha224_i2, key_size_blocks);
+   do_smth_with_hashes_5_C8DBD4(verify_ptr1_rev, verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks);
+   do_smth_with_hashes_6_C8DF74(buffer_table0[1], secret_key_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(buffer_table0[0], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+   do_smth_with_hashes_6_C8DF74(buffer_table0[1], verify_ptr0_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+   do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, buffer_table0[0], buffer_table0[1], dec_ptr_table_item0_rev, dec_ptr_table_item1_rev, key_size_blocks);
+   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
 
-   if(memcmp(pointer_table1[0], sha224_i8, key_size_blocks * 4) != 0)
+   if(memcmp(pointer_table1[0], verify_ptr0_rev, key_size_blocks * 4) != 0)
       return -1;
 
    return 0;
