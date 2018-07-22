@@ -35,22 +35,23 @@ void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int
 
 //=================
 
-void sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, int byte_size_aligned)
+void sub_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int byte_size)
 {
-   /*
-   int byte_size_aligned_local; // r3
-   unsigned int accumulator; // r5
-   int block_counter; // r4
-   unsigned int cur_block; // r6
+   int byte_size_aligned_local;
+   unsigned int accumulator;
+   int block_counter;
+   unsigned int cur_block;
 
-   byte_size_aligned_local = byte_size_aligned & 0x3F;
+   byte_size_aligned_local = byte_size & 0x3F;
+
    if ( byte_size_aligned_local )
    {
       accumulator = 0;
+
       for ( block_counter = 0; block_counter < block_size; ++block_counter )
       {
-         cur_block = *(int *)&buffer1[4 * block_counter];
-         *(int *)&buffer0[4 * block_counter] = accumulator | (cur_block << byte_size_aligned_local);
+         cur_block = *(unsigned int *)&src[4 * block_counter];
+         *(unsigned int *)&dst[4 * block_counter] = accumulator | (cur_block << byte_size_aligned_local);
          accumulator = cur_block >> (0x20 - byte_size_aligned_local);
       }
    }
@@ -58,13 +59,10 @@ void sub_C8EB0A(unsigned char *buffer0, unsigned char *buffer1, int block_size, 
    {
       while ( byte_size_aligned_local < block_size )
       {
-         *(int *)&buffer0[4 * byte_size_aligned_local] = *(int *)&buffer1[4 * byte_size_aligned_local];
+         *(unsigned int *)&dst[4 * byte_size_aligned_local] = *(unsigned int *)&src[4 * byte_size_aligned_local];
          ++byte_size_aligned_local;
       }
    }
-
-   return (int)buffer0;
-   */
 }
 
 void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
