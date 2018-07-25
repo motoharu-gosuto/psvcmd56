@@ -61,43 +61,46 @@ void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, in
 
 void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
 {
-   int byte_counter; // r4
-   unsigned int arg3_derive; // r8
-   int byte_size; // r10
-   unsigned int acc0; // r5
-   unsigned int cur_block; // r2
-   unsigned int val0_lo16; // r9
-   int val0_hi16; // r6
-   int val1; // r7
-   unsigned int val2; // lr
-   int val3; // r6
+   if (block_size <= 0)
+      return;
 
-   if ( block_size > 0 )
+   int byte_counter = 0;
+   int byte_size = 4 * block_size;
+
+   unsigned int acc0 = 0;
+
+   do
    {
-      byte_counter = 0;
-      arg3_derive = (unsigned int)arg3 >> 0x10;
-      byte_size = 4 * block_size;
-      acc0 = 0;
+      unsigned int cur_block = *(unsigned int *)&buffer1[byte_counter];
 
-      do
-      {
-         cur_block = *(unsigned int *)&buffer1[byte_counter];
-         val0_lo16 = (unsigned __int16)arg3 * (unsigned __int16)cur_block;
-         val0_hi16 = (unsigned __int16)arg3 * (cur_block >> 0x10);
-         val1 = arg3_derive * (unsigned __int16)cur_block;
-         val2 = val0_hi16 + (val0_lo16 >> 0x10);
-         val3 = val0_lo16 + ((val0_hi16 + val1) << 16);
-         *(unsigned int *)&buffer0[byte_counter] = val3 + acc0;
-         byte_counter += 4;
-         acc0 = arg3_derive * (cur_block >> 0x10)
-               + (val2 >> 0x10)
-               + ((val1 + (unsigned int)(unsigned __int16)val2) >> 0x10)
-               + (((val3 | acc0) & ~(val3 + acc0) | val3 & acc0) >> 0x1F);
-      }
-      while ( byte_counter != byte_size );
+      unsigned short cb_lo16 = (unsigned short)(cur_block);
+      unsigned short cb_hi16 = (unsigned short)(cur_block >> 0x10);
 
-      *(unsigned int *)&buffer0[byte_counter] = acc0;
+      unsigned short ag_lo16 = (unsigned short)(arg3);
+      unsigned short ag_hi16 = (unsigned short)(arg3 >> 0x10);
+
+      unsigned int mul0_lo = ag_lo16 * cb_lo16;
+      unsigned int mul0_hi = ag_lo16 * cb_hi16;
+
+      unsigned int mul1_lo = ag_hi16 * cb_lo16;
+      unsigned int mul1_hi = ag_hi16 * cb_hi16;
+      
+      unsigned int val2 = mul0_hi + (mul0_lo >> 0x10);
+      unsigned int val3 = mul0_lo + ((mul0_hi + mul1_lo) << 16);
+
+      *(unsigned int *)&buffer0[byte_counter] = val3 + acc0;
+
+      unsigned int term1 = (val2 >> 0x10);
+      unsigned int term2 = ((mul1_lo + (unsigned int)(unsigned __int16)val2) >> 0x10);
+      unsigned int term3 = (((val3 | acc0) & ~(val3 + acc0) | val3 & acc0) >> 0x1F);
+
+      acc0 = mul1_hi + term1 + term2 + term3;
+
+      byte_counter += 4;
    }
+   while (byte_counter != byte_size);
+
+   *(unsigned int *)&buffer0[byte_counter] = acc0;
 }
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
