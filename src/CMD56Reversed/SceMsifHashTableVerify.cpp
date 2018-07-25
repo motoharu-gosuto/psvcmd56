@@ -58,7 +58,8 @@ void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, in
 }
 
 //[REVERSED] - [TESTED] (but not with automatic tests)
-void arbitrary_length_multiply_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int multiplier)
+//dst buffer should be 4 bytes longer then src buffer (higher bit multiplication reminder is stored there)
+void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier)
 {
    if (block_size <= 0)
       return;
@@ -70,7 +71,7 @@ void arbitrary_length_multiply_C8E01C(unsigned char *buffer0, unsigned char *buf
 
    do
    {
-      unsigned int cur_block = *(unsigned int *)&buffer1[byte_counter];
+      unsigned int cur_block = *(unsigned int *)&src[byte_counter];
 
       unsigned short cb_lo16 = (unsigned short)(cur_block);
       unsigned short cb_hi16 = (unsigned short)(cur_block >> 0x10);
@@ -91,7 +92,7 @@ void arbitrary_length_multiply_C8E01C(unsigned char *buffer0, unsigned char *buf
 
       unsigned int val3 = mul0_lo + (sum1 << 0x10);
 
-      *(unsigned int *)&buffer0[byte_counter] = val3 + acc0;
+      *(unsigned int *)&dst[byte_counter] = val3 + acc0;
 
       unsigned short sum0_lo16 = (unsigned short)(sum0);
       unsigned short sum0_hi16 = (unsigned short)(sum0 >> 0x10);
@@ -112,7 +113,7 @@ void arbitrary_length_multiply_C8E01C(unsigned char *buffer0, unsigned char *buf
    }
    while (byte_counter != byte_size);
 
-   *(unsigned int *)&buffer0[byte_counter] = acc0;
+   *(unsigned int *)&dst[byte_counter] = acc0;
 }
 
 //=================
