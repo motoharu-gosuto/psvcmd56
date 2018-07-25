@@ -27,82 +27,77 @@ int block_memcmp_C8EADC(const unsigned char* buffer0, const unsigned char* buffe
    return res0 <= 0 ? 0 : 1;
 }
 
-//[REVERSED]
+//[REVERSED] - [TESTED]
 void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int byte_size)
 {
    reverse_byte_order(dst, src, byte_size);
 }
 
-//=================
-
-void sub_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int byte_size)
+//[REVERSED] - [TESTED]
+void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits)
 {
-   int byte_size_aligned = byte_size & 0x3F;
-
-   if (byte_size_aligned)
+   int bits_aligned = bits & 0x3F;
+   if (bits_aligned)
    {
-      unsigned int accumulator = 0;
+      unsigned long long acc = 0;
 
-      for (int block_counter = 0; block_counter < block_size; ++block_counter)
+      for(int i = 0; i < block_size; i++)
       {
-         unsigned int cur_block = *(unsigned int *)&src[4 * block_counter];
-         *(unsigned int *)&dst[4 * block_counter] = accumulator | (cur_block << byte_size_aligned);
-         accumulator = cur_block >> (0x20 - byte_size_aligned);
+         unsigned long long val = *(((unsigned int*)src) + i);
+         unsigned long long shft = val << bits_aligned;
+         *(((unsigned int*)dst) + i) = shft | acc;
+
+         unsigned int overflow_bits = 0x20 - bits_aligned;
+         acc = val >> overflow_bits;
       }
    }
    else
    {
-      while (byte_size_aligned < block_size)
-      {
-         *(unsigned int *)&dst[4 * byte_size_aligned] = *(unsigned int *)&src[4 * byte_size_aligned];
-         ++byte_size_aligned;
-      }
+      memcpy(dst, src, block_size * 4);
    }
 }
 
+//=================
+
 void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
 {
-   /*
    int byte_counter; // r4
-   unsigned int v5; // r8
+   unsigned int arg3_derive; // r8
    int byte_size; // r10
-   unsigned int v7; // r5
+   unsigned int acc0; // r5
    unsigned int cur_block; // r2
-   unsigned int v9; // r9
-   int v10; // r6
-   int v11; // r7
-   unsigned int v12; // lr
-   int v13; // r6
+   unsigned int val0_lo16; // r9
+   int val0_hi16; // r6
+   int val1; // r7
+   unsigned int val2; // lr
+   int val3; // r6
 
    if ( block_size > 0 )
    {
       byte_counter = 0;
-      v5 = (unsigned int)arg3 >> 0x10;
+      arg3_derive = (unsigned int)arg3 >> 0x10;
       byte_size = 4 * block_size;
-      v7 = 0;
+      acc0 = 0;
 
       do
       {
-         cur_block = *(int *)&buffer1[byte_counter];
-         v9 = (unsigned __int16)arg3 * (unsigned __int16)cur_block;
-         v10 = (unsigned __int16)arg3 * (cur_block >> 0x10);
-         v11 = v5 * (unsigned __int16)cur_block;
-         v12 = v10 + (v9 >> 0x10);
-         v13 = v9 + ((v10 + v11) << 16);
-         *(int *)&buffer0[byte_counter] = v13 + v7;
+         cur_block = *(unsigned int *)&buffer1[byte_counter];
+         val0_lo16 = (unsigned __int16)arg3 * (unsigned __int16)cur_block;
+         val0_hi16 = (unsigned __int16)arg3 * (cur_block >> 0x10);
+         val1 = arg3_derive * (unsigned __int16)cur_block;
+         val2 = val0_hi16 + (val0_lo16 >> 0x10);
+         val3 = val0_lo16 + ((val0_hi16 + val1) << 16);
+         *(unsigned int *)&buffer0[byte_counter] = val3 + acc0;
          byte_counter += 4;
-         v7 = v5 * (cur_block >> 0x10)
-            + (v12 >> 0x10)
-            + ((v11 + (unsigned int)(unsigned __int16)v12) >> 0x10)
-            + (((v13 | v7) & ~(v13 + v7) | v13 & v7) >> 0x1F);
+         acc0 = arg3_derive * (cur_block >> 0x10)
+               + (val2 >> 0x10)
+               + ((val1 + (unsigned int)(unsigned __int16)val2) >> 0x10)
+               + (((val3 | acc0) & ~(val3 + acc0) | val3 & acc0) >> 0x1F);
       }
       while ( byte_counter != byte_size );
 
-      *(int *)&buffer0[byte_counter] = v7;
+      *(unsigned int *)&buffer0[byte_counter] = acc0;
    }
-
-   return (int)buffer0;
-   */
 }
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
@@ -366,7 +361,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
             byte_size0_aligned = byte_size0 & 0x1F;
             *(int *)&buffer0[4 * block_size0] = 0;
 
-            sub_C8EB0A(buffer0, sha224_2, block_size0, byte_size0_aligned);
+            block_shift_with_overflow_C8EB0A(buffer0, sha224_2, block_size0, byte_size0_aligned);
 
             if ( (unsigned __int8)(byte_size1 & 0x1F) < byte_size0_aligned )
             {
@@ -378,7 +373,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
             }
 
             block_size3 = block_size0 + 1;
-            sub_C8EB0A(buffer2, sha224_1_local, block_size1, byte_size0_aligned);
+            block_shift_with_overflow_C8EB0A(buffer2, sha224_1_local, block_size1, byte_size0_aligned);
             val1 = *(int *)&buffer0[4 * (block_size0 - 1)];
             val_ptr0 = &buffer2[4 * (block_size1 + 1)];
             block_index0 = -4 * block_size0;

@@ -12,3 +12,5 @@ int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char secret_key[0x1C], u
 int block_memcmp_C8EADC(const unsigned char *buffer0, const unsigned char *buffer1, int nBlocks);
 
 void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int byte_size);
+
+void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits);
