@@ -18,3 +18,5 @@ void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, in
 void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier);
 
 int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input);
+
+int sub_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0);

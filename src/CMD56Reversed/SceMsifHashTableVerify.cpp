@@ -120,6 +120,7 @@ void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, in
 int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
 {
    unsigned int carry_bit = carry_input & 1;
+
    int byte_counter = 0;
    int block_counter = 0;
 
@@ -149,33 +150,35 @@ int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, u
 
 //=================
 
-int sub_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
+int sub_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
 {
-   unsigned __int8 *buffer0_local; // r12
-   int result; // r0
-   int byte_counter; // r4
-   int block_counter; // r5
-   int cur_block0; // r6
-   unsigned int cur_block1; // r7
-   int block_res; // lr
+   unsigned int carry_bit = carry_input & 1;
 
-   buffer0_local = buffer0;
-   result = arg_0 & 1;
-   byte_counter = 0;
-   block_counter = 0;
+   int byte_counter = 0;
+   int block_counter = 0;
 
-   while ( block_counter < block_size )
+   while (block_counter < block_size)
    {
-      cur_block0 = *(int *)&buffer1[byte_counter];
+      unsigned int cb_left = *(unsigned int*)&left[byte_counter];
+      unsigned int cb_right = *(unsigned int*)&right[byte_counter];
+
+      unsigned int block_res = cb_left + cb_right + carry_bit;
+
+      *(unsigned int*)&dst[byte_counter] = block_res;
+
+      unsigned int ct0 = (cb_right | cb_left);
+      unsigned int ct1 = (ct0 & ~block_res);
+      unsigned int ct2 = (cb_left & cb_right);
+
+      unsigned int carry = ct1 | ct2;
+
+      carry_bit = carry >> 0x1F;
+
       ++block_counter;
-      cur_block1 = *(int *)&buffer2[byte_counter];
-      block_res = cur_block0 + cur_block1 + result;
-      *(int *)&buffer0_local[byte_counter] = block_res;
-      result = ((cur_block1 | cur_block0) & ~block_res | cur_block0 & cur_block1) >> 0x1F;
       byte_counter += 4;
    }
 
-   return result;
+   return carry_bit;
 }
 
 void sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int byte_size_aligned)
