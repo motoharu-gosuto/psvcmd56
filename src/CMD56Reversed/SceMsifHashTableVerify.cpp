@@ -118,7 +118,7 @@ void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, in
 
 //=================
 
-int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int carry_input)
+int sub_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
 {
    unsigned int carry_bit = carry_input & 1;
    int byte_counter = 0;
@@ -126,16 +126,16 @@ int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
 
    while (block_counter < block_size)
    {
-      unsigned int cur_block0 = *(unsigned int *)&buffer1[byte_counter];
-      unsigned int cur_block1 = *(unsigned int *)&buffer2[byte_counter];
+      unsigned int cb_left = *(unsigned int *)&left[byte_counter];
+      unsigned int cb_right = *(unsigned int *)&right[byte_counter];
       
-      unsigned int block_res = cur_block0 - cur_block1 - carry_bit;
+      unsigned int block_res = cb_left - cb_right - carry_bit;
 
-      *(unsigned int *)&buffer0[byte_counter] = block_res;
+      *(unsigned int *)&dst[byte_counter] = block_res;
 
-      unsigned int ct0 = (~cur_block0 | cur_block1);
+      unsigned int ct0 = (~cb_left | cb_right);
       unsigned int ct1 = (ct0 & block_res);
-      unsigned int ct2 = (~cur_block0 & cur_block1);
+      unsigned int ct2 = (~cb_left & cb_right);
 
       unsigned int carry = (ct1 | ct2);
 
