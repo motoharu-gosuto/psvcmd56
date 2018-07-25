@@ -182,46 +182,40 @@ int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigne
 
 //=================
 
-void sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int byte_size_aligned)
+void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits)
 {
-   int byte_size_aligned_local; // r3
-   int key_size_blocks_local; // r5
-   int byte_size; // r2
-   int block_index0; // r4
-   unsigned char *cur_block0_ptr; // r1
-   int accumulator; // r6
-   unsigned char *cur_block1_ptr; // r2
-   unsigned int cur_block0; // r7
-
-   byte_size_aligned_local = byte_size_aligned & 0x3F;
-
-   if ( byte_size_aligned_local )
+   int bits_aligned = bits & 0x3F;
+   if (bits_aligned)
    {
-      key_size_blocks_local = key_size_blocks - 1;
-      byte_size = 4 * key_size_blocks;
-      block_index0 = 0;
-      cur_block0_ptr = &buffer1[byte_size];
-      accumulator = 0;
-      cur_block1_ptr = &buffer0[byte_size];
+      int block_counter = block_size - 1;
+      int block_index0 = 0;
+      
+      unsigned char *src_block_ptr = &src[4 * block_size];
+      unsigned char *dst_block_ptr = &dst[4 * block_size];
 
-      while ( 1 )
+      unsigned long long accumulator = 0;
+      
+      while (1)
       {
          block_index0 -= 4;
-         if ( key_size_blocks_local < 0 )
+         
+         if (block_counter < 0)
             break;
-         cur_block0 = *(unsigned int *)&cur_block0_ptr[block_index0];
-         --key_size_blocks_local;
-         *(unsigned int *)&cur_block1_ptr[block_index0] = accumulator | (cur_block0 >> byte_size_aligned_local);
-         accumulator = cur_block0 << (0x20 - byte_size_aligned_local);
+
+         unsigned long long cur_block0 = *(unsigned int *)&src_block_ptr[block_index0];
+
+         --block_counter;
+
+         unsigned long long shift_val = (cur_block0 >> bits_aligned);
+
+         *(unsigned int *)&dst_block_ptr[block_index0] = accumulator | shift_val;
+
+         accumulator = cur_block0 << (0x20 - bits_aligned);
       }
    }
    else
    {
-      while ( byte_size_aligned_local < key_size_blocks )
-      {
-         *(unsigned int *)&buffer0[4 * byte_size_aligned_local] = *(unsigned int *)&buffer1[4 * byte_size_aligned_local];
-         ++byte_size_aligned_local;
-      }
+      memcpy(dst, src, block_size * 4);
    }
 }
 

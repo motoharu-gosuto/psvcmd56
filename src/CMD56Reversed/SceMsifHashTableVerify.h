@@ -19,4 +19,7 @@ void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, in
 
 int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input);
 
-int arbitrary_length_add_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0);
+int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input);
+
+
+void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits);
