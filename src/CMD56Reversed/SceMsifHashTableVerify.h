@@ -15,11 +15,10 @@ void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int
 
 void block_shift_left_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits);
 
+void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits);
+
 void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier);
 
 int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input);
 
 int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input);
-
-
-void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits);

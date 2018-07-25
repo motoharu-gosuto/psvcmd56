@@ -58,6 +58,44 @@ void block_shift_left_with_overflow_C8EB0A(unsigned char* dst, unsigned char* sr
 }
 
 //[REVERSED] - [TESTED] (but not with automatic tests)
+void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits)
+{
+   int bits_aligned = bits & 0x3F;
+   if (bits_aligned)
+   {
+      int block_counter = block_size - 1;
+      int block_index0 = 0;
+      
+      unsigned char *src_block_ptr = &src[4 * block_size];
+      unsigned char *dst_block_ptr = &dst[4 * block_size];
+
+      unsigned long long accumulator = 0;
+      
+      while (1)
+      {
+         block_index0 -= 4;
+         
+         if (block_counter < 0)
+            break;
+
+         unsigned long long cur_block0 = *(unsigned int *)&src_block_ptr[block_index0];
+
+         --block_counter;
+
+         unsigned long long shift_val = (cur_block0 >> bits_aligned);
+
+         *(unsigned int *)&dst_block_ptr[block_index0] = accumulator | shift_val;
+
+         accumulator = cur_block0 << (0x20 - bits_aligned);
+      }
+   }
+   else
+   {
+      memcpy(dst, src, block_size * 4);
+   }
+}
+
+//[REVERSED] - [TESTED] (but not with automatic tests)
 //dst buffer should be 4 bytes longer then src buffer (higher bit multiplication reminder is stored there)
 void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier)
 {
@@ -181,43 +219,6 @@ int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigne
 }
 
 //=================
-
-void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits)
-{
-   int bits_aligned = bits & 0x3F;
-   if (bits_aligned)
-   {
-      int block_counter = block_size - 1;
-      int block_index0 = 0;
-      
-      unsigned char *src_block_ptr = &src[4 * block_size];
-      unsigned char *dst_block_ptr = &dst[4 * block_size];
-
-      unsigned long long accumulator = 0;
-      
-      while (1)
-      {
-         block_index0 -= 4;
-         
-         if (block_counter < 0)
-            break;
-
-         unsigned long long cur_block0 = *(unsigned int *)&src_block_ptr[block_index0];
-
-         --block_counter;
-
-         unsigned long long shift_val = (cur_block0 >> bits_aligned);
-
-         *(unsigned int *)&dst_block_ptr[block_index0] = accumulator | shift_val;
-
-         accumulator = cur_block0 << (0x20 - bits_aligned);
-      }
-   }
-   else
-   {
-      memcpy(dst, src, block_size * 4);
-   }
-}
 
 void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224_1, int key_size_blocks0, unsigned char *sha224_2, int key_size_blocks1)
 {
