@@ -84,17 +84,30 @@ void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, 
 
       unsigned int mul1_lo = ag_hi16 * cb_lo16;
       unsigned int mul1_hi = ag_hi16 * cb_hi16;
+
+      unsigned short mul0_lo16 = (mul0_lo >> 0x10);
       
-      unsigned int val2 = mul0_hi + (mul0_lo >> 0x10);
-      unsigned int val3 = mul0_lo + ((mul0_hi + mul1_lo) << 16);
+      unsigned int sum0 = mul0_hi + mul0_lo16;
+      unsigned int sum1 = mul0_hi + mul1_lo;
+
+      unsigned int val3 = mul0_lo + (sum1 << 0x10);
 
       *(unsigned int *)&buffer0[byte_counter] = val3 + acc0;
 
-      unsigned int term1 = (val2 >> 0x10);
-      unsigned int term2 = ((mul1_lo + (unsigned int)(unsigned __int16)val2) >> 0x10);
-      unsigned int term3 = (((val3 | acc0) & ~(val3 + acc0) | val3 & acc0) >> 0x1F);
+      unsigned short sum0_lo16 = (unsigned short)(sum0);
+      unsigned short sum0_hi16 = (unsigned short)(sum0 >> 0x10);
 
-      acc0 = mul1_hi + term1 + term2 + term3;
+      unsigned int sum2 = mul1_lo + sum0_lo16;
+      unsigned short sum2_lo16 = (unsigned short)(sum2 >> 0x10);
+      
+      unsigned int ct0 =  (val3 | acc0);
+      unsigned int ct1 = ~(val3 + acc0);
+      
+      unsigned int carry = (ct0 & ct1) | (val3 & acc0);
+
+      unsigned int carry_bit = (carry >> 0x1F);
+
+      acc0 = mul1_hi + sum0_hi16 + sum2_lo16 + carry_bit;
 
       byte_counter += 4;
    }
