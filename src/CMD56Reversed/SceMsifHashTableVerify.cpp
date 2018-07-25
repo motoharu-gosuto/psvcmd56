@@ -119,13 +119,13 @@ void arbitrary_length_multiply_C8E01C(unsigned char *buffer0, unsigned char *buf
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
 {
-   unsigned __int8 *buffer0_local; // r12
-   int result; // r0
-   int byte_counter; // r4
-   int block_counter; // r5
-   unsigned int cur_block1; // r6
-   int cur_block0; // lr
-   int block_res; // r7
+   unsigned char *buffer0_local;
+   unsigned int result;
+   int byte_counter;
+   int block_counter;
+   unsigned int cur_block1;
+   unsigned int cur_block0;
+   unsigned int block_res;
 
    buffer0_local = buffer0;
    result = arg_0 & 1;
@@ -134,11 +134,11 @@ int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
 
    while ( block_counter < block_size )
    {
-      cur_block1 = *(int *)&buffer2[byte_counter];
+      cur_block1 = *(unsigned int *)&buffer2[byte_counter];
       ++block_counter;
-      cur_block0 = *(int *)&buffer1[byte_counter];
+      cur_block0 = *(unsigned int *)&buffer1[byte_counter];
       block_res = cur_block0 - cur_block1 - result;
-      *(int *)&buffer0_local[byte_counter] = block_res;
+      *(unsigned int *)&buffer0_local[byte_counter] = block_res;
       result = ((~cur_block0 | cur_block1) & block_res | ~cur_block0 & cur_block1) >> 0x1F;
       byte_counter += 4;
    }
