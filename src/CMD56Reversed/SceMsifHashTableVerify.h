@@ -13,7 +13,7 @@ int block_memcmp_C8EADC(const unsigned char *buffer0, const unsigned char *buffe
 
 void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int byte_size);
 
-void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits);
+void block_shift_left_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits);
 
 void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier);
 

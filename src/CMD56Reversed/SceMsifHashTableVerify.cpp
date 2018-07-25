@@ -34,7 +34,7 @@ void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int
 }
 
 //[REVERSED] - [TESTED] (but not with automatic tests)
-void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits)
+void block_shift_left_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits)
 {
    int bits_aligned = bits & 0x3F;
    if (bits_aligned)
@@ -381,7 +381,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
             byte_size0_aligned = byte_size0 & 0x1F;
             *(int *)&buffer0[4 * block_size0] = 0;
 
-            block_shift_with_overflow_C8EB0A(buffer0, sha224_2, block_size0, byte_size0_aligned);
+            block_shift_left_with_overflow_C8EB0A(buffer0, sha224_2, block_size0, byte_size0_aligned);
 
             if ( (unsigned __int8)(byte_size1 & 0x1F) < byte_size0_aligned )
             {
@@ -393,7 +393,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
             }
 
             block_size3 = block_size0 + 1;
-            block_shift_with_overflow_C8EB0A(buffer2, sha224_1_local, block_size1, byte_size0_aligned);
+            block_shift_left_with_overflow_C8EB0A(buffer2, sha224_1_local, block_size1, byte_size0_aligned);
             val1 = *(int *)&buffer0[4 * (block_size0 - 1)];
             val_ptr0 = &buffer2[4 * (block_size1 + 1)];
             block_index0 = -4 * block_size0;
