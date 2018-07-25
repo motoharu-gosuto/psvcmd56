@@ -15,7 +15,7 @@ void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int
 
 void block_shift_left_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits);
 
-void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits);
+void block_shift_right_with_overflow_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits);
 
 void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier);
 

@@ -58,7 +58,7 @@ void block_shift_left_with_overflow_C8EB0A(unsigned char* dst, unsigned char* sr
 }
 
 //[REVERSED] - [TESTED] (but not with automatic tests)
-void sub_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits)
+void block_shift_right_with_overflow_C8E328(unsigned char* dst, unsigned char* src, int block_size, int bits)
 {
    int bits_aligned = bits & 0x3F;
    if (bits_aligned)
@@ -437,7 +437,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
                --block_size2;
             }
 
-            sha224_0 = (unsigned __int8 *)sub_C8E328(sha224_0_local, buffer2, key_size_blocks1, byte_size0_aligned);
+            sha224_0 = (unsigned __int8 *)block_shift_right_with_overflow_C8E328(sha224_0_local, buffer2, key_size_blocks1, byte_size0_aligned);
 
             for ( block_counter4 = 0; block_counter4 < key_size_blocks1 - block_size0; ++block_counter4 )
             {
