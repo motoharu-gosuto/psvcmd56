@@ -148,9 +148,8 @@ int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, u
    return carry_bit;
 }
 
-//=================
-
-int sub_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
+//[REVERSED] - [TESTED] (but not with automatic tests)
+int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
 {
    unsigned int carry_bit = carry_input & 1;
 
@@ -180,6 +179,8 @@ int sub_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, in
 
    return carry_bit;
 }
+
+//=================
 
 void sub_C8E328(unsigned char *buffer0, unsigned char *buffer1, int key_size_blocks, int byte_size_aligned)
 {
@@ -437,7 +438,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
 
                for ( xor0 = arbitrary_length_substract_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
                      xor0;
-                     xor0 ^= sub_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0) )
+                     xor0 ^= arbitrary_length_add_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0) )
                {
                   ;
                }
@@ -580,7 +581,7 @@ LABEL_8:
    {
       if ( (*buffer2 | *buffer3) & 1 )
       {
-         res0 = sub_C8EB4A(buffer2, buffer2, sha_224_1_local, key_size_blocks_local, buffer1[0] & 1);
+         res0 = arbitrary_length_add_C8EB4A(buffer2, buffer2, sha_224_1_local, key_size_blocks_local, buffer1[0] & 1);
          res1 = arbitrary_length_substract_C8E36E(buffer3, buffer3, sha_224_2_local, key_size_blocks_local, 0);
          *&buffer2[4 * key_size_blocks_local] += res0;
          *&buffer3[4 * key_size_blocks_local] -= res1;
@@ -619,7 +620,7 @@ LABEL_8:
       if ( (*buffer4 | *buffer5) & 1 )
       {
          check0 = buffer0[0] & 1;
-         res2 = sub_C8EB4A(buffer4, buffer4, sha_224_1_local, key_size_blocks_local, check0);
+         res2 = arbitrary_length_add_C8EB4A(buffer4, buffer4, sha_224_1_local, key_size_blocks_local, check0);
          res3 = arbitrary_length_substract_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, check0);
          *&buffer4[4 * key_size_blocks_local] += res2;
          *&buffer5[4 * key_size_blocks_local] -= res3;
@@ -698,7 +699,7 @@ LABEL_8:
    {
       do
       {
-         res4 = sub_C8EB4A(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, 0)
+         res4 = arbitrary_length_add_C8EB4A(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, 0)
                + *&buffer5[4 * key_size_blocks_local];
 
          *&buffer5[4 * key_size_blocks_local] = res4;
@@ -774,7 +775,7 @@ int do_smth_with_hashes_6_C8DF74(unsigned char *sha_224_0, unsigned char *sha_22
          sha_224_1_local_copy = sha_224_1_local;
          ++block_counter2;
          arbitrary_length_multiply_C8E01C((unsigned __int8 *)buffer0, sha_224_1_local, key_size_blocks0_local, block_ptr1);
-         sha_224_0 = (unsigned __int8 *)sub_C8EB4A(block_ptr0, block_ptr0, (unsigned __int8 *)buffer0, block_size0, 0);
+         sha_224_0 = (unsigned __int8 *)arbitrary_length_add_C8EB4A(block_ptr0, block_ptr0, (unsigned __int8 *)buffer0, block_size0, 0);
          sha_224_1_local = sha_224_1_local_copy;
       }
       while ( block_counter2 != key_size_blocks1 );
@@ -834,8 +835,8 @@ int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
          buffer1_val = *buffer1_local;
          buffer1_local += 4;
          arbitrary_length_multiply_C8E01C(data20, buffer2_local, key_size_blocks, buffer1_val);
-         res0 = sub_C8EB4A(data30, data30, data20, key_size_blocks + 1, 0);
-         res1 = sub_C8EB4A(data00, data01, data31, key_size_blocks, (*data00 | *data30) != 0) + res0;
+         res0 = arbitrary_length_add_C8EB4A(data30, data30, data20, key_size_blocks + 1, 0);
+         res1 = arbitrary_length_add_C8EB4A(data00, data01, data31, key_size_blocks, (*data00 | *data30) != 0) + res0;
          *&data00[4 * key_size_blocks] = res1;
          block_counter0 = block_counter1 + 1;
       }
@@ -913,11 +914,11 @@ int sub_C8EC70(unsigned char *buffer0, unsigned char *buffer1, int block_size_ar
          block_ptr1 += 4;
          arbitrary_length_multiply_C8E01C(data20, buffer3_local, block_size_arg1, block_val0 * arg_4);
          block_val1 = *&data20[4 * block_size_arg1];
-         *&data10[4 * block_counter1++] = sub_C8EB4A(block_ptr1, block_ptr1, data20, block_size_arg1, 0) + block_val1;
+         *&data10[4 * block_counter1++] = arbitrary_length_add_C8EB4A(block_ptr1, block_ptr1, data20, block_size_arg1, 0) + block_val1;
       }
       while ( block_counter1 != block_size_arg1 );
 
-      if ( sub_C8EB4A(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], data10, block_size_arg1, 0)
+      if ( arbitrary_length_add_C8EB4A(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], data10, block_size_arg1, 0)
          || (buffer0 = (unsigned char *)block_memcmp_C8EADC(buffer3_local, &data31[4 * block_size_arg1], block_size_arg1)) == 0 )
       {
          buffer0 = (unsigned char *)arbitrary_length_substract_C8E36E(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], buffer3_local, block_size_arg1, 0);
@@ -1384,7 +1385,7 @@ int sub_C8EE88(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned 
                   ptr_table0 = (unsigned __int8 **)(buffer4_local[0] & 1);
 
                   if ( buffer4_local[0] & 1 )
-                     ptr_table0 = (unsigned __int8 **)(sub_C8EB4A(buffer4_local, buffer4_local, buffer1_local_ptr, key_size_blocks, 0) << 31);
+                     ptr_table0 = (unsigned __int8 **)(arbitrary_length_add_C8EB4A(buffer4_local, buffer4_local, buffer1_local_ptr, key_size_blocks, 0) << 31);
 
                   ptr7 = &ptr_table0_local[1][4 * key_size_blocks];
                   block_index2 = 0;
