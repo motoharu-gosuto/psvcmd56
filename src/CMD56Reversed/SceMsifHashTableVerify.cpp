@@ -116,9 +116,8 @@ void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, in
    *(unsigned int *)&dst[byte_counter] = acc0;
 }
 
-//=================
-
-int sub_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
+//[REVERSED] - [TESTED] (but not with automatic tests)
+int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input)
 {
    unsigned int carry_bit = carry_input & 1;
    int byte_counter = 0;
@@ -147,6 +146,8 @@ int sub_C8E36E(unsigned char *dst, unsigned char *left, unsigned char *right, in
 
    return carry_bit;
 }
+
+//=================
 
 int sub_C8EB4A(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
 {
@@ -431,7 +432,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
 
                arbitrary_length_multiply_C8E01C(buffer1, buffer0, block_size0, val26);
 
-               for ( xor0 = sub_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
+               for ( xor0 = arbitrary_length_substract_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
                      xor0;
                      xor0 ^= sub_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0) )
                {
@@ -577,7 +578,7 @@ LABEL_8:
       if ( (*buffer2 | *buffer3) & 1 )
       {
          res0 = sub_C8EB4A(buffer2, buffer2, sha_224_1_local, key_size_blocks_local, buffer1[0] & 1);
-         res1 = sub_C8E36E(buffer3, buffer3, sha_224_2_local, key_size_blocks_local, 0);
+         res1 = arbitrary_length_substract_C8E36E(buffer3, buffer3, sha_224_2_local, key_size_blocks_local, 0);
          *&buffer2[4 * key_size_blocks_local] += res0;
          *&buffer3[4 * key_size_blocks_local] -= res1;
       }
@@ -616,7 +617,7 @@ LABEL_8:
       {
          check0 = buffer0[0] & 1;
          res2 = sub_C8EB4A(buffer4, buffer4, sha_224_1_local, key_size_blocks_local, check0);
-         res3 = sub_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, check0);
+         res3 = arbitrary_length_substract_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, check0);
          *&buffer4[4 * key_size_blocks_local] += res2;
          *&buffer5[4 * key_size_blocks_local] -= res3;
       }
@@ -651,15 +652,15 @@ LABEL_8:
 
    if ( block_memcmp_C8EADC(buffer0, buffer1, key_size_blocks_local) )
    {
-      sub_C8E36E(buffer0, buffer0, buffer1, key_size_blocks_local, 0);
-      sub_C8E36E(buffer4, buffer4, buffer2, key_size_blocks_local + 1, 0);
-      sub_C8E36E(buffer5, buffer5, buffer3, key_size_blocks_local + 1, 0);
+      arbitrary_length_substract_C8E36E(buffer0, buffer0, buffer1, key_size_blocks_local, 0);
+      arbitrary_length_substract_C8E36E(buffer4, buffer4, buffer2, key_size_blocks_local + 1, 0);
+      arbitrary_length_substract_C8E36E(buffer5, buffer5, buffer3, key_size_blocks_local + 1, 0);
    }
    else
    {
-      sub_C8E36E(buffer1, buffer1, buffer0, key_size_blocks_local, 0);
-      sub_C8E36E(buffer2, buffer2, buffer4, key_size_blocks_local + 1, 0);
-      sub_C8E36E(buffer3, buffer3, buffer5, key_size_blocks_local + 1, 0);
+      arbitrary_length_substract_C8E36E(buffer1, buffer1, buffer0, key_size_blocks_local, 0);
+      arbitrary_length_substract_C8E36E(buffer2, buffer2, buffer4, key_size_blocks_local + 1, 0);
+      arbitrary_length_substract_C8E36E(buffer3, buffer3, buffer5, key_size_blocks_local + 1, 0);
    }
 
    block_size3 = key_size_blocks_local;
@@ -705,7 +706,7 @@ LABEL_8:
    {
       while ( *&buffer5[4 * key_size_blocks_local] || !block_memcmp_C8EADC(sha_224_2_local, buffer5, key_size_blocks_local) )
       {
-         *&buffer5[4 * key_size_blocks_local] -= sub_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, 0);
+         *&buffer5[4 * key_size_blocks_local] -= arbitrary_length_substract_C8E36E(buffer5, buffer5, sha_224_2_local, key_size_blocks_local, 0);
       }
    }
 
@@ -839,7 +840,7 @@ int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
 
       if ( res1 || (buffer0 = (unsigned char *)block_memcmp_C8EADC(buffer3_local, data00, key_size_blocks)) == 0 )
       {
-         buffer0 = (unsigned char *)sub_C8E36E(data00, data00, buffer3_local, key_size_blocks, 0);
+         buffer0 = (unsigned char *)arbitrary_length_substract_C8E36E(data00, data00, buffer3_local, key_size_blocks, 0);
       }
 
       block_index1 = 0;
@@ -916,7 +917,7 @@ int sub_C8EC70(unsigned char *buffer0, unsigned char *buffer1, int block_size_ar
       if ( sub_C8EB4A(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], data10, block_size_arg1, 0)
          || (buffer0 = (unsigned char *)block_memcmp_C8EADC(buffer3_local, &data31[4 * block_size_arg1], block_size_arg1)) == 0 )
       {
-         buffer0 = (unsigned char *)sub_C8E36E(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], buffer3_local, block_size_arg1, 0);
+         buffer0 = (unsigned char *)arbitrary_length_substract_C8E36E(&data31[4 * block_size_arg1], &data31[4 * block_size_arg1], buffer3_local, block_size_arg1, 0);
       }
 
       byte_counter2 = 0;
