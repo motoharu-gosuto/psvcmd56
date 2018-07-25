@@ -33,7 +33,7 @@ void reverse_byte_order_C8E3AA(unsigned char* dst, const unsigned char* src, int
    reverse_byte_order(dst, src, byte_size);
 }
 
-//[REVERSED] - [TESTED]
+//[REVERSED] - [TESTED] (but not with automatic tests)
 void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, int block_size, int bits)
 {
    int bits_aligned = bits & 0x3F;
@@ -57,9 +57,8 @@ void block_shift_with_overflow_C8EB0A(unsigned char* dst, unsigned char* src, in
    }
 }
 
-//=================
-
-void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int arg3)
+//[REVERSED] - [TESTED] (but not with automatic tests)
+void arbitrary_length_multiply_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, int multiplier)
 {
    if (block_size <= 0)
       return;
@@ -76,8 +75,8 @@ void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, 
       unsigned short cb_lo16 = (unsigned short)(cur_block);
       unsigned short cb_hi16 = (unsigned short)(cur_block >> 0x10);
 
-      unsigned short ag_lo16 = (unsigned short)(arg3);
-      unsigned short ag_hi16 = (unsigned short)(arg3 >> 0x10);
+      unsigned short ag_lo16 = (unsigned short)(multiplier);
+      unsigned short ag_hi16 = (unsigned short)(multiplier >> 0x10);
 
       unsigned int mul0_lo = ag_lo16 * cb_lo16;
       unsigned int mul0_hi = ag_lo16 * cb_hi16;
@@ -115,6 +114,8 @@ void sub_C8E01C(unsigned char *buffer0, unsigned char *buffer1, int block_size, 
 
    *(unsigned int *)&buffer0[byte_counter] = acc0;
 }
+
+//=================
 
 int sub_C8E36E(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, int block_size, int arg_0)
 {
@@ -426,7 +427,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *sha224_0, unsigned char *sha224
                   while ( byte_counter0 );
                }
 
-               sub_C8E01C(buffer1, buffer0, block_size0, val26);
+               arbitrary_length_multiply_C8E01C(buffer1, buffer0, block_size0, val26);
 
                for ( xor0 = sub_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
                      xor0;
@@ -766,7 +767,7 @@ int do_smth_with_hashes_6_C8DF74(unsigned char *sha_224_0, unsigned char *sha_22
          block_counter1 = 0;
          sha_224_1_local_copy = sha_224_1_local;
          ++block_counter2;
-         sub_C8E01C((unsigned __int8 *)buffer0, sha_224_1_local, key_size_blocks0_local, block_ptr1);
+         arbitrary_length_multiply_C8E01C((unsigned __int8 *)buffer0, sha_224_1_local, key_size_blocks0_local, block_ptr1);
          sha_224_0 = (unsigned __int8 *)sub_C8EB4A(block_ptr0, block_ptr0, (unsigned __int8 *)buffer0, block_size0, 0);
          sha_224_1_local = sha_224_1_local_copy;
       }
@@ -823,10 +824,10 @@ int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
       do
       {
          block_counter1 = block_counter0;
-         sub_C8E01C(data30, buffer3_local, key_size_blocks, (*data00 + *buffer2_local * *buffer1_local) * arg4);
+         arbitrary_length_multiply_C8E01C(data30, buffer3_local, key_size_blocks, (*data00 + *buffer2_local * *buffer1_local) * arg4);
          buffer1_val = *buffer1_local;
          buffer1_local += 4;
-         sub_C8E01C(data20, buffer2_local, key_size_blocks, buffer1_val);
+         arbitrary_length_multiply_C8E01C(data20, buffer2_local, key_size_blocks, buffer1_val);
          res0 = sub_C8EB4A(data30, data30, data20, key_size_blocks + 1, 0);
          res1 = sub_C8EB4A(data00, data01, data31, key_size_blocks, (*data00 | *data30) != 0) + res0;
          *&data00[4 * key_size_blocks] = res1;
@@ -904,7 +905,7 @@ int sub_C8EC70(unsigned char *buffer0, unsigned char *buffer1, int block_size_ar
       {
          block_val0 = *(block_ptr1 + 1);
          block_ptr1 += 4;
-         sub_C8E01C(data20, buffer3_local, block_size_arg1, block_val0 * arg_4);
+         arbitrary_length_multiply_C8E01C(data20, buffer3_local, block_size_arg1, block_val0 * arg_4);
          block_val1 = *&data20[4 * block_size_arg1];
          *&data10[4 * block_counter1++] = sub_C8EB4A(block_ptr1, block_ptr1, data20, block_size_arg1, 0) + block_val1;
       }
