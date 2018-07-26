@@ -220,7 +220,7 @@ int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigne
 
 //=================
 
-void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, int byte_size_arg, unsigned __int8 *src1, int block_size_arg)
+void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int block_size_arg0, unsigned char *src1, int block_size_arg1)
 {
    unsigned __int8 *sha224_1_local; // r10
    unsigned __int8 *sha224_0_local; // r11
@@ -278,8 +278,8 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
 
    sha224_1_local = src0;
    sha224_0_local = dst;
-
-   if ( (unsigned int)(byte_size_arg - 1) <= 0x7F && (unsigned int)(block_size_arg - 1) <= 0x3F )
+  
+   if ( (unsigned int)(block_size_arg0 - 1) <= 0x7F && (unsigned int)(block_size_arg1 - 1) <= 0x3F )
    {
       block_counter3 = 0;
       block_size1_aligned = 0x20;
@@ -287,11 +287,12 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
 
       do
       {
+
          ++block_counter3;
          if ( block_size1_aligned != 0x20 )
             break;
 
-         val3 = *(unsigned int *)&sha224_1_local[4 * byte_size_arg + -4 * block_counter3];
+         val3 = *(unsigned int *)&sha224_1_local[4 * block_size_arg0 + -4 * block_counter3];
          val4 = (-(val3 >> 0x10) >> 0x10) & 0x10;
          val5 = 0x10 - val4;
          val6 = val3 >> val4;
@@ -302,15 +303,10 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
          val11 = val8 << val10;
          val12 = val9 + val10;
          val13 = ((unsigned int)(val11 - 0x4000) >> 0x10) & 2;
-
-         block_size1_aligned = val12
-                              + val13
-                              + 2
-                              - (((unsigned int)(val11 << val13) >> 0xE) & ~((unsigned int)(val11 << val13) >> 0xF));
-
+         block_size1_aligned = val12 + val13 + 2 - (((unsigned int)(val11 << val13) >> 0xE) & ~((unsigned int)(val11 << val13) >> 0xF));
          byte_size1 += block_size1_aligned;
       }
-      while ( block_counter3 != byte_size_arg );
+      while ( block_counter3 != block_size_arg0 );
 
       block_counter0 = 0;
       v22 = 0x20;
@@ -319,11 +315,10 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
       do
       {
          ++block_counter0;
-
          if ( v22 != 0x20 )
             break;
 
-         val14 = *(unsigned int *)&src1[4 * block_size_arg + -4 * block_counter0];
+         val14 = *(unsigned int *)&src1[4 * block_size_arg1 + -4 * block_counter0];
          val15 = (-(val14 >> 0x10) >> 0x10) & 0x10;
          val16 = 0x10 - val15;
          val17 = val14 >> val15;
@@ -337,19 +332,19 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
          v22 = val23 + val24 + 2 - (((unsigned int)(val22 << val24) >> 14) & ~((unsigned int)(val22 << val24) >> 15));
          byte_size0 += v22;
       }
-      while ( block_counter0 != block_size_arg );
+      while ( block_counter0 != block_size_arg1 );
 
-      block_size0 = block_size_arg - (byte_size0 >> 5);// /0x20
+      block_size0 = block_size_arg1 - (byte_size0 >> 5);// /0x20
 
-      if ( block_size_arg != byte_size0 >> 5 )    // /0x20
+      if ( block_size_arg1 != byte_size0 >> 5 )   // /0x20
       {
-         block_size1 = byte_size_arg - (byte_size1 >> 5);// /0x20
-         block_size2 = byte_size_arg - (byte_size1 >> 5);// /0x20
+         block_size1 = block_size_arg0 - (byte_size1 >> 5);// /0x20
+         block_size2 = block_size_arg0 - (byte_size1 >> 5);// /0x20
 
          if ( block_size1 == block_size0 )
          {
             sha224_2_copy = src1;
-            v38 = block_memcmp_C8EADC(src1, sha224_1_local, byte_size_arg - (byte_size1 >> 5));// /0x20
+            v38 = block_memcmp_C8EADC(src1, sha224_1_local, block_size_arg0 - (byte_size1 >> 5));// /0x20
             src1 = sha224_2_copy;
          }
          else
@@ -366,7 +361,8 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
                *(unsigned int *)&sha224_0_local[4 * block_counter1] = *(unsigned int *)&sha224_1_local[4 * block_counter1];
                ++block_counter1;
             }
-            for ( block_counter2 = 0; block_counter2 < block_size_arg - block_size1; ++block_counter2 )
+
+            for ( block_counter2 = 0; block_counter2 < block_size_arg1 - block_size1; ++block_counter2 )
             {
                *(unsigned int *)&sha224_0_local[4 * block_size1 + 4 * block_counter2] = 0;
             }
@@ -429,7 +425,7 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
 
                for ( xor0 = arbitrary_length_substract_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
                      xor0;
-                     xor0 ^= arbitrary_length_add_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0))
+                     xor0 ^= arbitrary_length_add_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0) )
                {
                   ;
                }
@@ -437,9 +433,9 @@ void do_smth_with_hashes_2_C8E084(unsigned __int8 *dst, unsigned __int8 *src0, i
                --block_size2;
             }
 
-            block_shift_right_with_overflow_C8E328(sha224_0_local, buffer2, block_size_arg, byte_size0_aligned);
+            block_shift_right_with_overflow_C8E328(sha224_0_local, buffer2, block_size_arg1, byte_size0_aligned);
 
-            for ( block_counter4 = 0; block_counter4 < block_size_arg - block_size0; ++block_counter4 )
+            for ( block_counter4 = 0; block_counter4 < block_size_arg1 - block_size0; ++block_counter4 )
             {
                *(unsigned int *)&sha224_0_local[4 * block_size0 + 4 * block_counter4] = 0;
             }
