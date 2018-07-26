@@ -97,7 +97,7 @@ void block_shift_right_with_overflow_C8E328(unsigned char* dst, unsigned char* s
 
 //[REVERSED] - [TESTED] (but not with automatic tests)
 //dst buffer should be 4 bytes longer then src buffer (higher bit multiplication reminder is stored there)
-void arbitrary_length_multiply_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier)
+void arbitrary_length_multiply_by_int_C8E01C(unsigned char *dst, unsigned char *src, int block_size, int multiplier)
 {
    if (block_size <= 0)
       return;
@@ -446,7 +446,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
                while ( byte_counter0 );
             }
 
-            arbitrary_length_multiply_C8E01C(buffer1, buffer0, block_size0, val26);
+            arbitrary_length_multiply_by_int_C8E01C(buffer1, buffer0, block_size0, val26);
 
             for ( xor0 = arbitrary_length_substract_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
                   xor0;
@@ -764,7 +764,7 @@ void do_smth_with_hashes_6_C8DF74(unsigned char *dst, unsigned char *src0, int b
       unsigned char * accumulator_block = (unsigned char *)&accumulator[4 * block_counter2];
       int multiplier = *(unsigned int *)&src1[4 * block_counter2];
 
-      arbitrary_length_multiply_C8E01C(buffer0, src0, block_size0, multiplier); //multiply part of src1 with whole src0
+      arbitrary_length_multiply_by_int_C8E01C(buffer0, src0, block_size0, multiplier); //multiply part of src1 with whole src0
       arbitrary_length_add_C8EB4A(accumulator_block, accumulator_block, buffer0, block_size0_local, 0); //add that into accumulator
 
       ++block_counter2;
@@ -816,10 +816,10 @@ int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *bu
       do
       {
          block_counter1 = block_counter0;
-         arbitrary_length_multiply_C8E01C(data30, buffer3_local, key_size_blocks, (*data00 + *buffer2_local * *buffer1_local) * arg4);
+         arbitrary_length_multiply_by_int_C8E01C(data30, buffer3_local, key_size_blocks, (*data00 + *buffer2_local * *buffer1_local) * arg4);
          buffer1_val = *buffer1_local;
          buffer1_local += 4;
-         arbitrary_length_multiply_C8E01C(data20, buffer2_local, key_size_blocks, buffer1_val);
+         arbitrary_length_multiply_by_int_C8E01C(data20, buffer2_local, key_size_blocks, buffer1_val);
          res0 = arbitrary_length_add_C8EB4A(data30, data30, data20, key_size_blocks + 1, 0);
          res1 = arbitrary_length_add_C8EB4A(data00, data01, data31, key_size_blocks, (*data00 | *data30) != 0) + res0;
          *&data00[4 * key_size_blocks] = res1;
@@ -897,7 +897,7 @@ int sub_C8EC70(unsigned char *buffer0, unsigned char *buffer1, int block_size_ar
       {
          block_val0 = *(block_ptr1 + 1);
          block_ptr1 += 4;
-         arbitrary_length_multiply_C8E01C(data20, buffer3_local, block_size_arg1, block_val0 * arg_4);
+         arbitrary_length_multiply_by_int_C8E01C(data20, buffer3_local, block_size_arg1, block_val0 * arg_4);
          block_val1 = *&data20[4 * block_size_arg1];
          *&data10[4 * block_counter1++] = arbitrary_length_add_C8EB4A(block_ptr1, block_ptr1, data20, block_size_arg1, 0) + block_val1;
       }
