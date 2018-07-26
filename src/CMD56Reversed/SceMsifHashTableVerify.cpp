@@ -220,13 +220,12 @@ int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigne
 
 //=================
 
-void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int block_size_arg0, unsigned char *src1, int block_size_arg1)
+unsigned int subroutine0_C8E084(const unsigned char *sha224_1_local, int block_size_arg0)
 {
-   unsigned __int8 *sha224_1_local; // r10
-   unsigned __int8 *sha224_0_local; // r11
    int block_counter3; // r1
    int block_size1_aligned; // r0
    unsigned int byte_size1; // r6
+
    unsigned int val3; // r5
    unsigned int val4; // r4
    int val5; // r0
@@ -238,53 +237,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
    int val11; // r4
    int val12; // r0
    unsigned int val13; // r5
-   int block_counter0; // r1
-   int v22; // r0
-   unsigned int byte_size0; // r9
-   unsigned int val14; // r5
-   unsigned int val15; // r4
-   int val16; // r0
-   unsigned int val17; // r4
-   unsigned int val18; // r5
-   int val19; // r4
-   int val20; // r0
-   unsigned int val21; // r5
-   int val22; // r4
-   int val23; // r0
-   unsigned int val24; // r5
-   int block_size0; // r5
-   int block_size1; // r4
-   unsigned __int8 *sha224_2_copy; // ST08_4
-   int v38; // r0
-   int block_counter1; // r12
-   int block_counter2; // r3
-   int byte_size0_aligned; // r9
-   unsigned int val1; // r7
-   unsigned __int8 *val_ptr0; // r6
-   int val25; // r2
-   unsigned int val0; // t1
-   int val26; // r3
-   signed int byte_counter0; // r1
-   int val27; // r0
-   int val28; // r4
-   unsigned int xor0; // r10
-   int block_counter4; // r3
-   int block_size2; // [sp+Ch] [bp-444h]
-   int block_size3; // [sp+10h] [bp-440h]
-   int block_index0; // [sp+14h] [bp-43Ch]
-   unsigned __int8 buffer0[260]; // [sp+18h] [bp-438h]
-   unsigned __int8 buffer1[260]; // [sp+11Ch] [bp-334h]
-   unsigned __int8 buffer2[516]; // [sp+220h] [bp-230h]
 
-   sha224_1_local = src0;
-   sha224_0_local = dst;
-
-   bool cond0 = (unsigned int)(block_size_arg0 - 1) <= 0x7F;
-   bool cond1 = (unsigned int)(block_size_arg1 - 1) <= 0x3F;
-  
-   if (!(cond0 && cond1))
-      return;
-   
    block_counter3 = 0;
    block_size1_aligned = 0x20;
    byte_size1 = 0;
@@ -312,6 +265,26 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
    }
    while ( block_counter3 != block_size_arg0 );
 
+   return byte_size1;
+}
+
+unsigned int subroutine1_C8E084(const unsigned char *src1, int block_size_arg1)
+{
+   int block_counter0; // r1
+   int v22; // r0
+   unsigned int byte_size0; // r9
+   unsigned int val14; // r5
+   unsigned int val15; // r4
+   int val16; // r0
+   unsigned int val17; // r4
+   unsigned int val18; // r5
+   int val19; // r4
+   int val20; // r0
+   unsigned int val21; // r5
+   int val22; // r4
+   int val23; // r0
+   unsigned int val24; // r5
+
    block_counter0 = 0;
    v22 = 0x20;
    byte_size0 = 0;
@@ -337,6 +310,54 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
       byte_size0 += v22;
    }
    while ( block_counter0 != block_size_arg1 );
+
+   return byte_size0;
+}
+
+void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int block_size_arg0, unsigned char *src1, int block_size_arg1)
+{
+   int block_size0; // r5
+   int block_size1; // r4
+   unsigned __int8 *sha224_2_copy; // ST08_4
+   int v38; // r0
+   int block_counter1; // r12
+   int block_counter2; // r3
+   int byte_size0_aligned; // r9
+   unsigned int val1; // r7
+   unsigned __int8 *val_ptr0; // r6
+   int val25; // r2
+   unsigned int val0; // t1
+   int val26; // r3
+   signed int byte_counter0; // r1
+   int val27; // r0
+   int val28; // r4
+   unsigned int xor0; // r10
+   int block_counter4; // r3
+   int block_size2; // [sp+Ch] [bp-444h]
+   int block_size3; // [sp+10h] [bp-440h]
+   int block_index0; // [sp+14h] [bp-43Ch]
+   unsigned __int8 buffer0[260]; // [sp+18h] [bp-438h]
+   unsigned __int8 buffer1[260]; // [sp+11Ch] [bp-334h]
+   unsigned __int8 buffer2[516]; // [sp+220h] [bp-230h]
+
+   unsigned __int8 * sha224_1_local = src0;
+   unsigned __int8 * sha224_0_local = dst;
+
+   //==================
+
+   bool cond0 = (unsigned int)(block_size_arg0 - 1) <= 0x7F;
+   bool cond1 = (unsigned int)(block_size_arg1 - 1) <= 0x3F;
+  
+   if (!(cond0 && cond1))
+      return;
+
+   //==================
+   
+   unsigned int byte_size1 = subroutine0_C8E084(src0, block_size_arg0);
+
+   unsigned int byte_size0 = subroutine1_C8E084(src1, block_size_arg1);
+
+   //==================
 
    block_size0 = block_size_arg1 - (byte_size0 >> 5);// /0x20
 
