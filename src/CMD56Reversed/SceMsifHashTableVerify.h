@@ -26,3 +26,5 @@ int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigne
 void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int byte_size_arg, unsigned char *src1, int block_size_arg);
 
 void arbitrary_length_multiply_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1);
+
+int do_smth_with_hashes_5_C8DBD4(unsigned char *dst, unsigned char *src1, unsigned char *src2, int block_size);
