@@ -278,167 +278,170 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
 
    sha224_1_local = src0;
    sha224_0_local = dst;
+
+   bool cond0 = (unsigned int)(block_size_arg0 - 1) <= 0x7F;
+   bool cond1 = (unsigned int)(block_size_arg1 - 1) <= 0x3F;
   
-   if ( (unsigned int)(block_size_arg0 - 1) <= 0x7F && (unsigned int)(block_size_arg1 - 1) <= 0x3F )
+   if (!(cond0 && cond1))
+      return;
+   
+   block_counter3 = 0;
+   block_size1_aligned = 0x20;
+   byte_size1 = 0;
+
+   do
    {
-      block_counter3 = 0;
-      block_size1_aligned = 0x20;
-      byte_size1 = 0;
 
-      do
+      ++block_counter3;
+      if ( block_size1_aligned != 0x20 )
+         break;
+
+      val3 = *(unsigned int *)&sha224_1_local[4 * block_size_arg0 + -4 * block_counter3];
+      val4 = (-(val3 >> 0x10) >> 0x10) & 0x10;
+      val5 = 0x10 - val4;
+      val6 = val3 >> val4;
+      val7 = ((val6 - 0x100) >> 0x10) & 8;
+      val8 = val6 << val7;
+      val9 = val5 + val7;
+      val10 = ((unsigned int)(val8 - 0x1000) >> 0x10) & 4;
+      val11 = val8 << val10;
+      val12 = val9 + val10;
+      val13 = ((unsigned int)(val11 - 0x4000) >> 0x10) & 2;
+      block_size1_aligned = val12 + val13 + 2 - (((unsigned int)(val11 << val13) >> 0xE) & ~((unsigned int)(val11 << val13) >> 0xF));
+      byte_size1 += block_size1_aligned;
+   }
+   while ( block_counter3 != block_size_arg0 );
+
+   block_counter0 = 0;
+   v22 = 0x20;
+   byte_size0 = 0;
+
+   do
+   {
+      ++block_counter0;
+      if ( v22 != 0x20 )
+         break;
+
+      val14 = *(unsigned int *)&src1[4 * block_size_arg1 + -4 * block_counter0];
+      val15 = (-(val14 >> 0x10) >> 0x10) & 0x10;
+      val16 = 0x10 - val15;
+      val17 = val14 >> val15;
+      val18 = ((val17 - 0x100) >> 0x10) & 8;
+      val19 = val17 << val18;
+      val20 = val16 + val18;
+      val21 = ((unsigned int)(val19 - 0x1000) >> 0x10) & 4;
+      val22 = val19 << val21;
+      val23 = val20 + val21;
+      val24 = ((unsigned int)(val22 - 0x4000) >> 0x10) & 2;
+      v22 = val23 + val24 + 2 - (((unsigned int)(val22 << val24) >> 14) & ~((unsigned int)(val22 << val24) >> 15));
+      byte_size0 += v22;
+   }
+   while ( block_counter0 != block_size_arg1 );
+
+   block_size0 = block_size_arg1 - (byte_size0 >> 5);// /0x20
+
+   if ( block_size_arg1 != byte_size0 >> 5 )   // /0x20
+   {
+      block_size1 = block_size_arg0 - (byte_size1 >> 5);// /0x20
+      block_size2 = block_size_arg0 - (byte_size1 >> 5);// /0x20
+
+      if ( block_size1 == block_size0 )
       {
-
-         ++block_counter3;
-         if ( block_size1_aligned != 0x20 )
-            break;
-
-         val3 = *(unsigned int *)&sha224_1_local[4 * block_size_arg0 + -4 * block_counter3];
-         val4 = (-(val3 >> 0x10) >> 0x10) & 0x10;
-         val5 = 0x10 - val4;
-         val6 = val3 >> val4;
-         val7 = ((val6 - 0x100) >> 0x10) & 8;
-         val8 = val6 << val7;
-         val9 = val5 + val7;
-         val10 = ((unsigned int)(val8 - 0x1000) >> 0x10) & 4;
-         val11 = val8 << val10;
-         val12 = val9 + val10;
-         val13 = ((unsigned int)(val11 - 0x4000) >> 0x10) & 2;
-         block_size1_aligned = val12 + val13 + 2 - (((unsigned int)(val11 << val13) >> 0xE) & ~((unsigned int)(val11 << val13) >> 0xF));
-         byte_size1 += block_size1_aligned;
+         sha224_2_copy = src1;
+         v38 = block_memcmp_C8EADC(src1, sha224_1_local, block_size_arg0 - (byte_size1 >> 5));// /0x20
+         src1 = sha224_2_copy;
       }
-      while ( block_counter3 != block_size_arg0 );
-
-      block_counter0 = 0;
-      v22 = 0x20;
-      byte_size0 = 0;
-
-      do
+      else
       {
-         ++block_counter0;
-         if ( v22 != 0x20 )
-            break;
-
-         val14 = *(unsigned int *)&src1[4 * block_size_arg1 + -4 * block_counter0];
-         val15 = (-(val14 >> 0x10) >> 0x10) & 0x10;
-         val16 = 0x10 - val15;
-         val17 = val14 >> val15;
-         val18 = ((val17 - 0x100) >> 0x10) & 8;
-         val19 = val17 << val18;
-         val20 = val16 + val18;
-         val21 = ((unsigned int)(val19 - 0x1000) >> 0x10) & 4;
-         val22 = val19 << val21;
-         val23 = val20 + val21;
-         val24 = ((unsigned int)(val22 - 0x4000) >> 0x10) & 2;
-         v22 = val23 + val24 + 2 - (((unsigned int)(val22 << val24) >> 14) & ~((unsigned int)(val22 << val24) >> 15));
-         byte_size0 += v22;
+         v38 = block_size1 < block_size0;
       }
-      while ( block_counter0 != block_size_arg1 );
 
-      block_size0 = block_size_arg1 - (byte_size0 >> 5);// /0x20
+      block_counter1 = 0;
 
-      if ( block_size_arg1 != byte_size0 >> 5 )   // /0x20
+      if ( v38 == 1 )
       {
-         block_size1 = block_size_arg0 - (byte_size1 >> 5);// /0x20
-         block_size2 = block_size_arg0 - (byte_size1 >> 5);// /0x20
-
-         if ( block_size1 == block_size0 )
+         while ( block_counter1 < block_size1 )
          {
-            sha224_2_copy = src1;
-            v38 = block_memcmp_C8EADC(src1, sha224_1_local, block_size_arg0 - (byte_size1 >> 5));// /0x20
-            src1 = sha224_2_copy;
+            *(unsigned int *)&sha224_0_local[4 * block_counter1] = *(unsigned int *)&sha224_1_local[4 * block_counter1];
+            ++block_counter1;
+         }
+
+         for ( block_counter2 = 0; block_counter2 < block_size_arg1 - block_size1; ++block_counter2 )
+         {
+            *(unsigned int *)&sha224_0_local[4 * block_size1 + 4 * block_counter2] = 0;
+         }
+      }
+      else
+      {
+         byte_size0_aligned = byte_size0 & 0x1F;
+         *(unsigned int *)&buffer0[4 * block_size0] = 0;
+         block_shift_left_with_overflow_C8EB0A(buffer0, src1, block_size0, byte_size0_aligned);
+
+         if ( (unsigned __int8)(byte_size1 & 0x1F) < byte_size0_aligned )
+         {
+            *(unsigned int *)&buffer2[4 * block_size1] = *(unsigned int *)&sha224_1_local[4 * (block_size1 + 0x3FFFFFFF)] >> (32 - byte_size0_aligned);
          }
          else
          {
-            v38 = block_size1 < block_size0;
+            *(unsigned int *)&buffer2[4 * block_size1] = 0;
          }
 
-         block_counter1 = 0;
+         block_size3 = block_size0 + 1;
+         block_shift_left_with_overflow_C8EB0A(buffer2, sha224_1_local, block_size1, byte_size0_aligned);
+         val1 = *(unsigned int *)&buffer0[4 * (block_size0 - 1)];
+         val_ptr0 = &buffer2[4 * (block_size1 + 1)];
+         block_index0 = -4 * block_size0;
 
-         if ( v38 == 1 )
+         while ( block_size2 >= block_size0 )
          {
-            while ( block_counter1 < block_size1 )
-            {
-               *(unsigned int *)&sha224_0_local[4 * block_counter1] = *(unsigned int *)&sha224_1_local[4 * block_counter1];
-               ++block_counter1;
-            }
+            val0 = *((unsigned int *)val_ptr0 - 1);
+            val_ptr0 -= 4;
+            val25 = val0;
 
-            for ( block_counter2 = 0; block_counter2 < block_size_arg1 - block_size1; ++block_counter2 )
+            if ( val0 >= val1 )
             {
-               *(unsigned int *)&sha224_0_local[4 * block_size1 + 4 * block_counter2] = 0;
-            }
-         }
-         else
-         {
-            byte_size0_aligned = byte_size0 & 0x1F;
-            *(unsigned int *)&buffer0[4 * block_size0] = 0;
-            block_shift_left_with_overflow_C8EB0A(buffer0, src1, block_size0, byte_size0_aligned);
-
-            if ( (unsigned __int8)(byte_size1 & 0x1F) < byte_size0_aligned )
-            {
-               *(unsigned int *)&buffer2[4 * block_size1] = *(unsigned int *)&sha224_1_local[4 * (block_size1 + 0x3FFFFFFF)] >> (32 - byte_size0_aligned);
+               val26 = -1;
             }
             else
             {
-               *(unsigned int *)&buffer2[4 * block_size1] = 0;
-            }
+               val26 = *((unsigned int *)val_ptr0 - 1);
+               byte_counter0 = 0x20;
 
-            block_size3 = block_size0 + 1;
-            block_shift_left_with_overflow_C8EB0A(buffer2, sha224_1_local, block_size1, byte_size0_aligned);
-            val1 = *(unsigned int *)&buffer0[4 * (block_size0 - 1)];
-            val_ptr0 = &buffer2[4 * (block_size1 + 1)];
-            block_index0 = -4 * block_size0;
-
-            while ( block_size2 >= block_size0 )
-            {
-               val0 = *((unsigned int *)val_ptr0 - 1);
-               val_ptr0 -= 4;
-               val25 = val0;
-
-               if ( val0 >= val1 )
+               do
                {
-                  val26 = -1;
-               }
-               else
-               {
-                  val26 = *((unsigned int *)val_ptr0 - 1);
-                  byte_counter0 = 0x20;
+                  val27 = val25 >> 0x1F;
+                  val28 = (unsigned __int64)(unsigned int)val26 >> 0x1F;
+                  val26 *= 2;
+                  val25 = val28 | 2 * val25;
 
-                  do
+                  if ( (val27 | (unsigned int)val25) >= val1 )
                   {
-                     val27 = val25 >> 0x1F;
-                     val28 = (unsigned __int64)(unsigned int)val26 >> 0x1F;
-                     val26 *= 2;
-                     val25 = val28 | 2 * val25;
-
-                     if ( (val27 | (unsigned int)val25) >= val1 )
-                     {
-                        val25 -= val1;
-                        val26 |= 1u;
-                     }
-
-                     --byte_counter0;
+                     val25 -= val1;
+                     val26 |= 1u;
                   }
-                  while ( byte_counter0 );
+
+                  --byte_counter0;
                }
-
-               arbitrary_length_multiply_C8E01C(buffer1, buffer0, block_size0, val26);
-
-               for ( xor0 = arbitrary_length_substract_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
-                     xor0;
-                     xor0 ^= arbitrary_length_add_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0) )
-               {
-                  ;
-               }
-
-               --block_size2;
+               while ( byte_counter0 );
             }
 
-            block_shift_right_with_overflow_C8E328(sha224_0_local, buffer2, block_size_arg1, byte_size0_aligned);
+            arbitrary_length_multiply_C8E01C(buffer1, buffer0, block_size0, val26);
 
-            for ( block_counter4 = 0; block_counter4 < block_size_arg1 - block_size0; ++block_counter4 )
+            for ( xor0 = arbitrary_length_substract_C8E36E(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer1, block_size3, 0);
+                  xor0;
+                  xor0 ^= arbitrary_length_add_C8EB4A(&val_ptr0[block_index0], &val_ptr0[block_index0], buffer0, block_size3, 0) )
             {
-               *(unsigned int *)&sha224_0_local[4 * block_size0 + 4 * block_counter4] = 0;
+               ;
             }
+
+            --block_size2;
+         }
+
+         block_shift_right_with_overflow_C8E328(sha224_0_local, buffer2, block_size_arg1, byte_size0_aligned);
+
+         for ( block_counter4 = 0; block_counter4 < block_size_arg1 - block_size0; ++block_counter4 )
+         {
+            *(unsigned int *)&sha224_0_local[4 * block_size0 + 4 * block_counter4] = 0;
          }
       }
    }
