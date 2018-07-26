@@ -218,6 +218,45 @@ int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigne
    return carry_bit;
 }
 
+//[REVERSED] - [TESTED] (but not with automatic tests)
+void arbitrary_length_multiply_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1)
+{
+   unsigned char buffer0[260];
+   unsigned char accumulator[512];
+   
+   bool cond0 = (unsigned int)(block_size0 - 1) <= 0x3F;
+   bool cond1 = (unsigned int)(block_size1 - 1) <= 0x3F;
+
+   if (!(cond0 && cond1))
+      return;
+
+   int block_size0_local = block_size0 + 1;
+
+   //memset 0 accumulator
+
+   memset(accumulator, 0, 4 * (block_size0 + block_size1));
+
+   //multiply and add into accumulator
+
+   int block_counter2 = 0;
+
+   do
+   {
+      unsigned char * accumulator_block = (unsigned char *)&accumulator[4 * block_counter2];
+      int multiplier = *(unsigned int *)&src1[4 * block_counter2];
+
+      arbitrary_length_multiply_by_int_C8E01C(buffer0, src0, block_size0, multiplier); //multiply part of src1 with whole src0
+      arbitrary_length_add_C8EB4A(accumulator_block, accumulator_block, buffer0, block_size0_local, 0); //add that into accumulator
+
+      ++block_counter2;
+   }
+   while (block_counter2 != block_size1);
+
+   //copy result
+
+   memcpy(dst, accumulator, 4 * (block_size0 + block_size1));
+}
+
 //=================
 
 unsigned int subroutine0_C8E084(const unsigned char *sha224_1_local, int block_size_arg0)
@@ -738,43 +777,7 @@ LABEL_40:
    return result;
 }
 
-void do_smth_with_hashes_6_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1)
-{
-   unsigned char buffer0[260];
-   unsigned char accumulator[512];
-   
-   bool cond0 = (unsigned int)(block_size0 - 1) <= 0x3F;
-   bool cond1 = (unsigned int)(block_size1 - 1) <= 0x3F;
 
-   if (!(cond0 && cond1))
-      return;
-
-   int block_size0_local = block_size0 + 1;
-
-   //memset 0 accumulator
-
-   memset(accumulator, 0, 4 * (block_size0 + block_size1));
-
-   //multiply and add into accumulator
-
-   int block_counter2 = 0;
-
-   do
-   {
-      unsigned char * accumulator_block = (unsigned char *)&accumulator[4 * block_counter2];
-      int multiplier = *(unsigned int *)&src1[4 * block_counter2];
-
-      arbitrary_length_multiply_by_int_C8E01C(buffer0, src0, block_size0, multiplier); //multiply part of src1 with whole src0
-      arbitrary_length_add_C8EB4A(accumulator_block, accumulator_block, buffer0, block_size0_local, 0); //add that into accumulator
-
-      ++block_counter2;
-   }
-   while (block_counter2 != block_size1);
-
-   //copy result
-
-   memcpy(dst, accumulator, 4 * (block_size0 + block_size1));
-}
 
 int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks, int arg4)
 {
@@ -1921,9 +1924,9 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    //some hash magic
 
    do_smth_with_hashes_5_C8DBD4(verify_ptr1_rev, verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks);
-   do_smth_with_hashes_6_C8DF74(buffer_table0[1], secret_key_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
+   arbitrary_length_multiply_C8DF74(buffer_table0[1], secret_key_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
    do_smth_with_hashes_2_C8E084(buffer_table0[0], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
-   do_smth_with_hashes_6_C8DF74(buffer_table0[1], verify_ptr0_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
+   arbitrary_length_multiply_C8DF74(buffer_table0[1], verify_ptr0_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
    do_smth_with_hashes_2_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
    do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, buffer_table0[0], buffer_table0[1], dec_ptr_table_item0_rev, dec_ptr_table_item1_rev, key_size_blocks);
    do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
