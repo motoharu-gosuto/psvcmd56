@@ -24,3 +24,5 @@ int arbitrary_length_substract_C8E36E(unsigned char *dst, unsigned char *left, u
 int arbitrary_length_add_C8EB4A(unsigned char *dst, unsigned char *left, unsigned char *right, int block_size, int carry_input);
 
 void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int byte_size_arg, unsigned char *src1, int block_size_arg);
+
+void do_smth_with_hashes_6_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1);

@@ -740,62 +740,40 @@ LABEL_40:
 
 void do_smth_with_hashes_6_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1)
 {
-   int block_size0_local; // r10
-   int block_counter0; // r3
-   int block_counter2; // r4
-   unsigned char *block_ptr0; // r11
-   int block_ptr1; // r3
-   int block_counter1; // r9
-   unsigned char *sha_224_1_local_copy; // ST0C_4
-   int block_size1_local; // [sp+8h] [bp-340h]
+   unsigned char buffer0[260];
+   unsigned char accumulator[512];
    
-   char buffer0[260]; // [sp+18h] [bp-330h]
-   char buffer1[512]; // [sp+11Ch] [bp-22Ch]
-   
-   unsigned char * sha_224_2_local = src1;
-   unsigned char * sha_224_1_local = src0;
-   int key_size_blocks0_local = block_size0;
-   unsigned char * dst_local = dst;
-
    bool cond0 = (unsigned int)(block_size0 - 1) <= 0x3F;
    bool cond1 = (unsigned int)(block_size1 - 1) <= 0x3F;
 
    if (!(cond0 && cond1))
       return;
 
-   block_size0_local = block_size0 + 1;
-   for ( block_counter0 = 0; ; ++block_counter0 )
-   {
-      block_counter2 = 0;
-      block_size1_local = block_size0 + block_size1;
+   int block_size0_local = block_size0 + 1;
 
-      if ( block_counter0 >= block_size0 + block_size1 )
-         break;
+   //memset 0 accumulator
 
-      *(unsigned int *)&buffer1[4 * block_counter0] = 0;
-   }
+   memset(accumulator, 0, 4 * (block_size0 + block_size1));
+
+   //multiply and add into accumulator
+
+   int block_counter2 = 0;
 
    do
    {
-      block_ptr0 = (unsigned __int8 *)&buffer1[4 * block_counter2];
-      block_ptr1 = *(unsigned int *)&sha_224_2_local[4 * block_counter2];
-      block_counter1 = 0;
-      sha_224_1_local_copy = sha_224_1_local;
+      unsigned char * accumulator_block = (unsigned char *)&accumulator[4 * block_counter2];
+      int multiplier = *(unsigned int *)&src1[4 * block_counter2];
+
+      arbitrary_length_multiply_C8E01C(buffer0, src0, block_size0, multiplier); //multiply part of src1 with whole src0
+      arbitrary_length_add_C8EB4A(accumulator_block, accumulator_block, buffer0, block_size0_local, 0); //add that into accumulator
+
       ++block_counter2;
-
-      arbitrary_length_multiply_C8E01C((unsigned __int8 *)buffer0, sha_224_1_local, key_size_blocks0_local, block_ptr1);
-      arbitrary_length_add_C8EB4A(block_ptr0, block_ptr0, (unsigned __int8 *)buffer0, block_size0_local, 0);
-
-      sha_224_1_local = sha_224_1_local_copy;
    }
-   while ( block_counter2 != block_size1 );
+   while (block_counter2 != block_size1);
 
-   do
-   {
-      *(unsigned int *)&dst_local[4 * block_counter1] = *(unsigned int *)&buffer1[4 * block_counter1];
-      ++block_counter1;
-   }
-   while ( block_counter1 < block_size1_local );
+   //copy result
+
+   memcpy(dst, accumulator, 4 * (block_size0 + block_size1));
 }
 
 int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks, int arg4)
