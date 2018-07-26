@@ -740,8 +740,6 @@ LABEL_40:
 
 void do_smth_with_hashes_6_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1)
 {
-   unsigned char *sha_224_1_local; // r12
-   int key_size_blocks0_local; // r5
    int block_size0_local; // r10
    int block_counter0; // r3
    int block_counter2; // r4
@@ -750,52 +748,54 @@ void do_smth_with_hashes_6_C8DF74(unsigned char *dst, unsigned char *src0, int b
    int block_counter1; // r9
    unsigned char *sha_224_1_local_copy; // ST0C_4
    int block_size1_local; // [sp+8h] [bp-340h]
-   unsigned char *dst_local; // [sp+10h] [bp-338h]
-   unsigned char *sha_224_2_local; // [sp+14h] [bp-334h]
+   
    char buffer0[260]; // [sp+18h] [bp-330h]
    char buffer1[512]; // [sp+11Ch] [bp-22Ch]
    
-   sha_224_2_local = src1;
-   sha_224_1_local = src0;
-   key_size_blocks0_local = block_size0;
-   dst_local = dst;
+   unsigned char * sha_224_2_local = src1;
+   unsigned char * sha_224_1_local = src0;
+   int key_size_blocks0_local = block_size0;
+   unsigned char * dst_local = dst;
 
-   if ( (unsigned int)(block_size0 - 1) <= 0x3F && (unsigned int)(block_size1 - 1) <= 0x3F )
+   bool cond0 = (unsigned int)(block_size0 - 1) <= 0x3F;
+   bool cond1 = (unsigned int)(block_size1 - 1) <= 0x3F;
+
+   if (!(cond0 && cond1))
+      return;
+
+   block_size0_local = block_size0 + 1;
+   for ( block_counter0 = 0; ; ++block_counter0 )
    {
-      block_size0_local = block_size0 + 1;
-      for ( block_counter0 = 0; ; ++block_counter0 )
-      {
-         block_counter2 = 0;
-         block_size1_local = block_size0 + block_size1;
+      block_counter2 = 0;
+      block_size1_local = block_size0 + block_size1;
 
-         if ( block_counter0 >= block_size0 + block_size1 )
-            break;
+      if ( block_counter0 >= block_size0 + block_size1 )
+         break;
 
-         *(unsigned int *)&buffer1[4 * block_counter0] = 0;
-      }
-
-      do
-      {
-         block_ptr0 = (unsigned __int8 *)&buffer1[4 * block_counter2];
-         block_ptr1 = *(unsigned int *)&sha_224_2_local[4 * block_counter2];
-         block_counter1 = 0;
-         sha_224_1_local_copy = sha_224_1_local;
-         ++block_counter2;
-
-         arbitrary_length_multiply_C8E01C((unsigned __int8 *)buffer0, sha_224_1_local, key_size_blocks0_local, block_ptr1);
-         arbitrary_length_add_C8EB4A(block_ptr0, block_ptr0, (unsigned __int8 *)buffer0, block_size0_local, 0);
-
-         sha_224_1_local = sha_224_1_local_copy;
-      }
-      while ( block_counter2 != block_size1 );
-
-      do
-      {
-         *(unsigned int *)&dst_local[4 * block_counter1] = *(unsigned int *)&buffer1[4 * block_counter1];
-         ++block_counter1;
-      }
-      while ( block_counter1 < block_size1_local );
+      *(unsigned int *)&buffer1[4 * block_counter0] = 0;
    }
+
+   do
+   {
+      block_ptr0 = (unsigned __int8 *)&buffer1[4 * block_counter2];
+      block_ptr1 = *(unsigned int *)&sha_224_2_local[4 * block_counter2];
+      block_counter1 = 0;
+      sha_224_1_local_copy = sha_224_1_local;
+      ++block_counter2;
+
+      arbitrary_length_multiply_C8E01C((unsigned __int8 *)buffer0, sha_224_1_local, key_size_blocks0_local, block_ptr1);
+      arbitrary_length_add_C8EB4A(block_ptr0, block_ptr0, (unsigned __int8 *)buffer0, block_size0_local, 0);
+
+      sha_224_1_local = sha_224_1_local_copy;
+   }
+   while ( block_counter2 != block_size1 );
+
+   do
+   {
+      *(unsigned int *)&dst_local[4 * block_counter1] = *(unsigned int *)&buffer1[4 * block_counter1];
+      ++block_counter1;
+   }
+   while ( block_counter1 < block_size1_local );
 }
 
 int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks, int arg4)
