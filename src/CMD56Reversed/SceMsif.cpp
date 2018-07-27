@@ -515,7 +515,7 @@ int decrypt_sha224_table_internal_C8D09C()
 }
 
 //[REVERSED]
-int decrypt_sha224_table_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_table[6])
+int decrypt_ecdsa_parameters_C8D09C(unsigned char* ptr_pair[2], unsigned char* ptr_table[6])
 {
    //check that tables is not already decrypted
 
@@ -845,7 +845,7 @@ int _byteswap_ulong_C8D78C(char* bytes)
 }
 
 //[REVERSED]
-int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char master_key[0x10])
+int ecdsa_verify_C8D78C(SceMsif_subctx* subctx, unsigned char master_key[0x10])
 {
    //get response from the card
 
@@ -859,16 +859,16 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char
    if(data_inv != 1)
       return -1; //returns not exactly this, but we dont care here
 
-   //decrypt static list of what is probably sha 224 hash table
+   //decrypt static list of ecdsa parameters
 
-   unsigned char* dec_ptr_pair[2];
-   unsigned char* dec_ptr_table[6];
+   unsigned char* public_key_point_table[2];
+   unsigned char* ecdsa_params_table[6];
 
-   int dec_res = decrypt_sha224_table_C8D09C(dec_ptr_pair, dec_ptr_table);
+   int dec_res = decrypt_ecdsa_parameters_C8D09C(public_key_point_table, ecdsa_params_table);
    if(dec_res != 0)
       return -1; //returns not exactly this, but we dont care here
 
-   //derive secret key from master key that we get during card initialization (use sha 224 for derivation)
+   //derive hash of master key that we get during card initialization (use sha 224 for derivation)
 
    unsigned char message_hash[0x1C];
    memset(message_hash, 0, 0x1C);
@@ -880,18 +880,18 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char
    //verify the data
 
    ecdsa_point P;
-   memcpy(P.X, dec_ptr_pair[0], 0x1C);
-   memcpy(P.Y, dec_ptr_pair[1], 0x1C);
+   memcpy(P.X, public_key_point_table[0], 0x1C);
+   memcpy(P.Y, public_key_point_table[1], 0x1C);
 
    ecdsa_params params;
-   memcpy(params.P, dec_ptr_table[0], 0x1C);
-   memcpy(params.A, dec_ptr_table[1], 0x1C);
-   memcpy(params.B, dec_ptr_table[2], 0x1C);
-   memcpy(params.N, dec_ptr_table[3], 0x1C);
-   memcpy(params.G.X, dec_ptr_table[4], 0x1C);
-   memcpy(params.G.Y, dec_ptr_table[5], 0x1C);
+   memcpy(params.P, ecdsa_params_table[0], 0x1C);
+   memcpy(params.A, ecdsa_params_table[1], 0x1C);
+   memcpy(params.B, ecdsa_params_table[2], 0x1C);
+   memcpy(params.N, ecdsa_params_table[3], 0x1C);
+   memcpy(params.G.X, ecdsa_params_table[4], 0x1C);
+   memcpy(params.G.Y, ecdsa_params_table[5], 0x1C);
 
-   int vf_res = verify_hashes_C8DBC0(&subctx->signature, message_hash, &P, &params);
+   int vf_res = ecdsa_verify_C8DBC0(&subctx->signature, message_hash, &P, &params);
    if(vf_res != 0)
       return -1;
 

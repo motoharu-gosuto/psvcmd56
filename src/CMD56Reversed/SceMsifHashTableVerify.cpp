@@ -1996,7 +1996,7 @@ int ecdsa_verify_C8DA14(ecdsa_signature *sig, unsigned char M[0x1C], const ecdsa
 // ctx contains 2 pointers of size 0x1C
 // dec_ptr_pair - contains 2 pointers of size 0x1C
 // dec_ptr_table - contains 6 pointers of size 0x1C
-int verify_hashes_C8DBC0(ecdsa_signature* sig, unsigned char M[0x1C], const ecdsa_point* P, const ecdsa_params* params)
+int ecdsa_verify_C8DBC0(ecdsa_signature* sig, unsigned char M[0x1C], const ecdsa_point* P, const ecdsa_params* params)
 {
    return ecdsa_verify_C8DA14(sig, M, P, params, 7, 0x1C);
 }
