@@ -1538,7 +1538,7 @@ typedef int hsub_hash_fun7(unsigned char **ptr_table, unsigned char *buffer0, un
 hsub_hash_fun7 *off_C8E720 = sub_C8E728;
 hsub_hash_fun7* off_C8E724 = sub_C8F130;
 
-int do_smth_with_hashes_7_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
+int arbitrary_length_multiply_add_and_smth_C8E420(unsigned char **sha_224_0, unsigned char **sha_224_1, unsigned char **sha_224_2, unsigned char *sha_224_3, unsigned char *sha_224_4, unsigned char *sha_224_5, unsigned char *sha_224_6, int key_size_blocks)
 {
    unsigned char *buffer_ptr5; // r9
    unsigned char **ptr_table6; // r6
@@ -1975,7 +1975,7 @@ int ecdsa_verify_C8DA14(ecdsa_signature *sig, unsigned char M[0x1C], const ecdsa
    C[1] = pointer_table2_item1;
    C[2] = pointer_table2_item2;
 
-   do_smth_with_hashes_7_C8E420(C, G_unpack, Qa_mod_P, U[0], U[1], P_unpack, A_unpack, key_size_blocks);
+   arbitrary_length_multiply_add_and_smth_C8E420(C, G_unpack, Qa_mod_P, U[0], U[1], P_unpack, A_unpack, key_size_blocks);
    
    //-------
   
