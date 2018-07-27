@@ -1840,21 +1840,37 @@ LABEL_38:
 
 //=================
 
-int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], unsigned char *dec_ptr_pair[2], unsigned char *dec_ptr_table[6], int key_size_blocks, int key_size_bytes)
+//http://www.secg.org/sec2-v2.pdf
+
+//https://github.com/kokke/tiny-ECDH-c/blob/master/ecdh.c#L872
+/*
+   1) Verify that (r,s) are in [1, n-1]
+   2) e = HASH(m)
+   3) z = Ln leftmost bits of e
+   4) w = inv(s) mod n
+   5) u0 = (z * w) mod n
+      u1 = (r * w) mod n
+   6) (x,y) = (u0 * G) + (u1 * Qa)
+   7) Signature is valid if r == x mod n && (x,y) != (0,0)
+*/
+
+int ecdsa_verify_C8DA14(verify_hash_ctx *ctx, unsigned char e[0x1C], unsigned char *dec_ptr_pair[2], unsigned char *dec_ptr_table[6], int key_size_blocks, int key_size_bytes)
 {
    //order of variables may be important
 
-   unsigned char* pointer_table0[3];
-   unsigned char* pointer_table1[3];
+   unsigned char* unk_params[3];
+   unsigned char* Qa_and_G_mod[3];
+   unsigned char* curve_point[3];
+   unsigned char* Qa_and_G[3];
 
-   unsigned char dec_ptr_table_item0_rev[28];
-   unsigned char dec_ptr_table_item1_rev[28];
-   unsigned char dec_ptr_table_item2_rev[28];
+   unsigned char Qa[28];
+   unsigned char G[28];
+   unsigned char n[28];
 
-   unsigned char verify_ptr0_rev[28];
-   unsigned char verify_ptr1_rev[28];
+   unsigned char r[28];
+   unsigned char s[28];
 
-   unsigned char secret_key_rev[28];
+   unsigned char z[28];
 
    unsigned char pointer_table0_item0[28];
    unsigned char pointer_table0_item1[28];
@@ -1864,73 +1880,97 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    unsigned char pointer_table1_item1[28];
    unsigned char pointer_table1_item2[28];
 
-   unsigned char buffer_table0[3][28];
+   unsigned char pointer_table2_item0[28];
+   unsigned char pointer_table2_item1[28];
+   unsigned char pointer_table2_item2[28];
+
+   unsigned char pointer_table3_item0[28];
+   unsigned char pointer_table3_item1[28];
+   unsigned char pointer_table3_item2[28];
+
+   unsigned char u[3][28];
 
    //prepare pointer tables
 
-   pointer_table0[0] = pointer_table0_item0;
-   pointer_table0[1] = pointer_table0_item1;
-   pointer_table0[2] = pointer_table0_item2;
+   unk_params[0] = pointer_table0_item0;
+   unk_params[1] = pointer_table0_item1;
+   unk_params[2] = pointer_table0_item2;
    
-   pointer_table1[0] = pointer_table1_item0;
-   pointer_table1[1] = pointer_table1_item1;
-   pointer_table1[2] = pointer_table1_item2;
+   Qa_and_G_mod[0] = pointer_table1_item0;
+   Qa_and_G_mod[1] = pointer_table1_item1;
+   Qa_and_G_mod[2] = pointer_table1_item2;
+
+   curve_point[0] = pointer_table2_item0;
+   curve_point[1] = pointer_table2_item1;
+   curve_point[2] = pointer_table2_item2;
+
+   Qa_and_G[0] = pointer_table3_item0;
+   Qa_and_G[1] = pointer_table3_item1;
+   Qa_and_G[2] = pointer_table3_item2;
 
    if(key_size_blocks <= 0)
       return -1;
 
    //reverse all required buffers
 
-   reverse_byte_order_C8E3AA(dec_ptr_table_item0_rev, dec_ptr_table[0], key_size_bytes);
-   reverse_byte_order_C8E3AA(dec_ptr_table_item1_rev, dec_ptr_table[1], key_size_bytes);
-   reverse_byte_order_C8E3AA(dec_ptr_table_item2_rev, dec_ptr_table[3], key_size_bytes);
+   reverse_byte_order_C8E3AA(Qa, dec_ptr_table[0], key_size_bytes); //parameter - public key curve point
+   reverse_byte_order_C8E3AA(G, dec_ptr_table[1], key_size_bytes);  //parameter - elliptic curve base point
+   reverse_byte_order_C8E3AA(n, dec_ptr_table[3], key_size_bytes);  //parameter - integer order of G
 
-   reverse_byte_order_C8E3AA(pointer_table0[0], dec_ptr_table[4], key_size_bytes);
-   reverse_byte_order_C8E3AA(pointer_table0[1], dec_ptr_table[5], key_size_bytes);
+   reverse_byte_order_C8E3AA(unk_params[0], dec_ptr_table[4], key_size_bytes); //TODO: Unknown parameter
+   reverse_byte_order_C8E3AA(unk_params[1], dec_ptr_table[5], key_size_bytes); //TODO: Unknown parameter
 
-   reverse_byte_order_C8E3AA(secret_key_rev, secret_key, key_size_bytes);
+   reverse_byte_order_C8E3AA(z, e, key_size_bytes);
 
-   reverse_byte_order_C8E3AA(pointer_table1[0], dec_ptr_pair[0], key_size_bytes);
-   reverse_byte_order_C8E3AA(pointer_table1[1], dec_ptr_pair[1], key_size_bytes);
+   reverse_byte_order_C8E3AA(Qa_and_G[0], dec_ptr_pair[0], key_size_bytes); //parameter - public key curve point
+   reverse_byte_order_C8E3AA(Qa_and_G[1], dec_ptr_pair[1], key_size_bytes); //parameter - elliptic curve base point
 
-   reverse_byte_order_C8E3AA(verify_ptr0_rev, ctx->ptr_4, key_size_bytes);
-   reverse_byte_order_C8E3AA(verify_ptr1_rev, ctx->ptr_20, key_size_bytes);
+   reverse_byte_order_C8E3AA(r, ctx->r, key_size_bytes);
+   reverse_byte_order_C8E3AA(s, ctx->s, key_size_bytes);
    
-   //check dec_ptr_table_item0_rev and derive something from it
+   //check that Qa is not identity element O
 
-   if(memory_is_all_zeroes(dec_ptr_table_item0_rev, key_size_blocks * 4))
+   if(memory_is_all_zeroes(Qa, key_size_blocks * 4))
       return -1;
 
-   arbitrary_length_modulo_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
-   arbitrary_length_modulo_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
+   arbitrary_length_modulo_C8E084(Qa_and_G_mod[0], Qa_and_G[0], key_size_blocks, Qa, key_size_blocks); // Qa mod Qa - TODO: why?
+   arbitrary_length_modulo_C8E084(Qa_and_G_mod[1], Qa_and_G[1], key_size_blocks, Qa, key_size_blocks); // G mod Qa - TODO: why?
 
-   //verify ctx pointers
+   //r and s must be < n
 
-   if(memory_is_all_zeroes(verify_ptr0_rev, key_size_blocks * 4))
+   if(memory_is_all_zeroes(r, key_size_blocks * 4))
       return -1;
 
-   if(memcmp(verify_ptr0_rev, dec_ptr_table_item2_rev, key_size_blocks * 4) >= 0)
+   if(memcmp(r, n, key_size_blocks * 4) >= 0)
       return -1;
 
-   if(memory_is_all_zeroes(verify_ptr1_rev, key_size_blocks * 4))
+   if(memory_is_all_zeroes(s, key_size_blocks * 4))
       return -1;
 
-   if(memcmp(verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks * 4) >= 0)
+   if(memcmp(s, n, key_size_blocks * 4) >= 0)
       return -1;
 
-   //some hash magic
+   //perform ecdsa verify
 
-   maybe_arbitrary_length_inverse_5_C8DBD4(verify_ptr1_rev, verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks);
-   arbitrary_length_multiply_C8DF74(buffer_table0[1], secret_key_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
-   arbitrary_length_modulo_C8E084(buffer_table0[0], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
-   arbitrary_length_multiply_C8DF74(buffer_table0[1], verify_ptr0_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
-   arbitrary_length_modulo_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
-   do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, buffer_table0[0], buffer_table0[1], dec_ptr_table_item0_rev, dec_ptr_table_item1_rev, key_size_blocks);
-   arbitrary_length_modulo_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+   unsigned char w[0x1C];
 
-   //verify ctx pointer
+   maybe_arbitrary_length_inverse_5_C8DBD4(w, s, n, key_size_blocks); //w = inv(s) mod n
 
-   if(memcmp(pointer_table1[0], verify_ptr0_rev, key_size_blocks * 4) != 0)
+   arbitrary_length_multiply_C8DF74(u[1], z, key_size_blocks, w, key_size_blocks); //u0 = (z * w)
+   arbitrary_length_modulo_C8E084(u[0], u[1], 2 * key_size_blocks, n, key_size_blocks); //u0 = u0 mod n
+
+   arbitrary_length_multiply_C8DF74(u[1], r, key_size_blocks, w, key_size_blocks); //u1 = (r * w)
+   arbitrary_length_modulo_C8E084(u[1], u[1], 2 * key_size_blocks, n, key_size_blocks); //u1 = u1 mod n
+
+   do_smth_with_hashes_7_C8E420(curve_point, unk_params, Qa_and_G_mod, u[0], u[1], Qa, G, key_size_blocks); //(u0 * G) + (u1 * Qa)
+   
+   unsigned char xmod[0x1C];
+   
+   arbitrary_length_modulo_C8E084(xmod, curve_point[0], key_size_blocks, n, key_size_blocks); //x mod n
+
+   //verify r
+
+   if(memcmp(xmod, r, key_size_blocks * 4) != 0) //r == x mod n
       return -1;
 
    return 0;
@@ -1941,5 +1981,5 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 // dec_ptr_table - contains 6 pointers of size 0x1C
 int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char secret_key[0x1C], unsigned char* dec_ptr_pair[2], unsigned char* dec_ptr_table[6])
 {
-   return verify_hashes_C8DA14(ctx, secret_key, dec_ptr_pair, dec_ptr_table, 7, 0x1C);
+   return ecdsa_verify_C8DA14(ctx, secret_key, dec_ptr_pair, dec_ptr_table, 7, 0x1C);
 }
