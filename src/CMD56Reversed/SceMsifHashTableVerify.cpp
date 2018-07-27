@@ -521,8 +521,6 @@ LABEL_8:
    return 1;
 }
 
-//=================
-
 unsigned int subroutine0_C8E084(const unsigned char *sha224_1_local, int block_size_arg0)
 {
    int block_counter3; // r1
@@ -617,11 +615,12 @@ unsigned int subroutine1_C8E084(const unsigned char *src1, int block_size_arg1)
    return byte_size0;
 }
 
-void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int block_size_arg0, unsigned char *src1, int block_size_arg1)
+//[NOT COMPLETELY REVERSED] - [TESTED] (but not with automatic tests)
+void arbitrary_length_modulo_C8E084(unsigned char *dst, unsigned char *src0, int block_size_arg0, unsigned char *mod, int block_size_arg1)
 {
    int block_size0; // r5
    int block_size1; // r4
-   unsigned __int8 *sha224_2_copy; // ST08_4
+   unsigned __int8 *sha224_2_copy; // ST08_4 
    int v38; // r0
    int block_counter1; // r12
    int block_counter2; // r3
@@ -658,7 +657,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
    
    unsigned int byte_size1 = subroutine0_C8E084(src0, block_size_arg0);
 
-   unsigned int byte_size0 = subroutine1_C8E084(src1, block_size_arg1);
+   unsigned int byte_size0 = subroutine1_C8E084(mod, block_size_arg1);
 
    //==================
 
@@ -671,9 +670,9 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
 
       if ( block_size1 == block_size0 )
       {
-         sha224_2_copy = src1;
-         v38 = block_memcmp_C8EADC(src1, sha224_1_local, block_size_arg0 - (byte_size1 >> 5));// /0x20
-         src1 = sha224_2_copy;
+         sha224_2_copy = mod;
+         v38 = block_memcmp_C8EADC(mod, sha224_1_local, block_size_arg0 - (byte_size1 >> 5));// /0x20
+         mod = sha224_2_copy;
       }
       else
       {
@@ -699,7 +698,7 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
       {
          byte_size0_aligned = byte_size0 & 0x1F;
          *(unsigned int *)&buffer0[4 * block_size0] = 0;
-         block_shift_left_with_overflow_C8EB0A(buffer0, src1, block_size0, byte_size0_aligned);
+         block_shift_left_with_overflow_C8EB0A(buffer0, mod, block_size0, byte_size0_aligned);
 
          if ( (unsigned __int8)(byte_size1 & 0x1F) < byte_size0_aligned )
          {
@@ -770,6 +769,8 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
       }
    }
 }
+
+//=================
 
 int sub_C8EB80(unsigned char *buffer0, unsigned char *buffer1, unsigned char *buffer2, unsigned char *buffer3, int key_size_blocks, int arg4)
 {
@@ -1512,7 +1513,7 @@ void sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned
       *((int *)&dummy + 2 * key_size_blocks1 - 0x10) = 1;
       
       ptr_table_local = ptr_table0;
-      ptr_table0 = (unsigned __int8 **)do_smth_with_hashes_2_C8E084(buffer1_local, buffer1_local, size1 + 1, buffer2, key_size_blocks1);
+      ptr_table0 = (unsigned __int8 **)arbitrary_length_modulo_C8E084(buffer1_local, buffer1_local, size1 + 1, buffer2, key_size_blocks1);
 
       if ( v9 )
          ptr_table0 = (unsigned __int8 **)sub_C8E8C4(ptr_table_local, v9, buffer1_local, buffer2, key_size_blocks1, arg_10);
@@ -1529,6 +1530,8 @@ void sub_C8E95C(unsigned char **ptr_table0, unsigned char **ptr_table1, unsigned
    return (int)ptr_table0;
    */
 }   
+
+//=================
 
 typedef int hsub_hash_fun7(unsigned char **ptr_table, unsigned char *buffer0, unsigned char *buffer1, unsigned int key_size_blocks, int arg_0);
 
@@ -1835,6 +1838,8 @@ LABEL_38:
   return (int)sha_224_0;
 }
 
+//=================
+
 int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], unsigned char *dec_ptr_pair[2], unsigned char *dec_ptr_table[6], int key_size_blocks, int key_size_bytes)
 {
    //order of variables may be important
@@ -1896,8 +1901,8 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
    if(memory_is_all_zeroes(dec_ptr_table_item0_rev, key_size_blocks * 4))
       return -1;
 
-   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
+   arbitrary_length_modulo_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
+   arbitrary_length_modulo_C8E084(pointer_table1[1], pointer_table1[1], key_size_blocks, dec_ptr_table_item0_rev, key_size_blocks);
 
    //verify ctx pointers
 
@@ -1917,11 +1922,11 @@ int verify_hashes_C8DA14(verify_hash_ctx *ctx, unsigned char secret_key[0x1C], u
 
    maybe_arbitrary_length_inverse_5_C8DBD4(verify_ptr1_rev, verify_ptr1_rev, dec_ptr_table_item2_rev, key_size_blocks);
    arbitrary_length_multiply_C8DF74(buffer_table0[1], secret_key_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(buffer_table0[0], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+   arbitrary_length_modulo_C8E084(buffer_table0[0], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
    arbitrary_length_multiply_C8DF74(buffer_table0[1], verify_ptr0_rev, key_size_blocks, verify_ptr1_rev, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+   arbitrary_length_modulo_C8E084(buffer_table0[1], buffer_table0[1], 2 * key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
    do_smth_with_hashes_7_C8E420(pointer_table1, pointer_table0, pointer_table1, buffer_table0[0], buffer_table0[1], dec_ptr_table_item0_rev, dec_ptr_table_item1_rev, key_size_blocks);
-   do_smth_with_hashes_2_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
+   arbitrary_length_modulo_C8E084(pointer_table1[0], pointer_table1[0], key_size_blocks, dec_ptr_table_item2_rev, key_size_blocks);
 
    //verify ctx pointer
 
