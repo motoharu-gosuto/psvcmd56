@@ -22,8 +22,7 @@
 typedef struct SceMsif_subctx
 {
    char error_code[4];
-   unsigned char resp_buffer0[0x1C];
-   unsigned char resp_buffer1[0x1C];
+   ecdsa_signature signature;
 }SceMsif_subctx;
 
 #define MS_TPC_48 0x48
@@ -871,20 +870,28 @@ int decrypt_sha224_table_and_verify_C8D78C(SceMsif_subctx* subctx, unsigned char
 
    //derive secret key from master key that we get during card initialization (use sha 224 for derivation)
 
-   unsigned char secret_key[0x1C];
-   memset(secret_key, 0, 0x1C);
+   unsigned char message_hash[0x1C];
+   memset(message_hash, 0, 0x1C);
 
-   int sha_res = SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(master_key, 0x10, secret_key);
+   int sha_res = SceKernelUtilsForDriver_sceSha224DigestForDriver_9ea9d4dc(master_key, 0x10, message_hash);
    if(sha_res != 0)
       return -1; //returns not exactly this, but we dont care here
 
    //verify the data
 
-   verify_hash_ctx vfh_ctx;
-   vfh_ctx.ptr_4 = subctx->resp_buffer0; 
-   vfh_ctx.ptr_20 = subctx->resp_buffer1;
+   ecdsa_point P;
+   memcpy(P.X, dec_ptr_pair[0], 0x1C);
+   memcpy(P.Y, dec_ptr_pair[1], 0x1C);
 
-   int vf_res = verify_hashes_C8DBC0(&vfh_ctx, secret_key, dec_ptr_pair, dec_ptr_table);
+   ecdsa_params params;
+   memcpy(params.P, dec_ptr_table[0], 0x1C);
+   memcpy(params.A, dec_ptr_table[1], 0x1C);
+   memcpy(params.B, dec_ptr_table[2], 0x1C);
+   memcpy(params.N, dec_ptr_table[3], 0x1C);
+   memcpy(params.G.X, dec_ptr_table[4], 0x1C);
+   memcpy(params.G.Y, dec_ptr_table[5], 0x1C);
+
+   int vf_res = verify_hashes_C8DBC0(&subctx->signature, message_hash, &P, &params);
    if(vf_res != 0)
       return -1;
 

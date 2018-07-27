@@ -1,12 +1,27 @@
 #pragma once
 
-typedef struct verify_hash_ctx
+struct ecdsa_signature
 {
-   unsigned char* r; //most likely the right size
-   unsigned char* s; //most likely the right size
-}verify_hash_ctx;
+   unsigned char r[0x1C];
+   unsigned char s[0x1C];
+};
 
-int verify_hashes_C8DBC0(verify_hash_ctx* ctx, unsigned char secret_key[0x1C], unsigned char* dec_ptr_pair[2], unsigned char* dec_ptr_table[6]);
+struct ecdsa_point
+{
+   unsigned char X[0x1C];
+   unsigned char Y[0x1C];
+};
+
+struct ecdsa_params
+{
+   unsigned char P[0x1C];
+   unsigned char A[0x1C];
+   unsigned char B[0x1C];
+   unsigned char N[0x1C];
+   ecdsa_point G;
+};
+
+int verify_hashes_C8DBC0(ecdsa_signature* sig, unsigned char M[0x1C], const ecdsa_point* P, const ecdsa_params* params);
 
 
 int block_memcmp_C8EADC(const unsigned char *buffer0, const unsigned char *buffer1, int nBlocks);
