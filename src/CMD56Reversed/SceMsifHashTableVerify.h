@@ -27,4 +27,4 @@ void do_smth_with_hashes_2_C8E084(unsigned char *dst, unsigned char *src0, int b
 
 void arbitrary_length_multiply_C8DF74(unsigned char *dst, unsigned char *src0, int block_size0, unsigned char *src1, int block_size1);
 
-int do_smth_with_hashes_5_C8DBD4(unsigned char *dst, unsigned char *src1, unsigned char *src2, int block_size);
+int maybe_arbitrary_length_inverse_5_C8DBD4(unsigned char *dst, unsigned char *src1, unsigned char *mod, int block_size);
