@@ -726,7 +726,7 @@ typedef struct tpc_cmd49_resp //size is 0x40
    unsigned char f00d_1C_key[0x10]; // this data is constant. it looks like it contains some string and binary numbers (maybe name and serial number, or manufacturing date?)
    unsigned char card_info[0x8]; // this data looks like to be constant. only last byte is not equal to zero
    unsigned char challenge[0x8]; // this data is random each time - i am assuming it depends on session_id
-   unsigned char iv[0x08]; // this data is different each time - thats because var_88 and session_id are part of cryptographic material, given to 3des-cbc-cts
+   unsigned char iv[0x08]; // this data is different each time - thats because challenge and session_id are part of cryptographic material, given to 3des-cbc-cts
    unsigned char reserved[0x18];
 }tpc_cmd49_resp;
 
