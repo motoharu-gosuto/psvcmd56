@@ -25,3 +25,18 @@ int SceSysclibForDriver_b5a4d745(unsigned char* char0, unsigned char* char1, int
    int res = memcmp(char0, char1, len);
    return (res != 0) ? -1 : 0;
 }
+
+unsigned int SceSysclibForDriver_e46c47e6(unsigned int a1, unsigned int a2, char a3)
+{
+   unsigned long long v0 = (a1 >> a3);
+   
+   unsigned int sh1 = (a3 - 0x20);
+   
+   unsigned long long v1 = sh1 >= 0x20 ? 0 : ((unsigned long long)a2 >> sh1);
+   
+   unsigned int sh2 = (0x20 - a3);
+   
+   unsigned long long v2 = sh2 >= 0x20 ? 0 : ((unsigned long long)a2 << sh2);
+
+   return v0 | v1 | v2;
+}
