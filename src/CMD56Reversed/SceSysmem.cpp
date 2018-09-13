@@ -131,7 +131,7 @@ int SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(void *vaddr, void **result)
    return 0;
 }
 
-void* SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize size)
+void* SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(SceUID pool, SceSize size)
 {
    return 0;
 }
@@ -171,6 +171,11 @@ int SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a(uintptr_t dst, const
 }
 
 int SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(void *dst, uintptr_t src, size_t len)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_sceKernelCreateHeapForDriver_9328e0e8(const char *name, SceSize size, SceKernelHeapCreateOpt *opt)
 {
    return 0;
 }

@@ -97,12 +97,12 @@ int SceSdifForDriver_gc_cmd56_response_134e06c4(sd_context_part_mmc* ctx, char* 
    return STACK_CHECK_FAIL;
 }
 
-int callback_00C680A9(int code, int unk)
+int callback_00C680A9(int intr_code, int subintr_code)
 {
    return 0;
 }
 
-int callback_00C68001(int code, int unk)
+int callback_00C68001(int intr_code, int subintr_code)
 {
    return 0;
 }
@@ -122,21 +122,21 @@ void init_intr_opts()
    intr_opt_C72FA8.size = 0x14;
    intr_opt_C72FA8.num = 9;
    intr_opt_C72FA8.opt2 = &intr_opt2_00C72F50;
-   intr_opt_C72FA8.unk_C = 0;
-   intr_opt_C72FA8.unk_10 = 0;
+   intr_opt_C72FA8.flags = 0;
+   intr_opt_C72FA8.sensitivity = 0;
 
    intr_opt2_00C72F50.size = 0x28;
-   intr_opt2_00C72F50.unk_4 = 0;
-   intr_opt2_00C72F50.unk_8 = 0;
-   intr_opt2_00C72F50.unk_C = 0;
+   intr_opt2_00C72F50.pre_register_subintr_cb = 0;
+   intr_opt2_00C72F50.post_register_subintr_cb = 0;
+   intr_opt2_00C72F50.release_subintr_cb = 0;
 
    intr_opt2_00C72F50.fptr0 = &callback_00C680A9;
-   intr_opt2_00C72F50.fptr1 = &callback_00C68001;
-   intr_opt2_00C72F50.fptr2 = &callback_00C680A9;
+   intr_opt2_00C72F50.enable_subintr_cb = &callback_00C68001;
+   intr_opt2_00C72F50.disable_subintr_cb = &callback_00C680A9;
 
-   intr_opt2_00C72F50.unk_1C = 0;
-   intr_opt2_00C72F50.unk_20 = 0;
-   intr_opt2_00C72F50.unk_24 = 0;
+   intr_opt2_00C72F50.fptr3 = 0;
+   intr_opt2_00C72F50.fptr4 = 0;
+   intr_opt2_00C72F50.fptr5 = 0;
 }
 
 void init_constants()
@@ -598,7 +598,7 @@ int SceSdifForDriver_init_0eb0ef86()
 
       int intrCode = ctx_B0->ctx_data.array_idx + INTR_CODE_SceSdif0; //[R4,#-0x74]
    
-      int res1 = SceIntrmgrForDriver_register_interrupt_5c1feb29(intrCode, currName, 0, callback_interrupt_handler_DC_DD_DE_C68FF8, ctx_B0, 0x80, 0xF, &intr_opt_C72FA8);
+      int res1 = SceIntrmgrForDriver_sceKernelRegisterIntrHandlerForDriver_5c1feb29(intrCode, currName, 0, callback_interrupt_handler_DC_DD_DE_C68FF8, ctx_B0, 0x80, 0xF, &intr_opt_C72FA8);
       if(res1 < 0)
          return exit_loc_C68BAE(res1, main_ctr, &ctx_B0->ctx_data.sdif_fast_mutex, var_2C, ctx_B0);
 
@@ -661,7 +661,7 @@ int SceSdifForDriver_init_0eb0ef86()
          break;
    }
 
-   SceUID suid = suspend_register_callback_04c05d10("SceSdif", &callback_suspend_eMMC_C6875C, 0);
+   SceUID suid = SceKernelSuspendForDriver_sceKernelSuspendRegisterCallbackForDriver_04c05d10("SceSdif", &callback_suspend_eMMC_C6875C, 0);
    var_00C78000.suspend_callback_id = suid;
 
    return exit_loc_C68B38(0, var_2C);

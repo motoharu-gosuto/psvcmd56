@@ -356,3 +356,8 @@ int SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(Sce
 {
    return 0;
 }
+
+sysbase_shared_buffer_t * SceSysrootForKernel_get_sysbase_0x320_shared_tz_region_c8c8c321()
+{
+   return 0;
+}

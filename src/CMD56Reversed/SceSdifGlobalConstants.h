@@ -21,5 +21,5 @@ extern char** NAME_SceSdif1_00C72CA4;
 extern char** NAME_SceSdif2_00C72CA8;
 extern char** NAME_SceSdif3_00C72CAC;
 
-extern reg_intr_opt2 intr_opt2_00C72F50;
-extern reg_intr_opt intr_opt_C72FA8;
+extern SceKernelRegisterInterruptOptionsExtended intr_opt2_00C72F50;
+extern SceKernelRegisterInterruptOptions intr_opt_C72FA8;

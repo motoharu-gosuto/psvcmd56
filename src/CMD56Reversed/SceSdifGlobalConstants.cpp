@@ -19,5 +19,5 @@ char** NAME_SceSdif1_00C72CA4 = &aScesdif1_00C72F84;
 char** NAME_SceSdif2_00C72CA8 = &aScesdif2_00C72F90;
 char** NAME_SceSdif3_00C72CAC = &aScesdif3_00C72F9C;
 
-reg_intr_opt2 intr_opt2_00C72F50;
-reg_intr_opt intr_opt_C72FA8;
+SceKernelRegisterInterruptOptionsExtended intr_opt2_00C72F50;
+SceKernelRegisterInterruptOptions intr_opt_C72FA8;

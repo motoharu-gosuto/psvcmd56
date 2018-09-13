@@ -351,7 +351,7 @@ int SceSysmemForDriver_ksceKernelGetPaddrList_e68beebd(addr_pair* input, paddr_l
 //This will write the physical address for a virtual address vaddr to memory pointed to by result. Returns <0 on error, values >=0 indicate success. 
 int SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(void *vaddr, void **result);
 
-void* SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceUID pool, SceSize size);
+void* SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(SceUID pool, SceSize size);
 
 void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, const void *ptr);
 
@@ -377,3 +377,16 @@ int SceSysmemForDriver_sceKernelMemcpyUserToKernel_bc996a7a(void *dst, uintptr_t
 int SceSysmemForDriver_sceKernelMemcpyKernelToUser_6d88ef8a(uintptr_t dst, const void *src, size_t len);
 
 int SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(void *dst, uintptr_t src, size_t len);
+
+struct SceKernelHeapCreateOpt
+{
+  SceSize size; //28
+  SceUInt32 uselock;
+  SceUInt32 field_8;
+  SceUInt32 field_C;
+  SceUInt32 block_type;
+  SceUInt32 field_14;
+  SceUInt32 field_18;
+};
+
+int SceSysmemForDriver_sceKernelCreateHeapForDriver_9328e0e8(const char *name, SceSize size, SceKernelHeapCreateOpt *opt);

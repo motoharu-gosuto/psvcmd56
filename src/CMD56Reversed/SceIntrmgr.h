@@ -17,39 +17,44 @@
 
 int SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
 
-#define INTR_CODE_SceSdif0 220
-#define INTR_CODE_SceSdif1 221
-#define INTR_CODE_SceSdif2 222
-#define INTR_CODE_SceSdif3 223
+#define INTR_CODE_SceSblSmSchedProxySGI 4
 
-typedef int(intr_callback)(int code, int unk);
+#define INTR_CODE_SceSdif0 0xDC
+#define INTR_CODE_SceSdif1 0xDD
+#define INTR_CODE_SceSdif2 0xDE
+#define INTR_CODE_SceSdif3 0xDF
 
-typedef struct reg_intr_opt2
+typedef int (SceKernelSubIntrHandler)(void *subintr_arg, void *register_arg, unsigned char intr_priority);
+typedef int (SceKernelIntrHandler)(int intr_code, void* userCtx);
+
+typedef int (SceKernelIntrOptHandlersCb1)(int intr_code, int subintr_code);
+typedef int (SceKernelIntrOptHandlersCb2)(int intr_code, int subintr_code, void *arg);
+typedef int (SceKernelIntrOptHandlersCb3)(int intr_code, int subintr_code, SceKernelSubIntrHandler handler, void *register_arg);
+
+typedef struct SceKernelRegisterInterruptOptionsExtended
 {
-   uint32_t size; //0x28
-   uint32_t unk_4;
-   uint32_t unk_8;
-   uint32_t unk_C;
-   intr_callback* fptr0; // function pointer
-   intr_callback* fptr1; // function pointer
-   intr_callback* fptr2; // function pointer
-   uint32_t unk_1C;
-   uint32_t unk_20;
-   uint32_t unk_24;
-}reg_intr_opt2;
+	uint32_t size; // 0x28
+	SceKernelIntrOptHandlersCb3* pre_register_subintr_cb;
+	SceKernelIntrOptHandlersCb3* post_register_subintr_cb;
+	SceKernelIntrOptHandlersCb1* release_subintr_cb;
+	SceKernelIntrOptHandlersCb1* fptr0;
+	SceKernelIntrOptHandlersCb1* enable_subintr_cb;
+	SceKernelIntrOptHandlersCb1* disable_subintr_cb;
+	SceKernelIntrOptHandlersCb2* fptr3;
+	SceKernelIntrOptHandlersCb1* fptr4;
+   SceKernelIntrOptHandlersCb1* fptr5;
+} SceKernelRegisterInterruptOptionsExtended; /* size = 0x28 */
 
-typedef struct reg_intr_opt
+typedef struct SceKernelRegisterInterruptOptions
 {
-   uint32_t size; //0x14
-   uint32_t num;
-   reg_intr_opt2* opt2;
-   uint32_t unk_C;
-   uint32_t unk_10;
-}reg_intr_opt;
+	unsigned int size;
+	unsigned int num;
+	SceKernelRegisterInterruptOptionsExtended *opt2;
+	unsigned int flags; /* 0b1 = use sensitivity param */
+	unsigned int sensitivity;
+} SceKernelRegisterInterruptOptions; /* size = 0x14 */
 
-typedef int (intr_callback_func)(int unk, void* userCtx);
-
-int SceIntrmgrForDriver_register_interrupt_5c1feb29(int code, const char *name, int interrupt_type, intr_callback_func* func, void* userCtx, int priority, int targetcpu, reg_intr_opt* opt);
+int SceIntrmgrForDriver_sceKernelRegisterIntrHandlerForDriver_5c1feb29(int intr_code, const char *name, int interrupt_type, SceKernelIntrHandler *handler, void *userCtx, int priority, int targetcpu, SceKernelRegisterInterruptOptions *opt);
 
 int SceIntrmgrForDriver_180435ec(int code);
 

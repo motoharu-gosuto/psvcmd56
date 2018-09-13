@@ -62,6 +62,38 @@ struct SceSelfInfo // size is 0x90
   uint32_t unk_8C;
 };
 
-
-
 int SceSysrootForKernel_sceSysrootGetSelfAuthInfoOrDefaultForKernel_4f0a4066(SceUID pid, SceSelfInfo *self_info);
+
+struct sysbase_shared_block_t
+{
+  char data[128];
+};
+
+struct sysbase_shared_block40
+{
+  int block_index;
+  int unk4;
+  int unk8;
+  int unkC;
+  int unk10;
+  int unk14;
+  int unk18;
+  int unk1C;
+  int unk20;
+  int unk24;
+  int unk28;
+  int unk2C;
+  int unk30;
+  int unk34;
+  int unk38;
+  int unk3C;
+};
+
+struct sysbase_shared_buffer_t
+{
+  sysbase_shared_block_t blocks0[8];
+  sysbase_shared_block_t blocks1[8];
+  sysbase_shared_block40 block40;
+};
+
+sysbase_shared_buffer_t * SceSysrootForKernel_get_sysbase_0x320_shared_tz_region_c8c8c321();

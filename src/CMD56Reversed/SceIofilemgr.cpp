@@ -1645,7 +1645,7 @@ int normalize_path_and_BF4F1C(const char *file, int normalize)
          if (next_slash_pos == 0)
             return 0;
 
-         char* args_alloc = (char*)SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceIoScheduler_99D724, 0x400u);
+         char* args_alloc = (char*)SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(SceIoScheduler_99D724, 0x400u);
          
          if (args_alloc == 0)
             return 0x8001000C;
@@ -1690,7 +1690,7 @@ char* proc_alloc_400_from_SceIoVfsHeap_BECE0C()
    while(counter != 4);
 
    SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df((int*)0x99D9F8, prev_state);
-   char* buffer = (char*)SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(SceIoVfsHeap_99C0D8, 0x400);
+   char* buffer = (char*)SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(SceIoVfsHeap_99C0D8, 0x400);
    if(buffer == 0)
       return 0;
             

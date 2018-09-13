@@ -534,7 +534,7 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
     r4[0] = r5;
     r4[4] = (char)r5;
     r4[5] = (char)r5;
-    int r0 = SceSdstor.SceKernelSuspendForDriver._imp_suspend_register_callback_04c05d10(r0, r1, r2);
+    int r0 = SceKernelSuspendForDriver_sceKernelSuspendRegisterCallbackForDriver_04c05d10(r0, r1, r2);
     int r3 = r0 - 0;
     if(r3 < 0)
         r0 = r3;

@@ -169,3 +169,7 @@ int SceSysmem.SceCpuForKernel._exp_sceKernelCpuDcacheInvalidate_583f30d1(void *p
 //int SceSysmem.SceCpuForKernel._exp_sceKernelCpuCombineACTLRWith_1806_04008cf7(void)
 //int SceSysmem.SceCpu._exp_sceKernelReadMPIDRAffinityLevel0_2704cfee(void)
 //int SceSysmem.SceCpuForDriver._exp_sceKernelReadMPIDRAffinityLevel0_5e4d5de1(void)
+
+int SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1();
+
+int SceCpuForDriver_sceKernelCpuDcacheAndL2CleanMVACRange_1ForDriver_103872a5(void *ptr, size_t size);

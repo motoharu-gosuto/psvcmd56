@@ -24,3 +24,13 @@ int SceCpuForDriver_sceKernelTryGetPaddr_337cbdf3(void *vaddr)
 {
    return 0;
 }
+
+int SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1()
+{
+   return 0;
+}
+
+int SceCpuForDriver_sceKernelCpuDcacheAndL2CleanMVACRange_1ForDriver_103872a5(void *ptr, size_t size)
+{
+   return 0;
+}

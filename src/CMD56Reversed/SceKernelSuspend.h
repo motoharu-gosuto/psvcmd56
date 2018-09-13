@@ -49,4 +49,4 @@ typedef struct suspend_args_t
 
 typedef int (suspend_callback_t)(int resume, int eventid, suspend_args_t *args, void *opt);
 
-SceUID suspend_register_callback_04c05d10(const char *name, suspend_callback_t *callback_func, void *opt);
+SceUID SceKernelSuspendForDriver_sceKernelSuspendRegisterCallbackForDriver_04c05d10(const char *name, suspend_callback_t *callback_func, void *opt);

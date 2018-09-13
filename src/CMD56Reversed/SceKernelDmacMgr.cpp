@@ -511,7 +511,7 @@ int sub_99289C(void* vaddr, int size, paddr_list_req* result)
       return exit_loc_9928F6(0, cookie);
 
    int poolSize = result->ret_count * sizeof(addr_pair); //0x08
-   addr_pair* listPool = (addr_pair*)SceSysmemForDriver_ksceKernelMemPoolAlloc_7b4cb60a(g_008FE000.poolUid_24, poolSize);
+   addr_pair* listPool = (addr_pair*)SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(g_008FE000.poolUid_24, poolSize);
    
    if(listPool == 0)
       return exit_loc_9928F6(SCE_KERNEL_ERROR_NO_MEMORY, cookie);
