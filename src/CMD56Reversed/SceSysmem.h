@@ -353,7 +353,7 @@ int SceSysmemForDriver_ksceKernelGetPaddr_8d160e65(void *vaddr, void **result);
 
 void* SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(SceUID pool, SceSize size);
 
-void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, const void *ptr);
+void SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceUID pool, const void *ptr);
 
 struct ctx_49D4DD9B
 {
@@ -390,3 +390,5 @@ struct SceKernelHeapCreateOpt
 };
 
 int SceSysmemForDriver_sceKernelCreateHeapForDriver_9328e0e8(const char *name, SceSize size, SceKernelHeapCreateOpt *opt);
+
+int SceSysmemForDriver_sceKernelDeleteHeapForDriver_d6437637(SceUID pool_uid);

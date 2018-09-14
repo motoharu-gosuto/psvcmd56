@@ -136,7 +136,7 @@ void* SceSysmemForDriver_sceKernelAllocHeapMemoryForDriver_7b4cb60a(SceUID pool,
    return 0;
 }
 
-void SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceUID pool, const void *ptr)
+void SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceUID pool, const void *ptr)
 {
 }
 
@@ -176,6 +176,11 @@ int SceSysmemForDriver_sceKernelStrncpyUserToKernel_db3ec244(void *dst, uintptr_
 }
 
 int SceSysmemForDriver_sceKernelCreateHeapForDriver_9328e0e8(const char *name, SceSize size, SceKernelHeapCreateOpt *opt)
+{
+   return 0;
+}
+
+int SceSysmemForDriver_sceKernelDeleteHeapForDriver_d6437637(SceUID pool_uid)
 {
    return 0;
 }

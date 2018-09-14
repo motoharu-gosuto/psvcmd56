@@ -228,11 +228,11 @@ int label_21_cleanup(SceUID pid, const appmgr_mount_t* virt_mount, const void* m
 
    //dealloc memory
 
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, virt_mount);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, virt_mount);
 
    if (mem)
    {
-      SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, mem);
+      SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, mem);
    }
 
    return error_code;
@@ -341,7 +341,7 @@ int special_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mo
 
 int label_113_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, const char *physical_path, char *mount_point_result)
 {
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, physical_path);
 
    if (mount_id != 0x3E9) //patch
    {
@@ -362,7 +362,7 @@ int label_113_cleanup(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *
 
 int label_113_cleanup2(SceUID pid, pfs_mount_t *pfs_mount, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, const char *physical_path, char *mount_point_result)
 {
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, physical_path);
 
    if (pfs_mount->mount_id != 0x3E9) //patch
    {
@@ -450,7 +450,7 @@ bool entries_stuff(SceUID pid, unsigned int mount_id, appmgr_mount_holder_t *mou
 
 int mpd_cleanup(SceUID pid, appmgr_mount_holder_t *mount_ctx_holder, appmgr_mount_t *virt_mount, pfs_mount_t* pfs_mount, const char *physical_path, char *mount_point_result, bool check0, int result)
 {
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, pfs_mount);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, pfs_mount);
 
    virt_mount->this_pfs_mount = 0;
 

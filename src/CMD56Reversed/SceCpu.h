@@ -1,10 +1,10 @@
 #pragma once
 
-int SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(int *addr);
-int SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(int *addr, int prev_state);
+int SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(int *addr);
+int SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(int *addr, int prev_state);
 
 int SceCpuForDriver_lock_bf82deb2(int *addr);
-int SceCpuForDriver_unlock_d6ed0c46(int *addr);
+int SceCpuForDriver_sceKernelCpuUnlockStoreLRForDriver_d6ed0c46(int *addr);
 
 //atomic set operation
 //set new value of 'value' into 'var'
@@ -173,3 +173,5 @@ int SceSysmem.SceCpuForKernel._exp_sceKernelCpuDcacheInvalidate_583f30d1(void *p
 int SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1();
 
 int SceCpuForDriver_sceKernelCpuDcacheAndL2CleanMVACRange_1ForDriver_103872a5(void *ptr, size_t size);
+
+int SceCpuForDriver_sceKernelCpuDcacheAndL2InvalidateMVACRange_1ForDriver_02796361(void *ptr, size_t len);

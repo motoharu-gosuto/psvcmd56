@@ -77,7 +77,7 @@ int iofilemgr_path_mapping_callback_23DDE64(const char *path, SceUID pid, char *
 
                //cleanup
 
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
+               SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
 
                SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
 
@@ -113,7 +113,7 @@ int iofilemgr_path_mapping_callback_23DDE64(const char *path, SceUID pid, char *
 
                   //cleanup
 
-                  SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
+                  SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
 
                   SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
 
@@ -147,7 +147,7 @@ int iofilemgr_path_mapping_callback_23DDE64(const char *path, SceUID pid, char *
 
                      //cleanup
 
-                     SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
+                     SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
 
                      SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
 
@@ -174,7 +174,7 @@ int iofilemgr_path_mapping_callback_23DDE64(const char *path, SceUID pid, char *
             }
          }
          
-         SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
+         SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, overlay_resolve_sync_path);
       }
       else
       {

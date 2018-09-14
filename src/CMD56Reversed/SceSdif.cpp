@@ -647,11 +647,11 @@ int SceSdifForDriver_init_0eb0ef86()
 
       main_ctr = main_ctr + 1;
 
-      int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&ctx_B0->ctx_data.lockable_int);
+      int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&ctx_B0->ctx_data.lockable_int);
 
       sub_C68598(ctx_B0, 3);
 
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx_B0->ctx_data.lockable_int, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx_B0->ctx_data.lockable_int, prev_state);
 
       SceIntrmgrForDriver_7117e827(intrCode);
 
@@ -764,7 +764,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
 
    while(true)
    {
-      int r11 = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&(ctx_glob->ctx_data.lockable_int));
+      int r11 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&(ctx_glob->ctx_data.lockable_int));
       int flag_shift = (((char*)ctx_glob->ctx_data.membase_1000)[0x29]) << 0x1F;
 
       if(flag_shift < 0)
@@ -773,7 +773,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
          {
             if(ctx_glob->ctx_data.dev_type_idx == 0) //0x10
             {
-               SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
+               SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
                cycle_result = 0x8032001A;
                break;
             }  
@@ -783,7 +783,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
       {
          if(numArg != 0)
          {
-            SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
+            SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
             cycle_result = 0x8032001A;
             break;
          }
@@ -793,7 +793,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
       {
          cycle_result = physical_send_command_C6812C(ctx_glob, cmd_data1);
          
-         SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
+         SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
 
          if(cycle_result != 0)
             break;
@@ -805,7 +805,7 @@ int proc_send_sd_command_C697E8(sd_context_global* ctx, cmd_input* cmd_data1, cm
 
          cmd_data1->unk_64 = 1; //0x64
 
-         SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
+         SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&(ctx_glob->ctx_data.lockable_int), r11);
       }
 
       cmd_input* cmd_arg = cmd_data1->secondary_cmd; // 0x74

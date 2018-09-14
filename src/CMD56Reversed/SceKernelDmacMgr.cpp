@@ -58,7 +58,7 @@ int exit_loc_992EAC(int r2, int* r6)
 {
    int* r0 = r6;
    int r1 = r2;
-   int r0_res = SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1);
+   int r0_res = SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(r0, r1);
    int r0_ret = SCE_KERNEL_ERROR_ALREADY_QUEUED;
    return r0_ret;
 }
@@ -68,7 +68,7 @@ int exit_loc_992EC2(int r2, int* r6)
 {
    int* r0 = r6;
    int r1 = r2;
-   int r0_res = SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1);
+   int r0_res = SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(r0, r1);
    int r0_ret = SCE_KERNEL_ERROR_INVALID_ARGUMENT;
    return r0_ret;
 }
@@ -77,7 +77,7 @@ int exit_loc_992ED6(int r2, int* r6)
 {
    int* r0 = r6;
    int r1 = r2;
-   int r0_res = SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1);
+   int r0_res = SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(r0, r1);
    int r0_ret = SCE_KERNEL_ERROR_NOT_UNDER_CONTROL;
    return r0_ret;
 }
@@ -86,7 +86,7 @@ int exit_loc_992EE8(int r2, int* r6)
 {
    int* r0 = r6;
    int r1 = r2;
-   int r0_res = SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1);
+   int r0_res = SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(r0, r1);
    int r0_ret = SCE_KERNEL_ERROR_NOT_INITIALIZED;
    return r0_ret;
 }
@@ -95,7 +95,7 @@ int exit_loc_992EFA(int r2, int* r6)
 {
    int* r0 = r6;
    int r1 = r2;
-   int r0_res = SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(r0, r1);
+   int r0_res = SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(r0, r1);
    int r0_ret = SCE_KERNEL_ERROR_CANCELING;
    return r0_ret;
 }
@@ -118,7 +118,7 @@ int SceDmacmgrForDriver_fce4171a(dmac_id unk0, int unk1, int unk2)
 
    int r6 = r4 + 0x2C;
    int r0 = r6;
-   int r0 = SceCpuForDriver_lock_int_d32ace9e(r0);
+   int r0 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(r0);
    int r3 = r4[0x38];
    int r2 = r0;
    int r0 = r3 << 0x1F;
@@ -201,7 +201,7 @@ int SceDmacmgrForDriver_fce4171a(dmac_id unk0, int unk1, int unk2)
    int r1 = r2;
    int r3 = r3 & r5;
    r4[0x34] = r3;
-   int r0 = SceCpuForDriver_unlock_int_7bb9d5df(r0, r1);
+   int r0 = SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(r0, r1);
    int r0 = 0;
 
    return r0;
@@ -716,7 +716,7 @@ int sub_992910(result_c8672a3d* ctx, int creationMode, const local_01a599e0* dat
          int res_1 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
 
          if(var_50.output_buffer_size > 1)
-            SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, var_50.output_buffer);
+            SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(var_78->poolUid_24, var_50.output_buffer);
       
          if(res_1 < 0)
             return exit_loc_992A7C(res_1, var_2C);
@@ -772,7 +772,7 @@ int sub_992910(result_c8672a3d* ctx, int creationMode, const local_01a599e0* dat
             int res_1 = sub_99289C(r4->source_paddr_04, r4->size_08, &var_50);
             if(res_1 < 0)
             {
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_64.output_buffer);
+               SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(g_008FE000.poolUid_24, var_64.output_buffer);
                return exit_loc_992A7C(res_1, var_2C);
             }
 
@@ -783,10 +783,10 @@ int sub_992910(result_c8672a3d* ctx, int creationMode, const local_01a599e0* dat
             int res_2 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
             
             if(var_64.output_buffer_size > 1)
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_64.output_buffer);
+               SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(g_008FE000.poolUid_24, var_64.output_buffer);
             
             if(var_50.output_buffer_size > 1)
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(g_008FE000.poolUid_24, var_50.output_buffer);
+               SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(g_008FE000.poolUid_24, var_50.output_buffer);
 
             if(res_2 < 0)
                return exit_loc_992A7C(res_2, var_2C);
@@ -968,7 +968,7 @@ int sub_992910(result_c8672a3d* ctx, int creationMode, const local_01a599e0* dat
             int res_1 = sub_992288(var_7C->unk_3A, var_64.output_buffer_size, &var_64.output_buffer, &var_50.output_buffer_size, &var_50.output_buffer, r4, &var_6C, &var_68);
 
             if(var_64.output_buffer_size > 1)
-               SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(var_78->poolUid_24, var_64.output_buffer);
+               SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(var_78->poolUid_24, var_64.output_buffer);
 
             if(res_1 < 0)
                return exit_loc_992A7C(res_1, var_2C);
@@ -1021,7 +1021,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_1
    if(ctx->unk_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&ctx->unk_2C);
+   int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&ctx->unk_2C);
    
    if(ptr != 0)
    {
@@ -1029,7 +1029,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_1
       {
          if(ptr->unk_0 != 0x5C) //check structure size ?
          {
-            SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+            SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
          }
       }
@@ -1037,7 +1037,7 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_1
       {
          if(ptr->unk_0 != 0x0C) //check structure size ?
          {
-            SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+            SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
             return SCE_KERNEL_ERROR_INVALID_ARGUMENT_SIZE;
          }
       }
@@ -1045,25 +1045,25 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_1
 
    if((ctx->unk_38 << 0x1F) >= 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
    if(((ctx->unk_38) << 0x1C) < 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
    if(ctx->unk_14 != 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
    if((ctx->unk_38 << 0x19) < 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_CANCELING;
    }
 
@@ -1091,13 +1091,13 @@ int SceDmacmgrForDriver_167079fc(dmac_id id, const local_01a599e0* data, input_1
    int res_0 = sub_992910(ctx, creationMode, data);
    if(res_0 < 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
       return res_0;      
    }
 
    ctx->unk_38 = 0xFFDF & ctx->unk_38;
 
-   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&ctx->unk_2C, prev_state);
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&ctx->unk_2C, prev_state);
    
    return 0;
 }
@@ -1420,42 +1420,42 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id)
    if(r4->unk_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&r4->unk_2C);
+   int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&r4->unk_2C);
        
    if((r4->unk_38 << 0x1F) >= 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
    // pointer to start of the list must be initialized
    if(r4->unk_18 == 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_SETUP;
    }
 
    if((r4->unk_38 << 0x1C) < 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
    if(r4->unk_14 != 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_ALREADY_QUEUED;
    }
 
    if((r4->unk_38 << 0x1A) < 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_TRANSFERRED;
    }
 
    if((r4->unk_38 << 0x19) < 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_CANCELING;
    }
 
@@ -1463,8 +1463,8 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id)
    int res_0 = SceCpuForDriver_lock_bf82deb2(&r5->size_08);
    if(r5->var_10 == 0)
    {
-      SceCpuForDriver_unlock_d6ed0c46(&r5->size_08);
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockStoreLRForDriver_d6ed0c46(&r5->size_08);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_UNDER_CONTROL;
    }
 
@@ -1479,8 +1479,8 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id)
 
       sub_992460(r0, r1);
 
-      SceCpuForDriver_unlock_d6ed0c46(&r5->size_08);
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockStoreLRForDriver_d6ed0c46(&r5->size_08);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return 0;
    }
 
@@ -1497,8 +1497,8 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id)
    r4->unk_00 = r3;
    r5->source_paddr_04 = r4;
    
-   SceCpuForDriver_unlock_d6ed0c46(&r5->size_08);
-   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+   SceCpuForDriver_sceKernelCpuUnlockStoreLRForDriver_d6ed0c46(&r5->size_08);
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
    return 0;
 }
 
@@ -1516,11 +1516,11 @@ int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
 
    int var_2C = unk2;
 
-   int prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&r4->unk_2C);
+   int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&r4->unk_2C);
 
    if((r4->unk_38 << 0x1F) >= 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
@@ -1530,7 +1530,7 @@ int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
       {
          if(((r4->unk_38) << 0x1A) >= 0)
          {
-            SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+            SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
             return SCE_KERNEL_ERROR_NOT_SETUP;
          }
       }
@@ -1540,14 +1540,14 @@ int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
 
    if(r8 != 0)
    {
-      SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
       return SCE_KERNEL_ERROR_CANCELING;
    }
 
    SceUID r10 = r4->unk_34;
    int r11 = r4->unk_38;
 
-   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
 
    if(mode == MODE_397a917c_2)
    {
@@ -1588,14 +1588,14 @@ int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
    if(unk3 == 0)
       return 0;
 
-   prev_state = SceCpuForDriver_ksceKernelCpuSuspendIntr_d32ace9e(&r4->unk_2C);
+   prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&r4->unk_2C);
 
    if(r7 == r4->unk_30)
    {
       (*unk3) = r4->unk_24; //paddr list end
    }
 
-   SceCpuForDriver_ksceKernelCpuResumeIntr_7bb9d5df(&r4->unk_2C, prev_state);
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->unk_2C, prev_state);
 
    return 0;
 }
@@ -1671,7 +1671,7 @@ void sub_992100(result_c8672a3d* r0)
 
    r0->unk_00 = 0x00;
    r0->unk_04 = 0x00;
-   SceCpuForDriver_unlock_d6ed0c46(&N5->size_08);
+   SceCpuForDriver_sceKernelCpuUnlockStoreLRForDriver_d6ed0c46(&N5->size_08);
 
    r0->unk_38 = 0xFFF7 & r0->unk_38;
 }
@@ -1691,19 +1691,19 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
    if(r4->gxor_30 != gxor)
       return SCE_KERNEL_ERROR_INVALID_ARGUMENT;
 
-   int prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->lockable_int_2C);
+   int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&r4->lockable_int_2C);
    
    int C0 = r4->unk_38 << 0x1F; //what is the point shifting short to 31 bits ?
    if(C0 >= 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->lockable_int_2C, prev_state);
       return SCE_KERNEL_ERROR_NOT_INITIALIZED;
    }
 
    int C1 = r4->unk_38 << 0x19; //what is the point shifting short to 25 bits ?
    if(C1 < 0)
    {
-      SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->lockable_int_2C, prev_state);
       return SCE_KERNEL_ERROR_CANCELING;
    }
 
@@ -1715,7 +1715,7 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
 
       if(C2 < 0)
       {
-         SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+         SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->lockable_int_2C, prev_state);
 
          int ctr = 5;
 
@@ -1723,13 +1723,13 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
          {
             SceThreadmgrForDriver_sceKernelDelayThread_4b675d05(0x0A); //10 ms
             
-            prev_state = SceCpuForDriver_lock_int_d32ace9e(&r4->lockable_int_2C);
+            prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&r4->lockable_int_2C);
 
             int C3 = (r4->unk_38) << 0x19;
             if(C3 >= 0)
                break;
 
-            SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+            SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->lockable_int_2C, prev_state);
             ctr = ctr - 1;
 
             if(ctr == 0)
@@ -1747,7 +1747,7 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
    r4->unk_38 = 0x00;
    r4->gxor_30 = 0x00;
    
-   SceCpuForDriver_unlock_int_7bb9d5df(&r4->lockable_int_2C, prev_state);
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&r4->lockable_int_2C, prev_state);
 
    SceSysmemForKernel_functor_571660aa(g_008FE000.unk_20, r4);
    */

@@ -326,7 +326,7 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
    char* alloc_buffer = (char *)SceSysmemForDriver_sceKernelAllocHeapMemory3ForDriver_49D4DD9B(SceAppMgrMount_pool_22A0008, 0x124u, &alloc_ctx1);
    if (!alloc_buffer)
    {
-      SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy);
+      SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy);
 
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return var_009EA004 == cookie ? 0x80801006 : STACK_CHECK_FAIL;
@@ -337,8 +337,8 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
    phys_ctx_t *gdat_ctx = (phys_ctx_t *)alloc_mem_23DDFF8(0x508u);
    if(!gdat_ctx)
    {
-      SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy);
-      SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
+      SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy);
+      SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
 
       SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
       return var_009EA004 == cookie ? 0x80801006 : STACK_CHECK_FAIL;
@@ -348,9 +348,9 @@ int SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(char *app_path, 
 
    int result = w_SceAppMgrForDriver_sceAppMgrGameDataMountForDriver_ce356b2d(app_path, patch_path, rif_file_path, mount_point, physical_path_copy, alloc_buffer, gdat_ctx);
 
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy);
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
-   SceSysmemForDriver_ksceKernelMemPoolFree_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, physical_path_copy);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, alloc_buffer);
+   SceSysmemForDriver_sceKernelFreeHeapMemoryForDriver_3ebce343(SceAppMgrMount_pool_22A0008, gdat_ctx);
 
    SceThreadmgrForDriver_ksceKernelUnlockMutex_1e82e5d0(SceAppMgrMount_mutex_22A000C, 1);
    return var_009EA004 == cookie ? result : STACK_CHECK_FAIL;
