@@ -455,7 +455,7 @@ int exit_loc_C68AEA(int r6, int r8, int cookie_2C)
 
          SceIntrmgrForDriver_d6009b98(INTR_CODE_SceSdif0 + r7); //calculate intr code
 
-         SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(r5->ctx_data.evid); // R0, [R5,#-4]
+         SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352(r5->ctx_data.evid); // R0, [R5,#-4]
 
          SceThreadmgrForDriver_11fe84a1(&r5->ctx_data.sdif_fast_mutex);
 
@@ -514,7 +514,7 @@ int exit_loc_C68BA8(int r0, int r6, uint32_t* r11, int cookie_2C, sd_context_glo
 
 int exit_loc_C68ABE(uint32_t* r4, int r6, int r11, int cookie_2C, sd_context_global* ctx_B0)
 {
-   SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(ctx_B0->ctx_data.evid);
+   SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352(ctx_B0->ctx_data.evid);
    return exit_loc_C68ACA(r4, r6, r11, cookie_2C, ctx_B0);
 }
 

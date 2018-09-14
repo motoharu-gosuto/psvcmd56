@@ -203,7 +203,7 @@ vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
       }
       else
       {
-         SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(mount_node->fd_lock.mutex_SceVfsFdLock);
+         SceThreadmgrForDriver_sceKernelDeleteMutexForDriver_0a912340(mount_node->fd_lock.mutex_SceVfsFdLock);
          mount_node->fd_lock.mutex_SceVfsFdLock = -1;
       }
    }

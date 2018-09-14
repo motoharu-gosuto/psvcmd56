@@ -26,7 +26,7 @@ int SceThreadmgrForDriver_db395782(void* unk0)
 
 //------------------------------------
 
-int SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(SceUID evid)
+int SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352(SceUID evid)
 {
    return 0;
 }
@@ -93,7 +93,7 @@ SceUID SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a(const char *n
    return 0;
 }
 
-int SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(SceUID uid)
+int SceThreadmgrForDriver_sceKernelDeleteMutexForDriver_0a912340(SceUID uid)
 {
    return 0;
 }

@@ -10,7 +10,7 @@ int SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(int *a
    return 0;
 }
 
-int SceCpuForDriver_lock_bf82deb2(int *addr)
+int SceCpuForDriver_sceKernelCpuLockStoreLRForDriver_bf82deb2(int *addr)
 {
    return 0;
 }

@@ -1460,7 +1460,7 @@ int SceDmacmgrForDriver_543f54cf(dmac_id id)
    }
 
    local_01a599e0* r5 = r4->unk_10;
-   int res_0 = SceCpuForDriver_lock_bf82deb2(&r5->size_08);
+   int res_0 = SceCpuForDriver_sceKernelCpuLockStoreLRForDriver_bf82deb2(&r5->size_08);
    if(r5->var_10 == 0)
    {
       SceCpuForDriver_sceKernelCpuUnlockStoreLRForDriver_d6ed0c46(&r5->size_08);
@@ -1651,7 +1651,7 @@ void sub_992100(result_c8672a3d* r0)
 {  
    local_01a599e0* N5 = r0->unk_10;
    
-   SceCpuForDriver_lock_bf82deb2(&N5->size_08);
+   SceCpuForDriver_sceKernelCpuLockStoreLRForDriver_bf82deb2(&N5->size_08);
 
    //this looks like some linked list operations
 
@@ -1742,7 +1742,7 @@ int SceDmacmgrForDriver_adff1186(dmac_id id)
    if(C5 < 0)
       sub_992100(r4);
    
-   SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(r4->eventFlagUid_34);
+   SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352(r4->eventFlagUid_34);
 
    r4->unk_38 = 0x00;
    r4->gxor_30 = 0x00;

@@ -32,11 +32,11 @@ int SceThreadmgrForDriver_db395782(void* unk0); // - not critical for now
 //internally sub_BCC19C calls SceKernelThreadMgr.SceSysmemForDriver._imp_sceKernelDeleteUserUid_84a4af5e
 
 //however there are no kernel level ksce functions yet defined in sdk
-//SceThreadmgrForDriver_71ecb352 uses SceKernelThreadMgr.SceSysmemForDriver._imp_sceKernelDeleteUserUid_84a4af5e 
+//SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352 uses SceKernelThreadMgr.SceSysmemForDriver._imp_sceKernelDeleteUserUid_84a4af5e 
 //as well and it is a pairing function for evid created with ksce function
 //so I would assume that this is close or delete function for event flag
 
-int SceThreadmgrForDriver_ksceKernelDeleteEventFlag_71ecb352(SceUID evid);
+int SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352(SceUID evid);
 
 //------------------------------------------------
 
@@ -103,7 +103,7 @@ typedef struct SceKernelCondOptParam {
 
 SceUID SceThreadmgrForDriver_sceKernelCreateCondForDriver_db6cd34a(const char *name, SceUInt attr, SceUID mutexId, const SceKernelCondOptParam *option);
 
-int SceThreadmgrForDriver_sceKernelDeleteMutexForKernel_0a912340(SceUID uid);
+int SceThreadmgrForDriver_sceKernelDeleteMutexForDriver_0a912340(SceUID uid);
 
 int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1);
 
