@@ -69,8 +69,24 @@ struct SceSblSmschedProxyHeap
   shed_proxy_operation_item_t items[0x40];
 };
 
+struct smc_12D_data_t
+{
+   int unk0;
+   int unk4;
+   int unk8;
+   int unkC;
+   SmOperationId invoke_operation_id;
+   void *maybe_status_secure_world_ptr;
+   unsigned int self_type;
+   uint32_t pathId;
+   SceUInt64 program_authority_id;
+   uint8_t caller_capability[32];
+};
+
 //==========================================================================================================
 
+int g_008F5000; //operation id counter
+//g_008F5004
 global_lock_count_t g_008F5010;
 SceUID g_008F5014;
 global_lock_t g_008F5018;
@@ -87,6 +103,16 @@ item_996E0C g_008F5138; //starting item - supposed to be for blocks 1
 //g_008F5148
 item_996E0C g_008F5150; //starting item with blocks 0
 //g_008F5160
+
+//==========================================================================================================
+
+//0x6CBE4B08
+//0x71F6D2DB
+//0x72C0A929
+//0
+//0
+//0
+kernel_message_ctx msg_9978A4;
 
 //==========================================================================================================
 
@@ -633,36 +659,36 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    
    ENTER_SYSCALL();
 
-   if ( MEMORY[0x8F5010].value == 1 )
+   if (g_008F5010.value == 1 )
    {
-      if ( id )
+      if (id)
       {
-         prev_state0 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e((unsigned int *)0x8F5018);
+         prev_state0 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
          op_item_index0 = 0;
       
-         while ( 1 )
+         while (true)
          {
-            op_item0 = &MEMORY[0x8F5020]->items[op_item_index0];
+            op_item0 = &g_008F5020->items[op_item_index0];
 
-            if ( !MEMORY[0x8F5020]->items[op_item_index0].is_used )
+            if ( !g_008F5020->items[op_item_index0].is_used )
                break;
 
             ++op_item_index0;
 
             if ( op_item_index0 == 0x40 )
             {
-               SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(
-               (unsigned int *)0x8F5018,
-               prev_state0);
-               goto LABEL_22;
+               SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
+               EXIT_SYSCALL();
+               result = 0x800F040C;
+               return result;
             }
          }
 
-         id_internal = MEMORY[0x8F5000];
+         id_internal = g_008F5000;
          op_item0->is_used = 1;                    // allocate new op item
-         MEMORY[0x8F5000] = id_internal + 1;
+         g_008F5000 = id_internal + 1;
 
-         SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df((unsigned int *)0x8F5018, prev_state0);
+         SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
 
          function_index = 0;
          op_item0->operation_id = id_internal;
@@ -687,14 +713,15 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
          if ( event_uid < 0 || (op_item0->SceSblSmsProxy_event_uid = event_uid, mutex_uid = SceThreadmgrForDriver_sceKernelCreateMutexForDriver_fbaa026e("SceSblSmsProxyWait", 0, 0, 0), mutex_uid < 0) )
          {
             cleanup_id_operation_996454(id_internal);
-            goto LABEL_22;
+            EXIT_SYSCALL();
+            result = 0x800F040C;
+            return result;
          }
 
          op_item0->SceSblSmsProxyWait_mutex_uid = mutex_uid;
 
          if ( id_internal == -1 )
          {
-LABEL_22:
             EXIT_SYSCALL();
             result = 0x800F040C;
             return result;
@@ -704,7 +731,12 @@ LABEL_22:
          block_index0 = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(0x48u, (void **)&data_block_ptr0, &data_size);
 
          if ( block_index0 < 0 )
-            goto LABEL_23;
+         {
+            cleanup_id_operation_996454(id_internal);
+            EXIT_SYSCALL();
+            result = block_index0;
+            return result;
+         }
 
          data_block_ptr1 = data_block_ptr0;
 
@@ -783,7 +815,7 @@ LABEL_22:
                   result = res1;
                   return result;
                }
-LABEL_23:
+
                cleanup_id_operation_996454(id_internal);
                EXIT_SYSCALL();
                result = block_index0;
