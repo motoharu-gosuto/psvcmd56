@@ -615,12 +615,6 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
 {
    void *kp_msg_adr;
    
-   sm_invoke_data_block_input* invoke_input_local = invoke_input;
-   
-   int priority_local = priority;
-   void* sm_self_data_paddr_local = sm_self_data_paddr;
-   int num_pairs_local = num_pairs;
-   
    ENTER_SYSCALL();
 
    if (g_008F5010.value == 1 )
@@ -708,13 +702,13 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
          smc_12D_data_t* data_block_ptr1 = data_block_ptr0;
 
          smc_12D_data_t* data_block_ptr2;
-         if ( invoke_input_local )
+         if (invoke_input)
          {
             data_block_ptr2 = data_block_ptr0;
-            data_block_ptr0->unk0 = invoke_input_local->unk0;
-            data_block_ptr1->unk4 = invoke_input_local->unk4;
-            data_block_ptr1->unk8 = invoke_input_local->unk8;
-            data_block_ptr1->unkC = invoke_input_local->unkC;
+            data_block_ptr0->unk0 = invoke_input->unk0;
+            data_block_ptr1->unk4 = invoke_input->unk4;
+            data_block_ptr1->unk8 = invoke_input->unk8;
+            data_block_ptr1->unkC = invoke_input->unkC;
          }
          else
          {
@@ -766,7 +760,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
          }
          else
          {
-            int res1 = proc_enter_SMC_996000(priority_local, (unsigned int)sm_self_data_paddr_local, num_pairs_local, block_index0, 0x12D);
+            int res1 = proc_enter_SMC_996000(priority, (unsigned int)sm_self_data_paddr, num_pairs, block_index0, 0x12D);
             int res2 = get_full_data_block_invalidate_cache_9970C4(block_index0, (void **)&data_block_ptr0, &data_size);
 
             if ( res2 >= 0 )
