@@ -11,6 +11,9 @@
 
 #define STACK_CHECK_FAIL -1
 
+#define ENTER_SYSCALL()
+#define EXIT_SYSCALL()
+
 #define DSB(option)
 
 #define PLD(adr)

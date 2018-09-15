@@ -38,12 +38,19 @@ struct global_lock_count_t
   int value;
 };
 
-struct shed_proxy_operation_item_functions_t
+struct operation_callback_data
 {
-  int (*func0)(SmOperationId op_id, int op_item_func_block_index, int func_data0, int func_data1, int func_data2);
-  int func_data0;
-  int unk8;
-  int unkC;
+  int func_arg2;
+  int func_arg4;
+  int func_arg3;
+};
+
+typedef int smc_138_callback(SmOperationId id, int index, int arg2, int arg3, int arg4);
+
+struct shed_proxy_operation_callback_entry_t
+{
+   smc_138_callback *cb;
+   operation_callback_data data;
 };
 
 struct shed_proxy_operation_item_t
@@ -53,7 +60,7 @@ struct shed_proxy_operation_item_t
   void *maybe_status_secure_world_ptr;
   SceUID SceSblSmsProxy_event_uid;
   SceUID SceSblSmsProxyWait_mutex_uid;
-  shed_proxy_operation_item_functions_t functions[4];
+  shed_proxy_operation_callback_entry_t functions[4];
 };
 
 struct SceSblSmschedProxyHeap
@@ -503,10 +510,64 @@ int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604()
 
 //==========================================================================================================
 
-int SceSblSmSchedProxyForKernel__exp_after_proxy_invoke_smc_138_8b84ac2a(SmOperationId id, int smcArg1_funcArg1, void *func, int funcArg2)
-{
-   //TODO: not reversed
-   return 0;
+int SceSblSmSchedProxyForKernel__exp_after_proxy_invoke_smc_138_8b84ac2a(SmOperationId id, int function_index, smc_138_callback *cb, int func_arg2)
+{   
+   ENTER_SYSCALL();
+
+   if (g_008F5010.value != 1)
+   {
+      EXIT_SYSCALL();
+      return 0x800F0426;
+   }
+
+   if(!cb)
+   {
+      EXIT_SYSCALL();
+      return 0x800F0416;
+   }
+
+   if(function_index > 3)
+   {
+      EXIT_SYSCALL();
+      return 0x800F0416;
+   }
+
+   int prev_state0 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
+
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(id, &error_code);
+   if (!op_item0)
+   {
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
+      EXIT_SYSCALL();
+      return 0x800F042B;
+   }
+
+   shed_proxy_operation_callback_entry_t* cb_entry0 = &op_item0->functions[function_index];
+   if (cb_entry0->cb)
+   {
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
+      EXIT_SYSCALL();
+      return 0x800F042E;
+   }
+
+   cb_entry0->cb = cb;
+   cb_entry0->data.func_arg2 = func_arg2;
+
+   int prev_func_arg4 = cb_entry0->data.func_arg4;
+   int prev_func_arg3 = cb_entry0->data.func_arg3;
+
+   cb_entry0->data.func_arg4 = 0;
+   cb_entry0->data.func_arg3 = 0;
+
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
+
+   if (prev_func_arg3)
+      cb(id, function_index, func_arg2, prev_func_arg3, prev_func_arg4);
+
+   int res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, function_index, 0, 0, 0x138);
+   EXIT_SYSCALL();
+   return res;
 }
 
 int SceSblSmSchedProxyForKernel__exp_not_implemented_1dfc8624()
