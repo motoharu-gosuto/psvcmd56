@@ -35,23 +35,10 @@ int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_
    return 0;
 }
 
-// =============================
-
 int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_path, int num1, sm_comm_ctx_130* ctx_130, int* id)
 {
    return 0;
 }
-
-// =============================
-
-//this is added for the sake of emulation
-int SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(std::string service_name, int* id)
-{
-   auto service = f00d::F00DServiceDispatcherService::get();
-   return service->start(service_name, id);
-}
-
-// =============================
 
 int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, int* f00d_resp, void* ctx, int size)
 {
@@ -71,20 +58,28 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, 
    return 0;
 }
 
+int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id, std::pair<int, int>* res)
+{
+   return 0;
+}
+
+// =============================
+
+//this is added for the sake of emulation
+int SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(std::string service_name, int* id)
+{
+   auto service = f00d::F00DServiceDispatcherService::get();
+   return service->start(service_name, id);
+}
+
+//this is added for the sake of emulation
 int SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(int id, int service_id, int* f00d_resp, void* ctx, int size)
 {
    auto service = f00d::F00DServiceDispatcherService::get();
    return service->dispatch(id, service_id, f00d_resp, ctx, size);
 }
 
-// =============================
-
-
-int SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(int id, std::pair<int, int>* res)
-{
-   return 0;
-}
-
+//this is added for the sake of emulation
 int SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(int id)
 {
    auto service = f00d::F00DServiceDispatcherService::get();
