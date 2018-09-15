@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Constants.h"
+#include "SceSysroot.h"
 
 //there is new information about SMC services on Vita at xyz wiki:
 //https://wiki.henkaku.xyz/vita/F00D_Processor
@@ -21,6 +22,42 @@ where the Supervisor call handler processes the SVC and executes a SMC, see Exce
 
 //there is some info on xyz wiki - recirection from SMC
 //https://wiki.henkaku.xyz/vita/SceExcpmgr
+
+//==========================================================================================================
+
+//public types
+
+typedef unsigned int SmOperationId;
+
+struct SceSblSmschedCallFuncCommand
+{
+  unsigned int size;
+  unsigned int service_id;
+  unsigned int response;
+  unsigned int unk2;
+  unsigned int padding[12];
+  unsigned int data[];
+};
+
+struct SceSblSmCommContext130
+{
+  uint32_t unk_0;
+  uint32_t self_type;
+  SceSelfInfo caller_self_info;
+  SceSelfInfo called_self_info;
+  uint32_t pathId;
+  uint32_t unk_12C;
+};
+
+struct sm_invoke_data_block_input
+{
+  int unk0;
+  int unk4;
+  int unk8;
+  int unkC;
+};
+
+//==========================================================================================================
 
 struct input_1916509b
 {

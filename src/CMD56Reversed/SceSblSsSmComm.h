@@ -3,7 +3,6 @@
 #include <stdint.h>
 
 #include "SceSblSmSchedProxy.h"
-#include "SceSysroot.h"
 
 struct memory_block_data_entry
 {
@@ -11,16 +10,6 @@ struct memory_block_data_entry
    int unk;
    SceUID mid; //memory block id
    SceUID eid; //event flag id
-};
-
-struct SceSblSmCommContext130
-{
-  uint32_t unk_0;
-  uint32_t self_type;
-  SceSelfInfo caller_self_info;
-  SceSelfInfo called_self_info;
-  uint32_t pathId;
-  uint32_t unk_12C;
 };
 
 int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_data, int elf_size, int num1, SceSblSmCommContext130* ctx_130, int* id);
