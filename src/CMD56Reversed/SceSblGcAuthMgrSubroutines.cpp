@@ -575,7 +575,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    int var97C = -1; //trigger for some cleanup on exit?
    int var978 = 0x00; // error state
 
-   sm_comm_ctx_130 var968;
+   SceSblSmCommContext130 var968;
 
    SceSblSmCommGcData_1000B ctx;
    ctx.var838 = 0x01;
@@ -610,7 +610,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
 
    memset(&var968, 0x00, 0x130);
 
-   memcpy(var968.data0, dword_CADC10, 0x90); //store to var960
+   memcpy(&var968.caller_self_info, dword_CADC10, 0x90); //store to var960
 
    var968.self_type = 0x02;
    var968.pathId = 0x02;

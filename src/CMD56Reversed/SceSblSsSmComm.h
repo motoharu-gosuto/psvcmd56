@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "SceSblSmSchedProxy.h"
+#include "SceSysroot.h"
 
 struct memory_block_data_entry
 {
@@ -12,19 +13,19 @@ struct memory_block_data_entry
    SceUID eid; //event flag id
 };
 
-typedef struct sm_comm_ctx_130
+struct SceSblSmCommContext130
 {
-   uint32_t unk_0;
-   uint32_t self_type;
-   char data0[0x90]; //hardcoded data
-   char data1[0x90];
-   uint32_t pathId; 
-   uint32_t unk_12C;   
-}sm_comm_ctx_130;
+  uint32_t unk_0;
+  uint32_t self_type;
+  SceSelfInfo caller_self_info;
+  SceSelfInfo called_self_info;
+  uint32_t pathId;
+  uint32_t unk_12C;
+};
 
-int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_data, int elf_size, int num1, sm_comm_ctx_130* ctx_130, int* id);
+int SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(int priority, char* elf_data, int elf_size, int num1, SceSblSmCommContext130* ctx_130, int* id);
 
-int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_path, int num1, sm_comm_ctx_130* ctx_130, int* id);
+int SceSblSmCommForKernel_sceSblSmCommStartSm2_7863a0cc(int priority, char* elf_path, int num1, SceSblSmCommContext130* ctx_130, int* id);
 
 int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, int* f00d_resp, void* ctx, int size);
 

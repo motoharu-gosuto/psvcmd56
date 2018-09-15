@@ -82,10 +82,10 @@ int food_start_F00D_communication_rmauth_sm_C8D880()
    if(SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(1, service_name) < 0)
       return 0x800F0016;
 
-   sm_comm_ctx_130 ctx_130;
+   SceSblSmCommContext130 ctx_130;
    
    memset(&ctx_130, 0, 0x130u);
-   memcpy(ctx_130.data0, ctx_130_part_C904A8, 0x90u);
+   memcpy(&ctx_130.caller_self_info, ctx_130_part_C904A8, 0x90u);
 
    ctx_130.pathId = 2;
    ctx_130.self_type = 2;
