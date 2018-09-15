@@ -7,6 +7,7 @@
 #include "SceCpu.h"
 #include "SceThreadmgr.h"
 #include "SceSysmem.h"
+#include "SceDebug.h"
 
 int SceDebugForDriver_02b04343(int r0, int* r1, char* r2, int r3)
 {
@@ -183,7 +184,7 @@ vfs_mount* proc_get_arg0_for_sceVfsGetNewNode_BEBAC0()
 
    mount_node->fd_lock_ptr = &mount_node->fd_lock; //C8
    
-   SceUID mutex_id = SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e("SceVfsFdLock", 0, 0, 0);
+   SceUID mutex_id = SceThreadmgrForDriver_sceKernelCreateMutexForDriver_fbaa026e("SceVfsFdLock", 0, 0, 0);
 
    if(mutex_id >= 0)
    {
@@ -466,7 +467,7 @@ int SceIofilemgrForDriver_sceVfsGetNewNode_d60b5c63(vfs_mount* cur_node, node_op
             }
             else
             {
-               SceDebugForDriver_02b04343(0xF, get_dword_BFD130_ptr(), "::0x10f::001::%d\n", get_99DA40());
+               SceDebugForDriver_sceDebugPrintf2ForDriver_02b04343(0xF, get_dword_BFD130_ptr(), "::0x10f::001::%d\n", get_99DA40());
 
                if(var_2C == var_009EA004)
                   return r11;

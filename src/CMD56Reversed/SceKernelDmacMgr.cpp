@@ -35,7 +35,7 @@ dmac_id SceDmacmgrForDriver_7cd5088a(const char* efName)
 
    const char* eventFlagName = (efName == 0) ? unk_994808 : efName;
 
-   SceUID eventFlagUid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(eventFlagName, 0x00, 0x00, 0x00);
+   SceUID eventFlagUid = SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4(eventFlagName, 0x00, 0x00, 0x00);
    if(eventFlagUid < 0)
    {
       SceSysmemForKernel_functor_571660aa(g_008FE000.unk_20, r4);

@@ -778,7 +778,7 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
         int r3 = r1;
         var_30 = (char)r7;
         int r8 = r10[r7];
-        int r0 = SceSdstor.SceThreadmgrForDriver._imp_ksceKernelCreateEventFlag_4336baa4(r0,r1,r2,r3);
+        int r0 = SceSdstor.SceThreadmgrForDriver._imp_sceKernelCreateEventFlagForDriver_4336baa4(r0,r1,r2,r3);
         int r9 = r0 - 0;
         if(r9 < 0)
         {
@@ -790,7 +790,7 @@ int proc_create_init_thread_reg_intr_suspend_callback_clear_buffers_C19004()
         int r0 = "SceSdstorOpSync";
         int r2 = r1;
         int r3 = r1;
-        int r0 = SceSdstor.SceThreadmgrForDriver._imp_ksceKernelCreateEventFlag_4336baa4(r0,r1,r2,r3);
+        int r0 = SceSdstor.SceThreadmgrForDriver._imp_sceKernelCreateEventFlagForDriver_4336baa4(r0,r1,r2,r3);
         int r2 = r0 - 0;
         if(r2 < 0)
         {

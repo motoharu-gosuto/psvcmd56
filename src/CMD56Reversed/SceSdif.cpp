@@ -590,7 +590,7 @@ int SceSdifForDriver_init_0eb0ef86()
       if(res0 < 0)
          return exit_loc_C68B52(res0, main_ctr, var_2C, ctx_B0);
 
-      int evid = SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(currName, 0, 0, 0);
+      int evid = SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4(currName, 0, 0, 0);
       ctx_B0->ctx_data.evid = evid; // [R4,#-0x54]
    
       if(evid < 0)

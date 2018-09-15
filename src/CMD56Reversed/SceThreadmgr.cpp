@@ -53,7 +53,7 @@ int SceThreadmgrForDriver_ksceKernelSignalSema_d270498b(SceUID semaid, int signa
    return 0;
 }
 
-SceUID SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt)
+SceUID SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt)
 {
    return 0;
 }
@@ -83,7 +83,7 @@ sce_time SceThreadmgrForDriver_sceKernelGetSystemTimeWideForDriver_f4ee4fa9()
    return scetime;
 }
 
-SceUID SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option)
+SceUID SceThreadmgrForDriver_sceKernelCreateMutexForDriver_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option)
 {
    return 0;
 }

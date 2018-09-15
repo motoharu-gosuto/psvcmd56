@@ -25,7 +25,7 @@ int SceThreadmgrForDriver_db395782(void* unk0); // - not critical for now
 //number of args confirmed
 //return type confirmed - can return error
 
-//this is a pairing end function for event flag that is created with SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4
+//this is a pairing end function for event flag that is created with SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4
 //int user level there are 2 sce functions for event flags that are both wrappers for sub_BCC19C
 //SceKernelThreadMgr.SceThreadmgr._exp_sceKernelDeleteEventFlag_5840162c
 //SceKernelThreadMgr.SceThreadmgr._exp_sceKernelCloseEventFlag_9a68f547
@@ -68,7 +68,7 @@ struct SceKernelEventFlagOptParam
    SceSize size;
 };
 
-SceUID  SceThreadmgrForDriver_ksceKernelCreateEventFlag_4336baa4(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt);
+SceUID  SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4(const char *name, int attr, int bits, SceKernelEventFlagOptParam *opt);
 
 int SceThreadmgrForDriver_sceKernelDelayThread_4b675d05(SceUInt delay);
 
@@ -95,7 +95,7 @@ typedef struct SceKernelMutexOptParam {
   int ceilingPriority;
 } SceKernelMutexOptParam;
 
-SceUID SceThreadmgrForDriver_ksceKernelCreateMutex_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option);
+SceUID SceThreadmgrForDriver_sceKernelCreateMutexForDriver_fbaa026e(const char *name, SceUInt attr, int initCount, SceKernelMutexOptParam *option);
 
 typedef struct SceKernelCondOptParam {
 	SceSize size;
