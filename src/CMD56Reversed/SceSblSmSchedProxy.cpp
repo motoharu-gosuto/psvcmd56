@@ -613,49 +613,13 @@ int SceSblSmSchedProxyForKernel_not_implemented_984ec9d1()
 
 int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_1916509b(int priority, void *sm_self_data_paddr, unsigned int num_pairs, sm_invoke_data_block_input *invoke_input, SceSblSmCommContext130 *ctx, SmOperationId *id)
 {
-   void *kp_msg_adr; // lr
-   sm_invoke_data_block_input *invoke_input_local; // r5
+   void *kp_msg_adr;
    
-   int prev_state0; // r0
-   int op_item_index0; // r3
-   shed_proxy_operation_item_t *op_item0; // r4
-   SmOperationId id_internal; // r7
-   int function_index; // r2
-   shed_proxy_operation_item_t *op_item0_part0; // r0
-   int *op_item0_part1; // r3
-   SceUID event_uid; // r3
-   SceUID mutex_uid; // r0
-   int block_index0; // r10
-   smc_12D_data_t *data_block_ptr1; // r3
-   smc_12D_data_t *data_block_ptr2; // lr
-   unsigned int self_type; // r6
-   int caller_caps0; // r0
-   int caller_caps1; // r1
-   int caller_caps2; // r2
-   int caller_caps3; // r3
-   uint32_t pathId; // r12
-   SceUInt64 program_authority_id; // d16
-   int *caller_caps_res0; // r5
-   int *caller_caps_res1; // r5
-   int caller_caps5; // r1
-   int caller_caps6; // r2
-   int caller_caps7; // r3
-   int res0; // r5
-   int res1; // r5
-   int res2; // r6
-   int result; // r0
-   int priority_local; // [sp+18h] [bp-48h]
-   void *sm_self_data_paddr_local; // [sp+1Ch] [bp-44h]
-   int num_pairs_local; // [sp+20h] [bp-40h]
-   void *kp_msg_adr_local; // [sp+24h] [bp-3Ch]
-   smc_12D_data_t *data_block_ptr0; // [sp+2Ch] [bp-34h]
-   unsigned int data_size; // [sp+30h] [bp-30h]
-
-   invoke_input_local = invoke_input;
-   kp_msg_adr_local = kp_msg_adr;
-   priority_local = priority;
-   sm_self_data_paddr_local = sm_self_data_paddr;
-   num_pairs_local = num_pairs;
+   sm_invoke_data_block_input* invoke_input_local = invoke_input;
+   
+   int priority_local = priority;
+   void* sm_self_data_paddr_local = sm_self_data_paddr;
+   int num_pairs_local = num_pairs;
    
    ENTER_SYSCALL();
 
@@ -663,9 +627,10 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    {
       if (id)
       {
-         prev_state0 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
-         op_item_index0 = 0;
+         int prev_state0 = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
+         int op_item_index0 = 0;
       
+         shed_proxy_operation_item_t* op_item0;
          while (true)
          {
             op_item0 = &g_008F5020->items[op_item_index0];
@@ -679,27 +644,27 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
             {
                SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
                EXIT_SYSCALL();
-               result = 0x800F040C;
-               return result;
+               return 0x800F040C;
             }
          }
 
-         id_internal = g_008F5000;
+         SmOperationId id_internal = g_008F5000;
          op_item0->is_used = 1;                    // allocate new op item
          g_008F5000 = id_internal + 1;
 
          SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
 
-         function_index = 0;
+         int function_index = 0;
          op_item0->operation_id = id_internal;
          op_item0->maybe_status_secure_world_ptr = (void *)-1;
 
+         //BOGUS!
          do
          {
-            op_item0_part0 = (shed_proxy_operation_item_t *)((char *)op_item0 + 0x10 * function_index++);
+            shed_proxy_operation_item_t* op_item0_part0 = (shed_proxy_operation_item_t *)((char *)op_item0 + 0x10 * function_index++);
             op_item0_part0->functions[0].cb = 0;
             op_item0_part0->functions[0].data.func_arg2 = 0;
-            op_item0_part1 = &op_item0_part0->functions[0].data.func_arg2;
+            int * op_item0_part1 = &op_item0_part0->functions[0].data.func_arg2;
             op_item0_part1[1] = 0;
             op_item0_part1[2] = 0;
          }
@@ -708,14 +673,14 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
          op_item0->SceSblSmsProxy_event_uid = -1;
          op_item0->SceSblSmsProxyWait_mutex_uid = -1;
 
-         event_uid = SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4("SceSblSmsProxy", 0, 0, 0);
+         SceUID event_uid = SceThreadmgrForDriver_sceKernelCreateEventFlagForDriver_4336baa4("SceSblSmsProxy", 0, 0, 0);
 
+         SceUID mutex_uid;
          if ( event_uid < 0 || (op_item0->SceSblSmsProxy_event_uid = event_uid, mutex_uid = SceThreadmgrForDriver_sceKernelCreateMutexForDriver_fbaa026e("SceSblSmsProxyWait", 0, 0, 0), mutex_uid < 0) )
          {
             cleanup_id_operation_996454(id_internal);
             EXIT_SYSCALL();
-            result = 0x800F040C;
-            return result;
+            return 0x800F040C;
          }
 
          op_item0->SceSblSmsProxyWait_mutex_uid = mutex_uid;
@@ -723,23 +688,26 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
          if ( id_internal == -1 )
          {
             EXIT_SYSCALL();
-            result = 0x800F040C;
-            return result;
+            return 0x800F040C;
          }
 
          *id = id_internal;
-         block_index0 = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(0x48u, (void **)&data_block_ptr0, &data_size);
+
+         smc_12D_data_t* data_block_ptr0;
+         unsigned int data_size;
+
+         int block_index0 = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(0x48u, (void **)&data_block_ptr0, &data_size);
 
          if ( block_index0 < 0 )
          {
             cleanup_id_operation_996454(id_internal);
             EXIT_SYSCALL();
-            result = block_index0;
-            return result;
+            return block_index0;
          }
 
-         data_block_ptr1 = data_block_ptr0;
+         smc_12D_data_t* data_block_ptr1 = data_block_ptr0;
 
+         smc_12D_data_t* data_block_ptr2;
          if ( invoke_input_local )
          {
             data_block_ptr2 = data_block_ptr0;
@@ -757,16 +725,16 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
             data_block_ptr1->unkC = 0;
          }
 
-         self_type = ctx->self_type;
+         unsigned int self_type = ctx->self_type;
 
-         caller_caps0 = *(_DWORD *)ctx->caller_self_info.capability;
-         caller_caps1 = *(_DWORD *)&ctx->caller_self_info.capability[4];
-         caller_caps2 = *(_DWORD *)&ctx->caller_self_info.capability[8];
-         caller_caps3 = *(_DWORD *)&ctx->caller_self_info.capability[12];
+         int caller_caps0 = *(_DWORD *)ctx->caller_self_info.capability;
+         int caller_caps1 = *(_DWORD *)&ctx->caller_self_info.capability[4];
+         int caller_caps2 = *(_DWORD *)&ctx->caller_self_info.capability[8];
+         int caller_caps3 = *(_DWORD *)&ctx->caller_self_info.capability[12];
 
-         pathId = ctx->pathId;
-         program_authority_id = ctx->caller_self_info.program_authority_id;
-         caller_caps_res0 = (int *)data_block_ptr2->caller_capability;
+         uint32_t pathId = ctx->pathId;
+         SceUInt64 program_authority_id = ctx->caller_self_info.program_authority_id;
+         int* caller_caps_res0 = (int *)data_block_ptr2->caller_capability;
 
          data_block_ptr2->invoke_operation_id = id_internal;
          data_block_ptr2->self_type = self_type;
@@ -778,33 +746,33 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
          caller_caps_res0[2] = caller_caps2;
          caller_caps_res0[3] = caller_caps3;
 
-         caller_caps_res1 = (int *)&data_block_ptr2->caller_capability[16];
-         caller_caps5 = *(_DWORD *)&ctx->caller_self_info.capability[20];
-         caller_caps6 = *(_DWORD *)&ctx->caller_self_info.capability[24];
-         caller_caps7 = *(_DWORD *)&ctx->caller_self_info.capability[28];
+         int* caller_caps_res1 = (int *)&data_block_ptr2->caller_capability[16];
+         int caller_caps5 = *(_DWORD *)&ctx->caller_self_info.capability[20];
+         int caller_caps6 = *(_DWORD *)&ctx->caller_self_info.capability[24];
+         int caller_caps7 = *(_DWORD *)&ctx->caller_self_info.capability[28];
 
          *caller_caps_res1 = *(_DWORD *)&ctx->caller_self_info.capability[16];
          caller_caps_res1[1] = caller_caps5;
          caller_caps_res1[2] = caller_caps6;
          caller_caps_res1[3] = caller_caps7;
-         res0 = data_block_write_back_997084(block_index0);
+         int res0 = data_block_write_back_997084(block_index0);
 
          if ( res0 < 0 )
          {
             data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index0);
             cleanup_id_operation_996454(id_internal);
             EXIT_SYSCALL();
-            result = res0;
+            return res0;
          }
          else
          {
-            res1 = proc_enter_SMC_996000(priority_local, (unsigned int)sm_self_data_paddr_local, num_pairs_local, block_index0, 0x12D);
-            res2 = get_full_data_block_invalidate_cache_9970C4(block_index0, (void **)&data_block_ptr0, &data_size);
+            int res1 = proc_enter_SMC_996000(priority_local, (unsigned int)sm_self_data_paddr_local, num_pairs_local, block_index0, 0x12D);
+            int res2 = get_full_data_block_invalidate_cache_9970C4(block_index0, (void **)&data_block_ptr0, &data_size);
 
             if ( res2 >= 0 )
             {
                if ( data_size <= 0x47 )
-                  SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_9978A4, kp_msg_adr_local);
+                  SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_9978A4, kp_msg_adr);
 
                op_item0->maybe_status_secure_world_ptr = data_block_ptr0->maybe_status_secure_world_ptr;
                block_index0 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index0);
@@ -812,14 +780,12 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
                if ( block_index0 >= 0 )
                {
                   EXIT_SYSCALL();
-                  result = res1;
-                  return result;
+                  return res1;
                }
 
                cleanup_id_operation_996454(id_internal);
                EXIT_SYSCALL();
-               result = block_index0;
-               return result;
+               return block_index0;
             }
 
             data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index0);
@@ -839,8 +805,6 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
       EXIT_SYSCALL();
       return 0x800F0426;
    }
-
-   return result;
 }
 
 int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperationId id, int result[2])
