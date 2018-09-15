@@ -402,7 +402,7 @@ ctx_19D4* get_0x99D9D4_ptr()
    return 0;
 }
 
-int* get_dword_BFD130_ptr()
+kernel_message_ctx* get_dword_BFD130_ptr()
 {
    //&dword_BFD130
    return 0;
