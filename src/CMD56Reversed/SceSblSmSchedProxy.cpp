@@ -93,7 +93,7 @@ struct smc_12E_data_t
 
 int g_008F5000; //operation id counter
 //g_008F5004
-global_lock_count_t g_008F5010;
+global_lock_count_t g_008F5010; // its not really a lock - its shed proxy state - RENAME IT LATER!
 SceUID g_008F5014;
 global_lock_t g_008F5018;
 lock_8F501C g_008F501C;
@@ -808,108 +808,114 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
 
 int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperationId id, int result[2])
 {
-   void *kp_msg_adr; // lr
-   SmOperationId id_local; // r8
-   int * result_local; // r9
-   
-   int lock_count; // r5
-   shed_proxy_operation_item_t *op_item0; // r0
-   shed_proxy_operation_item_t *op_item1; // r6
-   int res5; // r5
-   int res4; // r0
-   int res3; // r3
-   int smc_res; // r6
-   int res0; // r3
-   int res2; // r0
-   int res1; // r0
-   unsigned int v16; // r0
-   unsigned int ptr1; // [sp+8h] [bp-38h]
-   smc_12E_data_t *ptr0; // [sp+Ch] [bp-34h]
-   int result0; // [sp+10h] [bp-30h]
-   
-   id_local = id;
-   result_local = result;
+   void *kp_msg_adr;
 
    ENTER_SYSCALL();
 
-   lock_count = g_008F5010.value;
-
+   //check shed proxy state
    if (g_008F5010.value != 1 )
    {
       EXIT_SYSCALL();
-      res1 = 0x800F0426;
-      return res1;
+      return 0x800F0426;
    }
 
-   if ( !result )
+   //check result ptr
+   if (!result)
    {
       EXIT_SYSCALL();
-      res1 = 0x800F0416;
-      return res1;
+      return 0x800F0416;
    }
 
-   op_item0 = get_operation_item_99600C(id, &result0);
-   op_item1 = op_item0;
-
+   //get operation item
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(id, &error_code);
    if (!op_item0)
    {
       EXIT_SYSCALL();
-      res1 = 0x800F042B;
-      return res1;
+      return 0x800F042B;
    }
 
-   if (SceThreadmgrForDriver_sceKernelTryLockMutexForDriver_270993a6(op_item0->SceSblSmsProxyWait_mutex_uid, lock_count) < 0)
+   //lock operation item mutex
+   if (SceThreadmgrForDriver_sceKernelTryLockMutexForDriver_270993a6(op_item0->SceSblSmsProxyWait_mutex_uid, 1) < 0)
    {
       EXIT_SYSCALL();
-      res1 = 0x800F0416;
-      return res1;
+      return 0x800F0416;
    }
 
-   //same function is used by dmac mgr
+   //same function is used by dmac mgr - increase some counter
    SceSysrootForDriver_sceKernelCpuAtomicGetAndAdd_0x10_To_008B80A8_32ForDriver_ee934615();
 
-   res5 = SceThreadmgrForDriver_sceKernelWaitEventFlagForDriver_0c1d3f20(op_item1->SceSblSmsProxy_event_uid, lock_count, 3u, 0, 0);
+   //wait for operation item event
+   int wait_res = SceThreadmgrForDriver_sceKernelWaitEventFlagForDriver_0c1d3f20(op_item0->SceSblSmsProxy_event_uid, 1, 3u, 0, 0);
 
+   //decrease some counter
    SceSysrootForDriver_sceKernelCpuAtomicGetAndSub_0x10_From_008B80A8_32ForDriver_eef091a7();
 
-   if ( res5 >= 0 )
+   if (wait_res < 0)
    {
-      res4 = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(8u, (void **)&ptr0, &ptr1);
-      res5 = res4;
-
-      if ( res4 >= 0 )
-      {
-         res3 = data_block_write_back_997084(res4);
-         if ( res3 < 0
-         || (smc_res = proc_enter_SMC_996000((unsigned int)op_item1->maybe_status_secure_world_ptr, res5, 0, 0, 0x12E),
-            res3 = get_full_data_block_invalidate_cache_9970C4(res5, (void **)&ptr0, &ptr1),
-            res3 < 0) )
-         {
-            v16 = res5;
-            res5 = res3;
-            data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(v16);
-         }
-         else
-         {
-            if ( ptr1 <= 7 )
-               SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_99788C, kp_msg_adr);
-
-            res0 = ptr0->unk4;
-            *result_local = ptr0->unk0;
-            result_local[1] = res0;
-            res2 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(res5);
-            res5 = res2 & (res2 >> 0x20);
-            if ( res2 >= 0 )
-               res5 = smc_res;
-         }
-      }
+      cleanup_id_operation_996454(id);
+      EXIT_SYSCALL();
+      return wait_res;
    }
 
-   cleanup_id_operation_996454(id_local);
-   EXIT_SYSCALL();
-   res1 = res5;
+   //get shared block, lock
+   smc_12E_data_t* block_ptr;
+   unsigned int data_size;
+   int block_index = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(8u, (void **)&block_ptr, &data_size);
+   
+   //check block index
+   if (block_index < 0)
+   {
+      cleanup_id_operation_996454(id);
+      EXIT_SYSCALL();
+      return block_index;
+   }
 
-   return res1;
+   //write back shared block
+   int write_res = data_block_write_back_997084(block_index);
+   if(write_res < 0)
+   {
+      data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+      cleanup_id_operation_996454(id);
+      EXIT_SYSCALL();
+      return write_res;
+   }
+
+   //execute smc call
+   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, block_index, 0, 0, 0x12E);
+
+   //invalidate shared block
+   int inv_res = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&block_ptr, &data_size);
+   if (inv_res < 0)
+   {
+      data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+      cleanup_id_operation_996454(id);
+      EXIT_SYSCALL();
+      return inv_res;
+   }
+
+   //check data size
+   if (data_size <= 7)
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_99788C, kp_msg_adr);
+
+   //copy data to result from shared block
+   result[0] = block_ptr->unk0;
+   result[1] = block_ptr->unk4;
+
+   //write back, unlock
+   int unlock_res = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+   if (unlock_res >= 0)
+   {
+      cleanup_id_operation_996454(id);
+      EXIT_SYSCALL();
+      return smc_res;
+   }
+   else
+   {
+      cleanup_id_operation_996454(id);
+      EXIT_SYSCALL();
+      return unlock_res & (unlock_res >> 0x20);
+   }
 }
 
 int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmOperationId id, int status[2])
