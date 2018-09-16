@@ -308,6 +308,7 @@ int get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(unsign
    int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F501C.lock);
 
    //this assignment is very weird - does it overflow when cpuid > 1?
+   //remember though that according to shed proxy init and deinit functions you can probably only run it on cpu 0
    int cpuid = SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1();
    sysbase_shared_block_t ** block_pp = &g_008F5138.sysbase_block;
    *(int*)(block_pp + cpuid) = prev_state;
@@ -463,6 +464,7 @@ int data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971
    int res = data_block_write_back_maybe_remove_from_list_997144(g_008F5130, block_index);
    
    //this assignment is very weird - does it overflow when cpuid > 1?
+   //remember though that according to shed proxy init and deinit functions you can probably only run it on cpu 0
    int cpuid = SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1();
    sysbase_shared_block_t ** block_pp =  &g_008F5138.sysbase_block;
    int prev_state = *(int*)(block_pp + cpuid);
@@ -558,10 +560,10 @@ int SceSblSmschedProxy_module_start_935cd196()
 
 int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604()
 {
-  if (SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1())
-    return 0;
-  else
-    return SceSblSmschedProxy_module_start_935cd196();
+   if (SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1())
+      return 0;
+
+   return SceSblSmschedProxy_module_start_935cd196();
 }
 
 //==========================================================================================================
@@ -1086,8 +1088,10 @@ int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int smcArg1)
 
 int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2()
 {
-   //TODO: not reversed
-   return 0;
+   if (SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1())
+      return 0;
+   
+   return proc_smc_13B_heap_free_cleanup_9965C0();
 }
 
 int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int smcArg2, int smcArg3)
