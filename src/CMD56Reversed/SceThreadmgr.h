@@ -55,7 +55,7 @@ enum SceEventFlagWaitTypes
    SCE_EVENT_WAIT_5 = 5
 };
 
-int SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits, SceUInt *timeout);
+int SceThreadmgrForDriver_sceKernelWaitEventFlagForDriver_0c1d3f20(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits, SceUInt *timeout);
 
 int SceThreadmgrForDriver_ksceKernelPollEventFlag_76c6555b(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits);
 
@@ -122,3 +122,5 @@ int SceThreadmgrForDriver_ksceKernelSetPermission_02eedf17(int value);
 int SceThreadmgr_sceKernelUnlockLwMutex_2abc41df(SceKernelLwMutexWork *work, int unlockCount);
 
 int SceThreadmgrCoredumpTime_sceKernelExitThread_0c8a38e1(int status);
+
+int SceThreadmgrForDriver_sceKernelTryLockMutexForDriver_270993a6(SceUID mutexid, int lockCount);

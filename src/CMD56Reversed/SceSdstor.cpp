@@ -138,7 +138,7 @@ int proc_SceSdstorIntr_thread_callback_C18650(SceSize args, void *argp)
         int r2 = 5;
         outBits = r4;
         int r4 = r5[r7*4];
-        int r0 = SceSdstor.SceThreadmgrForDriver._imp_ksceKernelWaitEventFlag_0c1d3f20(r0,r1,r2,r3,arg4);
+        int r0 = SceSdstor.SceThreadmgrForDriver._imp_sceKernelWaitEventFlagForDriver_0c1d3f20(r0,r1,r2,r3,arg4);
         
         int r3 = outBits;
         if(r3 != 0)

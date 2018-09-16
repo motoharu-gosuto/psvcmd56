@@ -5,12 +5,12 @@
 
 #include "F00D/IF00DService.h"
 
-int SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615()
+int SceSysrootForDriver_sceKernelCpuAtomicGetAndAdd_0x10_To_008B80A8_32ForDriver_ee934615()
 {
    return 0;
 }
 
-int SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7()
+int SceSysrootForDriver_sceKernelCpuAtomicGetAndSub_0x10_From_008B80A8_32ForDriver_eef091a7()
 {
    return 0;
 }

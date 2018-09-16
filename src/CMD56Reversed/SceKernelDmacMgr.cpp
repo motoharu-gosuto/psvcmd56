@@ -1552,7 +1552,7 @@ int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
    if(mode == MODE_397a917c_2)
    {
       //TODO: fix call
-      int res_0 = 0; //SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(r10, 0x01, SCE_EVENT_WAIT_5, r8, r8);
+      int res_0 = 0; //SceThreadmgrForDriver_sceKernelWaitEventFlagForDriver_0c1d3f20(r10, 0x01, SCE_EVENT_WAIT_5, r8, r8);
       if(res_0 < 0)
          return res_0;
    }
@@ -1561,7 +1561,7 @@ int SceDmacmgrForDriver_397a917c(dmac_id id, int mode, int unk2, void** unk3)
       if(mode == MODE_397a917c_3)
       {
          //TODO: fix call
-         int res_0 = 0; //SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(r10, 0x01, SCE_EVENT_WAIT_5, &var_2C, r8, &var_2C);
+         int res_0 = 0; //SceThreadmgrForDriver_sceKernelWaitEventFlagForDriver_0c1d3f20(r10, 0x01, SCE_EVENT_WAIT_5, &var_2C, r8, &var_2C);
          if(res_0 < 0)
             return res_0;
       }

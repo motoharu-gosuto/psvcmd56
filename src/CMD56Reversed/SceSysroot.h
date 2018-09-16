@@ -15,9 +15,9 @@
 
 //this variable is not used in any other function meaning that it is part of some bigger structure ?
 
-int SceSysrootForDriver_atomic_add_10_to_008B80A8_ee934615();
+int SceSysrootForDriver_sceKernelCpuAtomicGetAndAdd_0x10_To_008B80A8_32ForDriver_ee934615();
 
-int SceSysrootForDriver_atomic_sub_10_from_008B80A8_eef091a7();
+int SceSysrootForDriver_sceKernelCpuAtomicGetAndSub_0x10_From_008B80A8_32ForDriver_eef091a7();
 
 //-------------------------------------------------
 

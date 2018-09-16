@@ -33,7 +33,7 @@ int SceThreadmgrForDriver_sceKernelDeleteEventFlagForDriver_71ecb352(SceUID evid
 
 //------------------------------------
 
-int SceThreadmgrForDriver_ksceKernelWaitEventFlag_0c1d3f20(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits, SceUInt *timeout)
+int SceThreadmgrForDriver_sceKernelWaitEventFlagForDriver_0c1d3f20(SceUID evid, unsigned int bits, unsigned int wait, unsigned int *outBits, SceUInt *timeout)
 {
    return 0;
 }
@@ -140,6 +140,11 @@ int SceThreadmgr_sceKernelUnlockLwMutex_2abc41df(SceKernelLwMutexWork *work, int
 }
 
 int SceThreadmgrCoredumpTime_sceKernelExitThread_0c8a38e1(int status)
+{
+   return 0;
+}
+
+int SceThreadmgrForDriver_sceKernelTryLockMutexForDriver_270993a6(SceUID mutexid, int lockCount)
 {
    return 0;
 }
