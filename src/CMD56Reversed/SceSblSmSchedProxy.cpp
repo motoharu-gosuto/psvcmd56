@@ -1040,8 +1040,12 @@ int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
 
 int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(SmOperationId id, int f00d_cmd_fifo_idx, SceSblSmschedCallFuncCommand *cmd_paddr)
 {
-   //TODO: not reversed
-   return 0;
+   ENTER_SYSCALL();
+
+   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x133, id, f00d_cmd_fifo_idx, (int)cmd_paddr);
+
+   EXIT_SYSCALL();
+   return smc_res;
 }
 
 int SceSblSmSchedProxyForKernel_smc_134_f70c04ec(SmOperationId id, int smcArg1, int *result)
