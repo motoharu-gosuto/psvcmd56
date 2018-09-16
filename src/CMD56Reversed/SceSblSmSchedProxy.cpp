@@ -1072,8 +1072,10 @@ int SceSblSmSchedProxyForKernel_smc_136_15b0e4df(SmOperationId id, int num_or_in
 
 int SceSblSmSchedProxyForKernel_smc_137_973a4a7d(SmOperationId id, int num, int *result)
 {
-   //TODO: not reversed
-   return 0;
+   ENTER_SYSCALL();
+   int smc_res = proc_proxy_smc_134_137_99636C(0x137, id, num, result);
+   EXIT_SYSCALL();
+   return smc_res;
 }
 
 int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int smcArg1)
