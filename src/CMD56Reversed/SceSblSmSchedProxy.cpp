@@ -1056,8 +1056,10 @@ int SceSblSmSchedProxyForKernel_smc_134_f70c04ec(SmOperationId id, int smcArg1, 
 
 int SceSblSmSchedProxyForKernel_smc_135_3ce17233(SmOperationId id, int smcArg1, int smcArg2)
 {
-   //TODO: not reversed
-   return 0;
+   ENTER_SYSCALL();
+   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x135, id, smcArg1, smcArg2);
+   EXIT_SYSCALL();
+   return smc_res;
 }
 
 int SceSblSmSchedProxyForKernel_smc_136_15b0e4df(SmOperationId id, int num_or_index, int res_from_smc0x137)
