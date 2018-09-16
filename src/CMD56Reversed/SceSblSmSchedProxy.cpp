@@ -1096,8 +1096,16 @@ int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2()
 
 int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int smcArg2, int smcArg3)
 {
-   //TODO: not reversed
-   return 0;
+   ENTER_SYSCALL();
+   if (g_008F5010.value != 1 )
+   {
+      EXIT_SYSCALL();
+      return 0x800F0426;
+   }
+
+   int smc_res = proc_enter_SMC_996000(smcArg0, smcArg1, smcArg2, smcArg3, 0x13C);
+   EXIT_SYSCALL();
+   return smc_res;
 }
 
 //==========================================================================================================
