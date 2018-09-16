@@ -1080,10 +1080,49 @@ int SceSblSmSchedProxyForKernel_smc_137_973a4a7d(SmOperationId id, int num, int 
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int smcArg1)
+int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_index)
 {
-   //TODO: not reversed
-   return 0;
+   ENTER_SYSCALL();
+
+   //check sched proxy state
+   if (g_008F5010.value != 1 )
+   {
+      EXIT_SYSCALL();
+      return 0x800F0426;
+   }
+
+   //check function index
+   if (function_index > 3 )
+   {
+      EXIT_SYSCALL();
+      return 0x800F0416;
+   }
+
+   //lock
+   int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
+
+   //get operation item
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(id, &error_code);
+   if (!op_item0)
+   {
+      SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);
+      EXIT_SYSCALL();
+      return 0x800F042B;
+   }
+
+   //get callback entry and init
+   shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[function_index];
+   cb_entry->cb = 0;
+   cb_entry->data.func_arg2 = 0;
+
+   //unlock
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);
+   
+   //execute smc call
+   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, function_index, 0, 0, 0x139);
+   EXIT_SYSCALL();
+   return smc_res;
 }
 
 int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2()
