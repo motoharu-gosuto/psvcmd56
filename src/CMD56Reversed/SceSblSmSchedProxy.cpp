@@ -89,6 +89,13 @@ struct smc_12E_data_t
   int unk4;
 };
 
+struct smc_12F_data_t
+{
+  int status0;
+  int status1;
+};
+
+
 //==========================================================================================================
 
 int g_008F5000; //operation id counter
@@ -127,6 +134,14 @@ kernel_message_ctx msg_9978A4;
 //0
 //0
 kernel_message_ctx msg_99788C;
+
+//0x6CBE4B08
+//0x39630764
+//0xAD1439EB
+//0
+//0
+//0
+kernel_message_ctx msg_997844;
 
 //==========================================================================================================
 
@@ -788,7 +803,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
 
    //validate data size
    if (data_size <= 0x47)
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_9978A4, kp_msg_adr);
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9978A4, kp_msg_adr);
 
    //assign what is probably a TZ pointer to operation item
    op_item0->maybe_status_secure_world_ptr = data_block->maybe_status_secure_world_ptr;
@@ -896,7 +911,7 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
 
    //check data size
    if (data_size <= 7)
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_99788C, kp_msg_adr);
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99788C, kp_msg_adr);
 
    //copy data to result from shared block
    result[0] = block_ptr->unk0;
@@ -920,8 +935,81 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
 
 int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmOperationId id, int status[2])
 {
-   //TODO: not reversed
-   return 0;
+   void *kp_msg_adr;
+
+   ENTER_SYSCALL();
+
+   //check sched proxy state
+   if (g_008F5010.value != 1)
+   {
+      EXIT_SYSCALL();
+      return 0x800F0426;
+   }
+
+   //check status pointer
+   if (!status)
+   {
+      EXIT_SYSCALL();
+      return 0x800F0416;
+   }
+   
+   //get operation item
+   int error_code;
+   shed_proxy_operation_item_t* op_item = get_operation_item_99600C(id, &error_code);
+   if (!op_item)
+   {
+      EXIT_SYSCALL();
+      return 0x800F042B;
+   }
+
+   //get shared block, lock
+   unsigned int shared_block_size;
+   smc_12F_data_t* shared_block;
+   int block_index = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(8u, (void **)&shared_block, &shared_block_size);
+   if (block_index < 0)
+   {
+      EXIT_SYSCALL();
+      return block_index;
+   }
+
+   //write back shared block
+   int res1 = data_block_write_back_997084(block_index);
+   if(res1 < 0)
+   {
+      data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+      EXIT_SYSCALL();
+      return res1;
+   }
+
+   //execute smc call
+   int res_smc = proc_enter_SMC_996000((unsigned int)op_item->maybe_status_secure_world_ptr, block_index, 0, 0, 0x12F);
+
+   //invalidate shared block
+   int res2 = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&shared_block, &shared_block_size);
+   if (res2 < 0)
+   {
+      data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+      EXIT_SYSCALL();
+      return res2;
+   }
+
+   //check block size
+   if (shared_block_size <= 7)
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997844, kp_msg_adr);
+
+   //get data from shared block
+   status[0] = shared_block->status0;
+   status[1] = shared_block->status1;
+
+   //write back shared block, unlock
+   int res3 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+
+   EXIT_SYSCALL();
+
+   if (res3 < 0)
+      return res3;
+
+   return res_smc;
 }
 
 int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
