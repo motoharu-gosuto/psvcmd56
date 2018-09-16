@@ -1014,8 +1014,28 @@ int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmO
 
 int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
 {
-   //TODO: not reversed
-   return 0;
+   ENTER_SYSCALL();
+
+   //check sched proxy state
+   if (g_008F5010.value != 1)
+   {
+      EXIT_SYSCALL();
+      return 0x800F0426;
+   }
+
+   //get operation item
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(id, &error_code);
+   if (!op_item0)
+   {
+      EXIT_SYSCALL();
+      return 0x800F042B;
+   }
+
+   //execute smc call
+   int smc_result = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, 0, 0, 0, 0x130);
+   EXIT_SYSCALL();
+   return smc_result; 
 }
 
 int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(SmOperationId id, int f00d_cmd_fifo_idx, SceSblSmschedCallFuncCommand *cmd_paddr)
