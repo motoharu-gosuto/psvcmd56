@@ -786,74 +786,76 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
          SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99782C, kp_msg_addr);
    }
 
-   //=====================================
-
-   int v14;
-   int result;
-   void *maybe_status_secure_world_ptr = op_item0->maybe_status_secure_world_ptr;
-
-   if ( intr_callback )
+   //execute smc call depending on flags
+   if (intr_callback)
    {
-      if ( shared_block40->maybe_flags & 2 )
+      if (shared_block40->maybe_flags & 2)
       {
          intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, shared_block40->func_data2, shared_block40->func_data1);
 
-         if ( !(shared_block40->maybe_flags & 4) )
+         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
+
+         //throwing kernel panic on error depends on flag!
+         if (smc_res == 0x800F042B)
          {
-LABEL_19:
-            v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, shared_block40->maybe_flags & 4, 0x13A); //zero optimization
-
-            if ( v14 == 0x800F042B )
-            {
-               goto LABEL_23;
-            }
-
-            goto LABEL_22;
+            if (shared_block40->maybe_flags & 4)
+               SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+            else
+               return -1;
          }
+
+         if (smc_res < 0)
+            SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+
+         return -1;
       }
-      else if ( !(shared_block40->maybe_flags & 4) )
+      else if (shared_block40->maybe_flags & 4)
       {
-         goto LABEL_19;
+         intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, 0, 0);
+
+         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
+
+         if (smc_res == 0x800F042B)
+            SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+
+         if (smc_res < 0)
+            SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+
+         return -1;
       }
-
-      intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, 0, 0);
-
-      v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
-
-      if ( v14 == 0x800F042B )
+      else
       {
-         goto LABEL_29;
-      }
+         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
 
-      goto LABEL_22;
+         //this is strange - why not throwing kernel panic on error?
+         if (smc_res == 0x800F042B)
+            return -1;
+
+         if (smc_res < 0)
+            SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+
+         return -1;
+      }  
    }
-
-   v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
-
-   if ( v14 != 0x800F042B )
+   else
    {
-LABEL_22:
+      int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
 
-      if ( v14 >= 0 )
+      //throwing kernel panic on error depends on flag!
+      if (smc_res == 0x800F042B)
       {
-         goto LABEL_23;
+         if (shared_block40->maybe_flags & 4)
+            SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+         else
+            return -1;
       }
+      
+      if (smc_res < 0)
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
 
-LABEL_29:
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
+      return -1;
    }
-
-   if ( shared_block40->maybe_flags & 4 )
-   {
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
-   }
-
-LABEL_23:
-   result = -1;
-
-   return result;
 }
-
 
 //==========================================================================================================
 
