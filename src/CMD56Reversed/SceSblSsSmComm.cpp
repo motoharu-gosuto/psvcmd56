@@ -45,15 +45,15 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, 
    //many globals, functionality is simplier
 
    //more imitations
-   smc_133_input in;
-   in.size = 0x40 + size;
-   in.service_id = service_id;
-   in.smcArg0 = 0x00;
-   in.unk = 0x00;
+   SceSblSmschedCallFuncCommand cmd;
+   cmd.size = 0x40 + size;
+   cmd.service_id = service_id;
+   cmd.response = 0x00;
+   cmd.unk2 = 0x00;
 
-   memcpy(&in.data, ctx, size);
+   memcpy(&cmd.data, ctx, size);
 
-   SceSblSmSchedProxyForKernel_smc_133_723b382f(&in, 1, &in);
+   SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(id, 1, &cmd);
 
    return 0;
 }

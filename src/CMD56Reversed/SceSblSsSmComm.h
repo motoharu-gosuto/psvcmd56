@@ -6,7 +6,7 @@
 
 struct memory_block_data_entry
 {
-   smc_133_input* ptr; //this will be used as input to db9fc204
+   SceSblSmschedCallFuncCommand* ptr; //this will be used as input to db9fc204
    int unk;
    SceUID mid; //memory block id
    SceUID eid; //event flag id

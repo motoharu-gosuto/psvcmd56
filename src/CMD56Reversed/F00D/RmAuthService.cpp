@@ -1,5 +1,7 @@
 #include "RmAuthService.h"
 
+#include "SceSblDMAC5DmacKRBase.h"
+
 using namespace f00d;
 
 int RmAuthService::service_0x1(int* f00d_resp, void* ctx, int size) const
@@ -8,15 +10,15 @@ int RmAuthService::service_0x1(int* f00d_resp, void* ctx, int size) const
 
    //this should call shed proxy which will call url executor which will call oracle
    /*
-   smc_133_input in;
-   in.size = 0x40 + size;
-   in.service_id = service_id;
-   in.smcArg0 = 0x00;
-   in.unk = 0x00;
+   SceSblSmschedCallFuncCommand cmd;
+   cmd.size = 0x40 + size;
+   cmd.service_id = service_id;
+   cmd.response = 0x00;
+   cmd.unk2 = 0x00;
 
-   memcpy(&in.data, ctx, size);
+   memcpy(&cmd.data, ctx, size);
 
-   SceSblSmSchedProxyForKernel_smc_133_723b382f(&in, 1, &in);
+   SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(id, 1, &cmd);
    */
 
    return 0;
@@ -28,15 +30,15 @@ int RmAuthService::service_0x2(int* f00d_resp, void* ctx, int size) const
 
    //this should call shed proxy which will call url executor which will call oracle
    /*
-   smc_133_input in;
-   in.size = 0x40 + size;
-   in.service_id = service_id;
-   in.smcArg0 = 0x00;
-   in.unk = 0x00;
+   SceSblSmschedCallFuncCommand cmd;
+   cmd.size = 0x40 + size;
+   cmd.service_id = service_id;
+   cmd.response = 0x00;
+   cmd.unk2 = 0x00;
 
-   memcpy(&in.data, ctx, size);
+   memcpy(&cmd.data, ctx, size);
 
-   SceSblSmSchedProxyForKernel_smc_133_723b382f(&in, 1, &in);
+   SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(id, 1, &cmd);
    */
 
    return 0;
