@@ -32,9 +32,13 @@ struct global_lock_t
   int lock;
 };
 
-struct global_lock_count_t
+#define SCHED_PROXY_STATE0 0
+#define SCHED_PROXY_STATE1 1
+#define SCHED_PROXY_STATE2 2
+
+struct sched_proxy_state_t
 {
-  int value;
+  int state;
 };
 
 struct operation_callback_data
@@ -115,7 +119,7 @@ struct smc_13A_intr_data_t
 
 int g_008F5000; //operation id counter
 //g_008F5004
-global_lock_count_t g_008F5010; // its not really a lock - its shed proxy state - RENAME IT LATER!
+sched_proxy_state_t g_008F5010; // sched proxy state
 SceUID g_008F5014;
 global_lock_t g_008F5018;
 lock_8F501C g_008F501C;
@@ -357,7 +361,7 @@ int proc_smc_13B_heap_free_cleanup_9965C0()
       g_008F5014 = -1;
    }
 
-   g_008F5010.value = 2;
+   g_008F5010.state = SCHED_PROXY_STATE2;
 
    return result;
 }
@@ -619,7 +623,7 @@ int cleanup_id_operation_996454(SmOperationId id)
 
 int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, int num_or_index_smcArg1, int smcArg2)
 {
-   if (g_008F5010.value != 1)
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       return 0x800F0426;
    }
@@ -642,7 +646,7 @@ int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int nu
    void *kp_msg_addr;
  
    //check sched proxy state
-   if (g_008F5010.value != 1 )
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
       return 0x800F0426;
 
    //maybe function index
@@ -894,7 +898,7 @@ int SceSblSmschedProxy_module_start_935cd196()
       return res2;
    
    g_008F5018.lock = 0;
-   g_008F5010.value = 1;
+   g_008F5010.state = SCHED_PROXY_STATE1;
 
    return 0;
 }
@@ -911,7 +915,7 @@ int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationI
 {   
    ENTER_SYSCALL();
 
-   if (g_008F5010.value != 1)
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
@@ -987,7 +991,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    
    ENTER_SYSCALL();
 
-   if (g_008F5010.value != 1 )
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
@@ -1169,7 +1173,7 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
    ENTER_SYSCALL();
 
    //check shed proxy state
-   if (g_008F5010.value != 1 )
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
@@ -1279,7 +1283,7 @@ int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmO
    ENTER_SYSCALL();
 
    //check sched proxy state
-   if (g_008F5010.value != 1)
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
@@ -1356,7 +1360,7 @@ int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
    ENTER_SYSCALL();
 
    //check sched proxy state
-   if (g_008F5010.value != 1)
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
@@ -1422,14 +1426,14 @@ int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_
    ENTER_SYSCALL();
 
    //check sched proxy state
-   if (g_008F5010.value != 1 )
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
    }
 
    //check function index
-   if (function_index > 3 )
+   if (function_index > 3)
    {
       EXIT_SYSCALL();
       return 0x800F0416;
@@ -1473,7 +1477,7 @@ int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2()
 int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int smcArg2, int smcArg3)
 {
    ENTER_SYSCALL();
-   if (g_008F5010.value != 1 )
+   if (g_008F5010.state != SCHED_PROXY_STATE1)
    {
       EXIT_SYSCALL();
       return 0x800F0426;
