@@ -95,6 +95,10 @@ struct smc_12F_data_t
   int status1;
 };
 
+struct smc_134_137_data_t
+{
+  int unk0;
+};
 
 //==========================================================================================================
 
@@ -142,6 +146,14 @@ kernel_message_ctx msg_99788C;
 //0
 //0
 kernel_message_ctx msg_997844;
+
+//0x6CBE4B08
+//0x5ADE75CF
+//0x25E11FE1
+//0
+//0
+//0
+kernel_message_ctx msg_997874;
 
 //==========================================================================================================
 
@@ -518,10 +530,63 @@ int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, in
    return smc_res;
 }
 
-int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int num, int *response)
+int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int num, int* response)
 {
-   //TODO: not reversed
-   return 0;
+   void *kp_msg_addr;
+ 
+   //check sched proxy state
+   if (g_008F5010.value != 1 )
+      return 0x800F0426;
+
+   //maybe function index
+   if ((num - 1) > 2)
+      return 0x800F0416;
+
+   //get operation item
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(id, &error_code);
+   if (!op_item0)
+      return 0x800F042B;
+
+   //get shared block, invalidate, lock
+   smc_134_137_data_t *shared_block;
+   unsigned int shared_block_size;
+   int block_index = get_partial_data_block_invalidate_cache_maybe_remove_from_list_996FCC(4u, (void **)&shared_block, &shared_block_size);
+   if (block_index < 0)
+      return block_index;
+
+   //write back shared block
+   int res0 = data_block_write_back_997084(block_index);
+   if (res0 < 0)
+   {
+      data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+      return res0;
+   }
+
+   //execute smc call
+   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, num, block_index, 0, monitorApiNumber);
+
+   //invalidate shared block
+   int res2 = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&shared_block, &shared_block_size);
+   if (res2 < 0)
+   {
+      data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+      return res2;
+   }
+
+   //check size of response
+   if (shared_block_size <= 3)
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_997874, kp_msg_addr);
+
+   //copy response to result
+   *response = shared_block->unk0;
+
+   //write back shared block, unlock
+   int res3 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
+   if (res3 < 0)
+      return res3 & (res3 >> 0x20);
+   
+   return smc_res;
 }
 
 int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
@@ -934,18 +999,16 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
 
    //write back, unlock
    int unlock_res = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
-   if (unlock_res >= 0)
-   {
-      cleanup_id_operation_996454(id);
-      EXIT_SYSCALL();
-      return smc_res;
-   }
-   else
+   if (unlock_res < 0)
    {
       cleanup_id_operation_996454(id);
       EXIT_SYSCALL();
       return unlock_res & (unlock_res >> 0x20);
    }
+   
+   cleanup_id_operation_996454(id);
+   EXIT_SYSCALL();
+   return smc_res;
 }
 
 int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmOperationId id, int status[2])
