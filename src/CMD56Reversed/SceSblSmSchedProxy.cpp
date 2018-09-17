@@ -243,24 +243,6 @@ int proc_smc_13B_heap_free_cleanup_9965C0()
    return result;
 }
 
-int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, int num_or_index_smcArg1, int smcArg2)
-{
-   //TODO: not reversed
-   return 0;
-}
-
-int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int num, int *response)
-{
-   //TODO: not reversed
-   return 0;
-}
-
-int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
-{
-   //TODO: not reversed
-   return 0;
-}
-
 // returns block index
 int get_partial_data_block_invalidate_cache_maybe_remove_from_list_996F58(sysbase_shared_block_t *block_base_ptr, unsigned int data_size, void** invalidate_block_pointer, unsigned int *data_size_result)
 {
@@ -516,6 +498,39 @@ int cleanup_id_operation_996454(SmOperationId id)
    return 0;
 }
 
+int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, int num_or_index_smcArg1, int smcArg2)
+{
+   if (g_008F5010.value != 1)
+   {
+      return 0x800F0426;
+   }
+   
+   //might be function index
+   if ((num_or_index_smcArg1 - 1) > 2)
+      return 0x800F0416;
+
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(id, &error_code);
+   if (!op_item0)
+      return 0x800F042B;
+      
+   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, num_or_index_smcArg1, smcArg2, 0, monitorApiNumber);
+   return smc_res;
+}
+
+int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int num, int *response)
+{
+   //TODO: not reversed
+   return 0;
+}
+
+int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
+{
+   //TODO: not reversed
+   return 0;
+}
+
+
 //==========================================================================================================
 
 int SceSblSmschedProxy_module_start_935cd196()
@@ -565,8 +580,6 @@ int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604()
 
    return SceSblSmschedProxy_module_start_935cd196();
 }
-
-//==========================================================================================================
 
 int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationId id, int function_index, smc_138_callback *cb, int func_arg2)
 {   
