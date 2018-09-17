@@ -107,7 +107,7 @@ int SceThreadmgrForDriver_sceKernelDeleteMutexForDriver_0a912340(SceUID uid);
 
 int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, const char* name, int unk0, int unk1);
 
-int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits);
+int SceThreadmgrForDriver_sceKernelSetEventFlagForDriver_d4780c3e(SceUID evid, unsigned int bits);
 
 int SceThreadmgrForDriver_sceKernelGetThreadIdForDriver_59d06540();
 

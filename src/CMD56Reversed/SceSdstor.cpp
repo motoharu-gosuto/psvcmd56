@@ -242,7 +242,7 @@ int proc_SceSdstorIntr_thread_callback_C18650(SceSize args, void *argp)
         int r1 = r6;
         int r0 = r10[8];
         outBits = r3;
-        SceSdstor.SceThreadmgrForDriver._imp_d4780c3e();
+        SceSdstor.SceThreadmgrForDriver._imp_sceKernelSetEventFlagForDriver_d4780c3e();
         int r9 = r9 - 1;
         
         if(r9 == 0)
@@ -478,7 +478,7 @@ void sub_C17BC8(int r0, void* r1)
     /*
     int r0 = r1[4];
     int r1 = 1;
-    SceSdstor.SceThreadmgrForDriver._imp_d4780c3e();
+    SceSdstor.SceThreadmgrForDriver._imp_sceKernelSetEventFlagForDriver_d4780c3e();
     */
 }
 
@@ -487,7 +487,7 @@ void sub_C17BD4(int r0, void* r1)
     /*
     int r0 = r1[4];
     int r1 = 0x10;
-    SceSdstor.SceThreadmgrForDriver._imp_d4780c3e();
+    SceSdstor.SceThreadmgrForDriver._imp_sceKernelSetEventFlagForDriver_d4780c3e();
     */
 }
 

@@ -350,7 +350,7 @@ int sub_BEBD70(vfs_node* input_node)
 
    r10->unk_4 = 0xFFFFFFFD;
 
-   return SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(r10->event_flag_SceVfsVnode, r10->evid_bits);
+   return SceThreadmgrForDriver_sceKernelSetEventFlagForDriver_d4780c3e(r10->event_flag_SceVfsVnode, r10->evid_bits);
 }
 
 int sub_BED838(int r0)

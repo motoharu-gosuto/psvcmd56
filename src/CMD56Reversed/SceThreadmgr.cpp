@@ -103,7 +103,7 @@ int SceThreadmgrForDriver_ksceKernelInitializeFastMutex_af8e1266(void* mutex, co
    return 0;
 }
 
-int SceThreadmgrForDriver_ksceKernelSetEventFlag_d4780c3e(SceUID evid, unsigned int bits)
+int SceThreadmgrForDriver_sceKernelSetEventFlagForDriver_d4780c3e(SceUID evid, unsigned int bits)
 {
    return 0;
 }
