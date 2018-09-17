@@ -14,8 +14,6 @@
 
 //==========================================================================================================
 
-//internal types
-
 struct item_996E0C //size is 0x10
 {
   item_996E0C *item0;
@@ -45,8 +43,6 @@ struct operation_callback_data
   int func_arg4;
   int func_arg3;
 };
-
-typedef int smc_138_callback(SmOperationId id, int index, int arg2, int arg3, int arg4);
 
 struct shed_proxy_operation_callback_entry_t
 {

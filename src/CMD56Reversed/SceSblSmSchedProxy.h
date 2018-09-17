@@ -25,18 +25,16 @@ where the Supervisor call handler processes the SVC and executes a SMC, see Exce
 
 //==========================================================================================================
 
-//public types
-
 typedef unsigned int SmOperationId;
 
-struct SceSblSmschedCallFuncCommand
+typedef int smc_138_callback(SmOperationId id, int index, int arg2, int arg3, int arg4);
+
+struct sm_invoke_data_block_input
 {
-  unsigned int size;
-  unsigned int service_id;
-  unsigned int response;
-  unsigned int unk2;
-  unsigned int padding[12];
-  unsigned int data[];
+  int unk0;
+  int unk4;
+  int unk8;
+  int unkC;
 };
 
 struct SceSblSmCommContext130
@@ -49,13 +47,51 @@ struct SceSblSmCommContext130
   uint32_t unk_12C;
 };
 
-struct sm_invoke_data_block_input
+struct SceSblSmschedCallFuncCommand
 {
-  int unk0;
-  int unk4;
-  int unk8;
-  int unkC;
+  unsigned int size;
+  unsigned int service_id;
+  unsigned int response;
+  unsigned int unk2;
+  unsigned int padding[12];
+  unsigned int data[];
 };
+
+//==========================================================================================================
+
+int SceSblSmschedProxy_module_start_935cd196();
+
+int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604();
+
+int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationId id, int function_index, smc_138_callback *cb, int func_arg2);
+
+int SceSblSmSchedProxyForKernel_not_implemented_1dfc8624();
+
+int SceSblSmSchedProxyForKernel_not_implemented_984ec9d1();
+
+int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_1916509b(int priority, void *sm_self_data_paddr, unsigned int num_pairs, sm_invoke_data_block_input *invoke_input, SceSblSmCommContext130 *ctx, SmOperationId *id);
+
+int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperationId id, int result[2]);
+
+int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmOperationId id, int status[2]);
+
+int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id);
+
+int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(SmOperationId id, int f00d_cmd_fifo_idx, SceSblSmschedCallFuncCommand *cmd_paddr);
+
+int SceSblSmSchedProxyForKernel_smc_134_f70c04ec(SmOperationId id, int smcArg1, int *result);
+
+int SceSblSmSchedProxyForKernel_smc_135_3ce17233(SmOperationId id, int smcArg1, int smcArg2);
+
+int SceSblSmSchedProxyForKernel_smc_136_15b0e4df(SmOperationId id, int num_or_index, int res_from_smc0x137);
+
+int SceSblSmSchedProxyForKernel_smc_137_973a4a7d(SmOperationId id, int num, int *result);
+
+int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_index);
+
+int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2();
+
+int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int smcArg2, int smcArg3);
 
 //==========================================================================================================
 
@@ -145,24 +181,3 @@ struct output_f35efc1a
 //smcArg2 is 0
 //smcArg3 is 0
 int SceSblSmSchedProxyForKernel_smc_12E_f35efc1a(input_f35efc1a* ptr, output_f35efc1a* result);
- 
-//All other exports of SceSblSmSchedProxy:
-/*
-SceSblSmschedProxy.._exp_initialize_935cd196
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_check_affinity_initialize_a488d604
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_not_implemented_1dfc8624
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_not_implemented_984ec9d1
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_12D_1916509b
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_12E_f35efc1a
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_12F_27eb92f1
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_130_de4eac3c
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_133_723b382f
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_134_f70c04ec
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_135_3ce17233
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_136_15b0e4df
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_137_973a4a7d
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_138_8b84ac2a
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_139_85eda5fc
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_13B_33a3a1e2
-SceSblSmschedProxy.SceSblSmSchedProxyForKernel._exp_smc_13C_7894b6f0
-*/
