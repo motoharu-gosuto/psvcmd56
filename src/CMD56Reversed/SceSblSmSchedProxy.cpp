@@ -102,13 +102,13 @@ struct smc_134_137_data_t
 
 struct smc_13A_intr_data_t
 {
-  int op_item_func_block_index;
+  int function_index;
   SmOperationId operation_id;
-  int maybe_flags;
+  int cb_call_mode_flags;
   int event_flag_bits;
-  int data_to_send_to_smc_0x13A;
-  int func_data1;
-  int func_data2;
+  int smc_arg2;
+  int func_arg4;
+  int func_arg3;
 };
 
 //==========================================================================================================
@@ -751,21 +751,21 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    smc_138_callback* intr_callback;
    int cb_arg2;
      
-   if (shared_block40->maybe_flags & 2)
+   if (shared_block40->cb_call_mode_flags & 2)
    {
-      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->op_item_func_block_index];                       
+      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->function_index];
       intr_callback = cb_entry->cb;
       cb_arg2 = cb_entry->data.func_arg2;
 
       if (intr_callback == 0)
       {
-         cb_entry->data.func_arg4 = shared_block40->func_data1;
-         cb_entry->data.func_arg3 = shared_block40->func_data2;
+         cb_entry->data.func_arg4 = shared_block40->func_arg4;
+         cb_entry->data.func_arg3 = shared_block40->func_arg3;
       }
    }
-   else if (shared_block40->maybe_flags & 4)
+   else if (shared_block40->cb_call_mode_flags & 4)
    {
-      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->op_item_func_block_index];
+      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->function_index];
       intr_callback = cb_entry->cb;
       cb_arg2 = cb_entry->data.func_arg2;
    }
@@ -776,10 +776,10 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    }   
 
    //unlock
-   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);   
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);
 
    //set event flag
-   if (shared_block40->maybe_flags & 1)
+   if (shared_block40->cb_call_mode_flags & 1)
    {
       int set_res = SceThreadmgrForDriver_sceKernelSetEventFlagForDriver_d4780c3e(op_item0->SceSblSmsProxy_event_uid, shared_block40->event_flag_bits);
       if(set_res < 0)
@@ -789,16 +789,16 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    //execute smc call depending on flags
    if (intr_callback)
    {
-      if (shared_block40->maybe_flags & 2)
+      if (shared_block40->cb_call_mode_flags & 2)
       {
-         intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, shared_block40->func_data2, shared_block40->func_data1);
+         intr_callback(shared_block40->operation_id, shared_block40->function_index, cb_arg2, shared_block40->func_arg3, shared_block40->func_arg4);
 
-         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
          //throwing kernel panic on error depends on flag!
          if (smc_res == 0x800F042B)
          {
-            if (shared_block40->maybe_flags & 4)
+            if (shared_block40->cb_call_mode_flags & 4)
                SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
             else
                return -1;
@@ -809,11 +809,11 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
 
          return -1;
       }
-      else if (shared_block40->maybe_flags & 4)
+      else if (shared_block40->cb_call_mode_flags & 4)
       {
-         intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, 0, 0);
+         intr_callback(shared_block40->operation_id, shared_block40->function_index, cb_arg2, 0, 0);
 
-         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
          if (smc_res == 0x800F042B)
             SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
@@ -825,7 +825,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
       }
       else
       {
-         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
          //this is strange - why not throwing kernel panic on error?
          if (smc_res == 0x800F042B)
@@ -839,12 +839,12 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    }
    else
    {
-      int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
+      int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
       //throwing kernel panic on error depends on flag!
       if (smc_res == 0x800F042B)
       {
-         if (shared_block40->maybe_flags & 4)
+         if (shared_block40->cb_call_mode_flags & 4)
             SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
          else
             return -1;
