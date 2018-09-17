@@ -3,8 +3,16 @@
 #include "Constants.h"
 #include "SceSysroot.h"
 
+//information about SMC calls of Vita:
+
 //there is new information about SMC services on Vita at xyz wiki:
+//https://wiki.henkaku.xyz/vita/SceExcpmgr
 //https://wiki.henkaku.xyz/vita/F00D_Processor
+//https://wiki.henkaku.xyz/vita/SceSblSmschedProxy
+
+//TZ exploit:
+//http://hexkyz.blogspot.com/2017/02/the-aftermath-tale-of-secure-worlds.html
+//https://wiki.henkaku.xyz/vita/Vulnerabilities#Secure_World_.28TrustZone.29
 
 /*
 //http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0301h/ch02s12s13.html
@@ -15,13 +23,6 @@ world to the other it must first execute a SVC instruction.
 This changes the processor to a privileged mode 
 where the Supervisor call handler processes the SVC and executes a SMC, see Exceptions.
 */
-
-//there is a 32 bit code function int proc_enterSMC_996000(int arg_0, int arg_1, int arg_2, int index, int monitorApiNumber)
-//that is used by many exports
-//it looks like this proxy library is used to perform Secure Monitor kernel service calls
-
-//there is some info on xyz wiki - recirection from SMC
-//https://wiki.henkaku.xyz/vita/SceExcpmgr
 
 //==========================================================================================================
 

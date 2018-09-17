@@ -336,6 +336,7 @@ int proc_suspend_callback_9964B0(int resume, int eventid, suspend_args_t *args, 
    return ret0 & (ret0 >> 31);
 }
 
+//proxy function that executes SMC call
 int proc_enter_SMC_996000(int arg_0, int arg_1, int arg_2, int arg_3, int monitor_api_number)
 {
   //__asm { SMC             #0; enters Secure Monitor mode }
