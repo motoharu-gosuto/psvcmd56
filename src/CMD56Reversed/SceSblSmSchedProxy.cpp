@@ -698,162 +698,110 @@ int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int nu
 
 int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
 {
-   smc_138_callback *v2; // r11
-   void *v3; // lr
-   int prev_state; // r9
-   int op_item_func_block_index0; // r6
-   SmOperationId id_local; // r7
-   int maybe_flags; // r4
-   int v8; // r1
-   shed_proxy_operation_item_t *op_item0; // r0
-   shed_proxy_operation_item_t *func_data; // r1
-   shed_proxy_operation_item_t *op_item1; // r3
-   shed_proxy_operation_item_t *func_block0; // lr
-   int *global_lock; // r0
-   int v14; // r0
-   int result; // r0
-   int *v16; // lr
-   shed_proxy_operation_item_t *v17; // [sp+Ch] [bp-5Ch]
-   void *maybe_status_secure_world_ptr; // [sp+10h] [bp-58h]
-   shed_proxy_operation_item_t *func_data0; // [sp+14h] [bp-54h]
-   void *some_address; // [sp+18h] [bp-50h]
-   int bits; // [sp+1Ch] [bp-4Ch]
-   int func_data2; // [sp+20h] [bp-48h]
-   int func_data1; // [sp+24h] [bp-44h]
-   unsigned int invalidate_size_ptr; // [sp+28h] [bp-40h]
-   smc_13A_intr_data_t *invalidate_data_ptr; // [sp+2Ch] [bp-3Ch]
-   int error_code; // [sp+30h] [bp-38h]
-   int v27[2]; // [sp+34h] [bp-34h]
+   void* kp_msg_addr;
    
-   some_address = v3;
-   
-   prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
+   //lock
+   int prev_state = SceCpuForDriver_sceKernelCpuLockSuspendIntrStoreLRForDriver_d32ace9e(&g_008F5018.lock);
 
-   if ( flush_block40_and_invalidate_from_shared_block_bank1_997100((void **)&invalidate_data_ptr, &invalidate_size_ptr) < 0 )
+   //invalidate block 40
+   smc_13A_intr_data_t* shared_block40;
+   unsigned int shared_block40_size;
+   if (flush_block40_and_invalidate_from_shared_block_bank1_997100((void **)&shared_block40, &shared_block40_size) < 0)
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997920, kp_msg_addr);
+
+   //check block 40 size
+   if (shared_block40_size <= 0x1B)
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997938, kp_msg_addr);
+
+   //get operation item
+   int error_code;
+   shed_proxy_operation_item_t* op_item0 = get_operation_item_99600C(shared_block40->operation_id, &error_code);
+   if (!op_item0)
    {
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997920, v3);
-   }
-
-   if ( invalidate_size_ptr <= 0x1B )
-   {
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997938, v3);
-   }
-
-   op_item_func_block_index0 = invalidate_data_ptr->op_item_func_block_index;
-   id_local = invalidate_data_ptr->operation_id;
-   maybe_flags = invalidate_data_ptr->maybe_flags;
-   v8 = invalidate_data_ptr->func_data2;
-   bits = invalidate_data_ptr->event_flag_bits;
-
-   v27[0] = invalidate_data_ptr->func_data1;
-   v27[1] = v8;
-   func_data2 = v27[0];
-   func_data1 = v8;
-
-   op_item0 = get_operation_item_99600C(id_local, &error_code);
-   op_item1 = op_item0;
-
-   if ( !op_item0 )
-   {
-      if ( error_code != 1 )
+      switch(error_code)
       {
-         if ( error_code != 2 )
-         {
-            if ( error_code != 3 )
-            {
-               if ( error_code != 4 )
-               {
-                  if ( error_code != 5 )
-                  {
-                     if ( error_code != 6 )
-                     {
-                        if ( error_code != 7 )
-                        {
-                           SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997814, v3);
-                        }
-
-                        SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9977E4, v3);
-                     }
-
-                     SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9979B0, v3);
-                  }
-
-                  SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997998, v3);
-               }
-
-               SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9977FC, v3);
-            }
-
-            SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997968, v3);
-         }
-
-         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997980, v3);
-      }
-
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997950, v3);
-   }
-
-   if ( !(maybe_flags & 2) )
-   {
-      func_data0 = (shed_proxy_operation_item_t *)(maybe_flags & 2);
-      v2 = (smc_138_callback *)(maybe_flags & 2);
-   }
-
-   maybe_status_secure_world_ptr = op_item0->maybe_status_secure_world_ptr;
-
-   if ( maybe_flags & 2 )
-   {
-      func_block0 = (shed_proxy_operation_item_t *)((char *)op_item0 + 0x10 * op_item_func_block_index0);// this is just a weird indexing - real array starts from offset 0x14
-                                                // 
-      v2 = func_block0->functions[0].cb;
-      func_data0 = (shed_proxy_operation_item_t *)func_block0->functions[0].data.func_arg2;
-
-      if ( !v2 )
-      {
-         func_data = (shed_proxy_operation_item_t *)v27[1];
-         v16 = &func_block0->functions[0].data.func_arg4;
-         *v16 = v27[0];
-         v16[1] = (int)func_data;
+      case 1:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997950, kp_msg_addr);
+         break;
+      case 2:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997980, kp_msg_addr);
+         break;
+      case 3:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997968, kp_msg_addr);
+         break;
+      case 4:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9977FC, kp_msg_addr);
+         break;
+      case 5:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997998, kp_msg_addr);
+         break;
+      case 6:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9979B0, kp_msg_addr);
+         break;
+      case 7:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9977E4, kp_msg_addr);
+         break;
+      default:
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997814, kp_msg_addr);
+         break;
       }
    }
 
-   global_lock = &g_008F5018.lock;
-
-   if ( maybe_flags & 4 )
+   //get callback and callback arg 2
+   smc_138_callback* intr_callback;
+   int cb_arg2;
+     
+   if (shared_block40->maybe_flags & 2)
    {
-      func_data = (shed_proxy_operation_item_t *)((char *)op_item1 + 0x10 * op_item_func_block_index0);
-   }
+      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->op_item_func_block_index];                       
+      intr_callback = cb_entry->cb;
+      cb_arg2 = cb_entry->data.func_arg2;
 
-   if ( maybe_flags & 4 )
-   {
-      v2 = func_data->functions[0].cb;
-      func_data = (shed_proxy_operation_item_t *)func_data->functions[0].data.func_arg2;
-   }
-
-   v17 = op_item1;
-
-   if ( maybe_flags & 4 )
-   {
-      func_data0 = func_data;
-   }
-
-   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(global_lock, prev_state);
-
-   if ( maybe_flags & 1 && SceThreadmgrForDriver_sceKernelSetEventFlagForDriver_d4780c3e(v17->SceSblSmsProxy_event_uid, bits) < 0 )
-   {
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99782C, some_address);
-   }
-
-   if ( v2 )
-   {
-      if ( maybe_flags & 2 )
+      if (intr_callback == 0)
       {
-         v2(id_local, op_item_func_block_index0, func_data0, func_data1, func_data2);
+         cb_entry->data.func_arg4 = shared_block40->func_data1;
+         cb_entry->data.func_arg3 = shared_block40->func_data2;
+      }
+   }
+   else if (shared_block40->maybe_flags & 4)
+   {
+      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->op_item_func_block_index];
+      intr_callback = cb_entry->cb;
+      cb_arg2 = cb_entry->data.func_arg2;
+   }
+   else
+   {
+      intr_callback = 0;
+      cb_arg2 = 0;
+   }   
 
-         if ( !(maybe_flags & 4) )
+   //unlock
+   SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);   
+
+   //set event flag
+   if (shared_block40->maybe_flags & 1)
+   {
+      int set_res = SceThreadmgrForDriver_sceKernelSetEventFlagForDriver_d4780c3e(op_item0->SceSblSmsProxy_event_uid, shared_block40->event_flag_bits);
+      if(set_res < 0)
+         SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99782C, kp_msg_addr);
+   }
+
+   //=====================================
+
+   int v14;
+   int result;
+   void *maybe_status_secure_world_ptr = op_item0->maybe_status_secure_world_ptr;
+
+   if ( intr_callback )
+   {
+      if ( shared_block40->maybe_flags & 2 )
+      {
+         intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, shared_block40->func_data2, shared_block40->func_data1);
+
+         if ( !(shared_block40->maybe_flags & 4) )
          {
 LABEL_19:
-            v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, op_item_func_block_index0, invalidate_data_ptr->data_to_send_to_smc_0x13A, maybe_flags & 4, 0x13A);
+            v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, shared_block40->maybe_flags & 4, 0x13A); //zero optimization
 
             if ( v14 == 0x800F042B )
             {
@@ -863,14 +811,14 @@ LABEL_19:
             goto LABEL_22;
          }
       }
-      else if ( !(maybe_flags & 4) )
+      else if ( !(shared_block40->maybe_flags & 4) )
       {
          goto LABEL_19;
       }
 
-      v2(id_local, op_item_func_block_index0, func_data0, 0, 0);
+      intr_callback(shared_block40->operation_id, shared_block40->op_item_func_block_index, cb_arg2, 0, 0);
 
-      v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, op_item_func_block_index0, invalidate_data_ptr->data_to_send_to_smc_0x13A, 0, 0x13A);
+      v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
 
       if ( v14 == 0x800F042B )
       {
@@ -880,7 +828,7 @@ LABEL_19:
       goto LABEL_22;
    }
 
-   v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, op_item_func_block_index0, invalidate_data_ptr->data_to_send_to_smc_0x13A, 0, 0x13A);
+   v14 = proc_enter_SMC_996000((unsigned int)maybe_status_secure_world_ptr, shared_block40->op_item_func_block_index, shared_block40->data_to_send_to_smc_0x13A, 0, 0x13A);
 
    if ( v14 != 0x800F042B )
    {
@@ -892,12 +840,12 @@ LABEL_22:
       }
 
 LABEL_29:
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, some_address);
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
    }
 
-   if ( maybe_flags & 4 )
+   if ( shared_block40->maybe_flags & 4 )
    {
-      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, some_address);
+      SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
    }
 
 LABEL_23:
