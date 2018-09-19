@@ -14,6 +14,10 @@
 
 //==========================================================================================================
 
+#define INVALID_SM_OPERATION_HANDLE -1
+
+typedef unsigned int SmOperationHandle;
+
 struct item_996E0C //size is 0x10
 {
   item_996E0C *item0;
@@ -58,7 +62,7 @@ struct shed_proxy_operation_item_t
 {
   int is_used;
   SmOperationId operation_id;
-  void *maybe_status_secure_world_ptr;
+  SmOperationHandle operation_handle;
   SceUID SceSblSmsProxy_event_uid;
   SceUID SceSblSmsProxyWait_mutex_uid;
   shed_proxy_operation_callback_entry_t functions[4];
@@ -69,6 +73,14 @@ struct SceSblSmschedProxyHeap
   shed_proxy_operation_item_t items[0x40];
 };
 
+struct smc_12D_data_self_t
+{
+  unsigned int self_type;
+  uint32_t pathId;
+  SceUInt64 program_authority_id;
+  uint8_t caller_capability[32];
+};
+
 struct smc_12D_data_t
 {
    int unk0;
@@ -76,11 +88,8 @@ struct smc_12D_data_t
    int unk8;
    int unkC;
    SmOperationId invoke_operation_id;
-   void *maybe_status_secure_world_ptr;
-   unsigned int self_type;
-   uint32_t pathId;
-   SceUInt64 program_authority_id;
-   uint8_t caller_capability[32];
+   SmOperationHandle operation_handle;
+   smc_12D_data_self_t caller_self_info;
 };
 
 struct smc_12E_data_t
@@ -638,7 +647,7 @@ int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, in
    if (!op_item0)
       return 0x800F042B;
       
-   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, num_or_index_smcArg1, smcArg2, 0, monitorApiNumber);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, num_or_index_smcArg1, smcArg2, 0, monitorApiNumber);
    return smc_res;
 }
 
@@ -676,7 +685,7 @@ int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int nu
    }
 
    //execute smc call
-   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, num, block_index, 0, monitorApiNumber);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, num, block_index, 0, monitorApiNumber);
 
    //invalidate shared block
    int res2 = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&shared_block, &shared_block_size);
@@ -798,7 +807,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
       {
          intr_callback(shared_block40->operation_id, shared_block40->function_index, cb_arg2, shared_block40->func_arg3, shared_block40->func_arg4);
 
-         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
          //throwing kernel panic on error depends on flag!
          if (smc_res == 0x800F042B)
@@ -818,7 +827,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
       {
          intr_callback(shared_block40->operation_id, shared_block40->function_index, cb_arg2, 0, 0);
 
-         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
          if (smc_res == 0x800F042B)
             SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
@@ -830,7 +839,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
       }
       else
       {
-         int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
          //this is strange - why not throwing kernel panic on error?
          if (smc_res == 0x800F042B)
@@ -844,7 +853,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    }
    else
    {
-      int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+      int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
 
       //throwing kernel panic on error depends on flag!
       if (smc_res == 0x800F042B)
@@ -967,7 +976,7 @@ int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationI
    if (prev_func_arg3)
       cb(id, function_index, func_arg2, prev_func_arg3, prev_func_arg4);
 
-   int res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, function_index, 0, 0, 0x138);
+   int res = proc_enter_SMC_996000(op_item0->operation_handle, function_index, 0, 0, 0x138);
    EXIT_SYSCALL();
    return res;
 }
@@ -1038,7 +1047,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    op_item0->operation_id = id_internal;
 
    //clear basic fields
-   op_item0->maybe_status_secure_world_ptr = (void *)-1;
+   op_item0->operation_handle = INVALID_SM_OPERATION_HANDLE;
    op_item0->SceSblSmsProxy_event_uid = -1;
    op_item0->SceSblSmsProxyWait_mutex_uid = -1;
 
@@ -1117,12 +1126,19 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    data_block->invoke_operation_id = id_internal;
 
    //copy auth fields from ctx to shared block
-   data_block->self_type = ctx->self_type;
-   data_block->pathId = ctx->pathId;
-   data_block->program_authority_id = ctx->caller_self_info.program_authority_id;
+   data_block->caller_self_info.self_type = ctx->self_type;
+   data_block->caller_self_info.pathId = ctx->pathId;
+   data_block->caller_self_info.program_authority_id = ctx->caller_self_info.program_authority_id;
 
    //copy caller caps from ctx to shared block
-   memcpy(data_block->caller_capability, ctx->caller_self_info.capability, 32);
+   *((int*)(data_block->caller_self_info.caller_capability + 0x00)) = *((int*)(ctx->caller_self_info.capability + 0x00));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x04)) = *((int*)(ctx->caller_self_info.capability + 0x04));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x08)) = *((int*)(ctx->caller_self_info.capability + 0x08));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x0C)) = *((int*)(ctx->caller_self_info.capability + 0x0C));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x10)) = *((int*)(ctx->caller_self_info.capability + 0x10));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x14)) = *((int*)(ctx->caller_self_info.capability + 0x14));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x18)) = *((int*)(ctx->caller_self_info.capability + 0x18));
+   *((int*)(data_block->caller_self_info.caller_capability + 0x1C)) = *((int*)(ctx->caller_self_info.capability + 0x1C));
 
    //write back data to shared block
    int res0 = data_block_write_back_997084(block_index0);
@@ -1152,7 +1168,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
       SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_9978A4, kp_msg_adr);
 
    //assign what is probably a TZ pointer to operation item
-   op_item0->maybe_status_secure_world_ptr = data_block->maybe_status_secure_world_ptr;
+   op_item0->operation_handle = data_block->operation_handle;
 
    //unlock and restore state
    int res3 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index0);
@@ -1243,7 +1259,7 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
    }
 
    //execute smc call
-   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, block_index, 0, 0, 0x12E);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, block_index, 0, 0, 0x12E);
 
    //invalidate shared block
    int inv_res = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&block_ptr, &data_size);
@@ -1326,7 +1342,7 @@ int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmO
    }
 
    //execute smc call
-   int res_smc = proc_enter_SMC_996000((unsigned int)op_item->maybe_status_secure_world_ptr, block_index, 0, 0, 0x12F);
+   int res_smc = proc_enter_SMC_996000(op_item->operation_handle, block_index, 0, 0, 0x12F);
 
    //invalidate shared block
    int res2 = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&shared_block, &shared_block_size);
@@ -1377,7 +1393,7 @@ int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
    }
 
    //execute smc call
-   int smc_result = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, 0, 0, 0, 0x130);
+   int smc_result = proc_enter_SMC_996000(op_item0->operation_handle, 0, 0, 0, 0x130);
    EXIT_SYSCALL();
    return smc_result; 
 }
@@ -1462,7 +1478,7 @@ int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_
    SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);
    
    //execute smc call
-   int smc_res = proc_enter_SMC_996000((unsigned int)op_item0->maybe_status_secure_world_ptr, function_index, 0, 0, 0x139);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, function_index, 0, 0, 0x139);
    EXIT_SYSCALL();
    return smc_res;
 }
