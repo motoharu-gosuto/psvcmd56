@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include "SceSysroot.h"
+#include "SceSblSmSchedProxyTypes.h"
 
 //information about SMC calls of Vita:
 
@@ -23,40 +24,6 @@ world to the other it must first execute a SVC instruction.
 This changes the processor to a privileged mode 
 where the Supervisor call handler processes the SVC and executes a SMC, see Exceptions.
 */
-
-//==========================================================================================================
-
-typedef unsigned int SmOperationId;
-
-typedef int smc_138_callback(SmOperationId id, int index, int arg2, int arg3, int arg4);
-
-struct sm_invoke_data_block_input
-{
-  int unk0;
-  int unk4;
-  int unk8;
-  int unkC;
-};
-
-struct SceSblSmCommContext130
-{
-  uint32_t unk_0;
-  uint32_t self_type;
-  SceSelfInfo caller_self_info;
-  SceSelfInfo called_self_info;
-  uint32_t pathId;
-  uint32_t unk_12C;
-};
-
-struct SceSblSmschedCallFuncCommand
-{
-  unsigned int size;
-  unsigned int service_id;
-  unsigned int response;
-  unsigned int unk2;
-  unsigned int padding[12];
-  unsigned int data[];
-};
 
 //==========================================================================================================
 
