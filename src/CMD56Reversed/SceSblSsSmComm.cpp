@@ -53,7 +53,7 @@ int SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(int id, int service_id, 
 
    memcpy(&cmd.data, ctx, size);
 
-   SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(id, 1, &cmd);
+   SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedProxySetCommandF00DRegisterForKernel_723b382f(id, 1, &cmd);
 
    return 0;
 }
