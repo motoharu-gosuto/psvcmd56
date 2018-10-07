@@ -29,34 +29,34 @@ where the Supervisor call handler processes the SVC and executes a SMC, see Exce
 
 int SceSblSmschedProxy_module_start_935cd196();
 
-int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604();
+int SceSblSmSchedProxyForKernel_sceSblSmSchedProxyInitializeForKernel_a488d604();
 
-int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationId id, int function_index, smc_138_callback *cb, int func_arg2);
+int SceSblSmSchedProxyForKernel_smc_138_sceSblSmSchedProxyEnableCry2ArmInterruptForKernel_8b84ac2a(SmOperationId id, int intr_index, smc_138_callback *cb, int func_arg2);
 
-int SceSblSmSchedProxyForKernel_not_implemented_1dfc8624();
+int SceSblSmSchedProxyForKernel_sceSblSmSchedProxyNotImplementedMaybeSMC0x131ForKernel_984ec9d1();
 
-int SceSblSmSchedProxyForKernel_not_implemented_984ec9d1();
+int SceSblSmSchedProxyForKernel_sceSblSmSchedProxyNotImplementedMaybeSMC0x132ForKernel_1dfc8624();
 
-int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_1916509b(int priority, void *sm_self_data_paddr, unsigned int num_pairs, sm_invoke_data_block_input *invoke_input, SceSblSmCommContext130 *ctx, SmOperationId *id);
+int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyCreateSmOperationForKernel_1916509b(int priority, void *sm_self_data_paddr, unsigned int num_pairs, sm_invoke_data_block_input *invoke_input, SceSblSmCommContext130 *ctx, SmOperationId *id);
 
-int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperationId id, int result[2]);
+int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWaitForKernel_f35efc1a(SmOperationId id, smc_12E_data_t* result);
 
-int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmOperationId id, int status[2]);
+int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatusForKernel_27eb92f1(SmOperationId id, smc_12F_data_t* status);
 
-int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id);
+int SceSblSmSchedProxyForKernel_smc_130_sceSblSmSchedProxyChangeF00DStatusForKernel_de4eac3c(SmOperationId id);
 
-int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(SmOperationId id, int f00d_cmd_fifo_idx, SceSblSmschedCallFuncCommand *cmd_paddr);
+int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedProxySetCommandF00DRegisterForKernel_723b382f(SmOperationId id, int f00d_fifo_register_index, SceSblSmschedCallFuncCommand* cmd_paddr);
 
-int SceSblSmSchedProxyForKernel_smc_134_f70c04ec(SmOperationId id, int smcArg1, int *result);
+int SceSblSmSchedProxyForKernel_smc_134_sceSblSmSchedProxyGetCommandF00DRegisterForKernel_f70c04ec(SmOperationId id, int f00d_fifo_register_index, SceSblSmschedCallFuncCommand** cmd_paddr);
 
-int SceSblSmSchedProxyForKernel_smc_135_3ce17233(SmOperationId id, int smcArg1, int smcArg2);
+int SceSblSmSchedProxyForKernel_smc_135_sceSblSmSchedProxyGetUnknownF00DRegisterForKernel_3ce17233(SmOperationId id, int f00d_fifo_register_index, int f00d_fifo_register_value);
 
-int SceSblSmSchedProxyForKernel_smc_136_15b0e4df(SmOperationId id, int num_or_index, int res_from_smc0x137);
+int SceSblSmSchedProxyForKernel_smc_136_sceSblSmSchedProxySetStatusCodeF00DRegisterForKernel_15b0e4df(SmOperationId id, int f00d_fifo_register_index, int status_code);
 
-int SceSblSmSchedProxyForKernel_smc_137_973a4a7d(SmOperationId id, int num, int *result);
+int SceSblSmSchedProxyForKernel_smc_137_sceSblSmSchedProxyGetStatusCodeF00DRegisterForKernel_973a4a7d(SmOperationId id, int f00d_fifo_register_index, int* status_code);
 
-int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_index);
+int SceSblSmSchedProxyForKernel_smc_139_sceSblSmSchedProxyDisableCry2ArmInterruptForKernel_85eda5fc(SmOperationId id, int intr_index);
 
-int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2();
+int SceSblSmSchedProxyForKernel_smc_13B_sceSblSmSchedProxyUninitializeForKernel_33a3a1e2();
 
-int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int smcArg2, int smcArg3);
+int SceSblSmSchedProxyForKernel_smc_13C_sceSblSmSchedProxyExecuteF00DCommandForKernel_7894b6f0(F00D_cmd_index cmd_index);

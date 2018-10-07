@@ -21,7 +21,7 @@ sched_proxy_state_t g_008F5010; // sched proxy state
 SceUID g_008F5014;
 global_lock_t g_008F5018;
 lock_8F501C g_008F501C;
-SceSblSmschedProxyHeap * g_008F5020;
+SceSblSmschedProxyHeap* g_008F5020; //heap from where shed_proxy_operation_item_t objects are allocated
 //g_008F5024
 item_996E0C g_008F5028[8]; //blocks 1 bank
 sysbase_shared_block_t* g_008F50A8; //blocks 1 - continuous array
@@ -520,7 +520,7 @@ int cleanup_id_operation_996454(SmOperationId id)
    return 0;
 }
 
-int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, int num_or_index_smcArg1, int smcArg2)
+int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, int f00d_fifo_register_index, int f00d_fifo_register_value)
 {
    if (g_008F5010.state != SCHED_PROXY_STATE_INITIALIZED)
    {
@@ -528,7 +528,7 @@ int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, in
    }
    
    //might be function index
-   if ((num_or_index_smcArg1 - 1) > 2)
+   if (f00d_fifo_register_index < F00D_FIFO_REGISTER_INDEX1 || f00d_fifo_register_index > F00D_FIFO_REGISTER_INDEX3)
       return 0x800F0416;
 
    int error_code;
@@ -536,11 +536,11 @@ int proc_proxy_smc_133_135_136_9962F4(int monitorApiNumber, SmOperationId id, in
    if (!op_item0)
       return 0x800F042B;
       
-   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, num_or_index_smcArg1, smcArg2, 0, monitorApiNumber);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, f00d_fifo_register_index, f00d_fifo_register_value, 0, monitorApiNumber);
    return smc_res;
 }
 
-int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int num, int* response)
+int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int f00d_fifo_register_index, int* f00d_fifo_register_value)
 {
    void *kp_msg_addr;
  
@@ -549,7 +549,7 @@ int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int nu
       return 0x800F0426;
 
    //maybe function index
-   if ((num - 1) > 2)
+   if (f00d_fifo_register_index < F00D_FIFO_REGISTER_INDEX1 || f00d_fifo_register_index > F00D_FIFO_REGISTER_INDEX3)
       return 0x800F0416;
 
    //get operation item
@@ -574,7 +574,7 @@ int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int nu
    }
 
    //execute smc call
-   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, num, block_index, 0, monitorApiNumber);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, f00d_fifo_register_index, block_index, 0, monitorApiNumber);
 
    //invalidate shared block
    int res2 = get_full_data_block_invalidate_cache_9970C4(block_index, (void **)&shared_block, &shared_block_size);
@@ -589,7 +589,7 @@ int proc_proxy_smc_134_137_99636C(int monitorApiNumber, SmOperationId id, int nu
       SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74((kernel_message_ctx *)&msg_997874, kp_msg_addr);
 
    //copy response to result
-   *response = shared_block->unk0;
+   *f00d_fifo_register_value = shared_block->f00d_fifo_register_value;
 
    //write back shared block, unlock
    int res3 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
@@ -656,19 +656,19 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
      
    if (shared_block40->cb_call_mode_flags & INTR_CALL_CB_EX)
    {
-      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->function_index];
+      proxy_intr_entry_t* cb_entry = &op_item0->intr_entries[shared_block40->intr_index];
       intr_callback = cb_entry->cb;
       cb_arg2 = cb_entry->data.func_arg2;
 
       if (intr_callback == 0)
       {
-         cb_entry->data.func_arg4 = shared_block40->func_arg4;
-         cb_entry->data.func_arg3 = shared_block40->func_arg3;
+         cb_entry->data.func_arg4 = shared_block40->data.func_arg4;
+         cb_entry->data.func_arg3 = shared_block40->data.func_arg3;
       }
    }
    else if (shared_block40->cb_call_mode_flags & INTR_CALL_CB)
    {
-      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[shared_block40->function_index];
+      proxy_intr_entry_t* cb_entry = &op_item0->intr_entries[shared_block40->intr_index];
       intr_callback = cb_entry->cb;
       cb_arg2 = cb_entry->data.func_arg2;
    }
@@ -694,9 +694,9 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    {
       if (shared_block40->cb_call_mode_flags & INTR_CALL_CB_EX)
       {
-         intr_callback(shared_block40->operation_id, shared_block40->function_index, cb_arg2, shared_block40->func_arg3, shared_block40->func_arg4);
+         intr_callback(shared_block40->operation_id, shared_block40->intr_index, cb_arg2, shared_block40->data.func_arg3, shared_block40->data.func_arg4);
 
-         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->intr_index, shared_block40->data.func_arg2, 0, 0x13A);
 
          //throwing kernel panic on error depends on flag!
          if (smc_res == 0x800F042B)
@@ -714,9 +714,9 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
       }
       else if (shared_block40->cb_call_mode_flags & INTR_CALL_CB)
       {
-         intr_callback(shared_block40->operation_id, shared_block40->function_index, cb_arg2, 0, 0);
+         intr_callback(shared_block40->operation_id, shared_block40->intr_index, cb_arg2, 0, 0);
 
-         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->intr_index, shared_block40->data.func_arg2, 0, 0x13A);
 
          if (smc_res == 0x800F042B)
             SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99785C, kp_msg_addr);
@@ -728,7 +728,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
       }
       else
       {
-         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+         int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->intr_index, shared_block40->data.func_arg2, 0, 0x13A);
 
          //this is strange - why not throwing kernel panic on error?
          if (smc_res == 0x800F042B)
@@ -742,7 +742,7 @@ int proc_interrupt_handler_smc_13A_99608C(int intr_code, void *userCtx)
    }
    else
    {
-      int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->function_index, shared_block40->smc_arg2, 0, 0x13A);
+      int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, shared_block40->intr_index, shared_block40->data.func_arg2, 0, 0x13A);
 
       //throwing kernel panic on error depends on flag!
       if (smc_res == 0x800F042B)
@@ -802,7 +802,7 @@ int SceSblSmschedProxy_module_start_935cd196()
    return 0;
 }
 
-int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604()
+int SceSblSmSchedProxyForKernel_sceSblSmSchedProxyInitializeForKernel_a488d604()
 {
    if (SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1())
       return 0;
@@ -810,7 +810,7 @@ int SceSblSmSchedProxyForKernel_initialize_shed_proxy_a488d604()
    return SceSblSmschedProxy_module_start_935cd196();
 }
 
-int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationId id, int function_index, smc_138_callback *cb, int func_arg2)
+int SceSblSmSchedProxyForKernel_smc_138_sceSblSmSchedProxyEnableCry2ArmInterruptForKernel_8b84ac2a(SmOperationId id, int intr_index, smc_138_callback *cb, int func_arg2)
 {   
    ENTER_SYSCALL();
 
@@ -820,13 +820,13 @@ int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationI
       return 0x800F0426;
    }
 
-   if(!cb)
+   if(cb == 0)
    {
       EXIT_SYSCALL();
       return 0x800F0416;
    }
 
-   if(function_index > 3)
+   if(intr_index > CRY_INTERRUPT_INDEX3)
    {
       EXIT_SYSCALL();
       return 0x800F0416;
@@ -843,7 +843,7 @@ int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationI
       return 0x800F042B;
    }
 
-   shed_proxy_operation_callback_entry_t* cb_entry0 = &op_item0->functions[function_index];
+   proxy_intr_entry_t* cb_entry0 = &op_item0->intr_entries[intr_index];
    if (cb_entry0->cb)
    {
       SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
@@ -863,28 +863,28 @@ int SceSblSmSchedProxyForKernel_after_proxy_invoke_smc_138_8b84ac2a(SmOperationI
    SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state0);
 
    if (prev_func_arg3)
-      cb(id, function_index, func_arg2, prev_func_arg3, prev_func_arg4);
+      cb(id, intr_index, func_arg2, prev_func_arg3, prev_func_arg4);
 
-   int res = proc_enter_SMC_996000(op_item0->operation_handle, function_index, 0, 0, 0x138);
+   int res = proc_enter_SMC_996000(op_item0->operation_handle, intr_index, 0, 0, 0x138);
    EXIT_SYSCALL();
    return res;
 }
 
-int SceSblSmSchedProxyForKernel_not_implemented_1dfc8624()
+int SceSblSmSchedProxyForKernel_sceSblSmSchedProxyNotImplementedMaybeSMC0x131ForKernel_984ec9d1()
 {
    ENTER_SYSCALL();
    EXIT_SYSCALL();
    return 0x800F0425;
 }
 
-int SceSblSmSchedProxyForKernel_not_implemented_984ec9d1()
+int SceSblSmSchedProxyForKernel_sceSblSmSchedProxyNotImplementedMaybeSMC0x132ForKernel_1dfc8624()
 {
    ENTER_SYSCALL();
    EXIT_SYSCALL();
    return 0x800F0425;
 }
 
-int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_1916509b(int priority, void *sm_self_data_paddr, unsigned int num_pairs, sm_invoke_data_block_input *invoke_input, SceSblSmCommContext130 *ctx, SmOperationId *id)
+int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyCreateSmOperationForKernel_1916509b(int priority, void *sm_self_data_paddr, unsigned int num_pairs, sm_invoke_data_block_input *invoke_input, SceSblSmCommContext130 *ctx, SmOperationId *id)
 {
    void *kp_msg_adr;
    
@@ -944,7 +944,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    int function_index = 0;
    do
    {
-      shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[function_index++];
+      proxy_intr_entry_t* cb_entry = &op_item0->intr_entries[function_index++];
       cb_entry->cb = 0;
       cb_entry->data.func_arg2 = 0;
       cb_entry->data.func_arg4 = 0;
@@ -1072,7 +1072,7 @@ int SceSblSmSchedProxyForKernel_smc_12D_sceSblSmSchedProxyInvokeForKernel_191650
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperationId id, int result[2])
+int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWaitForKernel_f35efc1a(SmOperationId id, smc_12E_data_t* result)
 {
    void *kp_msg_adr;
 
@@ -1165,8 +1165,8 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
       SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_99788C, kp_msg_adr);
 
    //copy data to result from shared block
-   result[0] = block_ptr->unk0;
-   result[1] = block_ptr->unk4;
+   result->status0 = block_ptr->status0;
+   result->status1 = block_ptr->status1;
 
    //write back, unlock
    int unlock_res = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
@@ -1182,7 +1182,7 @@ int SceSblSmSchedProxyForKernel_smc_12E_sceSblSmSchedProxyWait_f35efc1a(SmOperat
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmOperationId id, int status[2])
+int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatusForKernel_27eb92f1(SmOperationId id, smc_12F_data_t* status)
 {
    void *kp_msg_adr;
 
@@ -1247,8 +1247,8 @@ int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmO
       SceDebugForDriver_sceKernelCpuPrintKernelPanicForDriver_391b5b74(&msg_997844, kp_msg_adr);
 
    //get data from shared block
-   status[0] = shared_block->status0;
-   status[1] = shared_block->status1;
+   status->status0 = shared_block->status0;
+   status->status1 = shared_block->status1;
 
    //write back shared block, unlock
    int res3 = data_block_write_back_maybe_remove_from_list_restore_specific_cpu_state_9971C4(block_index);
@@ -1261,7 +1261,7 @@ int SceSblSmSchedProxyForKernel_smc_12F_sceSblSmSchedProxyGetStatus_27eb92f1(SmO
    return res_smc;
 }
 
-int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
+int SceSblSmSchedProxyForKernel_smc_130_sceSblSmSchedProxyChangeF00DStatusForKernel_de4eac3c(SmOperationId id)
 {
    ENTER_SYSCALL();
 
@@ -1287,47 +1287,47 @@ int SceSblSmSchedProxyForKernel_smc_130_de4eac3c(SmOperationId id)
    return smc_result; 
 }
 
-int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedCallFunc_723b382f(SmOperationId id, int f00d_cmd_fifo_idx, SceSblSmschedCallFuncCommand *cmd_paddr)
+int SceSblSmSchedProxyForKernel_smc_133_sceSblSmSchedProxySetCommandF00DRegisterForKernel_723b382f(SmOperationId id, int f00d_fifo_register_index, SceSblSmschedCallFuncCommand* cmd_paddr)
 {
    ENTER_SYSCALL();
-   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x133, id, f00d_cmd_fifo_idx, (int)cmd_paddr);
+   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x133, id, f00d_fifo_register_index, (int)cmd_paddr);
    EXIT_SYSCALL();
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_134_f70c04ec(SmOperationId id, int smcArg1, int *result)
+int SceSblSmSchedProxyForKernel_smc_134_sceSblSmSchedProxyGetCommandF00DRegisterForKernel_f70c04ec(SmOperationId id, int f00d_fifo_register_index, SceSblSmschedCallFuncCommand** cmd_paddr)
 {
    ENTER_SYSCALL();
-   int smc_res = proc_proxy_smc_134_137_99636C(0x134, id, smcArg1, result);
+   int smc_res = proc_proxy_smc_134_137_99636C(0x134, id, f00d_fifo_register_index, (int*)cmd_paddr);
    EXIT_SYSCALL();
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_135_3ce17233(SmOperationId id, int smcArg1, int smcArg2)
+int SceSblSmSchedProxyForKernel_smc_135_sceSblSmSchedProxyGetUnknownF00DRegisterForKernel_3ce17233(SmOperationId id, int f00d_fifo_register_index, int f00d_fifo_register_value)
 {
    ENTER_SYSCALL();
-   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x135, id, smcArg1, smcArg2);
+   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x135, id, f00d_fifo_register_index, f00d_fifo_register_value);
    EXIT_SYSCALL();
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_136_15b0e4df(SmOperationId id, int num_or_index, int res_from_smc0x137)
+int SceSblSmSchedProxyForKernel_smc_136_sceSblSmSchedProxySetStatusCodeF00DRegisterForKernel_15b0e4df(SmOperationId id, int f00d_fifo_register_index, int status_code)
 {
    ENTER_SYSCALL();
-   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x136, id, num_or_index, res_from_smc0x137);
+   int smc_res = proc_proxy_smc_133_135_136_9962F4(0x136, id, f00d_fifo_register_index, status_code);
    EXIT_SYSCALL();
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_137_973a4a7d(SmOperationId id, int num, int *result)
+int SceSblSmSchedProxyForKernel_smc_137_sceSblSmSchedProxyGetStatusCodeF00DRegisterForKernel_973a4a7d(SmOperationId id, int f00d_fifo_register_index, int* status_code)
 {
    ENTER_SYSCALL();
-   int smc_res = proc_proxy_smc_134_137_99636C(0x137, id, num, result);
+   int smc_res = proc_proxy_smc_134_137_99636C(0x137, id, f00d_fifo_register_index, status_code);
    EXIT_SYSCALL();
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_index)
+int SceSblSmSchedProxyForKernel_smc_139_sceSblSmSchedProxyDisableCry2ArmInterruptForKernel_85eda5fc(SmOperationId id, int intr_index)
 {
    ENTER_SYSCALL();
 
@@ -1339,7 +1339,7 @@ int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_
    }
 
    //check function index
-   if (function_index > 3)
+   if (intr_index > CRY_INTERRUPT_INDEX3)
    {
       EXIT_SYSCALL();
       return 0x800F0416;
@@ -1359,7 +1359,7 @@ int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_
    }
 
    //get callback entry and init
-   shed_proxy_operation_callback_entry_t* cb_entry = &op_item0->functions[function_index];
+   proxy_intr_entry_t* cb_entry = &op_item0->intr_entries[intr_index];
    cb_entry->cb = 0;
    cb_entry->data.func_arg2 = 0;
 
@@ -1367,12 +1367,12 @@ int SceSblSmSchedProxyForKernel_smc_139_85eda5fc(SmOperationId id, int function_
    SceCpuForDriver_sceKernelCpuUnlockResumeIntrStoreLRForDriver_7bb9d5df(&g_008F5018.lock, prev_state);
    
    //execute smc call
-   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, function_index, 0, 0, 0x139);
+   int smc_res = proc_enter_SMC_996000(op_item0->operation_handle, intr_index, 0, 0, 0x139);
    EXIT_SYSCALL();
    return smc_res;
 }
 
-int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2()
+int SceSblSmSchedProxyForKernel_smc_13B_sceSblSmSchedProxyUninitializeForKernel_33a3a1e2()
 {
    if (SceCpuForDriver_sceKernelCpuGetCpuIdForDriver_5e4d5de1())
       return 0;
@@ -1380,7 +1380,7 @@ int SceSblSmSchedProxyForKernel_smc_13B_uninitialize_shed_proxy_33a3a1e2()
    return proc_smc_13B_heap_free_cleanup_9965C0();
 }
 
-int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int smcArg2, int smcArg3)
+int SceSblSmSchedProxyForKernel_smc_13C_sceSblSmSchedProxyExecuteF00DCommandForKernel_7894b6f0(F00D_cmd_index cmd_index, int unused1, int unused2, int unused3)
 {
    ENTER_SYSCALL();
    if (g_008F5010.state != SCHED_PROXY_STATE_INITIALIZED)
@@ -1389,7 +1389,7 @@ int SceSblSmSchedProxyForKernel_smc_13C_7894b6f0(int smcArg0, int smcArg1, int s
       return 0x800F0426;
    }
 
-   int smc_res = proc_enter_SMC_996000(smcArg0, smcArg1, smcArg2, smcArg3, 0x13C);
+   int smc_res = proc_enter_SMC_996000((int)cmd_index, unused1, unused2, unused3, 0x13C);
    EXIT_SYSCALL();
    return smc_res;
 }
