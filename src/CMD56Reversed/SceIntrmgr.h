@@ -24,6 +24,11 @@ int SceIntrmgrForDriver_getCurrentCpuUnkData_182ee3e3();
 #define INTR_CODE_SceSdif2 0xDE
 #define INTR_CODE_SceSdif3 0xDF
 
+#define INTR_CODE_SceSblSmSchedCry2Arm0 0xC8
+#define INTR_CODE_SceSblSmSchedCry2Arm123_1 0xC9
+#define INTR_CODE_SceSblSmSchedCry2Arm123_2 0xCA
+#define INTR_CODE_SceSblSmSchedCry2Arm123_3 0xCB
+
 typedef int (SceKernelSubIntrHandler)(void *subintr_arg, void *register_arg, unsigned char intr_priority);
 typedef int (SceKernelIntrHandler)(int intr_code, void* userCtx);
 
