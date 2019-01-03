@@ -150,7 +150,7 @@ int execute_f00d_command_2_rmauth_sm_C8D988(unsigned const char input[0x10])
    }
 
    SceSblSmCommMsifData_2 data;
-   memcpy(data.data, input, 0x10);
+   memcpy(data.seed, input, 0x10);
 
    int f00d_resp = 0;
 

@@ -21,5 +21,7 @@ namespace f00d
       int service_0x1(int* f00d_resp, void* ctx, int size) const;
 
       int service_0x2(int* f00d_resp, void* ctx, int size) const;
+
+      int service_0x3(int* f00d_resp, void* ctx, int size) const;
    };
 }

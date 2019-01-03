@@ -5,6 +5,7 @@
 #define RM_AUTH_SM_SERVICE "rmauth_sm"
 #define RM_AUTH_SM_SERVICE_1 0x1
 #define RM_AUTH_SM_SERVICE_2 0x2
+#define RM_AUTH_SM_SERVICE_3 0x3
 
 #define GC_AUTH_MGR_SERVICE "gcauthmgr_sm"
 #define GC_AUTH_MGR_SERVICE_1000B 0x1000B
@@ -187,7 +188,7 @@ struct SceSblSmCommMsifData_1
 
 struct SceSblSmCommMsifData_2
 {
-   unsigned char data[0x20];
+   unsigned char seed[0x20];
 };
 
 struct SceSblSmCommKprxAuthData_50001
