@@ -192,8 +192,8 @@ struct SceSblSmCommMsifData_2
 
 struct SceSblSmCommKprxAuthData_50001
 {
-   char key[0x20];
-   char padding[0xE0];
+   unsigned char key[0x20];
+   unsigned char padding[0xE0];
    int key_size;
    int key_id;
    int slot_id;
