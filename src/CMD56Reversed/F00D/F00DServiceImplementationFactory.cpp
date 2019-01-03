@@ -3,6 +3,7 @@
 #include "GcAuthMgrService.h"
 #include "RmAuthService.h"
 #include "EncDecWPortabilityService.h"
+#include "KprxAuthService.h"
 
 using namespace f00d;
 
@@ -19,6 +20,10 @@ std::shared_ptr<IF00DService> F00DServiceImplementationFactory::create(std::stri
    else if(name == ENCDEC_W_PORTABILITY_SERVICE)
    {
       return std::make_shared<EncDecWPortabilityService>(name);
+   }
+   else if(name == KPRX_AUTH_SERVICE)
+   {
+      return std::make_shared<KprxAuthService>(name);
    }
    else
    {

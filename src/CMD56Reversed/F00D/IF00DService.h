@@ -13,6 +13,10 @@
 #define ENCDEC_W_PORTABILITY_SERVICE_1000A 0x1000A
 #define ENCDEC_W_PORTABILITY_SERVICE_2000A 0x2000A
 
+#define KPRX_AUTH_SERVICE "kprx_auth_sm"
+#define KPRX_AUTH_SERVICE_50001 0x50001
+#define KPRX_AUTH_SERVICE_60001 0x60001
+
 //I used documentation from this source to clarify lots of things about gc commands
 //https://wiki.henkaku.xyz/vita/F00D_Commands
 
