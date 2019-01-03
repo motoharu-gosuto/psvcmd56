@@ -4,6 +4,8 @@
 
 #include "SceSblDMAC5DmacKRBase.h"
 
+//this service is implemented with the reversing help provided by xerpi
+
 using namespace f00d;
 
 unsigned char key0_81277C[0x10] = {0xE1, 0x22, 0x13, 0xB4, 0x80, 0x16, 0xB0, 0xE9, 0x9A, 0xB8, 0x1F, 0x8E, 0xC0, 0x2A, 0xD4, 0xA2};
@@ -36,7 +38,7 @@ int sub_80D318()
    return 0;
 }
 
-int key_contract0_80E162(unsigned char* dst, int key_size, unsigned char* key)
+int key_contract0_80E162(unsigned char* dst, int key_size, const unsigned char* key)
 {
    //invoke crypto operation
    auto cryptops = CryptoService::get();
@@ -46,7 +48,7 @@ int key_contract0_80E162(unsigned char* dst, int key_size, unsigned char* key)
    return 0;
 }
 
-int key_contract1_80E43E(unsigned char* dst, int key_size, unsigned char* key, unsigned char* iv)
+int key_contract1_80E43E(unsigned char* dst, int key_size, const unsigned char* key, const unsigned char* iv)
 {
    unsigned char iv_copy[0x10];
 
@@ -60,7 +62,7 @@ int key_contract1_80E43E(unsigned char* dst, int key_size, unsigned char* key, u
    return 0;
 }
 
-int key_contract2_80E4CC(unsigned char* dst, int key_size, unsigned char* key, unsigned char* iv)
+int key_contract2_80E4CC(unsigned char* dst, int key_size, const unsigned char* key, const unsigned char* iv)
 {
    unsigned char iv_copy[0x10];
 
@@ -80,7 +82,7 @@ int key_contract2_80E4CC(unsigned char* dst, int key_size, unsigned char* key, u
    return 0;
 }
 
-int set_dmac5_key_80E26A(unsigned char* key, int nblocks, int slot_id)
+int set_dmac5_key_80E26A(const unsigned char* key, int nblocks, int slot_id)
 {
    SceSblDMAC5DmacKRBase::set_key_unrestricted(key, nblocks * 4, slot_id);
    return 0;
