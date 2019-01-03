@@ -16,32 +16,37 @@ char key3_8127FC[1];
 
 char key4_81281C[1];
 
-int sub_80D318()
-{
-   return 0;
-}
-
+//some scrambling
 int sub_8102BC(char* ptr, int value, int size)
 {
    return 0;
 }
 
-int set_dmac5_key_80E26A(char* key, int nblocks, int slot)
+//key_id 0x00010001 DMAC5 specific setup
+int sub_80D318()
 {
    return 0;
 }
 
+//maybe crypto
 int sub_80E162(char* key1, int key_size, char* key2)
 {
    return 0;
 }
 
-int sub_80E43E(char*, int, char*, char*)
+//maybe crypto
+int sub_80E43E(char* key1, int key_size, char* key2, char* key3)
 {
    return 0;
 }
 
-int sub_80E4CC(char*, int, char*, char*)
+//maybe crypto
+int sub_80E4CC(char* key1, int key_size, char* key2, char* key3)
+{
+   return 0;
+}
+
+int set_dmac5_key_80E26A(char* key, int nblocks, int slot)
 {
    return 0;
 }
@@ -52,8 +57,7 @@ int handle_command_0x50001_0x60001_80E568(int arg1, SceSblSmschedCallFuncCommand
 
    memcpy((char*)&raw_buffer, (char*)request_buffer, 0x150);
 
-   SceSblSmCommKprxAuthData_50001* request;
-   request = (SceSblSmCommKprxAuthData_50001*)raw_buffer.data;
+   SceSblSmCommKprxAuthData_50001* request = (SceSblSmCommKprxAuthData_50001*)raw_buffer.data;
 
    char key_dest[0x20];
 
@@ -95,14 +99,14 @@ int handle_command_0x50001_0x60001_80E568(int arg1, SceSblSmschedCallFuncCommand
       {
       case 0x00000000:
          {
-            raw_buffer.response = sub_80E162(key_dest, request->key_size, key0_81277C);
+            raw_buffer.response = sub_80E162(key_dest, request->key_size, key0_81277C); //probably crypto
             if(raw_buffer.response == 0)
                raw_buffer.response = set_dmac5_key_80E26A(key_dest, request->key_size / 4, request->slot_id);
          }
          break;
       case 0x00010000:
          {
-            raw_buffer.response = sub_80E162(key_dest, request->key_size, key1_81279C);
+            raw_buffer.response = sub_80E162(key_dest, request->key_size, key1_81279C); //probably crypto
             if(raw_buffer.response == 0)
                raw_buffer.response = set_dmac5_key_80E26A(key_dest, request->key_size / 4, request->slot_id);
          }
@@ -116,21 +120,21 @@ int handle_command_0x50001_0x60001_80E568(int arg1, SceSblSmschedCallFuncCommand
                return -1;
             }
 
-            raw_buffer.response = sub_80E162(key_dest, request->key_size, key2_8127BC);
+            raw_buffer.response = sub_80E162(key_dest, request->key_size, key2_8127BC); //probably crypto
             if(raw_buffer.response == 0)
                raw_buffer.response = set_dmac5_key_80E26A(key_dest, request->key_size / 4, request->slot_id);
          }
          break;
       case 0x00020000:
          {
-            raw_buffer.response = sub_80E43E(key_dest, request->key_size, key3_8127FC, key3_8127FC + 0x10);
+            raw_buffer.response = sub_80E43E(key_dest, request->key_size, key3_8127FC, key3_8127FC + 0x10); //probably crypto
             if(raw_buffer.response == 0)
                raw_buffer.response = set_dmac5_key_80E26A(key_dest, request->key_size / 4, request->slot_id);
          }
          break;
       case 0x00020001:
          {
-            raw_buffer.response = sub_80E4CC(key_dest, request->key_size, key4_81281C, key4_81281C + 0x20);
+            raw_buffer.response = sub_80E4CC(key_dest, request->key_size, key4_81281C, key4_81281C + 0x20); //probably crypto
             if(raw_buffer.response == 0)
                raw_buffer.response = set_dmac5_key_80E26A(key_dest, request->key_size / 4, request->slot_id);
          }
