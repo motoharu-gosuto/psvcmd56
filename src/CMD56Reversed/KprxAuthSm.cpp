@@ -6,8 +6,7 @@
 
 int cookie_810928 = 0;
 
-char key0_81277C[0x20] = {0xE1, 0x22, 0x13, 0xB4, 0x80, 0x16, 0xB0, 0xE9, 0x9A, 0xB8, 0x1F, 0x8E, 0xC0, 0x2A, 0xD4, 0xA2, 
-                          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+char key0_81277C[0x10] = {0xE1, 0x22, 0x13, 0xB4, 0x80, 0x16, 0xB0, 0xE9, 0x9A, 0xB8, 0x1F, 0x8E, 0xC0, 0x2A, 0xD4, 0xA2};
 
 char key1_81279C[0x20] = {0xA9, 0xFA, 0x5A, 0x62, 0x79, 0x9F, 0xCC, 0x4C, 0x72, 0x6B, 0x4E, 0x2C, 0xE3, 0x50, 0x6D, 0x38, 
                           0xF4, 0xF2, 0xD0, 0x15, 0x5D, 0xB9, 0x13, 0xCD, 0xE4, 0x52, 0xE4, 0xB5, 0x4A, 0xB7, 0x5F, 0x4A};
@@ -35,21 +34,56 @@ int sub_80D318()
    return 0;
 }
 
-//maybe crypto
-int sub_80E162(char* key1, int key_size, char* key2)
+int aes_128_ecb_decrypt_iv_0_80F0A8(char* dst, char* src, int key_size, char* key)
 {
    return 0;
 }
 
-//maybe crypto
+int aes_128_cbc_encrypt_80F226(char* dst, char* src, int key_size, char* key, char* iv)
+{
+   return 0;
+}
+
+int memcpy_dmac_80F434(char* dst, char* src, int size)
+{
+   return 0;
+}
+
+int sha256_80F2B8(char* dst, char* src, int size)
+{
+   return 0;
+}
+
+int sub_80E162(char* dst, int key_size, char* key)
+{
+   aes_128_ecb_decrypt_iv_0_80F0A8(dst, dst, key_size, key);
+
+   return 0;
+}
+
 int sub_80E43E(char* key1, int key_size, char* key2, char* key3)
 {
+   char iv_copy[0x10];
+
+   memcpy_dmac_80F434(iv_copy, key3, 0x10);
+
+   aes_128_cbc_encrypt_80F226(key1, key1, key_size, key2, iv_copy);
+
    return 0;
 }
 
-//maybe crypto
 int sub_80E4CC(char* key1, int key_size, char* key2, char* key3)
 {
+   char iv_copy[0x10];
+
+   memcpy_dmac_80F434(iv_copy, key3, 0x10);
+
+   char sha256[0x20];
+
+   sha256_80F2B8(sha256, key1, 0x20);
+
+   aes_128_cbc_encrypt_80F226(key1, sha256, key_size, key2, iv_copy);
+
    return 0;
 }
 
