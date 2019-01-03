@@ -47,7 +47,7 @@ int handle_command_0x50001_0x60001_80E568(int arg1, char* request_buffer)
 {
    int buffer_copy;
    int command_168;
-   int return_value_164;
+   int return_value_164 = 0;
    int unused_160;
    int var_10_15C;
    int var_14_158;
@@ -118,68 +118,34 @@ int handle_command_0x50001_0x60001_80E568(int arg1, char* request_buffer)
       #pragma endregion
    }
 
-   int reg1 = command_168;
-   int reg2 = 0x50001;
-
-   if(reg1 == reg2)
+   if(command_168 == 0x50001)
    {
-      if(reg3 == 0)
+      if(key_size_2C == 0)
       {
          goto handle_error_80E68E;
       }
    }
 
-   int reg3 = key_id_28; // i get the point that we check for 0x00000000, 0x00010000, 0x00010001, 0x00020000, 0x00020001
-                         // but why this happens for key_id?
-
-   if (reg3 != 0)
+   switch(key_id_28)
    {
-      reg2 = reg2 | 0x10000; // reg2 low part is randomly initialized?
-
-      if(reg3 != reg2)
+   case 0x00000000:
+   case 0x00010000:
+   case 0x00010001:
+   case 0x00020000:
+   case 0x00020001:
+      break;
+   default:
       {
-         reg2 = reg2 + 1;
-
-         if(reg3 != reg2)
-         {
-            reg2 = reg2 | 0x20000;
-
-            if(reg3 != reg2)
-            {
-               reg2 = reg2 + 1;
-
-               if(reg3 != reg2)
-               {
-                  goto handle_error_80E68E;
-               }
-            }
-         }
+         goto handle_error_80E68E;
       }
    }
 
-   //slot id check is relatively strange
-
-   int reg2 = slot_id_24;
-   reg2 = reg2 - 0xC;
-   
-   if(reg2 < 0xC) //unsigned
-   {
-      reg2 = 1;
-   }
-   else
-   {
-      reg2 = 0;
-   }
-
-   //allows slots 0,1,2,3,4,5,6,7,8,9,A,B and 19,1A,1B,1C,1D,1E,1F
-   if(reg2 == 0)
+   if(slot_id_24 < 0xC || slot_id_24 > 0x17)
    {
       goto handle_error_80E68E;
    }
 
-   reg2 = 0x10001;
-   
-   if(reg3 == reg2) // check for key id
+   if(key_id_28 == 0x00010001)
    {
       int reg0 = sub_80D318();
       
@@ -189,125 +155,71 @@ int handle_command_0x50001_0x60001_80E568(int arg1, char* request_buffer)
       }
    }
 
-   char* reg6 = key_dest; //add3    $6, $sp, 4      ; address of the dest buffer for key
-   
    int reg0 = sub_8102BC(key_dest, 0, 0x20);
 
-   reg3 = command_168;
-   reg2 = 0x50001;
-
-   if(command_168 != 0x50001)
+   if(command_168 == 0x50001)
    {
-      if(command_168 != 0x60001)
+      if(key_size_2C > 0x20)
       {
          goto handle_error_80E68E;
       }
 
-      memset(reg6, 0, 0x20);
+      memcpy(key_dest, (char*)&key_12C, key_size_2C);
+
+      switch(key_id_28)
+      {
+      case 0x00000000:
+         {
+            return_value_164 = sub_80E162(key_dest, key_size_2C, key0_81277C);
+            if(return_value_164 == 0)
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
+         }
+         break;
+      case 0x00010000:
+         {
+            return_value_164 = sub_80E162(key_dest, key_size_2C, key1_81279C);
+            if(return_value_164 == 0)
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
+         }
+         break;
+      case 0x00010001:
+         {
+            return_value_164 = sub_80E162(key_dest, key_size_2C, key2_8127BC);
+            if(return_value_164 == 0)
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
+         }
+         break;
+      case 0x00020000:
+         {
+            return_value_164 = sub_80E43E(key_dest, key_size_2C, key3_8127FC, key3_8127FC + 0x10);
+            if(return_value_164 == 0)
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
+         }
+         break;
+      case 0x00020001:
+         {
+            return_value_164 = sub_80E4CC(key_dest, key_size_2C, key4_81281C, key4_81281C + 0x20);
+            if(return_value_164 == 0)
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
+         }
+         break;
+      default:
+         {
+            if(return_value_164 == 0) //uses the value that was supplied in memcpy
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
+         }
+         break;
+      }
+   }
+   else if(command_168 == 0x60001)
+   {
+      memset(key_dest, 0, 0x20);
 
       return_value_164 = set_dmac5_key_80E26A(key_dest, 0x20 / 4, slot_id_24);
    }
    else
    {
-      #pragma region
-
-      int reg3 = key_size_2C;
-
-      if(reg3 < 0x21) // >= 0x20
-      {
-         reg2 = 1;
-      }
-      else
-      {
-         reg2 = 0;
-      }
-
-      if(reg2 == 0)
-      {
-         goto handle_error_80E68E;
-      }
-
-      memcpy(reg6, (char*)&key_12C, reg3);
-
-      int reg3 = key_id_28; // i get the point that we check for 0x00000000, 0x00010000, 0x00010001, 0x00020000, 0x00020001
-                            // but why this happens for key_id?
-
-      if(reg3 != 0)
-      {
-         int reg2 = reg2 | 0x10000; // reg2 low part is randomly initialized?
-         
-         if(reg3 != reg2)
-         {
-            int reg2 = 0x10001;
-            
-            if(reg3 != reg2)
-            {
-               int reg2 = reg2 | 0x20000;
-               
-               if(reg3 != reg2)
-               {
-                  int reg2 = 0x20001;
-                  
-                  if(reg3 !=  reg2)
-                  {
-                     reg3 = return_value_164; // value is not set!
-
-                     if(reg3 == 0)
-                     {
-                        return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
-                     }
-                  }
-                  else
-                  {
-                     return_value_164 = sub_80E4CC(reg6, key_size_2C, key4_81281C, key4_81281C + 0x20);
-
-                     if(return_value_164 == 0)
-                     {
-                        return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
-                     }
-                  }
-               }
-               else
-               {
-                  return_value_164 = sub_80E43E(reg6, key_size_2C, key3_8127FC, key3_8127FC + 0x10);
-
-                  if(return_value_164 == 0)
-                  {
-                     return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
-                  }
-               }
-            }
-            else
-            {
-               return_value_164 = sub_80E162(reg6, key_size_2C, key2_8127BC);
-            
-               if(return_value_164 == 0)
-               {
-                  return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
-               }
-            }
-         }
-         else
-         {
-            return_value_164 = sub_80E162(reg6, key_size_2C, key1_81279C);
-            
-            if(return_value_164 == 0)
-            {
-               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
-            }
-         }
-      }
-      else
-      {
-         return_value_164 = sub_80E162(reg6, key_size_2C, key0_81277C);
-         
-         if(return_value_164 == 0)
-         {
-            return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
-         }
-      }
-
-      #pragma endregion
+      goto handle_error_80E68E;
    }
 
    return 0;
