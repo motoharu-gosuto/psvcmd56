@@ -15,6 +15,8 @@ LibTomCryptCryptoOperations::LibTomCryptCryptoOperations()
 
    register_hash(&sha1_desc);
 
+   register_hash(&sha224_desc);
+
    register_hash(&sha256_desc);
 }
 
@@ -27,6 +29,8 @@ LibTomCryptCryptoOperations::~LibTomCryptCryptoOperations()
    unregister_cipher(&des3_desc);
 
    unregister_hash(&sha1_desc);
+
+   unregister_hash(&sha224_desc);
 
    unregister_hash(&sha256_desc);
 }
@@ -271,6 +275,44 @@ int LibTomCryptCryptoOperations::sha1(const unsigned char* src, unsigned char* d
       return -1;
 
    if(sha1_done(&hs, dst) != CRYPT_OK)
+      return -1;
+
+   return 0;
+}
+
+int LibTomCryptCryptoOperations::sha224(const unsigned char* src, unsigned char* dst, int size) const
+{
+   int idx = find_hash("sha224");
+   if(idx < 0)
+      return -1;
+  
+   hash_state hs;
+   if(sha224_init(&hs) != CRYPT_OK)
+      return -1;
+
+   if(sha224_process(&hs, src, size) != CRYPT_OK)
+      return -1;
+
+   if(sha224_done(&hs, dst) != CRYPT_OK)
+      return -1;
+
+   return 0;
+}
+
+int LibTomCryptCryptoOperations::sha256(const unsigned char* src, unsigned char* dst, int size) const
+{
+   int idx = find_hash("sha1");
+   if(idx < 0)
+      return -1;
+  
+   hash_state hs;
+   if(sha256_init(&hs) != CRYPT_OK)
+      return -1;
+
+   if(sha256_process(&hs, src, size) != CRYPT_OK)
+      return -1;
+
+   if(sha256_done(&hs, dst) != CRYPT_OK)
       return -1;
 
    return 0;
