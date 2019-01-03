@@ -1,368 +1,314 @@
+#include <iostream>
+#include <string>
 
-int handle_command_0x50001_0x60001_80E568(int arg1, int arg2)
+int cookie_810928 = 0;
+
+char key0_81277C[1];
+
+char key1_81279C[1];
+
+char key2_8127BC[1];
+
+char key3_8127FC[1];
+
+char key4_81281C[1];
+
+int sub_80D318()
 {
-   /*
-   add     $sp, -0x18
-   lw      $3, (cookie_810928) ; get cookie
-   ldc     $11, $lp
-   sw      $5, 0x18+prev_state_C($sp) ; + 0xC
-   sw      $6, 0x18+prev_state_10($sp) ; + 0x8
-   sw      $11, 0x18+prev_state_14($sp) ; + 0x4
-   add3    $sp, $sp, -0x178
-   add3    $1, $sp, 0x24   ; copy of f00d buffer
-   sw      $3, 0x190+cookie_1C($sp) ; store cookie
-   mov     $3, 0x150       ; size
-   mov     $5, $2          ; get f00d buffer ptr (src)
-   bsr     memcpy_810312   ; copy f00d buffer (request)
-   lw      $3, 0x190+key_size_2C($sp)
-   and3    $2, $3, 0xF
-   */
+   return 0;
+}
 
-   if($2 != 0)
+int sub_8102BC(char* ptr, int value, int size)
+{
+   return 0;
+}
+
+int set_dmac5_key_80E26A(char* key, int nblocks, int slot)
+{
+   return 0;
+}
+
+int sub_80E162(char* key1, int key_size, char* key2)
+{
+   return 0;
+}
+
+int sub_80E43E(char*, int, char*, char*)
+{
+   return 0;
+}
+
+int sub_80E4CC(char*, int, char*, char*)
+{
+   return 0;
+}
+
+int handle_command_0x50001_0x60001_80E568(int arg1, char* request_buffer)
+{
+   int buffer_copy;
+   int command_168;
+   int return_value_164;
+   int unused_160;
+   int var_10_15C;
+   int var_14_158;
+   int var_18_154;
+   int var_1C_150;
+   int var_20_14C;
+   int var_24_148;
+   int var_28_144;
+   int var_2C_140;
+   int var_30_13C;
+   int var_34_138;
+   int var_38_134;
+   int var_3C_130;
+   int key_12C;
+   int key_128;
+   int key_124;
+   int key_120;
+   int key_11C;
+   int key_118;
+   int key_114;
+   int key_110;
+
+   int key_size_2C;
+   int key_id_28;
+   int slot_id_24;
+   int var_20;
+
+   char* key_dest;
+   
+   int reg1 = buffer_copy; //add3    $1, $sp, 0x24
+
+   int reg3 = 0x150;
+   char* reg5 = request_buffer;
+
+   memcpy((char*)&buffer_copy, request_buffer, 0x150);
+
+   int reg3 = key_size_2C;
+   int reg2 = reg3 & 0xF;
+
+   if(reg2 != 0)
    {
+      handle_error_80E68E:
+
       #pragma region handle_error_80E68E
 
-      movh    $3, 0x800F
-      or3     $3, $3, 0x16
-      sw      $3, 8($5)       ; store error
+      reg3 = reg3 | 0x800F0000;
+      reg3 = reg3 | 0x16;
       
-      lw      $2, 0x190+cookie_1C($sp) ; get cookie
-      lw      $3, (cookie_810928) ; check cookie
+      return_value_164 = reg3;
       
-      if ($2 != $3)
-      {
-         bsr     sub_80B092
-      }
+      //int reg2 = cookie_1C;
+      //int reg3 = cookie_810928;
 
-      add3    $sp, $sp, 0x178
-      lw      $6, 0x18+prev_state_10($sp)
-      lw      $5, 0x18+prev_state_C($sp)
-      lw      $11, 0x18+prev_state_14($sp)
-      add     $sp, 0x18
-      jmp     $11
+      //if (reg2 != reg3)
+      //{
+      //   sub_80B092();
+      //}
+
+      //add3    $sp, $sp, 0x178
+   
+      //reg6 = prev_state_10;
+      //reg5 = prev_state_C;
+      //reg11 = prev_state_14;
+
+      //add     $sp, 0x18
+      //jmp     $11
 
       #pragma endregion
    }
 
-   /*
-   lw      $1, 0x190+command_168($sp)
-   movu    $2, 0x50001     ; command
-   */
+   int reg1 = command_168;
+   int reg2 = 0x50001;
 
-   if($1 == $2)
+   if(reg1 == reg2)
    {
-      if($3 == 0)
+      if(reg3 == 0)
       {
-         goto handle_error_80E68E
+         goto handle_error_80E68E;
       }
    }
 
-   //lw      $3, 0x190+key_id_28($sp)
+   int reg3 = key_id_28; // i get the point that we check for 0x00000000, 0x00010000, 0x00010001, 0x00020000, 0x00020001
+                         // but why this happens for key_id?
 
-   if ($3 != 0)
+   if (reg3 != 0)
    {
-      movh    $2, 1
+      reg2 = reg2 | 0x10000; // reg2 low part is randomly initialized?
 
-      if($3 != $2)
+      if(reg3 != reg2)
       {
-         add     $2, 1
+         reg2 = reg2 + 1;
 
-         if($3 != $2)
+         if(reg3 != reg2)
          {
-            movh    $2, 2
+            reg2 = reg2 | 0x20000;
 
-            if($3 != $2)
+            if(reg3 != reg2)
             {
-               add     $2, 1
+               reg2 = reg2 + 1;
 
-               if($3 != $2)
+               if(reg3 != reg2)
                {
-                  goto handle_error_80E68E
+                  goto handle_error_80E68E;
                }
             }
          }
       }
    }
 
-   /*
-   lw      $2, 0x190+slot_id_24($sp)
-   add     $2, -0xC
-   sltu3   $2, $2, 0xC
-   */
+   //slot id check is relatively strange
 
-   if($2 == 0)
+   int reg2 = slot_id_24;
+   reg2 = reg2 - 0xC;
+   
+   if(reg2 < 0xC) //unsigned
    {
-      goto handle_error_80E68E
+      reg2 = 1;
+   }
+   else
+   {
+      reg2 = 0;
    }
 
-   //movu    $2, 0x10001     ; command
-
-   if($3 == $2)
+   //allows slots 0,1,2,3,4,5,6,7,8,9,A,B and 19,1A,1B,1C,1D,1E,1F
+   if(reg2 == 0)
    {
-      bsr     sub_80D318
+      goto handle_error_80E68E;
+   }
+
+   reg2 = 0x10001;
+   
+   if(reg3 == reg2) // check for key id
+   {
+      int reg0 = sub_80D318();
       
-      if($0 == 0)
+      if(reg0 == 0)
       {
-         goto handle_error_80E68E
+         goto handle_error_80E68E;
       }
    }
 
-   /*
-   add3    $6, $sp, 4      ; address of the dest buffer for key
-   mov     $2, 0
-   mov     $3, 0x20
-   mov     $1, $6
-   bsr     sub_8102BC
-   lw      $3, 0x190+command_168($sp)
-   movu    $2, 0x50001     ; command
-   */
+   char* reg6 = key_dest; //add3    $6, $sp, 4      ; address of the dest buffer for key
+   
+   int reg0 = sub_8102BC(key_dest, 0, 0x20);
 
-   if($3 != $2)
+   reg3 = command_168;
+   reg2 = 0x50001;
+
+   if(command_168 != 0x50001)
    {
-      #pragma region
-
-      movu    $2, 0x60001
-      
-      if($3 != $2)
+      if(command_168 != 0x60001)
       {
-         goto handle_error_80E68E
+         goto handle_error_80E68E;
       }
 
-      /*
-      mov     $2, 0
-      mov     $1, $6          ; dest buffer for key
-      mov     $3, 0x20
-      bsr     memset_810368   ; (char* dest, int value, int size)
-      mov     $2, 0x20
-      */
+      memset(reg6, 0, 0x20);
 
-      lw      $3, 0x190+slot_id_24($sp)
-      add3    $1, $sp, 4      ; key (probably modified)
-      srl     $2, 2           ; / 4 = nblocks
-      bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-      sw      $0, 8($5)       ; store error state = 0
-
-      #pragma endregion
+      return_value_164 = set_dmac5_key_80E26A(key_dest, 0x20 / 4, slot_id_24);
    }
    else
    {
       #pragma region
 
-      /*
-      lw      $3, 0x190+key_size_2C($sp)
-      sltu3   $2, $3, 0x21
-      */
+      int reg3 = key_size_2C;
 
-      if($2 == 0)
+      if(reg3 < 0x21) // >= 0x20
       {
-         goto handle_error_80E68E
+         reg2 = 1;
+      }
+      else
+      {
+         reg2 = 0;
       }
 
-      /*
-      mov     $1, $6          ; dest buffer for key = sp + 4
-      add3    $2, $sp, 0x64   ; address of the key
-      bsr     memcpy_810312   ; copy key
-      lw      $3, 0x190+key_id_28($sp)
-      */
-
-      if($3 != 0)
+      if(reg2 == 0)
       {
-         movh    $2, 1
+         goto handle_error_80E68E;
+      }
+
+      memcpy(reg6, (char*)&key_12C, reg3);
+
+      int reg3 = key_id_28; // i get the point that we check for 0x00000000, 0x00010000, 0x00010001, 0x00020000, 0x00020001
+                            // but why this happens for key_id?
+
+      if(reg3 != 0)
+      {
+         int reg2 = reg2 | 0x10000; // reg2 low part is randomly initialized?
          
-         if($3 != $2)
+         if(reg3 != reg2)
          {
-            movu    $2, 0x10001
+            int reg2 = 0x10001;
             
-            if($3 != $2)
+            if(reg3 != reg2)
             {
-               movh    $2, 2
+               int reg2 = reg2 | 0x20000;
                
-               if($3 != $2)
+               if(reg3 != reg2)
                {
-                  movu    $2, 0x20001
+                  int reg2 = 0x20001;
                   
-                  if($3 !=  $2)
+                  if(reg3 !=  reg2)
                   {
-                     #pragma region
+                     reg3 = return_value_164; // value is not set!
 
-                     lw      $3, 8($5)
-
-                     if($3 == 0)
+                     if(reg3 == 0)
                      {
-                        lw      $2, 0x190+key_size_2C($sp)
-                        
-                        lw      $3, 0x190+slot_id_24($sp)
-                        add3    $1, $sp, 4      ; key (probably modified)
-                        srl     $2, 2           ; / 4 = nblocks
-                        bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-                        sw      $0, 8($5)       ; store error state = 0
+                        return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
                      }
-
-                     #pragma endregion
                   }
                   else
                   {
-                     #pragma region
+                     return_value_164 = sub_80E4CC(reg6, key_size_2C, key4_81281C, key4_81281C + 0x20);
 
-                     lw      $2, 0x190+key_size_2C($sp)
-                     movu    $3, key4_81281C
-                     mov     $1, $6          ; key
-
-                     add3    $4, $3, 0x20
-                     
-                     bsr     sub_80E4CC
-
-                     sw      $0, 8($5)
-
-                     lw      $3, 8($5)
-
-                     if($3 == 0)
+                     if(return_value_164 == 0)
                      {
-                        lw      $2, 0x190+key_size_2C($sp)
-                        
-                        lw      $3, 0x190+slot_id_24($sp)
-                        add3    $1, $sp, 4      ; key (probably modified)
-                        srl     $2, 2           ; / 4 = nblocks
-                        bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-                        sw      $0, 8($5)       ; store error state = 0
+                        return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
                      }
-
-                     #pragma endregion
                   }
                }
                else
                {
-                  #pragma region
+                  return_value_164 = sub_80E43E(reg6, key_size_2C, key3_8127FC, key3_8127FC + 0x10);
 
-                  lw      $2, 0x190+key_size_2C($sp)
-                  movu    $3, key3_8127FC
-                  mov     $1, $6          ; key
-
-                  add3    $4, $3, 0x10
-
-                  bsr     sub_80E43E
-
-                  sw      $0, 8($5)
-
-                  lw      $3, 8($5)
-
-                  if($3 == 0)
+                  if(return_value_164 == 0)
                   {
-                     lw      $2, 0x190+key_size_2C($sp)
-                     
-                     lw      $3, 0x190+slot_id_24($sp)
-                     add3    $1, $sp, 4      ; key (probably modified)
-                     srl     $2, 2           ; / 4 = nblocks
-                     bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-                     sw      $0, 8($5)       ; store error state = 0
+                     return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
                   }
-
-                  #pragma endregion
                }
             }
             else
             {
-               #pragma region
-
-               mov     $1, $6          ; key
-               lw      $2, 0x190+key_size_2C($sp)
-               movu    $3, key2_8127BC
-               
-               bsr     sub_80E162
+               return_value_164 = sub_80E162(reg6, key_size_2C, key2_8127BC);
             
-               sw      $0, 8($5)
-
-               lw      $3, 8($5)
-
-               if($3 == 0)
+               if(return_value_164 == 0)
                {
-                  lw      $2, 0x190+key_size_2C($sp)
-                  
-                  lw      $3, 0x190+slot_id_24($sp)
-                  add3    $1, $sp, 4      ; key (probably modified)
-                  srl     $2, 2           ; / 4 = nblocks
-                  bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-                  sw      $0, 8($5)       ; store error state = 0
+                  return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
                }
-
-               #pragma endregion
             }
          }
          else
          {
-            #pragma region
-
-            lw      $2, 0x190+key_size_2C($sp)
-            mov     $1, $6          ; key
-            movu    $3, key1_81279C
-
-            bsr     sub_80E162
+            return_value_164 = sub_80E162(reg6, key_size_2C, key1_81279C);
             
-            sw      $0, 8($5)
-
-            lw      $3, 8($5)
-
-            if($3 == 0)
+            if(return_value_164 == 0)
             {
-               lw      $2, 0x190+key_size_2C($sp)
-               
-               lw      $3, 0x190+slot_id_24($sp)
-               add3    $1, $sp, 4      ; key (probably modified)
-               srl     $2, 2           ; / 4 = nblocks
-               bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-               sw      $0, 8($5)       ; store error state = 0
+               return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
             }
-
-            #pragma endregion
          }
       }
       else
       {
-         #pragma region
-
-         mov     $1, $6          ; key
-         lw      $2, 0x190+key_size_2C($sp)
-         movu    $3, key0_81277C
+         return_value_164 = sub_80E162(reg6, key_size_2C, key0_81277C);
          
-         bsr     sub_80E162
-         
-         sw      $0, 8($5)
-
-         lw      $3, 8($5)
-
-         if($3 == 0)
+         if(return_value_164 == 0)
          {
-            lw      $2, 0x190+key_size_2C($sp)
-            
-            lw      $3, 0x190+slot_id_24($sp)
-            add3    $1, $sp, 4      ; key (probably modified)
-            srl     $2, 2           ; / 4 = nblocks
-            bsr     set_dmac5_key_80E26A ; (char* key, int nblocks, int slot)
-            sw      $0, 8($5)       ; store error state = 0
+            return_value_164 = set_dmac5_key_80E26A(key_dest, key_size_2C / 4, slot_id_24);
          }
-
-         #pragma endregion
       }
 
       #pragma endregion
    }
-
-   /*
-   lw      $2, 0x190+cookie_1C($sp) ; get cookie
-   lw      $3, (cookie_810928) ; check cookie
-      
-   if ($2 != $3)
-   {
-      bsr     sub_80B092
-   }
-
-   add3    $sp, $sp, 0x178
-   lw      $6, 0x18+prev_state_10($sp)
-   lw      $5, 0x18+prev_state_C($sp)
-   lw      $11, 0x18+prev_state_14($sp)
-   add     $sp, 0x18
-   jmp     $11
-   */
 
    return 0;
 }
