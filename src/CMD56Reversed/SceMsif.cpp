@@ -312,22 +312,36 @@ unsigned char g_zero_array_C90498[0x10] =
 //decrypted table of sha224 hashes
 unsigned char g_00B9F8D8[0x1C * 8] = {0};
 
+typedef struct MsifPortabilityInputData //size is 0x24
+{
+  uint32_t size;
+  uint8_t data_1[0x10];
+  uint8_t data_2[0x10];
+}MsifPortabilityInputData;
+
+typedef struct MsifPortabilityOutputData //size is 0x24
+{
+  uint32_t size;
+  uint8_t key_name[0x10];
+  uint8_t aes_key[0x10];
+}MsifPortabilityOutputData;
+
 //[REVERSED]
 int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
 {
    //try to decrypt aes key 1
 
-   portability_input_data dec_input1;
+   MsifPortabilityInputData dec_input1;
    dec_input1.size = 0x20;
    memcpy(dec_input1.data_1, g_dec_input_C90370, 0x10);
    memcpy(dec_input1.data_2, g_dec_input_C90370 + 0x10, 0x10);
 
-   portability_output_data dec_output;
+   MsifPortabilityOutputData dec_output;
    dec_output.size = 0x20;
    memset(dec_output.key_name, 0, 0x10);
    memset(dec_output.aes_key, 0, 0x10);
 
-   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input1, &dec_output);   
+   int kget_res1 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(ENCDEC_W_PORTABILITY_SERVICE_KEY_0x04, g_zero_array_C90498, (const ScePortabilityInputData*)&dec_input1, (ScePortabilityOutputData*)&dec_output);
    if(kget_res1 != 0)
    {
       memset(&dec_output, 0, 0x24);
@@ -341,12 +355,12 @@ int decrypt_sha224_table_get_key_internal_C8D09C(unsigned char* aes_key)
    {
       //try to decrypt aes key 2
 
-      portability_input_data dec_input2;
+      MsifPortabilityInputData dec_input2;
       dec_input2.size = 0x20;
       memcpy(dec_input2.data_1, g_dec_input_C90394, 0x10);
-      memcpy(dec_input2.data_2, g_dec_input_C90394 + 0x10, 0x10);      
+      memcpy(dec_input2.data_2, g_dec_input_C90394 + 0x10, 0x10);
 
-      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(4, g_zero_array_C90498, &dec_input2, &dec_output);
+      int kget_res2 = SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(ENCDEC_W_PORTABILITY_SERVICE_KEY_0x04, g_zero_array_C90498, (const ScePortabilityInputData*)&dec_input2, (ScePortabilityOutputData*)&dec_output);
       if(kget_res2 != 0)
       {
          memset(&dec_output, 0, 0x24);
