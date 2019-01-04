@@ -101,7 +101,7 @@ int EncDecWPortabilityService::service_0x1(int* f00d_resp, void* ctx, int size) 
 
 int EncDecWPortabilityService::service_0x2(int* f00d_resp, void* ctx, int size) const
 {
-   SceSblSmCommEncdecWPortability_2000A* data = (SceSblSmCommEncdecWPortability_2000A*)ctx;
+   SceSblSmCommEncdecWPortabilityData_2000A* data = (SceSblSmCommEncdecWPortabilityData_2000A*)ctx;
 
    if (data->key_id < ENCDEC_W_PORTABILITY_SERVICE_KEY_MIN || data->key_id > ENCDEC_W_PORTABILITY_SERVICE_KEY_MAX)
    {

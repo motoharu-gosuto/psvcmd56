@@ -13,7 +13,7 @@ const unsigned char key1[0x10] = {0xE0, 0x04, 0x8D, 0x44, 0x3D, 0x63, 0xC9, 0x2C
 
 int RmAuthService::service_0x1(int* f00d_resp, void* ctx, int size) const
 {
-   SceSblSmCommRmAuth_1* ctx_cast = (SceSblSmCommRmAuth_1*)ctx;
+   SceSblSmCommRmAuthData_1* ctx_cast = (SceSblSmCommRmAuthData_1*)ctx;
 
    //other bytes are untouched
    memset(ctx_cast->data + 0x10, 0, 4);
@@ -25,7 +25,7 @@ int RmAuthService::service_0x1(int* f00d_resp, void* ctx, int size) const
 
 int RmAuthService::service_0x2(int* f00d_resp, void* ctx, int size) const
 {
-   SceSblSmCommRmAuth_2* ctx_cast = (SceSblSmCommRmAuth_2*)ctx;
+   SceSblSmCommRmAuthData_2* ctx_cast = (SceSblSmCommRmAuthData_2*)ctx;
 
    unsigned char seed_trunc[0x10];
    

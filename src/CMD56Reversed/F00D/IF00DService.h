@@ -115,7 +115,7 @@ struct SceSblSmCommKprxAuthData_50001
 
 //=============== ENCDEC_W_PORTABILITY TYPES =============
 
-typedef struct SceSblSmCommEncdecWPortability_2000A 
+typedef struct SceSblSmCommEncdecWPortabilityData_2000A 
 {
    unsigned int key_id;
    unsigned int input_length;
@@ -123,7 +123,7 @@ typedef struct SceSblSmCommEncdecWPortability_2000A
    unsigned int output_length;
    unsigned char output[0x20];
    unsigned char iv[0x10];
-} SceSblSmCommEncdecWPortability_2000A;
+} SceSblSmCommEncdecWPortabilityData_2000A;
 
 #define ENCDEC_W_PORTABILITY_SERVICE_KEY_01 0x01
 #define ENCDEC_W_PORTABILITY_SERVICE_KEY_02 0x02
@@ -151,7 +151,7 @@ typedef struct SceSblSmCommEncdecWPortability_2000A
 
 //=============== GCAUTHMGR TYPES =============
 
-struct SceSblSmCommGcData_1000B
+struct SceSblSmCommGcAuthMgrData_1000B
 {
    //this is a structure of size 0x814
 
@@ -293,12 +293,12 @@ struct SceSblSmCommGcData_1000B
 
 //=============== RMAUTH TYPES =============
 
-struct SceSblSmCommRmAuth_1
+struct SceSblSmCommRmAuthData_1
 {
    unsigned char data[0x20];
 };
 
-struct SceSblSmCommRmAuth_2
+struct SceSblSmCommRmAuthData_2
 {
    unsigned char seed[0x20];
 };

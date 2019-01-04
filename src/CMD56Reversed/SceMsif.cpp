@@ -71,7 +71,7 @@ int execute_f00d_command_1_rmauth_sm_C8D908(unsigned int* f00d_data)
       return res0;
    }
 
-   SceSblSmCommRmAuth_1 data;
+   SceSblSmCommRmAuthData_1 data;
 
    int f00d_resp = 0;
 
@@ -108,7 +108,7 @@ int execute_f00d_command_2_rmauth_sm_C8D988(unsigned const char input[0x10])
       return res0;
    }
 
-   SceSblSmCommRmAuth_2 data;
+   SceSblSmCommRmAuthData_2 data;
    memcpy(data.seed, input, 0x10);
 
    int f00d_resp = 0;

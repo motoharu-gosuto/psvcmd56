@@ -481,7 +481,7 @@ int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int
    if(res0 != 0)
       return res0;
 
-   SceSblSmCommEncdecWPortability_2000A buffer;
+   SceSblSmCommEncdecWPortabilityData_2000A buffer;
    buffer.key_id = key_id;
    
    buffer.input_length = in->size;
