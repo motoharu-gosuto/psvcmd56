@@ -291,7 +291,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
    //essentially what it does - it copies 3 bytes
    memcpy(input_buffer + 0x50, _00BDD04C_RESPBUF1 + 0x08 + 0x20, 0x03);   
 
-   int res4 = sub_CAC924(0, input_buffer, KIRK_SERVICE_1B, 0x53, _00BDCDF4_PACKET6_DE); //preinit
+   int res4 = sub_CAC924(0, input_buffer, GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1B, 0x53, _00BDCDF4_PACKET6_DE); //preinit
    if(res4 != 0)
       return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
@@ -312,7 +312,7 @@ int packet9_to_10(char* input_buffer, int* cookie)
    
    //================================================
    
-   int res5 = sub_CAC924(_00BDCDF8_WB20, input_buffer, KIRK_SERVICE_1C, 0x40, _00BDCDF4_PACKET6_DE);
+   int res5 = sub_CAC924(_00BDCDF8_WB20, input_buffer, GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1C, 0x40, _00BDCDF4_PACKET6_DE);
    if(res5 != 0)
       return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 
@@ -481,7 +481,7 @@ int packet15_preinit(char* arg44, const char* arg24)
 
             memcpy(arg44 + 0x60, _00BDD04C_RESPBUF1 + 0x08, 0x43);
 
-            int res7 = sub_CAC924(0, arg44, KIRK_SERVICE_1D, 0xA3, _00BDCDF4_PACKET6_DE); //preinit
+            int res7 = sub_CAC924(0, arg44, GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1D, 0xA3, _00BDCDF4_PACKET6_DE); //preinit
             if(res7 != 0)
             {
                return -3;
@@ -643,7 +643,7 @@ int packet17_to_20(char* arg44, const char* arg24, int* cookie)
 
    //TODO: is _00BDD44C used somewhere ?
 
-   int res8 = sub_CAC924(_00BDD44C, arg44, KIRK_SERVICE_1F, 0xB3, _00BDCDF4_PACKET6_DE);
+   int res8 = sub_CAC924(_00BDD44C, arg44, GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1F, 0xB3, _00BDCDF4_PACKET6_DE);
    if(res8 != 0)
       return exit_loc_CA91D6(SCE_SBL_GC_AUTH_MGR_ERROR_808A0707, *cookie);
 

@@ -306,10 +306,10 @@ int SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(int index, std::strin
    switch(index)
    {
    case 0:
-      self_name = GC_AUTH_MGR_SERVICE;
+      self_name = GCAUTHMGR_SERVICE;
       return 0;
    case 1:
-      self_name = RM_AUTH_SM_SERVICE;
+      self_name = RMAUTH_SERVICE;
       return 0;
    case 2:
       self_name = ENCDEC_W_PORTABILITY_SERVICE;

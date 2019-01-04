@@ -97,7 +97,7 @@ int sub_CA8DC0(char idx, int packet6_de, const char* a_00BDCFF8, const char* a_0
    data_buffer[0x50] = idx;
 
    //size of data structure is exactly 0x51
-   int r0 = sub_CAC924(a_00BDCDF8_WB20, data_buffer, KIRK_SERVICE_1E, 0x51, packet6_de);
+   int r0 = sub_CAC924(a_00BDCDF8_WB20, data_buffer, GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1E, 0x51, packet6_de);
    if(r0 != 0)
    {
       if(cookie == var_009EA004)
@@ -256,7 +256,7 @@ int sub_CA8EA0(sd_context_part_mmc* sd_context, int packet6_de, const char* a_00
    memcpy(generic_buffer + 0xB3, var16C, 0x10);
    memcpy(generic_buffer + 0xC3, a_00BDD24C_RESPBUF2 + 0x08, 0x53);
 
-   int res6 = sub_CAC924(a_00BDD018, generic_buffer, KIRK_SERVICE_20, 0x116, packet6_de);
+   int res6 = sub_CAC924(a_00BDD018, generic_buffer, GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_20, 0x116, packet6_de);
    if(res6 != 0)
       return exit_loc_CA9058(-3, var24);
 
@@ -367,7 +367,7 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
    if(r2 > 0x800)
       return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
 
-   if(r3 == KIRK_SERVICE_04 || r3 == KIRK_SERVICE_07)
+   if(r3 == GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_04 || r3 == GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_07)
    {
       //TODO: 
       //I believe that KIRK services may change size value with response size if service has response (since r2 is part of the structure)
@@ -392,147 +392,147 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 
    switch(r3)
    {
-   case KIRK_SERVICE_0C:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_0C:
       {
          if(r2 == 0x3C)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_0D:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_0D:
       {
          if(r2 == 0x28)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_0E:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_0E:
       {
          if(r2 == 0x14)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_10:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_10:
       {
          if(r2 == 0x28)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_11:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_11:
        {
          if(r2 == 0x64)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_12:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_12:
       {
          if(r2 == 0xB8)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_14:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_14:
       {
          if(r2 == 0x54)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_15:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_15:
        {
          if(r2 == 0x38)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_16:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_16:
       {
          if(r2 == 0x1C)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_17:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_17:
       {
          if(r2 == 0x38)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24); 
       }
-   case KIRK_SERVICE_18:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_18:
       {
          if(r2 == 0x8C)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_19:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_19:
       {
          if(r2 == 0xE8)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_1B:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1B:
       {
          if(r2 == 0x53)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_1C:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1C:
       {
          if(r2 == 0x33)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_1D:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1D:
       {
          if(r2 == 0xA3)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_1E:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1E:
       {
          if(r2 == 0x33)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_1F:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_1F:
       {
          if(r2 == 0x20)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_20:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_20:
       {
          if(r2 == 0x34)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_21:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_21:
       {
          if(r2 == 0x28)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24);
       }
-   case KIRK_SERVICE_22:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_22:
       {
          if(r2 == 0x38)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
          else
             return exit_loc_CAC9CA(CAC924_ERROR_CODE, var97C, var24); 
       }
-   case KIRK_SERVICE_23:
+   case GCAUTHMGR_SERVICE_1000B_KIRK_SERVICE_23:
       {
          if(r2 == 0x20)
             return finish_CACA88(r8, var830, r2, 0, var97C, var24);
@@ -622,8 +622,8 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    if(res1 != 0)
       return exit_loc_CAC9CA(res1, &var97C, var24);
 
-   //int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GC_AUTH_MGR_SERVICE_1000B, &var978, &ctx, 0x814);
-   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(var97C, GC_AUTH_MGR_SERVICE_1000B, &var978, &ctx, 0x814);
+   //int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(var97C, GCAUTHMGR_SERVICE_1000B, &var978, &ctx, 0x814);
+   int res2 = SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(var97C, GCAUTHMGR_SERVICE_1000B, &var978, &ctx, 0x814);
    if(res2 != 0)
       return exit_loc_CAC9CA(res2, &var97C, var24);
 
