@@ -52,46 +52,14 @@ int ms_execute_ex_set_cmd_C8A4E8(SceMsif_subctx *subctx, int cmd, SceMsif_subctx
 
 int id_B9F9BC = 0;
 
-unsigned char ctx_130_part_C904A8[0x90] =
-{
-   0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x80, 0x00, 0x00, 0x00, 0xC0, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-   0x80, 0x09, 0x80, 0x03, 0x00, 0x00, 0xC3, 0x00, 0x00, 0x00, 0x80, 0x09, 0x80, 0x00, 0x00, 0x00, 
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
-
 //[REVERSED]
 int food_start_F00D_communication_rmauth_sm_C8D880()
 {
-   /*
-   elf_info_pair self;
-   self.size = 0xC;
-   self.elf_data = 0;
-   self.elf_size = 0;
-   
-   if (SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_f10ab792(1, &self) < 0)
-      return 0x800F0016;
-   */
-
    std::string service_name;
    if(SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(1, service_name) < 0)
       return 0x800F0016;
 
-   SceSblSmCommContext130 ctx_130;
-   
-   memset(&ctx_130, 0, 0x130u);
-   memcpy(&ctx_130.caller_self_info, ctx_130_part_C904A8, 0x90u);
-
-   ctx_130.pathId = 2;
-   ctx_130.self_type = 2;
-
    return SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(service_name, &id_B9F9BC);
-   //return SceSblSmCommForKernel_sceSblSmCommStartSm1_039c73b1(0, self.elf_data, self.elf_size, 0, &ctx_130, &id_B9F9BC);
 }
 
 //[REVERSED]
@@ -112,15 +80,12 @@ int execute_f00d_command_1_rmauth_sm_C8D908(unsigned int* f00d_data)
    SceSblSmCommMsifData_1 data;
 
    int f00d_resp = 0;
-      
-   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, RM_AUTH_SM_SERVICE_1, &f00d_resp, &data, 0x20))
-   //   f00d_resp = 0x800F1928;
+
    if(SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, RM_AUTH_SM_SERVICE_1, &f00d_resp, &data, 0x20))
       f00d_resp = 0x800F1928;
 
    std::pair<int, int> res;
 
-   //int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
    int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id_B9F9BC);
    if (res1 != 0)
    {
@@ -154,15 +119,11 @@ int execute_f00d_command_2_rmauth_sm_C8D988(unsigned const char input[0x10])
 
    int f00d_resp = 0;
 
-   //if (SceSblSmCommForKernel_sceSblSmCommCallFunc_db9fc204(id_B9F9BC, RM_AUTH_SM_SERVICE_2, &f00d_resp, &data, 0x20))
-   //   f00d_resp = 0x800F1928;
-
    if (SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id_B9F9BC, RM_AUTH_SM_SERVICE_2, &f00d_resp, &data, 0x20))
       f00d_resp = 0x800F1928;
    
    std::pair<int, int> res;
 
-   //int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_0631f8ed(id_B9F9BC, &res);
    int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id_B9F9BC);
    if (res1 != 0)
    {
