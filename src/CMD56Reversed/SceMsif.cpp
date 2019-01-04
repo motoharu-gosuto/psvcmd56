@@ -15,7 +15,7 @@
 #include "F00D/IF00DService.h"
 #include "F00D/F00DUtils.h"
 
-#include "SceMsifHashTableVerify.h"
+#include "SceMsifEcdsa.h"
 
 //-------- memory card communication --------
 
