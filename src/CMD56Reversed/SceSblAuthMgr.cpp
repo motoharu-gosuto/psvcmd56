@@ -25,14 +25,13 @@ int SceSblAuthMgr_sceSblAuthMgrSetDmac5KeyForKernel_0x122acdea(const unsigned ch
    ctx.slot_id = slot_id;
 
    int f00d_resp = 0;
-   if(SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id, KPRX_AUTH_SERVICE_50001, &f00d_resp, &ctx, sizeof(SceSblSmCommKprxAuthData_50001)) < 0)
-      return -1;
+   int res0 = SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id, KPRX_AUTH_SERVICE_50001, &f00d_resp, &ctx, 0x110);
+   if(res0 != 0)
+      f00d_resp = -1;
 
-   if(f00d_resp != 0)
-      return -1;
+   int res1 = SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id);
+   if(res1 != 0)
+      return res1;
 
-   if(SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id) < 0)
-      return -1;
-
-   return 0;
+   return f00d_resp;
 }
