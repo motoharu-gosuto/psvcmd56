@@ -148,6 +148,7 @@ int EncDecWPortabilityService::service_0x2(int* f00d_resp, void* ctx, int size) 
    return 0;
 }
 
+
 int EncDecWPortabilityService::dispatch(int service_id, int* f00d_resp, void* ctx, int size) const
 {
    switch(service_id)

@@ -88,6 +88,27 @@ int set_dmac5_key_80E26A(const unsigned char* key, int nblocks, int slot_id)
    return 0;
 }
 
+
+int KprxAuthService::service_0x10001(int* f00d_resp, void* ctx, int size) const
+{
+   return -1;
+}
+
+int KprxAuthService::service_0x20001(int* f00d_resp, void* ctx, int size) const
+{
+   return -1;
+}
+
+int KprxAuthService::service_0x30001(int* f00d_resp, void* ctx, int size) const
+{
+   return -1;
+}
+
+int KprxAuthService::service_0x40001(int* f00d_resp, void* ctx, int size) const
+{
+   return -1;
+}
+
 int KprxAuthService::service_0x50001(int* f00d_resp, void* ctx, int size) const
 {
    SceSblSmCommKprxAuthData_50001* ctx_cast = (SceSblSmCommKprxAuthData_50001*)ctx;
@@ -216,17 +237,42 @@ int KprxAuthService::service_0x60001(int* f00d_resp, void* ctx, int size) const
    return 0;
 }
 
+int KprxAuthService::service_0x70001(int* f00d_resp, void* ctx, int size) const
+{
+   return -1;
+}
+
+int KprxAuthService::service_0x80001(int* f00d_resp, void* ctx, int size) const
+{
+   return -1;
+}
+
+
 int KprxAuthService::dispatch(int service_id, int* f00d_resp, void* ctx, int size) const
 {
    switch(service_id)
    {
+   case KPRX_AUTH_SERVICE_10001:
+      return service_0x10001(f00d_resp, ctx, size);
+   case KPRX_AUTH_SERVICE_20001:
+      return service_0x20001(f00d_resp, ctx, size);
+   case KPRX_AUTH_SERVICE_30001:
+      return service_0x30001(f00d_resp, ctx, size);
+   case KPRX_AUTH_SERVICE_40001:
+      return service_0x40001(f00d_resp, ctx, size);
    case KPRX_AUTH_SERVICE_50001:
       return service_0x50001(f00d_resp, ctx, size);
    case KPRX_AUTH_SERVICE_60001:
       return service_0x60001(f00d_resp, ctx, size);
+   case KPRX_AUTH_SERVICE_70001:
+      return service_0x70001(f00d_resp, ctx, size);
+   case KPRX_AUTH_SERVICE_80001:
+      return service_0x80001(f00d_resp, ctx, size);
    default:
       //not implemented command
       *f00d_resp = 0x800F0016;
       return -1;
    }
 }
+
+
