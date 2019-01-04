@@ -19,25 +19,19 @@
 
 //-------- memory card communication --------
 
-typedef struct SceMsif_subctx
-{
-   char error_code[4];
-   ecdsa_signature signature;
-}SceMsif_subctx;
-
 #define MS_TPC_48 0x48
 #define MS_TPC_49 0x49
 #define MS_TPC_4A 0x4A
 #define MS_TPC_4B 0x4B
 
 //[NO NEED TO REVERSE]
-int ms_execute_ex_set_cmd_write_short_data_C8A3A8(SceMsif_subctx *subctx, int cmd, int size, const char* source, int delay)
+int ms_execute_ex_set_cmd_write_short_data_C8A3A8(SceMsif_subctx *subctx, int cmd, int size, const unsigned char* source, int delay)
 {
    return 0;
 }
 
 //[NO NEED TO REVERSE]
-int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd, int size, char* dest, int delay)
+int ms_execute_ex_set_cmd_read_short_data_C8A448(SceMsif_subctx *subctx, int cmd, int size, unsigned char* dest, int delay)
 {
    return 0;
 }
@@ -725,7 +719,7 @@ int get_card_key_C8D5FC(SceMsif_subctx* subctx, unsigned char mc_1C_key[0x10])
    cmd48_req.f00d_cmd1_data = f00d_cmd1_res; //copy f00d rm auth cmd1 resp 1 byte
    memset(cmd48_req.reserved, 0, 0x17); //fill rest with 0
 
-   int res48 = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_48, 0x20, (char*)&cmd48_req, 1000);
+   int res48 = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_48, 0x20, (unsigned char*)&cmd48_req, 1000);
    if(res48 != 0)
       return res48; //returns not exactly this, but we dont care here
 
@@ -734,7 +728,7 @@ int get_card_key_C8D5FC(SceMsif_subctx* subctx, unsigned char mc_1C_key[0x10])
    tpc_cmd49_resp cmd49_resp;
    memset(&cmd49_resp, 0, 0x40);
    
-   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, (char*)&cmd49_resp, 1000);
+   int res49 = ms_execute_ex_set_cmd_read_short_data_C8A448(subctx, MS_TPC_49, 0x40, (unsigned char*)&cmd49_resp, 1000);
    if(res49 != 0)
       return res49; //returns not exactly this, but we dont care here
 
@@ -785,7 +779,7 @@ int get_card_key_C8D5FC(SceMsif_subctx* subctx, unsigned char mc_1C_key[0x10])
    memcpy(cmd4A_req.iv, des3_iv_2, 8); //copy IV from second 3des-cbc-cts encryption
    memset(cmd4A_req.reserved, 0, 0x18); //clear all other bytes
 
-   int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, (char*)&cmd4A_req, 1000);
+   int res4A = ms_execute_ex_set_cmd_write_short_data_C8A3A8(subctx, MS_TPC_4A, 0x20, (const unsigned char*)&cmd4A_req, 1000);
    if(res4A < 0)
       return res4A; //returns not exactly this, but we dont care here
    
