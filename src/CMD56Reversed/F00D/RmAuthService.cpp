@@ -16,7 +16,7 @@ int RmAuthService::service_0x1(int* f00d_resp, void* ctx, int size) const
    SceSblSmCommMsifData_1* ctx_cast = (SceSblSmCommMsifData_1*)ctx;
 
    //other bytes are untouched
-   ctx_cast->data[0x10] = 0;
+   memset(ctx_cast->data + 0x10, 0, 4);
 
    *f00d_resp = 0;
 
