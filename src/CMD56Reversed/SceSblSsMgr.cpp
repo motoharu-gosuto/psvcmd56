@@ -13,6 +13,9 @@
 #include "SceSysmemGlobalVariables.h"
 #include "SceKernelDmacMgr.h"
 #include "SceKernelSuspend.h"
+#include "SceSblSsSmComm.h"
+
+#include "F00D/IF00DService.h"
 
 //---------------------------------------------
 
@@ -466,7 +469,40 @@ int SceSblSsMgrForDriver_sceKernelGetRandomNumberForDriver_4f9bfbe5(char* result
    return 0;
 }
 
-int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, unsigned char *iv, portability_input_data* in, portability_output_data* out)
+int SceSblSsMgrForDriver_sceSblSsMgrDecryptWithPortabilityForDriver_934db6b5(int key_id, unsigned char *iv, const ScePortabilityInputData* in, ScePortabilityOutputData* out)
 {
-   return 0;
+   std::string service_name;
+   if(SceSysrootForKernel_sceSysrootGetSelfInfoForKernel_Emu(1, service_name) < 0)
+      return 0x800F0016;
+
+   int id = 0;
+
+   int res0 = SceSblSmCommForKernel_sceSblSmCommStartSm_Emu(service_name, &id);
+   if(res0 != 0)
+      return res0;
+
+   SceSblSmCommEncdecWPortability_2000A buffer;
+   buffer.key_id = key_id;
+   
+   buffer.input_length = in->size;
+   memcpy(buffer.input, in->data, 0x20);
+   
+   memcpy(buffer.iv, iv, 0x10);
+
+   buffer.output_length = buffer.input_length;
+   
+   int f00d_resp = 0;
+
+   int res1 = SceSblSmCommForKernel_sceSblSmCommCallFunc_Emu(id, ENCDEC_W_PORTABILITY_SERVICE_2000A, &f00d_resp, 0, 0x5C);
+   if(res1 != 0)
+      f00d_resp = res1;
+
+   out->size = buffer.output_length;
+   memcpy(out->data, buffer.output, 0x20);
+
+   int res2 = SceSblSmCommForKernel_sceSblSmCommStopSm_Emu(id);
+   if(res2 != 0)
+      return res2;
+
+   return f00d_resp;
 }
