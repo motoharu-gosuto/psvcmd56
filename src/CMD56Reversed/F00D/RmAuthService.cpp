@@ -39,12 +39,12 @@ int RmAuthService::service_0x2(int* f00d_resp, void* ctx, int size) const
 
    //invoke crypto operation
    auto cryptops = CryptoService::get();
-   if(cryptops->aes_cbc_encrypt(seed_trunc, outkey, 0x10, key0, 0x10, iv) < 0)
+   if(cryptops->aes_cbc_encrypt(seed_trunc, outkey, 0x10, key0, 0x80, iv) < 0)
       return -1;
 
    memset(iv, 0, 0x10);
 
-   if(cryptops->aes_cbc_encrypt(seed_trunc, outkey + 0x10, 0x10, key1, 0x10, iv) < 0)
+   if(cryptops->aes_cbc_encrypt(seed_trunc, outkey + 0x10, 0x10, key1, 0x80, iv) < 0)
       return -1;
 
    SceSblDMAC5DmacKRBase::set_key_unrestricted(outkey, 0x20, 0x1C);
