@@ -1,4 +1,4 @@
-#include "SceMsifHashTableVerify.h"
+#include "SceMsifEcdsaNative.h"
 
 //WARNING:
 //this file contains reversed but irrelevant code for ECDSA checks that are done in Msif

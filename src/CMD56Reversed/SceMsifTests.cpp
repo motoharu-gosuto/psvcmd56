@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-#include "SceMsifHashTableVerify.h"
+#include "SceMsifEcdsaNative.h"
 
 void test0()
 {
