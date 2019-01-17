@@ -346,64 +346,36 @@ int initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(char* cmac_input, int 
    return res1;
 }
 
-int service_handler_0x1000B_command_1D_80BFC0(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+struct SceSblSmCommGcAuthMgrData_1000B_1D_input
 {
-   add     $sp, -0x20
-   lw      $3, (cookie_812E40)
-   sw      $6, 0x20+var_10($sp)
-   ldc     $11, $lp
-   mov     $6, $1
-   sw      $7, 0x20+var_14($sp)
-   sw      $8, 0x20+var_18($sp)
-   sw      $11, 0x20+var_1C($sp)
-   sw      $5, 0x20+var_C($sp)
-   add3    $sp, $sp, -0x60
-   lw      $2, 0x808($6)
-   sw      $3, 0x80+var_24($sp)
-   add3    $8, $sp, 0x4C
-   add3    $3, $1, 8
-   sw      $3, 0x80+var_7C($sp)
-   mov     $1, $3
-   mov     $4, $8
-   add3    $3, $6, 0x28
-   bsr     initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6 ; (char* cmac_input, int key_id, char* src, char* dst)
-   mov     $7, $0
-   
-   if($0 != 0)
-      return $0;
+  char packet6_chunk[0x20];
+  char packet9_chunk[0x30];
+  char packet13_chunk[0x10];
+  char packet14_chunk[0x43];
+};
 
-   add3    $5, $sp, 0xC
-   mov     $1, $5
-   add3    $2, $6, 0x6B
-   mov     $3, 0x40
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   mov     $1, $5
-   mov     $2, 0x40
-   mov     $3, $8
-   mov     $4, 1
-   bsr     bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE ; (char* src_dst, int size, char* key, int enc_mode)
-                           ; 1 - with key
-                           ; 2 - with keyslot 0x24
-   add3    $1, $6, 0x59
-   add3    $2, $sp, 0x15
-   mov     $3, 0xF
-   bsr     memcmp_8121D2   ; (char* src1, char* src2, int size)
+int service_handler_0x1000B_command_1D_80BFC0(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx1)
+{  
+   SceSblSmCommGcAuthMgrData_1000B_1D_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1D_input*)ctx1->data;
 
-   if($0 != 0)
-   {
-      mov     $7, 5
-      return $7;
-   }
+   char drv_key[0x10];
 
-   lw      $1, 0x80+var_7C($sp)
-   add3    $2, $sp, 0x24
-   mov     $3, 0x20
-   bsr     memcmp_8121D2   ; (char* src1, char* src2, int size)
-   if($0 != 0)
-   {
-      mov     $7, 5
-      return $7;
-   }
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(input_data->packet6_chunk, ctx1->packet6_de, input_data->packet9_chunk, drv_key);
+   if(res0 != 0)
+      return res0;
+
+   char dec_input[0x40];
+   memcpy(dec_input, input_data->packet14_chunk + 3, 0x40);
+
+   int res1 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x40, drv_key, 1); //dec with key mode
+
+   int res2 = memcmp(input_data->packet13_chunk + 1, dec_input + 9, 0xF);
+   if(res2 != 0)
+      return 5;
+
+   int res3 = memcmp(input_data->packet6_chunk, dec_input + 0x18, 0x20);
+   if(res2 != 0)
+      return 5;
 
    return 0;
 }
