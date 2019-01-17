@@ -100,171 +100,97 @@ int GcAuthMgrService::service_0x1000B_19(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return -1;
 }
 
-int sub_80BB6E(int,int, char* key, int* mode)
+char key_812400[0x10] = {0x6F, 0x22, 0x85, 0xED, 0x46, 0x3A, 0x6E, 0x57, 0xC5, 0xF3, 0x55, 0x0D, 0xDC, 0xC8, 0x1F, 0xEB, };
+char key_812440[0x10] = {0xDA, 0x96, 0x08, 0xB5, 0x28, 0x82, 0x5D, 0x6D, 0x13, 0xA7, 0xAF, 0x14, 0x46, 0xB8, 0xEC, 0x08, };
+char key_812480[0x10] = {0x36, 0x8B, 0x2E, 0xB5, 0x43, 0x7A, 0x82, 0x18, 0x62, 0xA6, 0xC9, 0x55, 0x96, 0xD8, 0xC1, 0x35, };
+char key_8124C0[0x10] = {0x7F, 0x1F, 0xD0, 0x65, 0xDD, 0x2F, 0x40, 0xB3, 0xE2, 0x65, 0x79, 0xA6, 0x39, 0x0B, 0x61, 0x6D, };
+
+char iv_8124D0[0x10] = {0x8B, 0x14, 0xC8, 0xA1, 0xE9, 0x6F, 0x30, 0xA7, 0xF1, 0x01, 0xA9, 0x6A, 0x30, 0x33, 0xC5, 0x5B, };
+
+int bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(char* src, int keyslot_dest, int keyslot_src)
 {
-   
-   add3    $sp, $sp, -0x28
-   ldc     $11, $lp
-   sw      $3, ($sp)       ; key
-   movu    $3, 0x8001
-   sw      $6, 0x28+var_10($sp)
-   sw      $8, 0x28+var_18($sp)
-   sw      $5, 0x28+var_C($sp)
-   sw      $7, 0x28+var_14($sp)
-   sw      $11, 0x28+var_1C($sp)
-   mov     $8, $1
-   mov     $6, $2
-   sw      $4, 0x28+mode_ptr_24($sp) ; mode
-   
+   return 0;
+}
 
-   if($2 == $3)
+int bigmac_cmac_aes_128_with_keyslot_80B87C(char* dst, const char* src, int size, int keyslot)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(char* src, char* iv, int keyslot_dst, int keyslot_src)
+{
+   return 0;
+}
+
+//cmac_input - size 0x20
+//cmac_output - size 0x10
+int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(char* cmac_input, int key_id, char* cmac_output, int* mode)
+{
+   switch(key_id)
    {
-      
-      mov     $7, 0 
-      movu    $1, byte_812400
-      
-      goto loc_80BBC8;
-   }
-   else
-   {
-      if($3 < $2)
+   case 0x8001:
       {
-         $0 = 1;
+         int res0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key_812400, 0x21, 0x345);
+         if(res0 != 0)
+            return res0;
+
+         int res1 = bigmac_cmac_aes_128_with_keyslot_80B87C(cmac_output, cmac_input, 0x20, 0x21);
+         if(res1 != 0)
+            return res1;
+
+         *mode = 1; //with key
+         return 0;
       }
-      else
+      break;
+   case 0x8002:
       {
-         $0 = 0;
-      }
+         int res0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key_812440, 0x21, 0x345);
+         if(res0 != 0)
+            return res0;
 
-      if($0 != 0)
+         int res1 = bigmac_cmac_aes_128_with_keyslot_80B87C(cmac_output, cmac_input, 0x20, 0x21);
+         if(res1 != 0)
+            return res1;
+
+         *mode = 1; //with key
+         return 0;
+      }
+      break;
+   case 0x8003:
       {
-         
-         movu    $3, 0x8002
-         
-         
-         if($2 == $3)
-         {
-            
-            mov     $7, 0
-            movu    $1, byte_812440
-            
-            goto loc_80BBC8;
-         }
-         else
-         {
-            
-            add     $3, 1
-            
+         int res0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key_812480, 0x21, 0x345);
+         if(res0 != 0)
+            return res0;
 
-            if($2 != $3)
-            {
-               mov     $5, 0xE
-               mov     $0, $5
-               return $0;
-            }
-            else
-            {
-               
-               mov     $7, 0
-               movu    $1, byte_812480
-               
-               goto loc_80BBC8;
-            }
-         }
+         int res1 = bigmac_cmac_aes_128_with_keyslot_80B87C(cmac_output, cmac_input, 0x20, 0x21);
+         if(res1 != 0)
+            return res1;
+
+         *mode = 1; //with key
+         return 0;
       }
-      else
+      break;
+   case 0x0001:
       {
-         if($2 != 1)
-         {
-            mov     $5, 0xE
-            mov     $0, $5
-            return $0;
-         }
-         else
-         {
-            
-            movu    $7, byte_8124D0
-            movu    $1, byte_8124C0
-            
+         int res0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key_8124C0, 0x21, 0x345);
+         if(res0 != 0)
+            return res0;
 
-            goto loc_80BBC8;
-         }
+         int res1 = bigmac_cmac_aes_128_with_keyslot_80B87C(cmac_output, cmac_input, 0x20, 0x21);
+         if(res1 != 0)
+            return res1;
+
+         int res2 = bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(cmac_output, iv_8124D0, 0x24, 0x348);
+         if(res2 != 0)
+            return res2;
+   
+         *mode = 2; //with keyslot 0x24
+         return 0;
       }
+      break;
+   default:
+       return 0xE;
    }
-
-loc_80BBC8:
-
-   mov     $2, 0x21
-   mov     $3, 0x345
-   bsr     bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C ; (char* buffer, int keyslot_dest, int keyslot_key)
-   mov     $5, $0
-   
-   if($0 != 0)
-   {
-      mov     $0, $5
-
-      return $0;
-   }
-
-   movu    $1, byte_812E48+0x38
-   mov     $2, $8
-   mov     $3, 0x20
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   movu    $1, byte_812E48+0x838
-   movu    $2, byte_812E48+0x38
-   mov     $3, 0x20
-   mov     $4, 0x21
-   bsr     bigmac_cmac_aes_128_with_keyslot_80B87C ; (char* dst, char* src, int size, int keyslot)
-   mov     $5, $0
-   
-   if($0 != 0)
-   {
-      mov     $0, $5
-
-      return $0;
-   }
-
-   lw      $1, ($sp)
-   movu    $2, byte_812E48+0x838
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   add     $6, -1          ; $6 - 1
-   mov     $8, 2
-   sltu3   $0, $8, $6      ; 2 < ($6 - 1)
-   
-   if($0 != 0)
-   {
-      mov     $0, $5
-
-      lw      $2, 0x28+mode_ptr_24($sp)
-      mov     $3, 1
-      sw      $3, ($2)        ; mode = 1
-      return $0;
-   }
-   
-   lw      $2, ($sp)
-   movu    $1, byte_812E48+0x38
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   movu    $1, byte_812E48+0x38
-   mov     $2, $7
-   mov     $3, 0x24
-   mov     $4, 0x348
-   bsr     bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486 ; (char* src, char* iv, int keyslot_dst, int keyslot_src)
-   mov     $5, $0
-   
-   if($0 != 0)
-   {
-      mov     $0, $5
-      return $0;
-   }
-   
-   lw      $2, 0x28+mode_ptr_24($sp) ; get mode ptr
-   sw      $8, ($2)        ; set mode
-
-   mov     $0, $5
-
-   return $0;
 }
 
 
