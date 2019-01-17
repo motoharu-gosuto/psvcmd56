@@ -198,11 +198,6 @@ int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(char* cmac_input, int key_id, 
    }
 }
 
-int sub_8121D2(char* src1, char* src2, int size)
-{
-   return 0;
-}
-
 struct SceSblSmCommGcAuthMgrData_1000B_input
 {
    char packet6_chunk[0x20];
@@ -226,8 +221,7 @@ int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuth
    
    int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_res, 0x20, drv_key, mode);
    
-   int res3 = sub_8121D2(data->packet7_chunk + 1, dec_res + 0x11, 0xF);
-   
+   int res3 = memcmp(data->packet7_chunk + 1, dec_res + 0x11, 0xF);
    if(res3 != 0)
       return res3;
 
