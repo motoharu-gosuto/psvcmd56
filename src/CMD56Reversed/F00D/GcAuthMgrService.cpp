@@ -330,39 +330,20 @@ int GcAuthMgrService::service_0x1000B_1C(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
-int sub_80BCB6(int,int, char* src, char* dst)
+int initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(char* cmac_input, int key_id, char* src, char* dst)
 {
-   add3    $sp, $sp, -0x30
-   ldc     $11, $lp
-   sw      $7, 0x30+var_14($sp)
-   mov     $7, $3          ; src
-   lw      $3, (cookie_812E40)
-   sw      $6, 0x30+var_10($sp)
-   add3    $6, $sp, 0x30+key_2C ; key
-   sw      $5, 0x30+var_C($sp)
-   sw      $3, 0x30+var_1C($sp)
-   mov     $5, $4          ; dst
-   mov     $3, $6          ; key
-   mov     $4, $sp
-   sw      $11, 0x30+var_18($sp)
-   bsr     initialize_keyslot_0x21_0x24_with_cmac_80BB6E ; (char* cmac_input, int key_id, char* cmac_output, int* mode)
+   int mode;
+   char drv_key[0x10];
+
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(cmac_input, key_id, drv_key, &mode);
+   if(res0 != 0)
+      return res0;
+
+   memcpy(dst, src, 0x10);
    
-   if($0 != 0)
-      return $0;
-
-   mov     $1, $5          ; dst
-   mov     $2, $7          ; src
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   lw      $4, ($sp)       ; mode
-   mov     $1, $5          ; src
-   mov     $2, 0x10        ; size
-   mov     $3, $6          ; key
-   bsr     bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE ; (char* src_dst, int size, char* key, int enc_mode)
-                           ; 1 - with key
-                           ; 2 - with keyslot 0x24
-
-   return $0;
+   int res1 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dst, 0x10, drv_key, mode);
+                           
+   return res1;
 }
 
 int service_handler_0x1000B_command_1D_80BFC0(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
