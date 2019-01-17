@@ -193,10 +193,61 @@ int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(char* cmac_input, int key_id, 
    }
 }
 
+int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   add3    $sp, $sp, -0x58
+   lw      $3, (byte_812E40)
+   sw      $6, 0x58+var_10($sp)
+   mov     $6, $1
+   sw      $8, 0x58+var_18($sp)
+   lw      $2, 0x808($6)
+   add3    $8, $sp, 0x58+var_34
+   ldc     $11, $lp
+   sw      $3, 0x58+in_ctx_24($sp)
+   add     $1, 8
+   mov     $3, $8
+   mov     $4, $sp
+   sw      $7, 0x58+var_14($sp)
+   sw      $5, 0x58+var_C($sp)
+   sw      $11, 0x58+var_1C($sp)
+   bsr     initialize_keyslot_0x21_0x24_with_cmac_80BB6E ; (char* cmac_input, int key_id, char* cmac_output, int* mode)
+   mov     $7, $0
+   
+   if($0 != 0)
+   {
+      return $7;
+   }
+
+   add3    $5, $sp, 0x58+var_54
+   mov     $1, $5
+   add3    $2, $6, 0x3B
+   mov     $3, 0x20
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   lw      $4, ($sp)       ; get enc mode back
+   mov     $1, $5
+   mov     $2, 0x20
+   mov     $3, $8
+   bsr     bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE ; (char* src_dst, int size, char* key, int enc_mode)
+                           ; 1 - with key
+                           ; 2 - with keyslot 0x24
+   add3    $1, $6, 0x29
+   add3    $2, $sp, 0x15
+   mov     $3, 0xF
+   bsr     sub_8121D2
+   
+   if($0 != 0)
+   {
+      return $7;
+   }
+
+   mov     $7, 5
+
+   return $7;
+}
 
 int GcAuthMgrService::service_0x1000B_1B(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_1B_80BC44();
+   service_handler_0x1000B_command_1B_80BC44(f00d_resp, ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
