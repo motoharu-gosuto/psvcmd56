@@ -226,12 +226,12 @@ int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuth
    if(res1 != 0)
       return res1;
 
-   char dec_res[0x20];
-   memcpy(dec_res, input_data->packet8_chunk + 3, 0x20);
+   char dec_input[0x20];
+   memcpy(dec_input, input_data->packet8_chunk + 3, 0x20);
    
-   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_res, 0x20, drv_key, mode);
+   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x20, drv_key, mode);
    
-   int res3 = memcmp(input_data->packet7_chunk + 1, dec_res + 0x11, 0xF);
+   int res3 = memcmp(input_data->packet7_chunk + 1, dec_input + 0x11, 0xF);
    if(res3 != 0)
       return 5;
 
@@ -268,41 +268,40 @@ int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuth
 {
    SceSblSmCommGcAuthMgrData_1000B_1C_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1C_input*)ctx->data;
 
-   int var_A8;
-   char var_A4[0x20];
-   char var_94[0x10];
-   char var_84[0x10];
-   char var_74[0x20];
-   char var_54[0x10];
-   char var_44[0x10];
-   char var_34[0x10];
-   
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(ctx->data, ctx->packet6_de, var_34, &var_A8);
+   int mode;
+   char drv_key[0x10];
+
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(input_data->packet6_chunk, ctx->packet6_de, drv_key, &mode);
    if(res0 != 0)
       return res0;
 
-   memcpy(var_A4, ctx + 0x28, 0x20);
+   char dec_input[0x20];
+   memcpy(dec_input, input_data->packet8_chunk, 0x20);
 
-   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_A4, 0x20, var_34, var_A8);
+   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x20, drv_key, mode);
+
+   char dec_part0[0x10];
+   char dec_part1[0x10];
                            
-   memcpy(var_54, var_A4, 0x10);
+   memcpy(dec_part0, dec_input + 0x00, 0x10);
+   memcpy(dec_part1, dec_input + 0x10, 0x10);
 
-   memcpy(var_44, var_94, 0x10);
+   dec_part0[0] |= 0x80;
+   dec_part1[0] |= 0x80;
 
-   var_54[0] |= 0xFFFFFF80;
-   var_44[0] |= 0xFFFFFF80;
+   char session_id[0x20];
    
-   int res3 = bigmac_generate_random_number_80C462(var_74, 0x20);
+   int res3 = bigmac_generate_random_number_80C462(session_id, 0x20);
    if(res3 != 0)
       return 5;
 
-   memcpy(var_A4, var_74, 0x10);
+   char enc_output[0x30];
+   
+   memcpy(enc_output + 0x00, session_id, 0x10);
+   memcpy(enc_output + 0x10, dec_part1, 0x10);
+   memcpy(enc_output + 0x20, dec_part0, 0x10);
 
-   memcpy(var_94, var_44, 0x10);
-
-   memcpy(var_84, var_54, 0x10);
-
-   int res4 = bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(var_A4, 0x30, var_34, var_A8);
+   int res4 = bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(enc_output, 0x30, drv_key, mode);
 
    SceSblSmCommGcAuthMgrData_1000B_1C_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_1C_output*)ctx->data;
 
@@ -314,7 +313,7 @@ int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuth
    output_data->unknown = 0;
    output_data->size = response_size;
    
-   memcpy(ctx + 0xB, var_A4, 0x30);
+   memcpy(output_data->data, enc_output, 0x30);
 
    return 0;
 }
