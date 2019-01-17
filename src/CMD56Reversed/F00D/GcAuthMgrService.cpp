@@ -127,6 +127,16 @@ int bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(char* src_dst, int size, 
    return 0;
 }
 
+int bigmac_generate_random_number_80C462(char* dst,int size)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(char* src_dst, int size, char* key, int enc_mode)
+{
+   return 0;
+}
+
 //cmac_input - size 0x20
 //cmac_output - size 0x10
 int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(char* cmac_input, int key_id, char* cmac_output, int* mode)
@@ -198,30 +208,30 @@ int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(char* cmac_input, int key_id, 
    }
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_input
+struct SceSblSmCommGcAuthMgrData_1000B_1B_input
 {
    char packet6_chunk[0x20];
    char packet7_chunk[0x10];
    char packet8_chunk[0x23];
 };
 
-int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx1)
+int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
-   SceSblSmCommGcAuthMgrData_1000B_input* data = (SceSblSmCommGcAuthMgrData_1000B_input*)ctx1->data;
+   SceSblSmCommGcAuthMgrData_1000B_1B_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1B_input*)ctx->data;
 
    char drv_key[0x10];
    int mode;
 
-   int res1 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(data->packet6_chunk, ctx1->packet6_de, drv_key, &mode);
+   int res1 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(input_data->packet6_chunk, ctx->packet6_de, drv_key, &mode);
    if(res1 != 0)
       return res1;
 
    char dec_res[0x20];
-   memcpy(dec_res, data->packet8_chunk + 3, 0x20);
+   memcpy(dec_res, input_data->packet8_chunk + 3, 0x20);
    
    int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_res, 0x20, drv_key, mode);
    
-   int res3 = memcmp(data->packet7_chunk + 1, dec_res + 0x11, 0xF);
+   int res3 = memcmp(input_data->packet7_chunk + 1, dec_res + 0x11, 0xF);
    if(res3 != 0)
       return 5;
 
@@ -240,102 +250,71 @@ int GcAuthMgrService::service_0x1000B_1B(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+struct SceSblSmCommGcAuthMgrData_1000B_1C_input
+{
+   char packet6_chunk[0x20];
+   char packet8_chunk[0x20]; 
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1C_output
+{
+   char command;
+   char unknown;
+   char size;
+   char data[0x30];
+};
+
 int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
-   add     $sp, -0x20
-   lw      $3, (cookie_812E40)
-   sw      $5, 0x20+var_C($sp)
-   mov     $5, $1
-   ldc     $11, $lp
-   sw      $7, 0x20+var_14($sp)
-   sw      $8, 0x20+var_18($sp)
-   sw      $6, 0x20+var_10($sp)
-   sw      $11, 0x20+var_1C($sp)
-   lw      $2, 0x808($5)
-   add3    $sp, $sp, -0x90
-   add3    $8, $sp, 0x7C
-   sw      $3, 0xB0+cookie_24($sp)
-   add     $1, 8
-   mov     $3, $8
-   add3    $4, $sp, 8
-   bsr     initialize_keyslot_0x21_0x24_with_cmac_80BB6E ; (char* cmac_input, int key_id, char* cmac_output, int* mode)
-   mov     $7, $0
-   
-   if(&0 != 0)
-   {
-      mov     $0, $7
-      return $0;
-   }
+   SceSblSmCommGcAuthMgrData_1000B_1C_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1C_input*)ctx->data;
 
-   add3    $6, $sp, 0xC
-   mov     $1, $6
-   add3    $2, $5, 0x28
-   mov     $3, 0x20
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   lw      $4, 0xB0+var_A8($sp)
-   mov     $1, $6
-   mov     $2, 0x20
-   mov     $3, $8
-   bsr     bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE ; (char* src_dst, int size, char* key, int enc_mode)
-                           ; 1 - with key
-                           ; 2 - with keyslot 0x24
-   add3    $1, $sp, 0x5C
-   mov     $2, $6
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   add3    $1, $sp, 0x6C
-   add3    $2, $sp, 0x1C
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   lb      $3, 0xB0+var_54($sp)
-   mov     $2, -0x80
-   or      $3, $2
-   sb      $3, 0xB0+var_54($sp)
-   lb      $3, 0xB0+var_44($sp)
-   or      $3, $2
-   sb      $3, 0xB0+var_44($sp)
-   add3    $3, $sp, 0x3C
-   mov     $1, $3
-   mov     $2, 0x20
-   sw      $3, 0xB0+var_AC($sp)
-   bsr     bigmac_generate_random_number_80C462 ; (char* dst,int size)
-   mov     $7, $0
-   lw      $3, 0xB0+var_AC($sp)
+   int var_A8;
+   char var_A4[0x20];
+   char var_94[0x10];
+   char var_84[0x10];
+   char var_74[0x20];
+   char var_54[0x10];
+   char var_44[0x10];
+   char var_34[0x10];
    
-   if($0 != 0)
-   {
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(ctx->data, ctx->packet6_de, var_34, &var_A8);
+   if(res0 != 0)
+      return res0;
+
+   memcpy(var_A4, ctx + 0x28, 0x20);
+
+   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_A4, 0x20, var_34, var_A8);
+                           
+   memcpy(var_54, var_A4, 0x10);
+
+   memcpy(var_44, var_94, 0x10);
+
+   var_54[0] |= 0xFFFFFF80;
+   var_44[0] |= 0xFFFFFF80;
+   
+   int res3 = bigmac_generate_random_number_80C462(var_74, 0x20);
+   if(res3 != 0)
       return 5;
-   }
 
-   mov     $1, $6
-   mov     $2, $3
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   add3    $1, $sp, 0x1C
-   add3    $2, $sp, 0x6C
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   add3    $1, $sp, 0x2C
-   add3    $2, $sp, 0x5C
-   mov     $3, 0x10
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
-   lw      $4, 0xB0+var_A8($sp)
-   mov     $1, $6
-   mov     $3, $8
-   mov     $2, 0x30
-   bsr     bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E ; (char* src_dst, int size, char* key, int enc_mode)
-                           ; 1 - with key
-                           ; 2 - with keyslot 0x24
-   mov     $3, 0x33
-   mov     $2, -0x5D
-   sw      $3, 0x80C($5)
-   sb      $2, 8($5)
-   sb      $3, 0xA($5)
-   sb      $7, 9($5)
-   add3    $1, $5, 0xB
-   mov     $2, $6
-   mov     $3, 0x30
-   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   memcpy(var_A4, var_74, 0x10);
+
+   memcpy(var_94, var_44, 0x10);
+
+   memcpy(var_84, var_54, 0x10);
+
+   int res4 = bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(var_A4, 0x30, var_34, var_A8);
+
+   SceSblSmCommGcAuthMgrData_1000B_1C_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_1C_output*)ctx->data;
+
+   int response_size = 0x33;
+   
+   ctx->size = response_size;
+
+   output_data->command = 0xA3;
+   output_data->unknown = 0;
+   output_data->size = response_size;
+   
+   memcpy(ctx + 0xB, var_A4, 0x30);
 
    return 0;
 }
