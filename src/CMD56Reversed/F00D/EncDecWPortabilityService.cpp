@@ -93,13 +93,13 @@ const unsigned char cmd_0x2000A_keys_80B960[0x14][0x20] = {
 
 #pragma endregion
 
-int EncDecWPortabilityService::service_0x1(int* f00d_resp, void* ctx, int size) const
+int EncDecWPortabilityService::service_0x1000A(int* f00d_resp, void* ctx, int size) const
 {
    *f00d_resp = 0x800F1725;
    return -1;
 }
 
-int EncDecWPortabilityService::service_0x2(int* f00d_resp, void* ctx, int size) const
+int EncDecWPortabilityService::service_0x2000A(int* f00d_resp, void* ctx, int size) const
 {
    SceSblSmCommEncdecWPortabilityData_2000A* data = (SceSblSmCommEncdecWPortabilityData_2000A*)ctx;
 
@@ -154,9 +154,9 @@ int EncDecWPortabilityService::dispatch(int service_id, int* f00d_resp, void* ct
    switch(service_id)
    {
    case ENCDEC_W_PORTABILITY_SERVICE_1000A:
-      return service_0x1(f00d_resp, ctx, size);
+      return service_0x1000A(f00d_resp, ctx, size);
    case ENCDEC_W_PORTABILITY_SERVICE_2000A:
-      return service_0x2(f00d_resp, ctx, size);
+      return service_0x2000A(f00d_resp, ctx, size);
    default:
       //not implemented command
       *f00d_resp = -1;
