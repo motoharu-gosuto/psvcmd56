@@ -490,9 +490,110 @@ int GcAuthMgrService::service_0x1000B_1E(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_1F_80BEC4()
+{
+   add     $sp, -0x20
+   lw      $3, (cookie_812E40)
+   sw      $6, 0x20+var_10($sp)
+   ldc     $11, $lp
+   mov     $6, $1
+   sw      $8, 0x20+var_18($sp)
+   sw      $5, 0x20+var_C($sp)
+   sw      $7, 0x20+var_14($sp)
+   sw      $11, 0x20+var_1C($sp)
+   add3    $sp, $sp, -0x80
+   lw      $2, 0x808($6)
+   sw      $3, 0xA0+cookie_24($sp)
+   add3    $3, $1, 8
+   sw      $3, ($sp)
+   mov     $1, $3
+   add3    $4, $sp, 0xA0+var_34
+   add3    $3, $6, 0x28
+   bsr     initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6 ; (char* cmac_input, int key_id, char* src, char* dst)
+   mov     $8, $0
+
+   if($0 != 0)
+      return $0;
+
+   add3    $7, $sp, 0xA0+var_94
+   mov     $1, $7
+   add3    $2, $6, 0x78
+   mov     $3, 3
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   add3    $1, $sp, 0xA0+var_94+3
+   mov     $2, 0
+   mov     $3, 0xD
+   bsr     memset_812140   ; (void* buffer, int value, int size)
+   add3    $3, $6, 0x7B
+   mov     $2, $3
+   sw      $3, 0xA0+var_9C($sp)
+   add3    $1, $sp, 0xA0+var_84
+   mov     $3, 0x30
+   add3    $5, $sp, 0xA0+var_44
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   mov     $1, $7
+   mov     $2, 0x40
+   add3    $3, $sp, 0xA0+var_34
+   mov     $4, $5
+   bsr     bigmac_cmac_aes_128_with_key_80BA5C ; (char* src, int size, char* key, char* dst)
+   add3    $1, $6, 0xAB
+   mov     $2, $5
+   mov     $3, 0x10
+   bsr     memcmp_8121D2   ; (char* src1, char* src2, int size)
+   
+   if($0 != 0)
+      return 5;
+
+   mov     $1, $7
+   add3    $2, $6, 0x58
+   mov     $3, 0x20
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   mov     $4, 1
+   mov     $1, $7
+   mov     $2, 0x20
+   add3    $3, $sp, 0xA0+var_34
+   bsr     bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE ; (char* src_dst, int size, char* key, int enc_mode)
+                           ; 1 - with key
+                           ; 2 - with keyslot 0x24
+   add3    $1, $sp, 0xA0+var_54
+   mov     $2, $7
+   mov     $3, 0x10
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   lw      $2, 0xA0+var_9C($sp)
+   mov     $1, $7
+   mov     $3, 0x30
+   lbu     $5, 0xA0+var_84+0xF($sp)
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   mov     $1, $7
+   mov     $2, 0x30
+   add3    $3, $sp, 0xA0+var_34
+   mov     $4, 1
+   bsr     bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE ; (char* src_dst, int size, char* key, int enc_mode)
+                           ; 1 - with key
+                           ; 2 - with keyslot 0x24
+   add3    $1, $sp, 0xA0+var_54+1
+   add3    $2, $sp, 0xA0+var_94+1
+   mov     $3, 0xF
+   bsr     memcmp_8121D2   ; (char* src1, char* src2, int size)
+
+   if($0 != 0)
+      return 5;
+
+   if($5 == 3)
+      return 0x12;
+
+   lw      $1, ($sp)
+   mov     $3, 0x20
+   sw      $3, 0x80C($6)
+   add3    $2, $sp, 0xA0+var_84
+   bsr     memcpy_812196   ; (char* dst,char* src,int size)
+   
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_1F(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_1F_80BEC4();
+   service_handler_0x1000B_command_1F_80BEC4();
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
