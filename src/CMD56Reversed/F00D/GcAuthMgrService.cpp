@@ -585,220 +585,76 @@ int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuth
    char var_54[0x10];
    char var_44[0x10];
    char var_34[0x10];
-
-   int r6 = ctx;
-
-   int r3 = ctx->data;
    
-   var_F8 = r3;
-   
-   int r2 = ctx->packet6_de;
-   int r3 = ctx + 0x28;
-   int r1 = var_F8;
-
-   int r8 = var_34;
-   int r4 = r8;
-   
-   var_F4 = r3;
-   
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(r1, r2, r3, r4);
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(ctx->data, ctx->packet6_de, ctx + 0x28, var_34);
    if(res0 != 0)
       return res0;
 
-   int r5 = var_E4;
-   int r1 = r5;
-   int r2 = r6 + 0x78;
-   int r3 = 3;
+   memcpy(var_E4, ctx + 0x78, 3);
    
-   memcpy(r1, r2, r3);
+   memset(var_E4 + 3, 0, 0xD);
 
-   int r3 = r5 + 3;
-   int r1 = r3;
-   
-   var_EC = r3;
-   int r2 = 0;
-   int r3 = 0xD;
-   
-   memset(r1, r2, r3);
+   memcpy(var_E4 + 0x10, ctx + 0x7B, 0x30);
 
-   int r3 = r6 + 0x7B;
-   
-   var_F0 = r3;
+   bigmac_cmac_aes_128_with_key_80BA5C(var_E4, 0x40, var_34, var_44);
 
-   int r2 = var_F0;
-   
-   int r3 = r5 + 0x10;
-   int r1 = r3;
-   
-   var_FC = r3;
-   
-   int r3 = 0x30;
-   
-   memcpy(r1, r2, r3);
-
-   int r1 = r5;
-   int r2 = 0x40;
-   int r3 = r8;
-   int r4 = var_44;
-   
-   bigmac_cmac_aes_128_with_key_80BA5C(r1, r2, r3, r4);
-
-   int r1 = r6 + 0xAB;
-   int r2 = var_44;
-   int r3 = 0x10;
-   
-   int res1 = memcmp(r1, r2, r3);
+   int res1 = memcmp(ctx + 0xAB, var_44, 0x10);
    if(res1 != 0)
       return 5;
 
-   int r1 = r5;
-   int r2 = r6 + 0x58;
-   int r3 = 0x20;
-   
-   memcpy(r1, r2, r3);
+   memcpy(var_E4, ctx + 0x58, 0x20);
 
-   int r4 = 1;
-   int r1 = r5;
-   int r2 = 0x20;
-   int r3 = r8;
-   
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(r1, r2, r3, r4);
+   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_E4, 0x20, var_34, 1);
 
-   int r1 = var_54;
-   int r2 = r5;
-   int r3 = 0x10;
-   
-   memcpy(r1, r2, r3);
+   memcpy(var_54, var_E4, 0x10);
 
-   char r9 = *(var_E4+0x1F);
-   
-   int r2 = var_F0;
-   
-   int r1 = r5;
-   int r3 = 0x30;
-   
-   ($sp) = r9;
-   
-   memcpy(r1, r2, r3);
+   memcpy(var_E4, ctx + 0x7B, 0x30);
 
-   int r1 = r5;
-   int r2 = 0x30;
-   int r3 = r8;
-   int r4 = 1;
-   
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(r1, r2, r3, r4);
+   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_E4, 0x30, var_34, 1);
 
-   int r1 = var_54+1;
-   int r2 = r5 + 1;
-   int r3 = 0xF;
-   
-   int res2 = memcmp(r1, r2, r3);
+   int res2 = memcmp(var_54 + 1, var_E4 + 1, 0xF);
    if(res2 != 0)
       return 5;
 
-   int r9 = ($sp);
+   int r9 = *(var_E4 + 0x1F);
    if(r9 != 3)
       return 0x12;
 
-   int r2 = var_FC;
-   int r1 = var_74;
-   int r3 = 0x20;
+   memcpy(var_74, var_E4 + 0x10, 0x20);
 
-   memcpy(r1, r2, r3);
+   memcpy(var_E4, ctx + 0xCB, 3);
 
-   int r1 = r5;
-   int r2 = r6 + 0xCB;
-   int r3 = 3;
-   
-   memcpy(r1, r2, r3);
+   memset(var_E4 + 3, 0, 0xD);
 
-   int r1 = var_EC;
-   int r2 = 0;
-   int r3 = 0xD;
-   
-   memset(r1, r2, r3);
+   memcpy(var_E4 + 0x10, ctx + 0xCE, 0x40);
 
-   int r1= var_FC;
-   int r9 = r6 + 0xCE;
-   int r2 = r9;
-   int r3 = 0x40;
-   
-   ($sp) = r9;
-   
-   memcpy(r1, r2, r3, r4);
+   bigmac_cmac_aes_128_with_key_80BA5C(var_E4, 0x50, var_34, var_44);
 
-   int r1 = r5;
-   int r2 = 0x50;
-   int r3 = r8;
-   int r4 = var_44;
-   
-   bigmac_cmac_aes_128_with_key_80BA5C(r1, r2, r3, r4);
-
-   int r1 = r6 + 0x10E;
-   int r2 = var_44;
-   int r3 = 0x10;
-   
-   int res3 = memcmp(r1, r2, r3);
+   int res3 = memcmp(ctx + 0x10E, var_44, 0x10);
    if(res3 != 0)
       return 5;
 
-   int r9 = ($sp);
+   memcpy(var_E4, ctx + 0xCE, 0x40);
 
-   int r2 = r9;
-   int r1 = r5;
-   int r3 = 0x40;
-   
-   memcpy(r1, r2, r3);
+   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_E4, 0x40, var_34, 1);
 
-   int r1 = r5;
-   int r2 = 0x40;
-   int r3 = r8;
-   int r4 = 1;
-   
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(r1, r2, r3, r4);
-
-   int r1 = r6 + 0xBC;
-   int r2 = r5 + 9;
-   int r3 = 0xF;
-   
-   int res4 = memcmp(r1, r2, r3);
+   int res4 = memcmp(ctx + 0xBC, var_E4 + 9, 0xF);
    if(res4 != 0)
       return 5;
 
-   int r8 = var_94;
-   int r1 = r8;
-   int r2 = r5 + 0x18;
-   int r3 = 0x20;
-   
-   memcpy(r1, r2, r3);
+   memcpy(var_94, var_E4 + 0x18, 0x20);
 
-   int r3 = 0x34;
+   int response_size = 0x34
    
-   0x80C($6) = r3;
+   ctx->size = response_size;
    
-   int r1 = r5;
-   int r2 = r8;
-   int r3 = 0x20;
-   
-   memcpy(r1, r2, r3);
+   memcpy(var_E4, var_94, 0x20);
 
-   int r1 = r5 + 0x20;
-   int r2 = var_74;
-   int r3 = 0x20;
-   
-   memcpy(r1, r2, r3);
+   memcpy(var_E4 + 0x20, var_74, 0x20);
 
-   int r3 = var_F8;
-   int r1 = r5;
-   int r2 = 0x40;
-   
-   bigmac_sha256_80BAC2(r1, r2, r3);
+   bigmac_sha256_80BAC2(var_E4, 0x40, ctx->data);
 
-   int r3 = var_F4;
-   int r1 = r8;
-   int r2 = 0x20;
-   
-   bigmac_sha1_80BB18(r1, r2, r3);
+   bigmac_sha1_80BB18(var_94, 0x20, ctx + 0x28);
 
    return 0;
 }
