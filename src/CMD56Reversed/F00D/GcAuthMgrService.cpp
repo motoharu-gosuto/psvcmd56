@@ -506,47 +506,42 @@ struct SceSblSmCommGcAuthMgrData_1000B_1F_output
 int service_handler_0x1000B_command_1F_80BEC4(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1F_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1F_input*)ctx->data;
-
-   char var_94[0x10];
-   //char var_84[0x30];
-
-   char var_54[0x10];
-   char var_44[0x10]; 
+ 
    char drv_key[0x10];
 
    int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(input_data->packet6_chunk, ctx->packet6_de, input_data->packet9_chunk, drv_key);
    if(res0 != 0)
       return res0;
 
-   memcpy(var_94, input_data->packet16_chunk, 3);
+   char cmac_input[0x40];
+   
+   memcpy(cmac_input, input_data->packet16_chunk, 3);
+   memset(cmac_input + 3, 0, 0xD);
+   memcpy(cmac_input + 0x10, input_data->packet16_chunk + 3, 0x30);
 
-   memset(var_94 + 3, 0, 0xD);
+   char cmac_output[0x10];
 
-   memcpy(var_94 + 0x10, input_data->packet16_chunk + 3, 0x30);
+   bigmac_cmac_aes_128_with_key_80BA5C(cmac_input, 0x40, drv_key, cmac_output);
 
-   bigmac_cmac_aes_128_with_key_80BA5C(var_94, 0x40, drv_key, var_44);
-
-   int res1 = memcmp(input_data->packet16_chunk + 0x33, var_44, 0x10);
+   int res1 = memcmp(input_data->packet16_chunk + 0x33, cmac_output, 0x10);
    if(res1 != 0)
       return 5;
 
-   //===================
+   char dec_input1[0x20];
+   memcpy(dec_input1, input_data->packet15_chunk, 0x20);
 
-   memcpy(var_94, input_data->packet15_chunk, 0x20);
+   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input1, 0x20, drv_key, 1);  //dec with key mode
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_94, 0x20, drv_key, 1);  //dec with key mode
+   char dec_input2[0x30];
+   memcpy(dec_input2, input_data->packet16_chunk + 3, 0x30);
 
-   memcpy(var_54, var_94, 0x10);
+   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input2, 0x30, drv_key, 1);  //dec with key mode
 
-   memcpy(var_94, input_data->packet16_chunk + 3, 0x30);
-
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(var_94, 0x30, drv_key, 1);  //dec with key mode
-
-   int res2 = memcmp(var_54 + 1, var_94 + 1, 0xF);
+   int res2 = memcmp(dec_input1 + 1, dec_input2 + 1, 0xF);
    if(res2 != 0)
       return 5;
 
-   if(var_94[0x1F] == 3)
+   if(dec_input1[0x1F] == 3)
       return 0x12;
 
    int response_size = 0x20;
@@ -555,7 +550,7 @@ int service_handler_0x1000B_command_1F_80BEC4(int* f00d_resp, SceSblSmCommGcAuth
 
    SceSblSmCommGcAuthMgrData_1000B_1F_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_1F_output*)ctx->data;
 
-   memcpy(output_data->unknown, var_94 + 0x10, response_size);
+   memcpy(output_data->unknown, dec_input2 + 0x10, response_size);
    
    return 0;
 }
