@@ -15,6 +15,7 @@
 #define KPRX_AUTH_SERVICE_80001 0x80001
 
 #define ACT_SERVICE "act_sm"
+#define ACT_SERVICE_1 0x1
 #define ACT_SERVICE_2 0x2
 #define ACT_SERVICE_4 0x4
 #define ACT_SERVICE_5 0x5
@@ -89,6 +90,8 @@
 #define MGKM_SERVICE_1 0x1
 #define MGKM_SERVICE_2 0x2
 
+#pragma pack(push,1)
+
 //=============== KPRX_AUTH TYPES =============
 
 struct SceSblSmCommKprxAuthData_50001
@@ -103,7 +106,38 @@ struct SceSblSmCommKprxAuthData_50001
 
 //=============== ACT TYPES =============
 
-// NONE
+struct SceSblCommActDataBase
+{
+   unsigned char magic[4];
+   unsigned int format_version;
+   unsigned int issue_number;
+   unsigned int start_validity_time;
+   unsigned int  end_validity_time;
+   unsigned char activation_key[0x10];
+   unsigned char padding[0xC];
+};
+
+struct SceSblCommActDataDec
+{
+   SceSblCommActDataBase data;
+   unsigned char padding[0x10];
+};
+
+struct SceSblCommActDataEnc
+{
+   SceSblCommActDataBase data;
+   unsigned char cmac[0x10];
+};
+
+struct SceSblCommActData_0x01_0x02
+{
+   SceSblCommActDataDec act_data_dec;
+   SceSblCommActDataEnc act_data_enc;
+};
+
+typedef SceSblCommActData_0x01_0x02 SceSblCommActData_0x01;
+
+typedef SceSblCommActData_0x01_0x02 SceSblCommActData_0x02;
 
 //=============== AIMGR TYPES =============
 
@@ -158,7 +192,7 @@ struct SceSblSmCommGcAuthMgrData_1000B
    int var838; // set to 1
    int command; //var834
    char data[0x800]; //var830
-   int packet6_de; //var30
+   int key_id; //var30
    int size; //var2C
    int var28; //is set to 0
 };
@@ -320,6 +354,8 @@ struct SceSblSmCommRmAuthData_2
 //NONE
 
 //============================================
+
+#pragma pack(pop)
 
 namespace f00d
 {
