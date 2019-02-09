@@ -112,7 +112,7 @@ struct SceSblCommActDataBase
    unsigned int format_version;
    unsigned int issue_number;
    unsigned int start_validity_time;
-   unsigned int  end_validity_time;
+   unsigned int end_validity_time;
    unsigned char activation_key[0x10];
    unsigned char padding[0xC];
 };
@@ -138,6 +138,21 @@ struct SceSblCommActData_0x01_0x02
 typedef SceSblCommActData_0x01_0x02 SceSblCommActData_0x01;
 
 typedef SceSblCommActData_0x01_0x02 SceSblCommActData_0x02;
+
+struct SceSblCommActData_0x04_data
+{
+   unsigned char magic[4];
+   unsigned int issue_number;
+   unsigned int start_validity_time;
+   unsigned int end_validity_time;
+};
+
+struct SceSblCommActData_0x04
+{
+   SceSblCommActData_0x04_data data;
+   unsigned char cmac[0x10];
+};
+
 
 //=============== AIMGR TYPES =============
 

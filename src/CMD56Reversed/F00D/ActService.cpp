@@ -31,6 +31,13 @@ int bigmac_execute_cmac_command_4B756(unsigned char* dst, const unsigned char* s
    return 0;
 }
 
+//0x10 - CMAC-AES-128
+//0x18 - CMAC-AES-192 
+//0x20 - CMAC-AES-256
+int bigmac_execute_cmac_command_80BE98(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, int command)
+{
+   return 0;
+}
 
 int decrypt_act_4B2E2(const SceSblCommActData_0x01_0x02* src, SceSblCommActData_0x01_0x02* dst, const unsigned char* key, const unsigned char* iv)
 {
@@ -124,8 +131,34 @@ int ActService::service_0x2(int* f00d_resp, void* ctx, int size) const
    return 0;
 }
 
+int service_0x4_impl(SceSblCommActData_0x04* ctx, const unsigned char* key)
+{
+   SceSblCommActData_0x04_data cmac_input;
+   unsigned char actual_cmac[0x10] = {0};
+
+   memcpy(&cmac_input, &ctx->data, sizeof(SceSblCommActData_0x04_data));
+   memcpy(actual_cmac, ctx->cmac, 0x10);
+
+   unsigned char result_cmac[0x20] = {0}; // original size is only 0x10
+
+   int res0 = bigmac_execute_cmac_command_80BE98(result_cmac, (const unsigned char*)&cmac_input, sizeof(SceSblCommActData_0x04_data), key, 0x20);
+   if(res0 != 0)
+      return res0;
+
+   int res2 = memcmp(result_cmac, actual_cmac, 0x10);
+   if(res2 != 0)
+      return 0x800F1327;
+
+   return 0;
+}
+
+unsigned char new_service_key_80CF54[0x20] = { 0x5A, 0x91, 0xFC, 0x74, 0xA8, 0x2B, 0xE3, 0xF2, 0xB8, 0xF4, 0xDB, 0x60, 0x70, 0xA0, 0x99, 0xA2,
+                                               0xBD, 0xF0, 0xE, 0x7B, 0xF0, 0xE, 0x7B, 0xF0, 0x8B, 0x68, 0x55, 0x34, 0xA0, 0x64, 0x6D, 0x87 };
+
 int ActService::service_0x4(int* f00d_resp, void* ctx, int size) const
 {
+   *f00d_resp = service_0x4_impl((SceSblCommActData_0x04*)ctx, new_service_key_80CF54);
+
    return -1;
 }
 
