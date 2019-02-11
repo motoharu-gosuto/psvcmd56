@@ -109,7 +109,10 @@ struct SceSblSmCommKprxAuthData_50001
 struct SceSblCommActDataBase
 {
    unsigned char magic[4];
-   unsigned int format_version;
+   unsigned char format_version0;
+   unsigned char format_version1;
+   unsigned char format_version2;
+   unsigned char format_version3;
    unsigned int issue_number;
    unsigned int start_validity_time;
    unsigned int end_validity_time;
@@ -129,15 +132,21 @@ struct SceSblCommActDataEnc
    unsigned char cmac[0x10];
 };
 
-struct SceSblCommActData_0x01_0x02
+struct SceSblCommActDataAct
 {
    SceSblCommActDataDec act_data_dec;
    SceSblCommActDataEnc act_data_enc;
 };
 
-typedef SceSblCommActData_0x01_0x02 SceSblCommActData_0x01;
+struct SceSblCommActData_0x01
+{
+   SceSblCommActDataAct act_data;
+};
 
-typedef SceSblCommActData_0x01_0x02 SceSblCommActData_0x02;
+struct SceSblCommActData_0x02
+{
+   SceSblCommActDataAct act_data;
+};
 
 struct SceSblCommActData_0x04_data
 {
@@ -151,6 +160,20 @@ struct SceSblCommActData_0x04
 {
    SceSblCommActData_0x04_data data;
    unsigned char cmac[0x10];
+};
+
+struct SceSblCommActData_0x0A
+{
+   SceSblCommActDataAct new_act_data;
+   unsigned char new_act_data_rsa[0x100];
+   SceSblCommActDataAct prev_act_data;
+   unsigned char prev_act_data_rsa[0x100];
+   SceSblCommActData_0x04 cmd4_output;
+};
+
+struct SceSblCommActData_0x0B
+{
+   
 };
 
 
