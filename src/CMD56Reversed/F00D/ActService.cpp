@@ -362,9 +362,7 @@ int verify_rsa_80B350(unsigned char* rsa_input, SceSblCommActDataAct* act_buffer
    params.unkC = 1;
    
    int res1 = verify_rsa_impl_80BE46(rsa_work, rsa_input, &params, hash, 4);
-   
-   //not sure what this condition means
-   if(res1 < 1)
+   if(res1 != 0)
       return res1;
 
    return 0;
@@ -389,12 +387,32 @@ int bigmac_update_act_data_cmac_80B4EE(SceSblCommActData_0x04* output, const uns
    return 0;
 }
 
+int update_cmac_80B77A(int* f00d_resp, SceSblCommActData_0x0A* input_data)
+{
+   memset(&input_data->cmd4_output, 0, sizeof(SceSblCommActData_0x04));
+
+   //not sure why fields are swapped. 
+   //maybe because new start_validity_time time starts from the old end_validity_time
+   //and new end_validity_time does not matter
+
+   memcpy(input_data->cmd4_output.data.magic, act_str_80CE10, 4);
+   input_data->cmd4_output.data.issue_number = input_data->new_act_data.act_data_dec.data.issue_number;
+   input_data->cmd4_output.data.start_validity_time = input_data->new_act_data.act_data_dec.data.end_validity_time;
+   input_data->cmd4_output.data.end_validity_time = input_data->new_act_data.act_data_dec.data.start_validity_time;
+   
+   int res5 = bigmac_update_act_data_cmac_80B4EE(&input_data->cmd4_output, new_service_key_80CF54);
+
+   *f00d_resp = res5;
+
+   return 0;
+}
+
 int ActService::service_0xA(int* f00d_resp, void* ctx, int size) const
 {
-   int var_24 = 0;
+   int format_version = 0;
    SceSblCommActData_0x0A* input_data = (SceSblCommActData_0x0A*)ctx;
 
-   int res0 = bigmac_verify_act_buffer_80B5E6(&input_data->new_act_data, &var_24);
+   int res0 = bigmac_verify_act_buffer_80B5E6(&input_data->new_act_data, &format_version);
    if(res0 != 0)
    {
       *f00d_resp = res0;
@@ -404,7 +422,7 @@ int ActService::service_0xA(int* f00d_resp, void* ctx, int size) const
    int res1 = verify_rsa_80B350(input_data->new_act_data_rsa, &input_data->new_act_data);
    if(res1 != 0)
    {
-      if(var_24 != 0)
+      if(format_version != 0)
       {
          *f00d_resp = res1;
          return 0;
@@ -416,110 +434,41 @@ int ActService::service_0xA(int* f00d_resp, void* ctx, int size) const
       }
    }
 
-   //int arg1;
-   //SceSblSmschedCallFuncCommand arg2;
-   //SceSblCommActData_0x0A* r5 = input_data;
-   //SceSblSmschedCallFuncCommand* r6 = arg2;
-   //int r7 = r1;
-   //var_2C = input_data->cmd4_output;
-   //int r9 = input_data->cmd4_output.data.issue_number;
-   
-   int res2 = bigmac_verify_act_buffer_80B5E6(&input_data->prev_act_data, &var_24);
-
-   int r8 = res2;
-   
-   int res3 = verify_rsa_80B350(input_data->prev_act_data_rsa, &input_data->prev_act_data);
-   
-   if(res3 != 0)
-   {
-      r8 = 0;
-   }
-   else
-   {
-      if(r8 < 1)
-      {
-         r8 = 1;
-      }
-      else
-      {
-         r8 = 0;
-      }
-   }
-
-   if(input_data->prev_act_data.act_data_dec.data.issue_number != input_data->cmd4_output.data.issue_number)
-   {
-      r8 = 0;
-   }
-
+   //check if cmd4 data is valid - if not then cmac update is required
    int res4 = act_sm_cmd_0x04_impl_80B450(&input_data->cmd4_output, new_service_key_80CF54);
-   
    if(res4 != 0)
+      return update_cmac_80B77A(f00d_resp, input_data);
+
+   int res2 = bigmac_verify_act_buffer_80B5E6(&input_data->prev_act_data, &format_version);
+
+   int res3 = verify_rsa_80B350(input_data->prev_act_data_rsa, &input_data->prev_act_data);
+
+   //check if act buffer is valid and rsa is valid and issue numbers are equal
+   //if any of this conditions is not met - cmac update is required
+   if(res3 != 0 || res2 != 0 || input_data->prev_act_data.act_data_dec.data.issue_number != input_data->cmd4_output.data.issue_number)
+      return update_cmac_80B77A(f00d_resp, input_data);
+
+   if(input_data->cmd4_output.data.issue_number >= input_data->new_act_data.act_data_dec.data.issue_number)
    {
-      goto loc_80B77A;
+      if(input_data->new_act_data.act_data_dec.data.issue_number != 0)
+      {
+         *f00d_resp = 0x800F1311;
+         return 0;
+      }
+   }
+
+   int start_validity_time = input_data->new_act_data.act_data_dec.data.start_validity_time;
+   int end_validity_time = input_data->new_act_data.act_data_dec.data.end_validity_time;
+ 
+   if((end_validity_time - start_validity_time) < 0x02AD8C01)
+   {
+      return update_cmac_80B77A(f00d_resp, input_data);
    }
    else
    {
-      if(r8 == 0)
-      {
-         goto loc_80B77A;
-      }
-      else
-      {
-         if(input_data->cmd4_output.data.issue_number < input_data->new_act_data.act_data_dec.data.issue_number)
-         {
-            int start_validity_time = input_data->new_act_data.act_data_dec.data.start_validity_time;
-            int end_validity_time = input_data->new_act_data.act_data_dec.data.end_validity_time;
- 
-            if((end_validity_time - start_validity_time) < 0x02AD8C01)
-            {
-               goto loc_80B77A;
-            }
-            else
-            {
-               *f00d_resp = 0x800F1311;
-               return 0;
-            }
-         }
-         else
-         {
-            if(input_data->new_act_data.act_data_dec.data.issue_number != 0)
-            {
-               *f00d_resp = 0x800F1311;
-               return 0;
-            }
-            else
-            {
-               int start_validity_time = input_data->new_act_data.act_data_dec.data.start_validity_time;
-               int end_validity_time = input_data->new_act_data.act_data_dec.data.end_validity_time;
-
-               if((end_validity_time - start_validity_time) < 0x02AD8C01)
-               {
-                  goto loc_80B77A;
-               }
-               else
-               {
-                  *f00d_resp = 0x800F1311;
-                  return 0;
-               }
-            }
-         }
-      }
+      *f00d_resp = 0x800F1311;
+      return 0;
    }
-
-loc_80B77A:
-
-   memset(&input_data->cmd4_output, 0, sizeof(SceSblCommActData_0x04));
-
-   memcpy(input_data->cmd4_output.data.magic, act_str_80CE10, 4);
-   input_data->cmd4_output.data.issue_number = input_data->new_act_data.act_data_dec.data.issue_number;
-   input_data->cmd4_output.data.start_validity_time = input_data->new_act_data.act_data_dec.data.end_validity_time; //not sure why fields are swapped. i guess because new validity time starts from end_validity_time and then end_validity_time will be updated
-   input_data->cmd4_output.data.end_validity_time = input_data->new_act_data.act_data_dec.data.start_validity_time;
-   
-   int res5 = bigmac_update_act_data_cmac_80B4EE(&input_data->cmd4_output, new_service_key_80CF54);
-
-   *f00d_resp = res5;
-
-   return 0;
 }
 
 int ActService::service_0xB(int* f00d_resp, void* ctx, int size) const
