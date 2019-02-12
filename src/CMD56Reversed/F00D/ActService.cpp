@@ -78,6 +78,16 @@ int bigmac_read_key_80C64C(int key_slot, unsigned char* key)
    return 0;
 }
 
+int bigmac_read_key_80B206(int key_slot, unsigned char* key)
+{
+   return 0;
+}
+
+int bigmac_write_key(int key_slot, unsigned char* key)
+{
+   return 0;
+}
+
 int bigmac_sha_256_80BE0C(unsigned char* dst, const unsigned char* src, int size)
 {
    return 0;
@@ -471,9 +481,132 @@ int ActService::service_0xA(int* f00d_resp, void* ctx, int size) const
    }
 }
 
+int bigmac_tweak_key_slot_0x517_80B2BE(int tweak_value, int tweak_index)
+{
+   unsigned char key[0x20] = {0};
+
+   bigmac_read_key_80B206(0x517, key);
+
+   ((unsigned int*)key)[tweak_index] = tweak_value;
+   
+   bigmac_write_key(0x517, key);
+
+   return 0;
+}
+
+unsigned int bigmac_key_slot_0x50A_get_byte_mix_80B278()
+{
+   unsigned char key[0x20] = {0};
+
+   bigmac_read_key_80B206(0x50A, key);
+
+   unsigned int v0 = ((unsigned int*)key)[0];
+   unsigned int v1 = ((unsigned int*)key)[1];
+   unsigned int v2 = ((unsigned int*)key)[2];
+   unsigned int v3 = ((unsigned int*)key)[3];
+   
+   unsigned int val = v0 | v1 | v2 | v3;
+
+   unsigned int interm = (val < 1) ? 1 : 0;
+
+   unsigned int result = interm ^ 1;
+
+   return result;
+}
+
+unsigned int bigmac_key_slot_0x50B_get_masked_byte_80B2A2()
+{
+   unsigned char key[0x20] = {0};
+
+   bigmac_read_key_80B206(0x50B, key);
+
+   return ((unsigned int)key[0]) & 1;
+}
+
+int loc_80B93C(int* f00d_resp, SceSblCommActData_0x0B* var_2C, int r8, int r6, int r7)
+{
+   int r8_local = r8;
+
+   int res0 = bigmac_key_slot_0x50A_get_byte_mix_80B278();
+   if(res0 != 0)
+   {
+      bigmac_tweak_key_slot_0x517_80B2BE(3, 0);
+
+      r8_local = 0;
+   }
+   else
+   {
+      
+      int res1 = bigmac_key_slot_0x50B_get_masked_byte_80B2A2();
+      if(res1 != 0)
+      {
+         bigmac_tweak_key_slot_0x517_80B2BE(3, 0);
+
+         r8_local = 0;
+      }
+   }
+
+   var_2C->unkC = r6;
+   var_2C->unk8 = r8_local;
+   
+   *f00d_resp = r7;
+   
+   return 0;
+}
+
 int ActService::service_0xB(int* f00d_resp, void* ctx, int size) const
 {
-   return -1;
+   SceSblCommActData_0x0B* input_data = (SceSblCommActData_0x0B*)ctx;
+
+   int format_version = 0;
+
+   if(input_data->error == 0x800F1329)
+      return loc_80B93C(f00d_resp, input_data, 2, 0, 0);
+
+   if(input_data->error != 0)
+      return loc_80B93C(f00d_resp, input_data, 1, 0, 0);
+
+   int res0 = bigmac_verify_act_buffer_80B5E6(&input_data->act_data, &format_version);      
+   if(res0 != 0)
+      return loc_80B93C(f00d_resp, input_data, 1, 0, res0);
+
+   int res1 = verify_rsa_80B350(input_data->act_data_rsa, &input_data->act_data);         
+   if(res1 != 0)
+      return loc_80B93C(f00d_resp, input_data, 1, 0, res1);
+
+   int res2 = act_sm_cmd_0x04_impl_80B450(&input_data->cmd4_output, new_service_key_80CF54);   
+   if(res2 != 0)
+      return loc_80B93C(f00d_resp, input_data, 1, 0, res2);
+
+   if(input_data->cmd4_output.data.start_validity_time != input_data->act_data.act_data_dec.data.end_validity_time)
+      return loc_80B93C(f00d_resp, input_data, 1, 0, 0);
+
+   if(input_data->cmd4_output.data.issue_number != input_data->act_data.act_data_dec.data.issue_number)
+      return loc_80B93C(f00d_resp, input_data, 1, 0, 0);
+
+   //why check time difference? should not it be equal to 0 ?
+   int time1 = input_data->act_data.act_data_dec.data.start_validity_time;
+   int time2 = input_data->cmd4_output.data.start_validity_time;
+   
+   int time3;
+   if(0x02AD8C00 < time2 - time1)
+   {
+      time3 = 0;
+   }
+   else
+   {
+      time3 = input_data->cmd4_output.data.start_validity_time;
+   }
+   
+   if(input_data->unk4 < time3)
+   {
+      bigmac_tweak_key_slot_0x517_80B2BE(3, 0);
+      return loc_80B93C(f00d_resp, input_data, 0, time3, 0);
+   }
+   else
+   {
+      return loc_80B93C(f00d_resp, input_data, 1, 0, 0);
+   }
 }
 
 

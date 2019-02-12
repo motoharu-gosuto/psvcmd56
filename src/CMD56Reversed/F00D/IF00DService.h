@@ -173,7 +173,17 @@ struct SceSblCommActData_0x0A
 
 struct SceSblCommActData_0x0B
 {
+   int error;
+   int unk4;
+   int unk8;
+   int unkC;
+
+   int unk10;
+   int unk14;
    
+   SceSblCommActData_0x04 cmd4_output;
+   SceSblCommActDataAct act_data;
+   unsigned char act_data_rsa[0x100];
 };
 
 
