@@ -9,6 +9,8 @@
 #include <cstdint>
 #include <iostream>
 
+#include <F00D/ECDSA.h>
+
 bool memory_is_all_zeroes(unsigned char const* const begin, std::size_t const bytes)
 {
    return std::all_of( begin, begin + bytes, [](unsigned char const byte) { return byte == 0; } );
