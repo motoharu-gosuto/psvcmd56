@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "Crypto/CryptoService.h""
+#include "Crypto/CryptoService.h"
 
 
 int SceKernelUtilsForDriver_sceSha1DigestForDriver_87dc7f2f(const unsigned char *source, uint32_t size, unsigned char result[0x14])
