@@ -107,7 +107,7 @@ char key_8124C0[0x10] = {0x7F, 0x1F, 0xD0, 0x65, 0xDD, 0x2F, 0x40, 0xB3, 0xE2, 0
 
 char iv_8124D0[0x10] = {0x8B, 0x14, 0xC8, 0xA1, 0xE9, 0x6F, 0x30, 0xA7, 0xF1, 0x01, 0xA9, 0x6A, 0x30, 0x33, 0xC5, 0x5B, };
 
-int bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(char* src, int keyslot_dest, int keyslot_src)
+int bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(char* src, int keyslot_dst, int keyslot_src)
 {
    return 0;
 }
@@ -122,8 +122,12 @@ int bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(char* src, char* 
    return 0;
 }
 
+// mode 1 uses key
+// mode 2 uses keyslot 0x24
 int bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(char* src_dst, int size, char* key, int enc_mode)
 {
+   //iv is 0
+
    return 0;
 }
 
@@ -132,6 +136,8 @@ int bigmac_generate_random_number_80C462(char* dst,int size)
    return 0;
 }
 
+// mode 1 uses key
+// mode 2 uses keyslot 0x24
 int bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(char* src_dst, int size, char* key, int enc_mode)
 {
    return 0;
@@ -202,15 +208,15 @@ int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(char* cmac_input, int key_id, 
       break;
    case 0x0001:
       {
-         int res0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key_8124C0, 0x21, 0x345);
+         int res0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key_8124C0, 0x21, 0x345); //initialize key slot 0x21 by decrypting key_8124C0 with key slot 0x345
          if(res0 != 0)
             return res0;
 
-         int res1 = bigmac_cmac_aes_128_with_keyslot_80B87C(cmac_output, cmac_input, 0x20, 0x21);
+         int res1 = bigmac_cmac_aes_128_with_keyslot_80B87C(cmac_output, cmac_input, 0x20, 0x21); // calculate cmac of the cmac_input with key slot 0x21
          if(res1 != 0)
             return res1;
 
-         int res2 = bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(cmac_output, iv_8124D0, 0x24, 0x348);
+         int res2 = bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(cmac_output, iv_8124D0, 0x24, 0x348); // decrypt cmac with iv_8124D0 and key slot 0x348 and set key slot 0x24
          if(res2 != 0)
             return res2;
    
@@ -230,24 +236,27 @@ struct SceSblSmCommGcAuthMgrData_1000B_1B_input
    char packet8_chunk[0x23];
 };
 
-int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+//USE UNSIGNED TYPES!!!!!!!!!!!!!!!!!!!!!!!!!!
+//FIX POINTER CONSTNESS!!!!!!!!!!!!
+
+int service_handler_0x1000B_command_1B_80BC44(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1B_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1B_input*)ctx->data;
 
    char drv_key[0x10];
    int mode;
 
-   int res1 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(input_data->packet6_chunk, ctx->packet6_de, drv_key, &mode);
-   if(res1 != 0)
-      return res1;
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(input_data->packet6_chunk, ctx->key_id, drv_key, &mode);
+   if(res0 != 0)
+      return res0;
 
    char dec_input[0x20];
    memcpy(dec_input, input_data->packet8_chunk + 3, 0x20);
    
-   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x20, drv_key, mode);
+   int res1 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x20, drv_key, mode);
    
-   int res3 = memcmp(input_data->packet7_chunk + 1, dec_input + 0x11, 0xF);
-   if(res3 != 0)
+   int res2 = memcmp(input_data->packet7_chunk + 1, dec_input + 0x11, 0xF);
+   if(res2 != 0)
       return 5;
 
    return 0;
@@ -255,7 +264,7 @@ int service_handler_0x1000B_command_1B_80BC44(int* f00d_resp, SceSblSmCommGcAuth
 
 int GcAuthMgrService::service_0x1000B_1B(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   service_handler_0x1000B_command_1B_80BC44(f00d_resp, ctx);
+   *f00d_resp = service_handler_0x1000B_command_1B_80BC44(ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
@@ -279,21 +288,21 @@ struct SceSblSmCommGcAuthMgrData_1000B_1C_output
    char data[0x30];
 };
 
-int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+int service_handler_0x1000B_command_1C_80C604( SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1C_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1C_input*)ctx->data;
 
    int mode;
    char drv_key[0x10];
 
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(input_data->packet6_chunk, ctx->packet6_de, drv_key, &mode);
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_80BB6E(input_data->packet6_chunk, ctx->key_id, drv_key, &mode);
    if(res0 != 0)
       return res0;
 
    char dec_input[0x20];
    memcpy(dec_input, input_data->packet8_chunk, 0x20);
 
-   int res2 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x20, drv_key, mode);
+   int res1 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x20, drv_key, mode);
 
    char dec_part0[0x10];
    char dec_part1[0x10];
@@ -306,8 +315,8 @@ int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuth
 
    char session_id[0x20];
    
-   int res3 = bigmac_generate_random_number_80C462(session_id, 0x20);
-   if(res3 != 0)
+   int res2 = bigmac_generate_random_number_80C462(session_id, 0x20);
+   if(res2 != 0)
       return 5;
 
    char enc_output[0x30];
@@ -316,7 +325,7 @@ int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuth
    memcpy(enc_output + 0x10, dec_part1, 0x10);
    memcpy(enc_output + 0x20, dec_part0, 0x10);
 
-   int res4 = bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(enc_output, 0x30, drv_key, mode);
+   int res3 = bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(enc_output, 0x30, drv_key, mode);
 
    int response_size = 0x33;
    
@@ -334,7 +343,7 @@ int service_handler_0x1000B_command_1C_80C604(int* f00d_resp, SceSblSmCommGcAuth
 
 int GcAuthMgrService::service_0x1000B_1C(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   service_handler_0x1000B_command_1C_80C604(f00d_resp, ctx);
+   *f00d_resp = service_handler_0x1000B_command_1C_80C604(ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
@@ -344,7 +353,7 @@ int GcAuthMgrService::service_0x1000B_1C(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
-int initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(char* cmac_input, int key_id, char* src, char* dst)
+int initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(char* cmac_input, int key_id, char* src, char* dst)
 {
    int mode;
    char drv_key[0x10];
@@ -368,27 +377,27 @@ struct SceSblSmCommGcAuthMgrData_1000B_1D_input
   char packet14_chunk[0x43];
 };
 
-int service_handler_0x1000B_command_1D_80BFC0(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+int service_handler_0x1000B_command_1D_80BFC0(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {  
    SceSblSmCommGcAuthMgrData_1000B_1D_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1D_input*)ctx->data;
 
    char drv_key[0x10];
 
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(input_data->packet6_chunk, ctx->packet6_de, input_data->packet9_chunk, drv_key);
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(input_data->packet6_chunk, ctx->key_id, input_data->packet9_chunk, drv_key);
    if(res0 != 0)
       return res0;
 
    char dec_input[0x40];
    memcpy(dec_input, input_data->packet14_chunk + 3, 0x40);
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x40, drv_key, 1); //dec with key mode
+   int res1 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input, 0x40, drv_key, 1); //dec with key mode
 
-   int res1 = memcmp(input_data->packet13_chunk + 1, dec_input + 9, 0xF);
-   if(res1 != 0)
+   int res2 = memcmp(input_data->packet13_chunk + 1, dec_input + 9, 0xF);
+   if(res2 != 0)
       return 5;
 
-   int res2 = memcmp(input_data->packet6_chunk, dec_input + 0x18, 0x20);
-   if(res2 != 0)
+   int res3 = memcmp(input_data->packet6_chunk, dec_input + 0x18, 0x20);
+   if(res3 != 0)
       return 5;
 
    return 0;
@@ -396,7 +405,7 @@ int service_handler_0x1000B_command_1D_80BFC0(int* f00d_resp, SceSblSmCommGcAuth
 
 int GcAuthMgrService::service_0x1000B_1D(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   service_handler_0x1000B_command_1D_80BFC0(f00d_resp, ctx);
+   *f00d_resp = service_handler_0x1000B_command_1D_80BFC0(ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
@@ -421,7 +430,7 @@ struct SceSblSmCommGcAuthMgrData_1000B_1E_output
    char data[0x30];
 };
 
-int service_handler_0x1000B_command_1E_80C4F6(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+int service_handler_0x1000B_command_1E_80C4F6(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1E_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1E_input*)ctx->data;
 
@@ -429,7 +438,7 @@ int service_handler_0x1000B_command_1E_80C4F6(int* f00d_resp, SceSblSmCommGcAuth
 
    char drv_key[0x10];
 
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(input_data->packet6_chunk, ctx->packet6_de, input_data->packet9_chunk, drv_key);
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(input_data->packet6_chunk, ctx->key_id, input_data->packet9_chunk, drv_key);
    if(res0 != 0)
       return res0;
 
@@ -452,7 +461,7 @@ int service_handler_0x1000B_command_1E_80C4F6(int* f00d_resp, SceSblSmCommGcAuth
 
    //encrypt challenge
    
-   bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(enc_output, 0x20, drv_key, 1); // enc with key mode
+   int res2 = bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(enc_output, 0x20, drv_key, 1); // enc with key mode
 
    //construct buffer for cmac
 
@@ -468,7 +477,7 @@ int service_handler_0x1000B_command_1E_80C4F6(int* f00d_resp, SceSblSmCommGcAuth
 
    char cmac_output[0x10];
 
-   bigmac_cmac_aes_128_with_key_80BA5C(cmac_input, 0x30, drv_key, cmac_output);
+   int res3 = bigmac_cmac_aes_128_with_key_80BA5C(cmac_input, 0x30, drv_key, cmac_output);
 
    //update response size in context
 
@@ -490,7 +499,7 @@ int service_handler_0x1000B_command_1E_80C4F6(int* f00d_resp, SceSblSmCommGcAuth
 
 int GcAuthMgrService::service_0x1000B_1E(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   service_handler_0x1000B_command_1E_80C4F6(f00d_resp, ctx);
+   *f00d_resp = service_handler_0x1000B_command_1E_80C4F6(ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
@@ -513,13 +522,13 @@ struct SceSblSmCommGcAuthMgrData_1000B_1F_output
    char unknown[0x20];
 };
 
-int service_handler_0x1000B_command_1F_80BEC4(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+int service_handler_0x1000B_command_1F_80BEC4(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1F_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1F_input*)ctx->data;
  
    char drv_key[0x10];
 
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(input_data->packet6_chunk, ctx->packet6_de, input_data->packet9_chunk, drv_key);
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(input_data->packet6_chunk, ctx->key_id, input_data->packet9_chunk, drv_key);
    if(res0 != 0)
       return res0;
 
@@ -531,24 +540,24 @@ int service_handler_0x1000B_command_1F_80BEC4(int* f00d_resp, SceSblSmCommGcAuth
 
    char cmac_output[0x10];
 
-   bigmac_cmac_aes_128_with_key_80BA5C(cmac_input, 0x40, drv_key, cmac_output);
+   int res1 = bigmac_cmac_aes_128_with_key_80BA5C(cmac_input, 0x40, drv_key, cmac_output);
 
-   int res1 = memcmp(input_data->packet16_chunk + 0x33, cmac_output, 0x10);
-   if(res1 != 0)
+   int res2 = memcmp(input_data->packet16_chunk + 0x33, cmac_output, 0x10);
+   if(res2 != 0)
       return 5;
 
    char dec_input1[0x20];
    memcpy(dec_input1, input_data->packet15_chunk, 0x20);
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input1, 0x20, drv_key, 1);  //dec with key mode
+   int res3 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input1, 0x20, drv_key, 1);  //dec with key mode
 
    char dec_input2[0x30];
    memcpy(dec_input2, input_data->packet16_chunk + 3, 0x30);
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input2, 0x30, drv_key, 1);  //dec with key mode
+   int res4 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input2, 0x30, drv_key, 1);  //dec with key mode
 
-   int res2 = memcmp(dec_input1 + 1, dec_input2 + 1, 0xF);
-   if(res2 != 0)
+   int res5 = memcmp(dec_input1 + 1, dec_input2 + 1, 0xF);
+   if(res5 != 0)
       return 5;
 
    if(dec_input1[0x1F] == 3)
@@ -567,7 +576,7 @@ int service_handler_0x1000B_command_1F_80BEC4(int* f00d_resp, SceSblSmCommGcAuth
 
 int GcAuthMgrService::service_0x1000B_1F(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   service_handler_0x1000B_command_1F_80BEC4(f00d_resp, ctx);
+   *f00d_resp = service_handler_0x1000B_command_1F_80BEC4(ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
@@ -590,16 +599,16 @@ struct SceSblSmCommGcAuthMgrData_1000B_20_input
 struct SceSblSmCommGcAuthMgrData_1000B_20_output
 {
    char klicensee_keys[0x20];
-   char digest[0x14];
+   char rif_digest[0x14];
 };
 
-int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx)
+int service_handler_0x1000B_command_20_80BD06(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_20_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_20_input*)ctx->data;
 
    char drv_key[0x10];
    
-   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_80BCB6(input_data->packet6_chunk, ctx->packet6_de, input_data->packet9_chunk, drv_key);
+   int res0 = initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(input_data->packet6_chunk, ctx->key_id, input_data->packet9_chunk, drv_key);
    if(res0 != 0)
       return res0;
 
@@ -613,10 +622,10 @@ int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuth
 
    char cmac_output1[0x10];
 
-   bigmac_cmac_aes_128_with_key_80BA5C(cmac_input1, 0x40, drv_key, cmac_output1);
+   int res1 = bigmac_cmac_aes_128_with_key_80BA5C(cmac_input1, 0x40, drv_key, cmac_output1);
 
-   int res1 = memcmp(input_data->packet18_chunk + 0x33, cmac_output1, 0x10);
-   if(res1 != 0)
+   int res2 = memcmp(input_data->packet18_chunk + 0x33, cmac_output1, 0x10);
+   if(res2 != 0)
       return 5;
 
    //=================
@@ -625,16 +634,16 @@ int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuth
 
    memcpy(dec_input1, input_data->packet17_chunk, 0x20);
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input1, 0x20, drv_key, 1);
+   int res3 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input1, 0x20, drv_key, 1);
 
    char dec_input2[0x30];
 
    memcpy(dec_input2, input_data->packet18_chunk + 3, 0x30);
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input2, 0x30, drv_key, 1);
+   int res4 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input2, 0x30, drv_key, 1);
 
-   int res2 = memcmp(dec_input1 + 1, dec_input2 + 1, 0xF);
-   if(res2 != 0)
+   int res5 = memcmp(dec_input1 + 1, dec_input2 + 1, 0xF);
+   if(res5 != 0)
       return 5;
 
    if(dec_input1[0x1F] != 3)
@@ -650,10 +659,10 @@ int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuth
 
    char cmac_output2[0x10];
 
-   bigmac_cmac_aes_128_with_key_80BA5C(cmac_input2, 0x50, drv_key, cmac_output2);
+   int res6 = bigmac_cmac_aes_128_with_key_80BA5C(cmac_input2, 0x50, drv_key, cmac_output2);
 
-   int res3 = memcmp(input_data->packet20_chunk + 0x43, cmac_output2, 0x10);
-   if(res3 != 0)
+   int res7 = memcmp(input_data->packet20_chunk + 0x43, cmac_output2, 0x10);
+   if(res7 != 0)
       return 5;
 
    //=================
@@ -661,10 +670,10 @@ int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuth
    char dec_input3[0x40];
    memcpy(dec_input3, input_data->packet20_chunk + 3, 0x40); 
 
-   bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input3, 0x40, drv_key, 1);
+   int res8 = bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(dec_input3, 0x40, drv_key, 1);
 
-   int res4 = memcmp(input_data->packet19_chunk + 1, dec_input3 + 9, 0xF);
-   if(res4 != 0)
+   int res9 = memcmp(input_data->packet19_chunk + 1, dec_input3 + 9, 0xF);
+   if(res9 != 0)
       return 5;
 
    //=================
@@ -675,20 +684,20 @@ int service_handler_0x1000B_command_20_80BD06(int* f00d_resp, SceSblSmCommGcAuth
 
    SceSblSmCommGcAuthMgrData_1000B_20_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_20_output*)ctx->data;
    
-   char sha_input[0x50];
+   char sha_input[0x40];
    memcpy(sha_input, dec_input3 + 0x18, 0x20);
    memcpy(sha_input + 0x20, dec_input2 + 0x10, 0x20);
 
-   bigmac_sha256_80BAC2(sha_input, 0x40, output_data->klicensee_keys); 
+   int res10 = bigmac_sha256_80BAC2(sha_input, 0x40, output_data->klicensee_keys); 
 
-   bigmac_sha1_80BB18(dec_input3 + 0x18, 0x20, output_data->digest);
+   int res11 = bigmac_sha1_80BB18(dec_input3 + 0x18, 0x20, output_data->rif_digest);
 
    return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_20(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   service_handler_0x1000B_command_20_80BD06(f00d_resp, ctx);
+   *f00d_resp = service_handler_0x1000B_command_20_80BD06(ctx);
 
    //TODO: his code imitates size change and encryption - need to figure out what is going on here
 
@@ -697,6 +706,8 @@ int GcAuthMgrService::service_0x1000B_20(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 
    return 0;
 }
+
+
 
 int GcAuthMgrService::service_0x1000B_21(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
