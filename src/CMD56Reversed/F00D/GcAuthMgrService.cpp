@@ -707,8 +707,6 @@ int GcAuthMgrService::service_0x1000B_20(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
-
-
 int GcAuthMgrService::service_0x1000B_21(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
    //service_handler_0x1000B_command_21_80C36A();
@@ -716,11 +714,56 @@ int GcAuthMgrService::service_0x1000B_21(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return -1;
 }
 
-int GcAuthMgrService::service_0x1000B_22(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
+struct SceSblSmCommGcAuthMgrData_1000B_22_input
 {
-   //service_handler_0x1000B_command_22_80C256();
+   char field0[0x3C];
+};
+
+int bigmac_hmac_sha256_80D974(char* dst, char* src, int size, char* key, int permission)
+{
+   return 0;
+}
+
+char hmac_256_key_812340[0x20] = {0x54, 0x88, 0xA9, 0x81, 0x1C, 0x9A, 0x2C, 0xBC, 0xCC, 0x59, 0x6B, 0x1F, 0xAD, 0x1A, 0x7E, 0x29, 
+                                  0xE0, 0x75, 0x84, 0x0F, 0x47, 0x43, 0x1F, 0x37, 0xAC, 0x06, 0x02, 0x46, 0x4A, 0x27, 0x9E, 0x02};
+
+int bigmac_hmac_sha256_contract_80C0F6(char* src2, char* src1, int size, char* dst)
+{
+   if (size != 0x14 && size != 0x1C)
+      return 0x12;
+
+   char combo[0x38];
+
+   memcpy(combo, src1, size);
+   memcpy(combo + size, src2, size);
+
+   char contract[0x20];
+
+   int r0 = bigmac_hmac_sha256_80D974(contract, combo, size * 2, hmac_256_key_812340, 0x40);
+   if (r0 != 0)
+      return 0x11;
+  
+   memcpy(dst, contract, 0x20);
+   
+   return 0;
+}
+
+int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_22_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_22_input*)ctx->data;
+
+
 
    return -1;
+}
+
+int GcAuthMgrService::service_0x1000B_22(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
+{
+   *f00d_resp = service_handler_0x1000B_command_22_80C256(ctx);
+
+   //imitate output
+
+   return -0;
 }
 
 int GcAuthMgrService::service_0x1000B_23(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
