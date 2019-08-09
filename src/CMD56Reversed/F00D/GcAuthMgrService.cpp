@@ -757,22 +757,22 @@ int bigmac_hmac_sha256_contract_80C0F6(const unsigned char* src2, const unsigned
    return 0;
 }
 
-int can_be_reversed_80C17A(const unsigned char* src, int some_size, unsigned char* iv, unsigned char* src_xored_digest)
+int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, unsigned char* iv, unsigned char* digest)
 {
    unsigned char src_xored[0x20];
 
-   if (some_size > 0x20)
+   if (data_size > 0x20)
       return 0x12;
 
-   for(int i = 0; i < some_size; i++)
+   for(int i = 0; i < data_size; i++)
       src_xored[i] = src[i] ^ iv[i];
 
-   int r0 = bigmac_sha256_80D960(src_xored_digest, src_xored, 0x20);
+   int r0 = bigmac_sha256_80D960(digest, src_xored, 0x20);
    if(r0 != 0)
       return 0x11;
 
    for(int i = 0; i < 0x20; i++)
-      iv[i] = src_xored_digest[i] ^ iv[i];
+      iv[i] = digest[i] ^ iv[i];
 
    for(int i = 0; i < 0x20; i++)
    {
