@@ -570,7 +570,7 @@ int sub_CAC924_command(int r2, int r3, int r7, int* var97C, int var24, char* var
 // will be overflown if size is not changed from 0x116 to 0x34
 // and for command 0x20 sub_CAC924_command demands that size should be 0x34
 
-int sub_CAC924(char* destination, char* source, int command, int size, int packet6_de)
+int sub_CAC924(char* destination, char* source, int command, int size, int key_id)
 {
    int var97C = -1; //trigger for some cleanup on exit?
    int var978 = 0x00; // error state
@@ -580,7 +580,7 @@ int sub_CAC924(char* destination, char* source, int command, int size, int packe
    SceSblSmCommGcAuthMgrData_1000B ctx;
    ctx.var838 = 0x01;
    ctx.command = command;
-   ctx.packet6_de = packet6_de;
+   ctx.key_id = key_id;
    ctx.size = size;
    ctx.var28 = 0x00;
 
