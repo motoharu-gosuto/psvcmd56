@@ -721,13 +721,13 @@ struct SceSblSmCommGcAuthMgrData_1000B_22_input
    char field0[0x3C];
 };
 
-int bigmac_hmac_sha256_80D974(unsigned char* dst, unsigned char* src, int size, unsigned char* key, int permission)
+int bigmac_hmac_sha256_80D974(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, int permission)
 {
    auto cryptops = CryptoService::get();
    return cryptops->hmac_sha256(src, dst, size, key, 0x20);
 }
 
-int bigmac_sha256_80D960(unsigned char* dst, unsigned char* src, int size)
+int bigmac_sha256_80D960(unsigned char* dst, const unsigned char* src, int size)
 {
    auto cryptops = CryptoService::get();
    return cryptops->sha256(src, dst, size);
@@ -736,7 +736,7 @@ int bigmac_sha256_80D960(unsigned char* dst, unsigned char* src, int size)
 unsigned char hmac_256_key_812340[0x20] = {0x54, 0x88, 0xA9, 0x81, 0x1C, 0x9A, 0x2C, 0xBC, 0xCC, 0x59, 0x6B, 0x1F, 0xAD, 0x1A, 0x7E, 0x29, 
                                            0xE0, 0x75, 0x84, 0x0F, 0x47, 0x43, 0x1F, 0x37, 0xAC, 0x06, 0x02, 0x46, 0x4A, 0x27, 0x9E, 0x02};
 
-int bigmac_hmac_sha256_contract_80C0F6(unsigned char* src2, unsigned char* src1, int size, unsigned char* dst)
+int bigmac_hmac_sha256_contract_80C0F6(const unsigned char* src2, const unsigned char* src1, int size, unsigned char* dst)
 {
    if (size != 0x14 && size != 0x1C)
       return 0x12;
@@ -757,30 +757,22 @@ int bigmac_hmac_sha256_contract_80C0F6(unsigned char* src2, unsigned char* src1,
    return 0;
 }
 
-int can_be_reversed_80C17A(unsigned char* src, int some_size, unsigned char* iv, unsigned char* src_xored_digest)
+int can_be_reversed_80C17A(const unsigned char* src, int some_size, unsigned char* iv, unsigned char* src_xored_digest)
 {
    unsigned char src_xored[0x20];
-   unsigned char src_xored_copy[0x20];
-   unsigned char src_xored_digest[0x20];
 
    if (some_size > 0x20)
       return 0x12;
 
-   memcpy(src_xored, iv, 0x20);
-
    for(int i = 0; i < some_size; i++)
-      src_xored[i] = src_xored[i] ^ src[i];
+      src_xored[i] = src[i] ^ iv[i];
 
-   memcpy(src_xored_copy, src_xored, 0x20);
-
-   int r0 = bigmac_sha256_80D960(src_xored_digest, src_xored_copy, 0x20);
+   int r0 = bigmac_sha256_80D960(src_xored_digest, src_xored, 0x20);
    if(r0 != 0)
       return 0x11;
 
-   memcpy(src_xored_digest, src_xored_digest, 0x20);
-
    for(int i = 0; i < 0x20; i++)
-      iv[i] = iv[i] ^ src_xored_digest[i];
+      iv[i] = src_xored_digest[i] ^ iv[i];
 
    for(int i = 0; i < 0x20; i++)
    {
