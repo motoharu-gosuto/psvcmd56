@@ -915,8 +915,6 @@ int GcAuthMgrService::service_0x1000B_22(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 {
    *f00d_resp = service_handler_0x1000B_command_22_80C256(ctx);
 
-   //imitate output
-
    return -0;
 }
 
