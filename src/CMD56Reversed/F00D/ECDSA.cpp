@@ -306,23 +306,26 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
                                                          if(signature != NULL)
                                                          {
                                                             const BIGNUM* r_sig = ECDSA_SIG_get0_r(signature);
-                                                            const BIGNUM* s_sig = ECDSA_SIG_get0_s(signature);
-
-                                                            BN_bn2bin(r_sig, sig_res->r);
-                                                            BN_bn2bin(s_sig, sig_res->s);
-
                                                             
-                                                            std::cout << "rp:" << std::endl;
-                                                            print_bignum(rp);
-                                                            std::cout << "kinvp:" << std::endl;
-                                                            print_bignum(kinvp);
-                                                            std::cout << "r_sig:" << std::endl;
-                                                            print_bignum(r_sig);
-                                                            std::cout << "s_sig:" << std::endl;
-                                                            print_bignum(s_sig);
+                                                            if(BN_bn2bin(r_sig, sig_res->r) == 1)
+                                                            {
+                                                               const BIGNUM* s_sig = ECDSA_SIG_get0_s(signature);
+
+                                                               if(BN_bn2bin(s_sig, sig_res->s) == 1)
+                                                               {
+                                                                  std::cout << "rp:" << std::endl;
+                                                                  print_bignum(rp);
+                                                                  std::cout << "kinvp:" << std::endl;
+                                                                  print_bignum(kinvp);
+                                                                  std::cout << "r_sig:" << std::endl;
+                                                                  print_bignum(r_sig);
+                                                                  std::cout << "s_sig:" << std::endl;
+                                                                  print_bignum(s_sig);
                                                             
 
-                                                            result = 0;
+                                                                  result = 0;
+                                                               }
+                                                            }
                                                          }
 
                                                          ECDSA_SIG_free(signature);
@@ -362,4 +365,97 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
    }
 
    return result;
+}
+
+int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const unsigned char multiplier[0x1C], ecdsa_point* output)
+{
+   int result = -1;
+
+   EC_GROUP* curve = create_curve(params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
+
+   if(curve != NULL)
+   {
+      EC_POINT* input_curve_point;
+
+      if(NULL != (input_curve_point = EC_POINT_new(curve)))
+      {
+         BIGNUM* input_curve_point_x_bn;
+
+         if(NULL != (input_curve_point_x_bn = BN_bin2bn(input->X, 0x1C, NULL)))
+         {
+            BIGNUM* input_curve_point_y_bn;
+
+            if(NULL != (input_curve_point_y_bn = BN_bin2bn(input->Y, 0x1C, NULL)))
+            {
+               BN_CTX* ctx = BN_CTX_new();
+
+               if(NULL != ctx)
+               {
+                  if(EC_POINT_set_affine_coordinates(curve, input_curve_point, input_curve_point_x_bn, input_curve_point_y_bn, ctx) == 1)
+                  {
+                     BIGNUM* multiplier_bn;
+
+                     if(NULL != (multiplier_bn = BN_bin2bn(multiplier, 0x1C, NULL)))
+                     {
+                        EC_POINT* tmp_point;
+
+                        if(NULL != (tmp_point = EC_POINT_new(curve)))
+                        {
+                           if (EC_POINT_mul(curve, tmp_point, NULL, input_curve_point, multiplier_bn, ctx) == 1)
+                           {
+                              BIGNUM* output_curve_point_x = BN_new();
+
+                              if(output_curve_point_x != NULL)
+                              {
+                                 BIGNUM* output_curve_point_y = BN_new();
+
+                                 if(output_curve_point_y != NULL)
+                                 {
+                                    if (EC_POINT_get_affine_coordinates(curve, tmp_point, output_curve_point_x, output_curve_point_y, ctx) == 1)
+                                    {
+                                       if(BN_bn2bin(output_curve_point_x, output->X) == 1)
+                                       {
+                                          if(BN_bn2bin(output_curve_point_y, output->Y) == 1)
+                                          {
+                                             std::cout << "rp:" << std::endl;
+                                             print_bignum(output_curve_point_x);
+                                             std::cout << "kinvp:" << std::endl;
+                                             print_bignum(output_curve_point_y);
+                                          
+                                             result = 0;
+                                          }
+                                       }
+                                    }
+
+                                    BN_clear_free(output_curve_point_y);
+                                 }
+
+                                 BN_clear_free(output_curve_point_x);
+                              }
+                           }
+
+                           EC_POINT_free(tmp_point);
+                        }
+
+                        BN_free(multiplier_bn);
+                     }
+
+                  }
+
+                  BN_CTX_free(ctx);
+               }
+
+               BN_free(input_curve_point_y_bn);
+            }
+
+            BN_free(input_curve_point_x_bn);
+         }
+
+         EC_POINT_free(input_curve_point);
+      }
+
+      EC_GROUP_free(curve);
+   }
+
+   return 0;
 }
