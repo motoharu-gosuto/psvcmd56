@@ -184,7 +184,7 @@ int initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(unsigned char* cma
 int bigmac_hmac_sha256_80D974(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, int permission)
 {
    auto cryptops = CryptoService::get();
-   return cryptops->hmac_sha256(src, dst, size, key, 0x20);
+   return cryptops->hmac_sha256(src, dst, size, key, 0x10); // IMPORTANT - KEY SIZE IS 0x10
 }
 
 int bigmac_sha256_80D960(unsigned char* dst, const unsigned char* src, int size)
@@ -443,19 +443,35 @@ int multiply_ECC_224_curve_point_80EE00(unsigned char* curve_point_output[2], un
 //M
 //nonce
 //result is signature
-int F00D_math_80EE76(unsigned char* sig[2], unsigned char*, unsigned char* , unsigned char* , unsigned char* curve[6], int size_blocks, int size)
+int ECDSA_do_sign_F00D_ecc_80EE76(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6], int size_blocks, int size)
 {
+   ecdsa_params params;
+
+   memcpy(params.P, curve[0], size);
+   memcpy(params.A, curve[1], size);
+   memcpy(params.B, curve[2], size);
+   memcpy(params.N, curve[3], size);
+   memcpy(params.G.X, curve[4], size);
+   memcpy(params.G.Y, curve[5], size);
+
+   ecdsa_signature signature;
+
+   ecdsa_sign(size, M, Pk, &params, nonce, &signature);
+
+   memcpy(sig[0], signature.r, size);
+   memcpy(sig[1], signature.s, size);
+
    return 0;
 }
 
-int F00D_math_ecc_160_related_80F4B4(unsigned char* sig[2], unsigned char* b, unsigned char* c, unsigned char* d, unsigned char* curve[6])
+int ECDSA_do_sign_F00D_ecc_160_80F4B4(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
 {
-   return F00D_math_80EE76(sig, b, c, d, curve, 5, 0x14);
+   return ECDSA_do_sign_F00D_ecc_80EE76(sig, M, nonce, Pk, curve, 5, 0x14);
 }
 
-int F00D_math_ecc_224_related_80F4CE(unsigned char* sig[2], unsigned char* b, unsigned char* c, unsigned char* d, unsigned char* curve[6])
+int ECDSA_do_sign_F00D_ecc_224_80F4CE(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
 {
-   return F00D_math_80EE76(sig, b, c, d, curve, 7, 0x1C);
+   return ECDSA_do_sign_F00D_ecc_80EE76(sig, M, nonce, Pk, curve, 7, 0x1C);
 }
 
 //==========================================
@@ -1140,8 +1156,10 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
          return 5;
 
       int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce_n_product_40, digest_F4, N_ptr_224_81251C);
-      if(r0_3 != 0)
-         break; // not sure about this part. is there one cycle or not?
+      //if(r0_3 != 0)
+      //   break; // not sure about this part. is there one cycle or not?
+
+      break;
    }
 
    //check input
@@ -1157,7 +1175,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char static_salt_813680[0x1C] = {0};
    memcpy(static_salt_813680, static_salt, 0x1C);
       
-   int r0_4 = F00D_math_ecc_224_related_80F4CE(sig_ptrs, input_salt_94, nonce_n_product_40, static_salt_813680, ECC_224_curve_812510);
+   int r0_4 = ECDSA_do_sign_F00D_ecc_224_80F4CE(sig_ptrs, input_salt_94, nonce_n_product_40, static_salt_813680, ECC_224_curve_812510);
    if(r0_4 != 0)
       return 5;
 
