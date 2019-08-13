@@ -8,7 +8,7 @@
 #include <iostream>
 #include <iomanip>
 
-EC_GROUP *create_curve(const unsigned char a_bin[0x1C], const unsigned char b_bin[0x1C], const unsigned char p_bin[0x1C], const unsigned char order_bin[0x1C], const unsigned char x_bin[0x1C], const unsigned char y_bin[0x1C])
+EC_GROUP *create_curve(int ecc_size, const unsigned char* a_bin, const unsigned char* b_bin, const unsigned char* p_bin, const unsigned char* order_bin, const unsigned char* x_bin, const unsigned char* y_bin)
 {
    EC_GROUP* result_curve = nullptr;
 
@@ -20,27 +20,27 @@ EC_GROUP *create_curve(const unsigned char a_bin[0x1C], const unsigned char b_bi
       BIGNUM* a; 
 
       //Set the values for the various parameters
-      if(NULL != (a = BN_bin2bn(a_bin, 0x1C, NULL)))
+      if(NULL != (a = BN_bin2bn(a_bin, ecc_size, NULL)))
       {
          BIGNUM* b; 
 
-         if(NULL != (b = BN_bin2bn(b_bin, 0x1C, NULL)))
+         if(NULL != (b = BN_bin2bn(b_bin, ecc_size, NULL)))
          {
             BIGNUM* p; 
             
-            if(NULL != (p = BN_bin2bn(p_bin, 0x1C, NULL)))
+            if(NULL != (p = BN_bin2bn(p_bin, ecc_size, NULL)))
             {
                BIGNUM* order; 
                
-               if(NULL != (order = BN_bin2bn(order_bin, 0x1C, NULL)))
+               if(NULL != (order = BN_bin2bn(order_bin, ecc_size, NULL)))
                {
                   BIGNUM* x; 
 
-                  if(NULL != (x = BN_bin2bn(x_bin, 0x1C, NULL)))
+                  if(NULL != (x = BN_bin2bn(x_bin, ecc_size, NULL)))
                   {
                      BIGNUM* y;
 
-                     if(NULL != (y = BN_bin2bn(y_bin, 0x1C, NULL)))
+                     if(NULL != (y = BN_bin2bn(y_bin, ecc_size, NULL)))
                      {
                         EC_GROUP* curve;
 
@@ -89,13 +89,13 @@ EC_GROUP *create_curve(const unsigned char a_bin[0x1C], const unsigned char b_bi
    return result_curve;
 }
 
-int print_bignum(const BIGNUM* b)
+int print_bignum(int ecc_size, const BIGNUM* b)
 {
    unsigned char bc[0x1C];
 
    BN_bn2bin(b, bc);
 
-   for(int i = 0; i < 0x1C; i++)
+   for(int i = 0; i < ecc_size; i++)
    {
       std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)bc[i];
    }
@@ -146,11 +146,11 @@ int ec_group_do_inverse_ord(const EC_GROUP *curve, BIGNUM *res, const BIGNUM *x,
     return ec_field_inverse_mod_ord(curve, res, x, ctx);
 }
 
-int ecdsa_verify(ecdsa_signature *sig, unsigned char M[0x1C], const ecdsa_point* Qa, const ecdsa_params* params)
+int ecdsa_verify(int ecc_size, ecdsa_signature *sig, unsigned char* M, const ecdsa_point* Qa, const ecdsa_params* params)
 {
    int result = -1;
 
-   EC_GROUP* curve = create_curve(params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
+   EC_GROUP* curve = create_curve(ecc_size, params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
 
    if(curve != NULL)
    {
@@ -166,27 +166,27 @@ int ecdsa_verify(ecdsa_signature *sig, unsigned char M[0x1C], const ecdsa_point*
             {
                BIGNUM* qax;
 
-               if(NULL != (qax = BN_bin2bn(Qa->X, 0x1C, NULL)))
+               if(NULL != (qax = BN_bin2bn(Qa->X, ecc_size, NULL)))
                {
                   BIGNUM* qay;
 
-                  if(NULL != (qay = BN_bin2bn(Qa->Y, 0x1C, NULL)))
+                  if(NULL != (qay = BN_bin2bn(Qa->Y, ecc_size, NULL)))
                   {
                      if(EC_KEY_set_public_key_affine_coordinates(key, qax, qay) == 1)
                      {
                         BIGNUM* r;
 
-                        if(NULL != (r = BN_bin2bn(sig->r, 0x1C, NULL)))
+                        if(NULL != (r = BN_bin2bn(sig->r, ecc_size, NULL)))
                         {
                            BIGNUM* s;
-                           if(NULL != (s = BN_bin2bn(sig->s, 0x1C, NULL)))
+                           if(NULL != (s = BN_bin2bn(sig->s, ecc_size, NULL)))
                            {
                               ECDSA_SIG* signature = ECDSA_SIG_new();
                               if(signature != NULL)
                               {
                                  ECDSA_SIG_set0(signature, r, s);
 
-                                 int ver_res = ECDSA_do_verify(M, 0x1C, signature, key);
+                                 int ver_res = ECDSA_do_verify(M, ecc_size, signature, key);
 
                                  if(ver_res == 1)
                                  {
@@ -233,11 +233,11 @@ int ecdsa_verify(ecdsa_signature *sig, unsigned char M[0x1C], const ecdsa_point*
    return result;
 }
 
-int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_params* params, const unsigned char nonce[0x1C], ecdsa_signature* sig_res)
+int ecdsa_sign(int ecc_size, unsigned char* M, unsigned const char* Pk, const ecdsa_params* params, const unsigned char* nonce, ecdsa_signature* sig_res)
 {
    int result = -1;
 
-   EC_GROUP* curve = create_curve(params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
+   EC_GROUP* curve = create_curve(ecc_size, params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
 
    if(curve != NULL)
    {
@@ -249,7 +249,7 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
          {
             BIGNUM* pk;
 
-            if(NULL != (pk = BN_bin2bn(Pk, 0x1C, NULL)))
+            if(NULL != (pk = BN_bin2bn(Pk, ecc_size, NULL)))
             {
                if(EC_KEY_set_private_key(key, pk) == 1)
                {
@@ -284,7 +284,7 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
                                        {
                                           // initialize nonce
 
-                                          if(NULL != (BN_bin2bn(nonce, 0x1C, k)))
+                                          if(NULL != (BN_bin2bn(nonce, ecc_size, k)))
                                           {
                                              // compute tmp_point = generator * k
                                              if (EC_POINT_mul(curve, tmp_point, k, NULL, NULL, ctx) == 1)
@@ -301,26 +301,26 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
                                                          BIGNUM* rp = r;
                                                          BIGNUM* kinvp = k;
 
-                                                         ECDSA_SIG* signature = ECDSA_do_sign_ex(M, 0x1C, kinvp, rp, key);
+                                                         ECDSA_SIG* signature = ECDSA_do_sign_ex(M, ecc_size, kinvp, rp, key);
 
                                                          if(signature != NULL)
                                                          {
                                                             const BIGNUM* r_sig = ECDSA_SIG_get0_r(signature);
                                                             
-                                                            if(BN_bn2bin(r_sig, sig_res->r) == 0x1C)
+                                                            if(BN_bn2bin(r_sig, sig_res->r) == ecc_size)
                                                             {
                                                                const BIGNUM* s_sig = ECDSA_SIG_get0_s(signature);
 
-                                                               if(BN_bn2bin(s_sig, sig_res->s) == 0x1C)
+                                                               if(BN_bn2bin(s_sig, sig_res->s) == ecc_size)
                                                                {
                                                                   std::cout << "rp:" << std::endl;
-                                                                  print_bignum(rp);
+                                                                  print_bignum(ecc_size, rp);
                                                                   std::cout << "kinvp:" << std::endl;
-                                                                  print_bignum(kinvp);
+                                                                  print_bignum(ecc_size, kinvp);
                                                                   std::cout << "r_sig:" << std::endl;
-                                                                  print_bignum(r_sig);
+                                                                  print_bignum(ecc_size, r_sig);
                                                                   std::cout << "s_sig:" << std::endl;
-                                                                  print_bignum(s_sig);
+                                                                  print_bignum(ecc_size, s_sig);
                                                             
 
                                                                   result = 0;
@@ -367,11 +367,11 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
    return result;
 }
 
-int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const unsigned char multiplier[0x1C], ecdsa_point* output)
+int ecc_multiply(int ecc_size, const ecdsa_params* params, const ecdsa_point* input, const unsigned char* multiplier, ecdsa_point* output)
 {
    int result = -1;
 
-   EC_GROUP* curve = create_curve(params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
+   EC_GROUP* curve = create_curve(ecc_size, params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
 
    if(curve != NULL)
    {
@@ -381,11 +381,11 @@ int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const uns
       {
          BIGNUM* input_curve_point_x_bn;
 
-         if(NULL != (input_curve_point_x_bn = BN_bin2bn(input->X, 0x1C, NULL)))
+         if(NULL != (input_curve_point_x_bn = BN_bin2bn(input->X, ecc_size, NULL)))
          {
             BIGNUM* input_curve_point_y_bn;
 
-            if(NULL != (input_curve_point_y_bn = BN_bin2bn(input->Y, 0x1C, NULL)))
+            if(NULL != (input_curve_point_y_bn = BN_bin2bn(input->Y, ecc_size, NULL)))
             {
                BN_CTX* ctx = BN_CTX_new();
 
@@ -395,7 +395,7 @@ int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const uns
                   {
                      BIGNUM* multiplier_bn;
 
-                     if(NULL != (multiplier_bn = BN_bin2bn(multiplier, 0x1C, NULL)))
+                     if(NULL != (multiplier_bn = BN_bin2bn(multiplier, ecc_size, NULL)))
                      {
                         EC_POINT* tmp_point;
 
@@ -413,14 +413,14 @@ int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const uns
                                  {
                                     if (EC_POINT_get_affine_coordinates(curve, tmp_point, output_curve_point_x, output_curve_point_y, ctx) == 1)
                                     {
-                                       if(BN_bn2bin(output_curve_point_x, output->X) == 0x1C)
+                                       if(BN_bn2bin(output_curve_point_x, output->X) == ecc_size)
                                        {
-                                          if(BN_bn2bin(output_curve_point_y, output->Y) == 0x1C)
+                                          if(BN_bn2bin(output_curve_point_y, output->Y) == ecc_size)
                                           {
                                              std::cout << "rp:" << std::endl;
-                                             print_bignum(output_curve_point_x);
+                                             print_bignum(ecc_size, output_curve_point_x);
                                              std::cout << "kinvp:" << std::endl;
-                                             print_bignum(output_curve_point_y);
+                                             print_bignum(ecc_size, output_curve_point_y);
                                           
                                              result = 0;
                                           }
