@@ -34,21 +34,6 @@ unsigned char* ECC_224_curve_812510[6] = {ecc_224_0x22_p, ecc_224_0x22_a, ecc_22
 
 //==========================================
 
-int multiply_ecc_curve_point_80EB50(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6], int size_blocks, int size)
-{
-   return 0;
-}
-
-int multiply_ECC_160_curve_point_80EDEA(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6])
-{
-   return multiply_ecc_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 5, 0x14);
-}
-
-int multiply_ECC_224_curve_point_80EE00(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char** curve_point_input, unsigned char* curve[6])
-{
-   return multiply_ecc_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 7, 0x1C);
-}
-
 unsigned char key_812400[0x10] = {0x6F, 0x22, 0x85, 0xED, 0x46, 0x3A, 0x6E, 0x57, 0xC5, 0xF3, 0x55, 0x0D, 0xDC, 0xC8, 0x1F, 0xEB, };
 unsigned char key_812440[0x10] = {0xDA, 0x96, 0x08, 0xB5, 0x28, 0x82, 0x5D, 0x6D, 0x13, 0xA7, 0xAF, 0x14, 0x46, 0xB8, 0xEC, 0x08, };
 unsigned char key_812480[0x10] = {0x36, 0x8B, 0x2E, 0xB5, 0x43, 0x7A, 0x82, 0x18, 0x62, 0xA6, 0xC9, 0x55, 0x96, 0xD8, 0xC1, 0x35, };
@@ -295,8 +280,62 @@ int cmd_14_17_22_ecc_224_related_with_mode_maybe_modulus_F00D_80FF50(unsigned ch
 
 //---
 
+int maybe_BN_bin2bn_80FFD6(unsigned char* dst, unsigned char* src, int size)
+{
+   return 0;
+}
+
+int maybe_BN_bn2bin_81001A(unsigned char* dst, unsigned char* src, int size_blocks)
+{
+   return 0;
+}
+
+int unindentified_function_80DECC(unsigned char* multiplier, unsigned char* order, int size_blocks)
+{
+   return 0;
+}
+
+int maybe_multiply_ecc_curve_F00D_80DF18(unsigned char* curve_point_output[2], unsigned char* curve_point_input[2], unsigned char* curve_p, unsigned char* curve_a, unsigned char* multiplier)
+{
+   return 0;
+}
+
+//---
+
 int multiply_generator_point_on_ecc_curve_F00D_80DD96(unsigned char* output_point[2], unsigned char* multiplier, unsigned char* curve[6], int size_blocks, int size)
 {
+   unsigned char curve_p_bn[0x28];
+   unsigned char curve_a_bn[0x28];
+   unsigned char curve_n_bn[0x28];
+   unsigned char curve_gx_bn[0x28];
+   unsigned char curve_gy_bn[0x28];
+
+   maybe_BN_bin2bn_80FFD6(curve_p_bn, curve[0], size);
+   maybe_BN_bin2bn_80FFD6(curve_a_bn, curve[1], size);
+   maybe_BN_bin2bn_80FFD6(curve_n_bn, curve[3], size);
+   maybe_BN_bin2bn_80FFD6(curve_gx_bn, curve[4], size);
+   maybe_BN_bin2bn_80FFD6(curve_gy_bn, curve[5], size);
+
+   unsigned char multiplier_bn[0x28];
+
+   maybe_BN_bin2bn_80FFD6(multiplier_bn, multiplier, size);
+
+   int r0 = unindentified_function_80DECC(multiplier_bn, curve_n_bn, size_blocks);
+   if(r0 != 0)
+      return -1;
+
+   unsigned char output_x[0x28];
+   unsigned char output_y[0x28];
+   unsigned char* output_curve_point[2] = {output_x, output_y};
+
+   unsigned char* input_curve_point[2] = {curve_gx_bn, curve_gy_bn};
+
+   maybe_multiply_ecc_curve_F00D_80DF18(output_curve_point, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
+
+   maybe_BN_bn2bin_81001A(output_point[0], output_curve_point[0], size_blocks);
+
+   maybe_BN_bn2bin_81001A(output_point[1], output_curve_point[1], size_blocks);
+
    return 0;
 }
 
@@ -309,6 +348,25 @@ int multiply_generator_point_on_ecc_curve_ecc_224_80DEB8(unsigned char* output_p
 {
    return multiply_generator_point_on_ecc_curve_F00D_80DD96(output_point, multiplier, curve, 7, 0x1C);
 }
+
+//---
+
+int multiply_ecc_curve_point_80EB50(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6], int size_blocks, int size)
+{
+   return 0;
+}
+
+int multiply_ECC_160_curve_point_80EDEA(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6])
+{
+   return multiply_ecc_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 5, 0x14);
+}
+
+int multiply_ECC_224_curve_point_80EE00(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char** curve_point_input, unsigned char* curve[6])
+{
+   return multiply_ecc_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 7, 0x1C);
+}
+
+//---
 
 //for signing we need
 //curve
