@@ -481,7 +481,7 @@ struct SceSblSmCommGcAuthMgrData_1000B_20_output
 struct SceSblSmCommGcAuthMgrData_1000B_22_input
 {
    unsigned char field0[0x20];
-   unsigned char salt[0x1C];
+   unsigned char message_hash[0x1C];
 };
 
 struct SceSblSmCommGcAuthMgrData_1000B_22_output

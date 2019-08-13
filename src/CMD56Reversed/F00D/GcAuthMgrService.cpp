@@ -248,9 +248,9 @@ int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, u
    return 0;
 }
 
-unsigned char salt_00812528[0x1C] = {0x76, 0x74, 0x36, 0xA6, 0x99, 0x9D, 0x88, 0x48, 0x0E, 0xC8, 0x56, 0xF5, 0x5C, 0xEA, 0xBB, 0x43, 0x96, 0x85, 0x9E, 0x37, 0x45, 0x99, 0x40, 0x39, 0x21, 0xF5, 0x55, 0x98};
+unsigned char Pk_00812528[0x1C] = {0x76, 0x74, 0x36, 0xA6, 0x99, 0x9D, 0x88, 0x48, 0x0E, 0xC8, 0x56, 0xF5, 0x5C, 0xEA, 0xBB, 0x43, 0x96, 0x85, 0x9E, 0x37, 0x45, 0x99, 0x40, 0x39, 0x21, 0xF5, 0x55, 0x98};
 
-unsigned char salt_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA0, 0x32, 0xF4, 0x52, 0x53, 0xCF, 0xED, 0x20, 0xDB, 0x2E, 0x6E, 0x44, 0x6C, 0x37, 0x82, 0xE8, 0x2A, 0x1A, 0xB9, 0xC9, 0x23};
+unsigned char Pk_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA0, 0x32, 0xF4, 0x52, 0x53, 0xCF, 0xED, 0x20, 0xDB, 0x2E, 0x6E, 0x44, 0x6C, 0x37, 0x82, 0xE8, 0x2A, 0x1A, 0xB9, 0xC9, 0x23};
 
 //---
 
@@ -1107,15 +1107,15 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 
    // get static salt
 
-   unsigned char* static_salt = 0;
+   unsigned char* Pk = 0;
 
    if(ctx->key_id == 0)
    {
-      static_salt = salt_00812528;
+      Pk = Pk_00812528;
    }
    else if(ctx->key_id == 1)
    {
-      static_salt = salt_00812544;
+      Pk = Pk_00812544;
    }
    else
    {
@@ -1126,36 +1126,28 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char sig_s[0x1C] = {0};
    unsigned char* sig_ptrs[2] = {sig_r, sig_s};
 
-   // get input salt
-
-   unsigned char input_salt_94[0x1C];
-
-   memcpy(input_salt_94, input_data->salt, 0x1C);
-
    // calculate contract
 
    unsigned char iv_B4[0x20];
 
-   int r0_0 = bigmac_hmac_sha256_contract_80C0F6(static_salt, input_salt_94, 0x1C, iv_B4);
+   int r0_0 = bigmac_hmac_sha256_contract_80C0F6(Pk, input_data->message_hash, 0x1C, iv_B4);
    if(r0_0 != 0)
       return 5;
 
-   // set order N ? calculate nonce ? calculate partials ?
-
    unsigned char digest_F4[0x40] = {0};
-   unsigned char nonce_n_product_40[0x1C] = {0}; // size is unknown, probably 0x1C
+   unsigned char nonce[0x1C] = {0};
 
    while(true)
    {
-      int r0_1 = bigmac_sha256_block_update_80C17A(input_salt_94, 0x1C, iv_B4, digest_F4);
+      int r0_1 = bigmac_sha256_block_update_80C17A(input_data->message_hash, 0x1C, iv_B4, digest_F4);
       if(r0_1 != 0)
          return 5;
 
-      int r0_2 = bigmac_sha256_block_update_80C17A(input_salt_94, 0x1C, iv_B4, digest_F4 + 0x20);
+      int r0_2 = bigmac_sha256_block_update_80C17A(input_data->message_hash, 0x1C, iv_B4, digest_F4 + 0x20);
       if(r0_2 != 0)
          return 5;
 
-      int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce_n_product_40, digest_F4, N_ptr_224_81251C);
+      int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce, digest_F4, N_ptr_224_81251C);
       //if(r0_3 != 0)
       //   break; // not sure about this part. is there one cycle or not?
 
@@ -1172,10 +1164,9 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 
    // calculate signature
 
-   unsigned char static_salt_813680[0x1C] = {0};
-   memcpy(static_salt_813680, static_salt, 0x1C);
+   //unsigned char real_nonce[0x1C] = {0x2C, 0x1C, 0x3B, 0x8A, 0x66, 0x5E, 0x3D, 0x92, 0x8E, 0x62, 0xA0, 0xF5, 0xA4, 0x3E, 0xF7, 0x1F, 0x33, 0xB6, 0xB6, 0xD5, 0x9B, 0xC6, 0x0E, 0x81, 0xAF, 0xC6, 0x90, 0x61}; // OK
       
-   int r0_4 = ECDSA_do_sign_F00D_ecc_224_80F4CE(sig_ptrs, input_salt_94, nonce_n_product_40, static_salt_813680, ECC_224_curve_812510);
+   int r0_4 = ECDSA_do_sign_F00D_ecc_224_80F4CE(sig_ptrs, input_data->message_hash, nonce, Pk, ECC_224_curve_812510);
    if(r0_4 != 0)
       return 5;
 
