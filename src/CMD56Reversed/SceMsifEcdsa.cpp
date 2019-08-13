@@ -13,5 +13,5 @@ int ecdsa_verify_C8DBC0(ecdsa_signature* sig, unsigned char M[0x1C], const ecdsa
 {
    //return ecdsa_verify_C8DA14(sig, M, Qa, params, 7, 0x1C);
 
-   return ecdsa_verify(sig, M, Qa, params); // , 7, 0x1C
+   return ecdsa_verify(0x1C, sig, M, Qa, params); // , 7, 0x1C
 }
