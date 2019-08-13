@@ -365,6 +365,131 @@ struct SceSblSmCommGcAuthMgrData_1000B
 //Commands that I am particulary interested in are: 1B - 20
 //I know some basic layout of requests and size of responses (assumption about size check in sub_CAC924_command)
 
+struct SceSblSmCommGcAuthMgrData_1000B_0C_output
+{
+   unsigned char private_key[0x14];
+   unsigned char public_key_x[0x14];
+   unsigned char public_key_y[0x14];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_0D_input
+{
+   unsigned char multiplier[0x14];
+   unsigned char x[0x14];
+   unsigned char y[0x14];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_0D_output
+{
+   unsigned char x[0x14];
+   unsigned char y[0x14];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_14_output
+{
+   unsigned char private_key[0x1C];
+   unsigned char public_key_x[0x1C];
+   unsigned char public_key_y[0x1C];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_15_input
+{
+   unsigned char multiplier[0x1C];
+   unsigned char x[0x1C];
+   unsigned char y[0x1C];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_15_output
+{
+   unsigned char x[0x1C];
+   unsigned char y[0x1C];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1B_input
+{
+   unsigned char packet6_chunk[0x20];
+   unsigned char packet7_chunk[0x10];
+   unsigned char packet8_chunk[0x23];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1C_input
+{
+   unsigned char packet6_chunk[0x20];
+   unsigned char packet8_chunk[0x20]; 
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1C_output
+{
+   unsigned char command;
+   unsigned char unknown;
+   unsigned char size;
+   unsigned char data[0x30];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1D_input
+{
+  unsigned char packet6_chunk[0x20];
+  unsigned char packet9_chunk[0x30];
+  unsigned char packet13_chunk[0x10];
+  unsigned char packet14_chunk[0x43];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1E_input
+{
+   unsigned char packet6_chunk[0x20];
+   unsigned char packet9_chunk[0x30];
+   unsigned char parameter; // value 2 or 3
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1E_output
+{
+   unsigned char command;
+   unsigned char unknown;
+   unsigned char size;
+   unsigned char data[0x30];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1F_input
+{
+   unsigned char packet6_chunk[0x20];
+   unsigned char packet9_chunk[0x30];
+   unsigned char packet15_chunk[0x20];
+   unsigned char packet16_chunk[0x43];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_1F_output
+{
+   unsigned char unknown[0x20];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_20_input
+{
+   unsigned char packet6_chunk[0x20];
+   unsigned char packet9_chunk[0x30];
+   unsigned char packet17_chunk[0x20];
+   unsigned char packet18_chunk[0x43];
+   unsigned char packet19_chunk[0x10];
+   unsigned char packet20_chunk[0x53];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_20_output
+{
+   unsigned char klicensee_keys[0x20];
+   unsigned char rif_digest[0x14];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_22_input
+{
+   unsigned char field0[0x20];
+   unsigned char salt[0x1C];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_22_output
+{
+   unsigned char r[0x1C];
+   unsigned char s[0x1C];
+};
+
 //=============== PM TYPES =============
 
 //NONE

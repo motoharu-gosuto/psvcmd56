@@ -2,6 +2,8 @@
 
 #include "Crypto/CryptoService.h"
 
+#include <F00D/ECDSA.h>
+
 //FIX POINTER CONSTNESS!!!!!!!!!!!!
 
 using namespace f00d;
@@ -252,7 +254,7 @@ unsigned char salt_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0
 
 //---
 
-int maybe_modulus_F00D_80FD6E(unsigned char* dst, unsigned char* nonce, int nonce_size_blocks, int nonce_size, unsigned char* N, int N_blocks_size, int N_size)
+int BN_mod_F00D_ecc_80FD6E(unsigned char* dst, unsigned char* nonce, int nonce_size_blocks, int nonce_size, unsigned char* N, int N_blocks_size, int N_size)
 {
    //BN_bin2bn N - size is N_size
    //BN_bin2bn nonce - size is nonce_size 
@@ -265,17 +267,17 @@ int maybe_modulus_F00D_80FD6E(unsigned char* dst, unsigned char* nonce, int nonc
    //check dst (what is the check?)
    //BN_bn2bin result to dst - size n_size_blocks
 
-   return 0;
+   return ecc_modulus(nonce, nonce_size, N, N_size, dst);
 }
 
-int cmd_0C_10_21_ecc_160_related_with_mode_maybe_modulus_F00D_80FF34(unsigned char* dst, unsigned char* nonce, unsigned char* n)
+int BN_mod_F00D_ecc_160_80FF34(unsigned char* dst, unsigned char* nonce, unsigned char* n)
 {
-   return maybe_modulus_F00D_80FD6E(dst, nonce, 0xA, 0x28, n, 5, 0x14);
+   return BN_mod_F00D_ecc_80FD6E(dst, nonce, 0xA, 0x28, n, 5, 0x14);
 }
 
-int cmd_14_17_22_ecc_224_related_with_mode_maybe_modulus_F00D_80FF50(unsigned char* dst, unsigned char* nonce, unsigned char* n)
+int BN_mod_F00D_ecc_224_80FF50(unsigned char* dst, unsigned char* nonce, unsigned char* n)
 {
-   return maybe_modulus_F00D_80FD6E(dst, nonce, 0xF, 0x3C, n, 7, 0x1C);
+   return BN_mod_F00D_ecc_80FD6E(dst, nonce, 0xF, 0x3C, n, 7, 0x1C);
 }
 
 //---
@@ -472,20 +474,13 @@ int GcAuthMgrService::service_0x1000B_07(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return -1;
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_0C_output
-{
-   unsigned char private_key[0x14];
-   unsigned char public_key_x[0x14];
-   unsigned char public_key_y[0x14];
-};
-
 int service_handler_0x1000B_command_C_80C9F4(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    unsigned char nonce[0x40];
    bigmac_generate_random_number_80C462(nonce, 0x40);
 
    unsigned char nonce_modulus[0x14];
-   cmd_0C_10_21_ecc_160_related_with_mode_maybe_modulus_F00D_80FF34(nonce_modulus, nonce, N_ptr_160_81259C);
+   BN_mod_F00D_ecc_160_80FF34(nonce_modulus, nonce, N_ptr_160_81259C);
 
    unsigned char output_curve_point_x[0x14];
    unsigned char output_curve_point_y[0x14];
@@ -516,19 +511,6 @@ int GcAuthMgrService::service_0x1000B_0C(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 
    return 0;
 }
-
-struct SceSblSmCommGcAuthMgrData_1000B_0D_input
-{
-   unsigned char multiplier[0x14];
-   unsigned char x[0x14];
-   unsigned char y[0x14];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_0D_output
-{
-   unsigned char x[0x14];
-   unsigned char y[0x14];
-};
 
 int service_handler_0x1000B_command_D_80B2C8(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
@@ -601,20 +583,13 @@ int GcAuthMgrService::service_0x1000B_12(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return -1;
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_14_output
-{
-   unsigned char private_key[0x1C];
-   unsigned char public_key_x[0x1C];
-   unsigned char public_key_y[0x1C];
-};
-
 int service_handler_0x1000B_command_14_80C828(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    unsigned char nonce[0x40];
    bigmac_generate_random_number_80C462(nonce, 0x40);
 
    unsigned char nonce_modulus[0x1C];
-   cmd_14_17_22_ecc_224_related_with_mode_maybe_modulus_F00D_80FF50(nonce_modulus, nonce, N_ptr_224_81251C);
+   BN_mod_F00D_ecc_224_80FF50(nonce_modulus, nonce, N_ptr_224_81251C);
 
    unsigned char output_curve_point_x[0x1C];
    unsigned char output_curve_point_y[0x1C];
@@ -645,19 +620,6 @@ int GcAuthMgrService::service_0x1000B_14(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 
    return 0;
 }
-
-struct SceSblSmCommGcAuthMgrData_1000B_15_input
-{
-   unsigned char multiplier[0x1C];
-   unsigned char x[0x1C];
-   unsigned char y[0x1C];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_15_output
-{
-   unsigned char x[0x1C];
-   unsigned char y[0x1C];
-};
 
 int service_handler_0x1000B_command_15_80B72A(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
@@ -730,13 +692,6 @@ int GcAuthMgrService::service_0x1000B_19(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return -1;
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_1B_input
-{
-   unsigned char packet6_chunk[0x20];
-   unsigned char packet7_chunk[0x10];
-   unsigned char packet8_chunk[0x23];
-};
-
 int service_handler_0x1000B_command_1B_80BC44(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1B_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1B_input*)ctx->data;
@@ -771,20 +726,6 @@ int GcAuthMgrService::service_0x1000B_1B(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 
    return 0;
 }
-
-struct SceSblSmCommGcAuthMgrData_1000B_1C_input
-{
-   unsigned char packet6_chunk[0x20];
-   unsigned char packet8_chunk[0x20]; 
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_1C_output
-{
-   unsigned char command;
-   unsigned char unknown;
-   unsigned char size;
-   unsigned char data[0x30];
-};
 
 int service_handler_0x1000B_command_1C_80C604( SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
@@ -851,14 +792,6 @@ int GcAuthMgrService::service_0x1000B_1C(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_1D_input
-{
-  unsigned char packet6_chunk[0x20];
-  unsigned char packet9_chunk[0x30];
-  unsigned char packet13_chunk[0x10];
-  unsigned char packet14_chunk[0x43];
-};
-
 int service_handler_0x1000B_command_1D_80BFC0(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {  
    SceSblSmCommGcAuthMgrData_1000B_1D_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1D_input*)ctx->data;
@@ -896,21 +829,6 @@ int GcAuthMgrService::service_0x1000B_1D(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 
    return 0;
 }
-
-struct SceSblSmCommGcAuthMgrData_1000B_1E_input
-{
-   unsigned char packet6_chunk[0x20];
-   unsigned char packet9_chunk[0x30];
-   unsigned char parameter; // value 2 or 3
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_1E_output
-{
-   unsigned char command;
-   unsigned char unknown;
-   unsigned char size;
-   unsigned char data[0x30];
-};
 
 int service_handler_0x1000B_command_1E_80C4F6(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
@@ -991,19 +909,6 @@ int GcAuthMgrService::service_0x1000B_1E(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_1F_input
-{
-   unsigned char packet6_chunk[0x20];
-   unsigned char packet9_chunk[0x30];
-   unsigned char packet15_chunk[0x20];
-   unsigned char packet16_chunk[0x43];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_1F_output
-{
-   unsigned char unknown[0x20];
-};
-
 int service_handler_0x1000B_command_1F_80BEC4(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_1F_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_1F_input*)ctx->data;
@@ -1067,22 +972,6 @@ int GcAuthMgrService::service_0x1000B_1F(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 
    return 0;
 }
-
-struct SceSblSmCommGcAuthMgrData_1000B_20_input
-{
-   unsigned char packet6_chunk[0x20];
-   unsigned char packet9_chunk[0x30];
-   unsigned char packet17_chunk[0x20];
-   unsigned char packet18_chunk[0x43];
-   unsigned char packet19_chunk[0x10];
-   unsigned char packet20_chunk[0x53];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_20_output
-{
-   unsigned char klicensee_keys[0x20];
-   unsigned char rif_digest[0x14];
-};
 
 int service_handler_0x1000B_command_20_80BD06(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
@@ -1196,18 +1085,6 @@ int GcAuthMgrService::service_0x1000B_21(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return -1;
 }
 
-struct SceSblSmCommGcAuthMgrData_1000B_22_input
-{
-   unsigned char field0[0x20];
-   unsigned char salt[0x1C];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_22_output
-{
-   unsigned char r[0x1C];
-   unsigned char s[0x1C];
-};
-
 int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    SceSblSmCommGcAuthMgrData_1000B_22_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_22_input*)ctx->data;
@@ -1229,8 +1106,9 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
       return 0x12;
    }
 
-   unsigned char sig[0x38] = {0};
-   unsigned char* sig_ptrs[2] = {sig, sig + 0x1C};
+   unsigned char sig_r[0x1C] = {0};
+   unsigned char sig_s[0x1C] = {0};
+   unsigned char* sig_ptrs[2] = {sig_r, sig_s};
 
    // get input salt
 
@@ -1261,9 +1139,9 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
       if(r0_2 != 0)
          return 5;
 
-      int r0_3 = cmd_14_17_22_ecc_224_related_with_mode_maybe_modulus_F00D_80FF50(nonce_n_product_40, digest_F4, N_ptr_224_81251C);
+      int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce_n_product_40, digest_F4, N_ptr_224_81251C);
       if(r0_3 != 0)
-         break;
+         break; // not sure about this part. is there one cycle or not?
    }
 
    //check input

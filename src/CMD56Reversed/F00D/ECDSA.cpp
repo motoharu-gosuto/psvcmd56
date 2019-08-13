@@ -307,11 +307,11 @@ int ecdsa_sign(unsigned char M[0x1C], unsigned const char* Pk, const ecdsa_param
                                                          {
                                                             const BIGNUM* r_sig = ECDSA_SIG_get0_r(signature);
                                                             
-                                                            if(BN_bn2bin(r_sig, sig_res->r) == 1)
+                                                            if(BN_bn2bin(r_sig, sig_res->r) == 0x1C)
                                                             {
                                                                const BIGNUM* s_sig = ECDSA_SIG_get0_s(signature);
 
-                                                               if(BN_bn2bin(s_sig, sig_res->s) == 1)
+                                                               if(BN_bn2bin(s_sig, sig_res->s) == 0x1C)
                                                                {
                                                                   std::cout << "rp:" << std::endl;
                                                                   print_bignum(rp);
@@ -413,9 +413,9 @@ int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const uns
                                  {
                                     if (EC_POINT_get_affine_coordinates(curve, tmp_point, output_curve_point_x, output_curve_point_y, ctx) == 1)
                                     {
-                                       if(BN_bn2bin(output_curve_point_x, output->X) == 1)
+                                       if(BN_bn2bin(output_curve_point_x, output->X) == 0x1C)
                                        {
-                                          if(BN_bn2bin(output_curve_point_y, output->Y) == 1)
+                                          if(BN_bn2bin(output_curve_point_y, output->Y) == 0x1C)
                                           {
                                              std::cout << "rp:" << std::endl;
                                              print_bignum(output_curve_point_x);
@@ -457,5 +457,45 @@ int ecc_multiply(const ecdsa_params* params, const ecdsa_point* input, const uns
       EC_GROUP_free(curve);
    }
 
-   return 0;
+   return result;
+}
+
+int ecc_modulus(const unsigned char* nonce, int nonce_size, const unsigned char* N, int N_size, unsigned char* output)
+{
+   int result = -1;
+
+   BN_CTX* ctx = BN_CTX_new();
+
+   if(NULL != ctx)
+   {
+      BIGNUM* nonce_bn;
+
+      if(NULL != (nonce_bn = BN_bin2bn(nonce, nonce_size, NULL)))
+      {
+         BIGNUM* N_bn;
+
+         if(NULL != (N_bn = BN_bin2bn(N, N_size, NULL)))
+         {
+            BIGNUM* rem = BN_new();
+
+            if(BN_mod(rem, nonce_bn, N_bn, ctx) == 1)
+            {
+               if(BN_bn2bin(rem, output) == N_size)
+               {
+                  result = 0;
+               }
+
+               BN_free(rem);
+            }
+
+            BN_free(N_bn);
+         }
+
+         BN_free(nonce_bn);
+      }
+
+      BN_CTX_free(ctx);
+   }
+
+   return result;
 }
