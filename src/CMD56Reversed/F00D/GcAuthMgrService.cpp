@@ -326,15 +326,15 @@ int multiply_generator_point_on_ecc_curve_F00D_80DD96(unsigned char* output_poin
 
    unsigned char output_x[0x28];
    unsigned char output_y[0x28];
-   unsigned char* output_curve_point[2] = {output_x, output_y};
+   unsigned char* output_curve_point_bn[2] = {output_x, output_y};
 
    unsigned char* input_curve_point[2] = {curve_gx_bn, curve_gy_bn};
 
-   maybe_multiply_ecc_curve_F00D_80DF18(output_curve_point, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
+   maybe_multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
 
-   maybe_BN_bn2bin_81001A(output_point[0], output_curve_point[0], size_blocks);
+   maybe_BN_bn2bin_81001A(output_point[0], output_curve_point_bn[0], size_blocks);
 
-   maybe_BN_bn2bin_81001A(output_point[1], output_curve_point[1], size_blocks);
+   maybe_BN_bn2bin_81001A(output_point[1], output_curve_point_bn[1], size_blocks);
 
    return 0;
 }
@@ -353,6 +353,73 @@ int multiply_generator_point_on_ecc_curve_ecc_224_80DEB8(unsigned char* output_p
 
 int multiply_ecc_curve_point_80EB50(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6], int size_blocks, int size)
 {
+   unsigned char curve_p_bn[0x28];
+   unsigned char curve_a_bn[0x28];
+   unsigned char curve_n_bn[0x28];
+
+   maybe_BN_bin2bn_80FFD6(curve_p_bn, curve[0], size);
+   maybe_BN_bin2bn_80FFD6(curve_a_bn, curve[1], size);
+   maybe_BN_bin2bn_80FFD6(curve_n_bn, curve[3], size);
+
+   unsigned char curve_point_input_x_bn[0x28];
+   unsigned char curve_point_input_y_bn[0x28];
+
+   maybe_BN_bin2bn_80FFD6(curve_point_input_x_bn, curve_point_input[0], size);
+   maybe_BN_bin2bn_80FFD6(curve_point_input_y_bn, curve_point_input[1], size);
+
+   //=============== those transformations probably do EC_POINT_set_affine_coordinates
+
+   // do some additional checks of curve parameters (p, maybe a and n)
+
+   unsigned char curve_point_trans_x[0x28];
+   unsigned char curve_point_trans_y[0x28];
+
+   if(size_blocks > 0)
+   {
+      //copy curve_point_input_x_bn to 0xE0040000 - size size_blocks
+   }
+
+   if(size_blocks > 0)
+   {
+      //copy curve_p to 0xE0040000 - size size_blocks
+   }
+
+   //set 0xE0040800 to (((size_blocks << 0x12) & 0x3FC0000) | 0x58000000) | ((r3 << 9) & 0x3FE00)
+   //copy 0xE0040000 to curve_point_trans_x
+
+   if(size_blocks > 0)
+   {
+      //copy curve_point_input_y_bn to 0xE0040000 - size size_blocks
+   }
+
+   //set 0xE0040800 to (((size_blocks << 0x12) & 0x3FC0000) | 0x58000000) | ((r3 << 9) & 0x3FE00)
+   //copy 0xE0040000 to curve_point_trans_y
+
+   //===============
+
+   unsigned char multiplier_bn[0x28];
+
+   maybe_BN_bin2bn_80FFD6(multiplier_bn, multiplier, size);
+
+   int r0 = unindentified_function_80DECC(multiplier_bn, curve_n_bn, size_blocks); // not sure what does this call do
+   if(r0 != 0)
+      return -1;
+
+   unsigned char output_x[0x28];
+   unsigned char output_y[0x28];
+   unsigned char* output_curve_point_bn[2] = {output_x, output_y};
+
+   unsigned char* input_curve_point[2] = {curve_point_trans_x, curve_point_trans_y};
+
+   // how equal is this to EC_POINT_mul ?
+   // this call probably should include EC_POINT_get_affine_coordinates inside it
+
+   maybe_multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
+
+   maybe_BN_bn2bin_81001A(curve_point_output[0], output_curve_point_bn[0], size_blocks);
+
+   maybe_BN_bn2bin_81001A(curve_point_output[1], output_curve_point_bn[1], size_blocks);
+
    return 0;
 }
 
