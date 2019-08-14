@@ -181,10 +181,13 @@ int initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(unsigned char* cma
    return res1;
 }
 
-int bigmac_hmac_sha256_80D974(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, int permission)
+int bigmac_hmac_sha256_80D974(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, int key_size)
 {
+   if(key_size != 0x40)
+      return -1;
+
    auto cryptops = CryptoService::get();
-   return cryptops->hmac_sha256(src, dst, size, key, 0x10); // IMPORTANT - KEY SIZE IS 0x10
+   return cryptops->hmac_sha256(src, dst, size, key, 0x40);
 }
 
 int bigmac_sha256_80D960(unsigned char* dst, const unsigned char* src, int size)
@@ -193,9 +196,10 @@ int bigmac_sha256_80D960(unsigned char* dst, const unsigned char* src, int size)
    return cryptops->sha256(src, dst, size);
 }
 
-unsigned char hmac_256_key_812340[0x10] = {0x54, 0x88, 0xA9, 0x81, 0x1C, 0x9A, 0x2C, 0xBC, 0xCC, 0x59, 0x6B, 0x1F, 0xAD, 0x1A, 0x7E, 0x29, 
-                                           //0xE0, 0x75, 0x84, 0x0F, 0x47, 0x43, 0x1F, 0x37, 0xAC, 0x06, 0x02, 0x46, 0x4A, 0x27, 0x9E, 0x02
-                                          };
+unsigned char hmac_256_key_812340[0x40] = {0x54, 0x88, 0xA9, 0x81, 0x1C, 0x9A, 0x2C, 0xBC, 0xCC, 0x59, 0x6B, 0x1F, 0xAD, 0x1A, 0x7E, 0x29, 
+                                           0xE0, 0x75, 0x84, 0x0F, 0x47, 0x43, 0x1F, 0x37, 0xAC, 0x06, 0x02, 0x46, 0x4A, 0x27, 0x9E, 0x02, 
+                                           0xDF, 0x2E, 0x71, 0x65, 0xF1, 0x13, 0x7B, 0xF6, 0x9A, 0xE6, 0xDC, 0xB9, 0xDC, 0x38, 0x8C, 0x9D, 
+                                           0xCC, 0xB3, 0x64, 0xC4, 0xCA, 0x26, 0xCB, 0x8F, 0x1A, 0xF0, 0x63, 0x8A, 0x6E, 0xAD, 0xB5, 0x4D};
 
 int bigmac_hmac_sha256_contract_80C0F6(const unsigned char* src2, const unsigned char* src1, int size, unsigned char* dst)
 {
@@ -230,14 +234,14 @@ int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, u
    memcpy(src_xored, iv, 0x20);
 
    for(int i = 0; i < data_size; i++)
-      src_xored[i] = src[i] ^ src_xored[i];
+      src_xored[i] = src_xored[i] ^ src[i];
 
    int r0 = bigmac_sha256_80D960(digest, src_xored, 0x20);
    if(r0 != 0)
       return 0x11;
 
    for(int i = 0; i < 0x20; i++)
-      iv[i] = digest[i] ^ iv[i];
+      iv[i] = iv[i] ^ digest[i];
 
    for(int i = 0; i < 0x20; i++)
    {
@@ -261,17 +265,6 @@ unsigned char Pk_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA
 
 int BN_mod_F00D_ecc_80FD6E(unsigned char* dst, unsigned char* nonce, int nonce_size_blocks, int nonce_size, unsigned char* N, int N_blocks_size, int N_size)
 {
-   //BN_bin2bn N - size is N_size
-   //BN_bin2bn nonce - size is nonce_size 
-   //check N (what is the check?)
-   //copy nonce to 0xE0040000 (what is the buffer?) - size is nonce_size_blocks
-   //copy N to 0xE0040000 (RsaModulusBuffer) - size is nonce_size_blocks
-   //set 0xE0040800 (RsaControl) to ((N_size_blocks << 9) & (0x3FE00)) | (((0x3FC0000) & (nonce_size_blocks << 0x12)) | (0x58000000))
-   //wait for completion by checking 0xE0040804 (RsaStatus)
-   //copy to dst from 0xE0040000 (what is the buffer?) - size is N_size_blocks
-   //check dst (what is the check?)
-   //BN_bn2bin result to dst - size n_size_blocks
-
    return ecc_modulus(nonce, nonce_size, N, N_size, dst);
 }
 
@@ -1110,7 +1103,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 {
    SceSblSmCommGcAuthMgrData_1000B_22_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_22_input*)ctx->data;
 
-   // get static salt
+   // get Pk salt
 
    unsigned char* Pk = 0;
 
@@ -1133,7 +1126,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 
    // calculate contract
 
-   unsigned char iv_B4[0x20];
+   unsigned char iv_B4[0x20] = {0};
 
    int r0_0 = bigmac_hmac_sha256_contract_80C0F6(Pk, input_data->message_hash, 0x1C, iv_B4);
    if(r0_0 != 0)
@@ -1141,6 +1134,10 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 
    unsigned char digest_F4[0x40] = {0};
    unsigned char nonce[0x1C] = {0};
+
+   // calculate nonce
+
+   // this part is supposed to cycle forever on fail, untill modulus completes successfully
 
    while(true)
    {
@@ -1154,10 +1151,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 
       int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce, digest_F4, N_ptr_224_81251C);
       if(r0_3 == 0)
-         break; // not sure about this part. is there one cycle or not?
-
-      //if(nonce[0] == 0x2C && nonce[1] == 0x1C && nonce[2] == 0x3B)
-      //break;
+         break;
    }
 
    //check input
@@ -1169,9 +1163,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
    }
 
    // calculate signature
-
-   //unsigned char real_nonce[0x1C] = {0x2C, 0x1C, 0x3B, 0x8A, 0x66, 0x5E, 0x3D, 0x92, 0x8E, 0x62, 0xA0, 0xF5, 0xA4, 0x3E, 0xF7, 0x1F, 0x33, 0xB6, 0xB6, 0xD5, 0x9B, 0xC6, 0x0E, 0x81, 0xAF, 0xC6, 0x90, 0x61}; // OK
-      
+   
    int r0_4 = ECDSA_do_sign_F00D_ecc_224_80F4CE(sig_ptrs, input_data->message_hash, nonce, Pk, ECC_224_curve_812510);
    if(r0_4 != 0)
       return 5;

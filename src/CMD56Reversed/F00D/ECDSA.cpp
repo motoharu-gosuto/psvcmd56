@@ -89,13 +89,13 @@ EC_GROUP *create_curve(int ecc_size, const unsigned char* a_bin, const unsigned 
    return result_curve;
 }
 
-int print_bignum(int ecc_size, const BIGNUM* b)
+int print_bignum(const BIGNUM* b)
 {
-   unsigned char bc[0x1C];
+   unsigned char bc[0x40];
 
-   BN_bn2bin(b, bc);
+   int size = BN_bn2bin(b, bc);
 
-   for(int i = 0; i < ecc_size; i++)
+   for(int i = 0; i < size; i++)
    {
       std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)bc[i];
    }
@@ -313,15 +313,14 @@ int ecdsa_sign(int ecc_size, unsigned char* M, unsigned const char* Pk, const ec
 
                                                                if(BN_bn2bin(s_sig, sig_res->s) == ecc_size)
                                                                {
-                                                                  std::cout << "rp:" << std::endl;
-                                                                  print_bignum(ecc_size, rp);
-                                                                  std::cout << "kinvp:" << std::endl;
-                                                                  print_bignum(ecc_size, kinvp);
-                                                                  std::cout << "r_sig:" << std::endl;
-                                                                  print_bignum(ecc_size, r_sig);
-                                                                  std::cout << "s_sig:" << std::endl;
-                                                                  print_bignum(ecc_size, s_sig);
-                                                            
+                                                                  //std::cout << "rp:" << std::endl;
+                                                                  //print_bignum(rp);
+                                                                  //std::cout << "kinvp:" << std::endl;
+                                                                  //print_bignum(kinvp);
+                                                                  //std::cout << "r_sig:" << std::endl;
+                                                                  //print_bignum(r_sig);
+                                                                  //std::cout << "s_sig:" << std::endl;
+                                                                  //print_bignum(s_sig);
 
                                                                   result = 0;
                                                                }
@@ -417,10 +416,10 @@ int ecc_multiply(int ecc_size, const ecdsa_params* params, const ecdsa_point* in
                                        {
                                           if(BN_bn2bin(output_curve_point_y, output->Y) == ecc_size)
                                           {
-                                             std::cout << "rp:" << std::endl;
-                                             print_bignum(ecc_size, output_curve_point_x);
-                                             std::cout << "kinvp:" << std::endl;
-                                             print_bignum(ecc_size, output_curve_point_y);
+                                             //std::cout << "rp:" << std::endl;
+                                             //print_bignum(output_curve_point_x);
+                                             //std::cout << "kinvp:" << std::endl;
+                                             //print_bignum(output_curve_point_y);
                                           
                                              result = 0;
                                           }
@@ -484,9 +483,9 @@ int ecc_modulus(const unsigned char* nonce, int nonce_size, const unsigned char*
                {
                   result = 0;
                }
-
-               BN_free(rem);
             }
+
+            BN_free(rem);
 
             BN_free(N_bn);
          }
