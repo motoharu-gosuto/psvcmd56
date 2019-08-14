@@ -193,8 +193,9 @@ int bigmac_sha256_80D960(unsigned char* dst, const unsigned char* src, int size)
    return cryptops->sha256(src, dst, size);
 }
 
-unsigned char hmac_256_key_812340[0x20] = {0x54, 0x88, 0xA9, 0x81, 0x1C, 0x9A, 0x2C, 0xBC, 0xCC, 0x59, 0x6B, 0x1F, 0xAD, 0x1A, 0x7E, 0x29, 
-                                           0xE0, 0x75, 0x84, 0x0F, 0x47, 0x43, 0x1F, 0x37, 0xAC, 0x06, 0x02, 0x46, 0x4A, 0x27, 0x9E, 0x02};
+unsigned char hmac_256_key_812340[0x10] = {0x54, 0x88, 0xA9, 0x81, 0x1C, 0x9A, 0x2C, 0xBC, 0xCC, 0x59, 0x6B, 0x1F, 0xAD, 0x1A, 0x7E, 0x29, 
+                                           //0xE0, 0x75, 0x84, 0x0F, 0x47, 0x43, 0x1F, 0x37, 0xAC, 0x06, 0x02, 0x46, 0x4A, 0x27, 0x9E, 0x02
+                                          };
 
 int bigmac_hmac_sha256_contract_80C0F6(const unsigned char* src2, const unsigned char* src1, int size, unsigned char* dst)
 {
@@ -219,13 +220,17 @@ int bigmac_hmac_sha256_contract_80C0F6(const unsigned char* src2, const unsigned
 
 int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, unsigned char* iv, unsigned char* digest)
 {
-   unsigned char src_xored[0x20];
+   unsigned char src_xored[0x20] = {0};
 
    if (data_size > 0x20)
       return 0x12;
 
+   // this memcpy is important because src is only of size 0x1C!
+   // if memcpy is not done - 4 last bytes will be incorrectly calculated
+   memcpy(src_xored, iv, 0x20);
+
    for(int i = 0; i < data_size; i++)
-      src_xored[i] = src[i] ^ iv[i];
+      src_xored[i] = src[i] ^ src_xored[i];
 
    int r0 = bigmac_sha256_80D960(digest, src_xored, 0x20);
    if(r0 != 0)
@@ -1148,10 +1153,11 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
          return 5;
 
       int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce, digest_F4, N_ptr_224_81251C);
-      //if(r0_3 != 0)
-      //   break; // not sure about this part. is there one cycle or not?
+      if(r0_3 == 0)
+         break; // not sure about this part. is there one cycle or not?
 
-      break;
+      //if(nonce[0] == 0x2C && nonce[1] == 0x1C && nonce[2] == 0x3B)
+      //break;
    }
 
    //check input
