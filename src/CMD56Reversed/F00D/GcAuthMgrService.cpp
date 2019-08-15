@@ -445,7 +445,7 @@ int multiply_ecc_224_custom_curve_point_80EE00(unsigned char* curve_point_output
 
 //==========================================
 
-int ECDSA_do_sign_F00D_ecc_80EE76(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6], int size_blocks, int size)
+int sign_ecc_80EE76(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6], int size_blocks, int size)
 {
    ecdsa_params params;
 
@@ -466,14 +466,14 @@ int ECDSA_do_sign_F00D_ecc_80EE76(unsigned char* sig[2], unsigned char* M, unsig
    return 0;
 }
 
-int ECDSA_do_sign_F00D_ecc_160_80F4B4(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
+int sign_ecc_160_80F4B4(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
 {
-   return ECDSA_do_sign_F00D_ecc_80EE76(sig, M, nonce, Pk, curve, 5, 0x14);
+   return sign_ecc_80EE76(sig, M, nonce, Pk, curve, 5, 0x14);
 }
 
-int ECDSA_do_sign_F00D_ecc_224_80F4CE(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
+int sign_ecc_224_80F4CE(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
 {
-   return ECDSA_do_sign_F00D_ecc_80EE76(sig, M, nonce, Pk, curve, 7, 0x1C);
+   return sign_ecc_80EE76(sig, M, nonce, Pk, curve, 7, 0x1C);
 }
 
 //==========================================
@@ -1168,7 +1168,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
 
    // calculate signature
    
-   int r0_4 = ECDSA_do_sign_F00D_ecc_224_80F4CE(sig_ptrs, input_data->message_hash, nonce, Pk, ECC_224_curve_812510);
+   int r0_4 = sign_ecc_224_80F4CE(sig_ptrs, input_data->message_hash, nonce, Pk, ECC_224_curve_812510);
    if(r0_4 != 0)
       return 5;
 
