@@ -4,8 +4,6 @@
 
 #include <F00D/ECDSA.h>
 
-//FIX POINTER CONSTNESS!!!!!!!!!!!!
-
 using namespace f00d;
 
 //==========================================
@@ -21,7 +19,7 @@ unsigned char ecc_160_gy[0x14] = {0x59, 0x58, 0x55, 0x7E, 0xB1, 0xDB, 0x00, 0x12
 
 unsigned char* N_ptr_160_81259C = ecc_160_n;
 
-unsigned char* ECC_160_curve_812590[6] = {ecc_160_p, ecc_160_a, ecc_160_b, ecc_160_n, ecc_160_gx, ecc_160_gy};
+const unsigned char* ECC_160_curve_812590[6] = {ecc_160_p, ecc_160_a, ecc_160_b, ecc_160_n, ecc_160_gx, ecc_160_gy};
 
 //==========================================
 
@@ -36,7 +34,7 @@ unsigned char ecc_224_0x22_gy[0x1C] = {0x0B, 0xD9, 0x41, 0x8D, 0xE8, 0xE3, 0xE4,
 
 unsigned char* N_ptr_224_81251C = ecc_224_0x22_n;
 
-unsigned char* ECC_224_curve_812510[6] = {ecc_224_0x22_p, ecc_224_0x22_a, ecc_224_0x22_b, ecc_224_0x22_n, ecc_224_0x22_gx, ecc_224_0x22_gy};
+const unsigned char* ECC_224_curve_812510[6] = {ecc_224_0x22_p, ecc_224_0x22_a, ecc_224_0x22_b, ecc_224_0x22_n, ecc_224_0x22_gx, ecc_224_0x22_gy};
 
 //==========================================
 
@@ -60,7 +58,7 @@ unsigned char Pk_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA
 
 //==========================================
 
-int bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(unsigned char* src, int keyslot_dst, int keyslot_src)
+int bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(const unsigned char* src, int keyslot_dst, int keyslot_src)
 {
    return 0;
 }
@@ -70,14 +68,14 @@ int bigmac_cmac_aes_128_with_keyslot_80B87C(unsigned char* dst, const unsigned c
    return 0;
 }
 
-int bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(unsigned char* src, unsigned char* iv, int keyslot_dst, int keyslot_src)
+int bigmac_aes_128_cbc_decrypt_set_keyslot_from_keyslot_80B486(const unsigned char* src, unsigned char* iv, int keyslot_dst, int keyslot_src)
 {
    return 0;
 }
 
 // mode 1 uses key
 // mode 2 uses keyslot 0x24
-int bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(unsigned char* src_dst, int size, unsigned char* key, int enc_mode)
+int bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(const unsigned char* src_dst, int size, const unsigned char* key, int enc_mode)
 {
    //iv is 0
 
@@ -93,29 +91,29 @@ int bigmac_generate_random_number_80C462(unsigned char* dst, int size)
 
 // mode 1 uses key
 // mode 2 uses keyslot 0x24
-int bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(unsigned char* src_dst, int size, unsigned char* key, int enc_mode)
+int bigmac_aes_128_cbc_encrypt_with_mode_select_80B91E(unsigned char* src_dst, int size, const unsigned char* key, int enc_mode)
 {
    return 0;
 }
 
-int bigmac_cmac_aes_128_with_key_80BA5C(unsigned char* src, int size, unsigned char* key, unsigned char* dst)
+int bigmac_cmac_aes_128_with_key_80BA5C(const unsigned char* src, int size, const unsigned char* key, unsigned char* dst)
 {
    return 0;
 }
 
-int bigmac_sha256_80BAC2(unsigned char* src, int size, unsigned char* dst)
+int bigmac_sha256_80BAC2(const unsigned char* src, int size, unsigned char* dst)
 {
    return 0;
 }
 
-int bigmac_sha1_80BB18(unsigned char* src, int size, unsigned char* dst)
+int bigmac_sha1_80BB18(const unsigned char* src, int size, unsigned char* dst)
 {
    return 0;
 }
 
 //cmac_input - size 0x20
 //cmac_output - size 0x10
-int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(unsigned char* cmac_input, int key_id, unsigned char* cmac_output, int* mode)
+int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(const unsigned char* cmac_input, int key_id, unsigned char* cmac_output, int* mode)
 {
    switch(key_id)
    {
@@ -184,7 +182,7 @@ int initialize_keyslot_0x21_0x24_with_cmac_80BB6E(unsigned char* cmac_input, int
    }
 }
 
-int initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(unsigned char* cmac_input, int key_id, unsigned char* src, unsigned char* dst)
+int initialize_keyslot_0x21_0x24_with_cmac_and_dec_key_80BCB6(const unsigned char* cmac_input, int key_id, const unsigned char* src, unsigned char* dst)
 {
    int mode;
    unsigned char drv_key[0x10];
@@ -273,46 +271,46 @@ int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, u
 
 //==========================================
 
-int maybe_BN_bin2bn_80FFD6(unsigned char* dst, unsigned char* src, int size)
+int maybe_BN_bin2bn_80FFD6(unsigned char* dst, const unsigned char* src, int size)
 {
    return 0;
 }
 
-int maybe_BN_bn2bin_81001A(unsigned char* dst, unsigned char* src, int size_blocks)
+int maybe_BN_bn2bin_81001A(unsigned char* dst, const unsigned char* src, int size_blocks)
 {
    return 0;
 }
 
-int unindentified_function_80DECC(unsigned char* multiplier, unsigned char* order, int size_blocks)
+int unindentified_function_80DECC(const unsigned char* multiplier, const unsigned char* order, int size_blocks)
 {
    return 0;
 }
 
-int multiply_ecc_curve_F00D_80DF18(unsigned char* curve_point_output[2], unsigned char* curve_point_input[2], unsigned char* curve_p, unsigned char* curve_a, unsigned char* multiplier)
+int multiply_ecc_curve_F00D_80DF18(unsigned char* curve_point_output[2], const unsigned char* curve_point_input[2], const unsigned char* curve_p, const unsigned char* curve_a, const unsigned char* multiplier)
 {
    return 0;
 }
 
 //==========================================
 
-int ecc_modulus_80FD6E(unsigned char* dst, unsigned char* nonce, int nonce_size_blocks, int nonce_size, unsigned char* N, int N_blocks_size, int N_size)
+int ecc_modulus_80FD6E(unsigned char* dst, const unsigned char* nonce, int nonce_size_blocks, int nonce_size, const unsigned char* N, int N_blocks_size, int N_size)
 {
    return ecc_modulus(nonce, nonce_size, N, N_size, dst);
 }
 
-int modulus_ecc_160_80FF34(unsigned char* dst, unsigned char* nonce, unsigned char* n)
+int modulus_ecc_160_80FF34(unsigned char* dst, const unsigned char* nonce, const unsigned char* n)
 {
    return ecc_modulus_80FD6E(dst, nonce, 0xA, 0x28, n, 5, 0x14);
 }
 
-int modulus_ecc_224_80FF50(unsigned char* dst, unsigned char* nonce, unsigned char* n)
+int modulus_ecc_224_80FF50(unsigned char* dst, const unsigned char* nonce, const unsigned char* n)
 {
    return ecc_modulus_80FD6E(dst, nonce, 0xF, 0x3C, n, 7, 0x1C);
 }
 
 //==========================================
 
-int multiply_generator_ecc_curve_point_80DD96(unsigned char* output_point[2], unsigned char* multiplier, unsigned char* curve[6], int size_blocks, int size)
+int multiply_generator_ecc_curve_point_80DD96(unsigned char* output_point[2], const unsigned char* multiplier, const unsigned char* curve[6], int size_blocks, int size)
 {
    unsigned char curve_p_bn[0x28];
    unsigned char curve_a_bn[0x28];
@@ -338,7 +336,7 @@ int multiply_generator_ecc_curve_point_80DD96(unsigned char* output_point[2], un
    unsigned char output_y[0x28];
    unsigned char* output_curve_point_bn[2] = {output_x, output_y};
 
-   unsigned char* input_curve_point[2] = {curve_gx_bn, curve_gy_bn};
+   const unsigned char* input_curve_point[2] = {curve_gx_bn, curve_gy_bn};
 
    multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
 
@@ -349,19 +347,19 @@ int multiply_generator_ecc_curve_point_80DD96(unsigned char* output_point[2], un
    return 0;
 }
 
-int multiply_ECC_160_generator_curve_point_80DEA4(unsigned char* output_point[2] , unsigned char* multiplier, unsigned char* curve[6])
+int multiply_ECC_160_generator_curve_point_80DEA4(unsigned char* output_point[2] , const unsigned char* multiplier, const unsigned char* curve[6])
 {
    return multiply_generator_ecc_curve_point_80DD96(output_point, multiplier, curve, 5, 0x14);
 }
 
-int multiply_ECC_224_generator_curve_point_80DEB8(unsigned char* output_point[2] , unsigned char* multiplier, unsigned char* curve[6])
+int multiply_ECC_224_generator_curve_point_80DEB8(unsigned char* output_point[2] , const unsigned char* multiplier, const unsigned char* curve[6])
 {
    return multiply_generator_ecc_curve_point_80DD96(output_point, multiplier, curve, 7, 0x1C);
 }
 
 //==========================================
 
-int multiply_ecc_custom_curve_point_80EB50(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6], int size_blocks, int size)
+int multiply_ecc_custom_curve_point_80EB50(unsigned char* curve_point_output[2], const unsigned char* multiplier, const unsigned char* curve_point_input[2], const unsigned char* curve[6], int size_blocks, int size)
 {
    unsigned char curve_p_bn[0x28];
    unsigned char curve_a_bn[0x28];
@@ -419,7 +417,7 @@ int multiply_ecc_custom_curve_point_80EB50(unsigned char* curve_point_output[2],
    unsigned char output_y[0x28];
    unsigned char* output_curve_point_bn[2] = {output_x, output_y};
 
-   unsigned char* input_curve_point[2] = {curve_point_trans_x, curve_point_trans_y};
+   const unsigned char* input_curve_point[2] = {curve_point_trans_x, curve_point_trans_y};
 
    // how equal is this to EC_POINT_mul ?
    // this call probably should include EC_POINT_get_affine_coordinates inside it
@@ -433,19 +431,19 @@ int multiply_ecc_custom_curve_point_80EB50(unsigned char* curve_point_output[2],
    return 0;
 }
 
-int multiply_ecc_160_custom_curve_point_80EDEA(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6])
+int multiply_ecc_160_custom_curve_point_80EDEA(unsigned char* curve_point_output[2], const unsigned char* multiplier, const unsigned char* curve_point_input[2], const unsigned char* curve[6])
 {
    return multiply_ecc_custom_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 5, 0x14);
 }
 
-int multiply_ecc_224_custom_curve_point_80EE00(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char** curve_point_input, unsigned char* curve[6])
+int multiply_ecc_224_custom_curve_point_80EE00(unsigned char* curve_point_output[2], const unsigned char* multiplier, const unsigned char* curve_point_input[2], const unsigned char* curve[6])
 {
    return multiply_ecc_custom_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 7, 0x1C);
 }
 
 //==========================================
 
-int sign_ecc_80EE76(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6], int size_blocks, int size)
+int sign_ecc_80EE76(unsigned char* sig[2], const unsigned char* M, const unsigned char* nonce, const unsigned char* Pk, const unsigned char* curve[6], int size_blocks, int size)
 {
    ecdsa_params params;
 
@@ -466,12 +464,12 @@ int sign_ecc_80EE76(unsigned char* sig[2], unsigned char* M, unsigned char* nonc
    return 0;
 }
 
-int sign_ecc_160_80F4B4(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
+int sign_ecc_160_80F4B4(unsigned char* sig[2], const unsigned char* M, const unsigned char* nonce, const unsigned char* Pk, const unsigned char* curve[6])
 {
    return sign_ecc_80EE76(sig, M, nonce, Pk, curve, 5, 0x14);
 }
 
-int sign_ecc_224_80F4CE(unsigned char* sig[2], unsigned char* M, unsigned char* nonce, unsigned char* Pk, unsigned char* curve[6])
+int sign_ecc_224_80F4CE(unsigned char* sig[2], const unsigned char* M, const unsigned char* nonce, const unsigned char* Pk, const unsigned char* curve[6])
 {
    return sign_ecc_80EE76(sig, M, nonce, Pk, curve, 7, 0x1C);
 }
@@ -540,7 +538,7 @@ int service_handler_0x1000B_command_D_80B2C8(SceSblSmCommGcAuthMgrData_1000B* ct
 
    unsigned char x[0x14];
    unsigned char y[0x14];
-   unsigned char* curve_point[2] = {x, y};
+   const unsigned char* curve_point[2] = {x, y};
 
    memcpy(x, input_data->x, 0x14);
    memcpy(y, input_data->y, 0x14);
@@ -649,7 +647,7 @@ int service_handler_0x1000B_command_15_80B72A(SceSblSmCommGcAuthMgrData_1000B* c
 
    unsigned char x[0x1C];
    unsigned char y[0x1C];
-   unsigned char* curve_point[2] = {x, y};
+   const unsigned char* curve_point[2] = {x, y};
 
    memcpy(x, input_data->x, 0x1C);
    memcpy(y, input_data->y, 0x1C);

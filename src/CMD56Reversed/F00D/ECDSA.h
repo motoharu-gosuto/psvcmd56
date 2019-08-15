@@ -21,9 +21,9 @@ struct ecdsa_params
    ecdsa_point G;
 };
 
-int ecdsa_verify(int ecc_size, ecdsa_signature *sig, unsigned char* M, const ecdsa_point* Qa, const ecdsa_params* params);
+int ecdsa_verify(int ecc_size, ecdsa_signature *sig, const unsigned char* M, const ecdsa_point* Qa, const ecdsa_params* params);
 
-int ecdsa_sign(int ecc_size, unsigned char* M, unsigned const char* Pk, const ecdsa_params* params, const unsigned char* nonce, ecdsa_signature* sig_res);
+int ecdsa_sign(int ecc_size, const unsigned char* M, const unsigned const char* Pk, const ecdsa_params* params, const unsigned char* nonce, ecdsa_signature* sig_res);
 
 int ecc_multiply(int ecc_size, const ecdsa_params* params, const ecdsa_point* input, const unsigned char* multiplier, ecdsa_point* output);
 

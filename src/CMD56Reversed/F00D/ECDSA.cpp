@@ -146,7 +146,7 @@ int ec_group_do_inverse_ord(const EC_GROUP *curve, BIGNUM *res, const BIGNUM *x,
     return ec_field_inverse_mod_ord(curve, res, x, ctx);
 }
 
-int ecdsa_verify(int ecc_size, ecdsa_signature *sig, unsigned char* M, const ecdsa_point* Qa, const ecdsa_params* params)
+int ecdsa_verify(int ecc_size, ecdsa_signature *sig, const unsigned char* M, const ecdsa_point* Qa, const ecdsa_params* params)
 {
    int result = -1;
 
@@ -233,7 +233,7 @@ int ecdsa_verify(int ecc_size, ecdsa_signature *sig, unsigned char* M, const ecd
    return result;
 }
 
-int ecdsa_sign(int ecc_size, unsigned char* M, unsigned const char* Pk, const ecdsa_params* params, const unsigned char* nonce, ecdsa_signature* sig_res)
+int ecdsa_sign(int ecc_size, const unsigned char* M, const unsigned const char* Pk, const ecdsa_params* params, const unsigned char* nonce, ecdsa_signature* sig_res)
 {
    int result = -1;
 
