@@ -69,6 +69,8 @@ int bigmac_aes_128_cbc_decrypt_with_mode_select_80B9BE(unsigned char* src_dst, i
 
 int bigmac_generate_random_number_80C462(unsigned char* dst, int size)
 {
+   memset(dst, 0, size);
+
    return 0;
 }
 
@@ -263,19 +265,19 @@ unsigned char Pk_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA
 
 //---
 
-int BN_mod_F00D_ecc_80FD6E(unsigned char* dst, unsigned char* nonce, int nonce_size_blocks, int nonce_size, unsigned char* N, int N_blocks_size, int N_size)
+int ecc_modulus_80FD6E(unsigned char* dst, unsigned char* nonce, int nonce_size_blocks, int nonce_size, unsigned char* N, int N_blocks_size, int N_size)
 {
    return ecc_modulus(nonce, nonce_size, N, N_size, dst);
 }
 
-int BN_mod_F00D_ecc_160_80FF34(unsigned char* dst, unsigned char* nonce, unsigned char* n)
+int modulus_ecc_160_80FF34(unsigned char* dst, unsigned char* nonce, unsigned char* n)
 {
-   return BN_mod_F00D_ecc_80FD6E(dst, nonce, 0xA, 0x28, n, 5, 0x14);
+   return ecc_modulus_80FD6E(dst, nonce, 0xA, 0x28, n, 5, 0x14);
 }
 
-int BN_mod_F00D_ecc_224_80FF50(unsigned char* dst, unsigned char* nonce, unsigned char* n)
+int modulus_ecc_224_80FF50(unsigned char* dst, unsigned char* nonce, unsigned char* n)
 {
-   return BN_mod_F00D_ecc_80FD6E(dst, nonce, 0xF, 0x3C, n, 7, 0x1C);
+   return ecc_modulus_80FD6E(dst, nonce, 0xF, 0x3C, n, 7, 0x1C);
 }
 
 //---
@@ -295,14 +297,14 @@ int unindentified_function_80DECC(unsigned char* multiplier, unsigned char* orde
    return 0;
 }
 
-int maybe_multiply_ecc_curve_F00D_80DF18(unsigned char* curve_point_output[2], unsigned char* curve_point_input[2], unsigned char* curve_p, unsigned char* curve_a, unsigned char* multiplier)
+int multiply_ecc_curve_F00D_80DF18(unsigned char* curve_point_output[2], unsigned char* curve_point_input[2], unsigned char* curve_p, unsigned char* curve_a, unsigned char* multiplier)
 {
    return 0;
 }
 
 //---
 
-int multiply_generator_point_on_ecc_curve_F00D_80DD96(unsigned char* output_point[2], unsigned char* multiplier, unsigned char* curve[6], int size_blocks, int size)
+int multiply_generator_ecc_curve_point_80DD96(unsigned char* output_point[2], unsigned char* multiplier, unsigned char* curve[6], int size_blocks, int size)
 {
    unsigned char curve_p_bn[0x28];
    unsigned char curve_a_bn[0x28];
@@ -330,7 +332,7 @@ int multiply_generator_point_on_ecc_curve_F00D_80DD96(unsigned char* output_poin
 
    unsigned char* input_curve_point[2] = {curve_gx_bn, curve_gy_bn};
 
-   maybe_multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
+   multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
 
    maybe_BN_bn2bin_81001A(output_point[0], output_curve_point_bn[0], size_blocks);
 
@@ -339,19 +341,19 @@ int multiply_generator_point_on_ecc_curve_F00D_80DD96(unsigned char* output_poin
    return 0;
 }
 
-int multiply_generator_point_on_ecc_curve_ecc_160_80DEA4(unsigned char* output_point[2] , unsigned char* multiplier, unsigned char* curve[6])
+int multiply_ECC_160_generator_curve_point_80DEA4(unsigned char* output_point[2] , unsigned char* multiplier, unsigned char* curve[6])
 {
-   return multiply_generator_point_on_ecc_curve_F00D_80DD96(output_point, multiplier, curve, 5, 0x14);
+   return multiply_generator_ecc_curve_point_80DD96(output_point, multiplier, curve, 5, 0x14);
 }
 
-int multiply_generator_point_on_ecc_curve_ecc_224_80DEB8(unsigned char* output_point[2] , unsigned char* multiplier, unsigned char* curve[6])
+int multiply_ECC_224_generator_curve_point_80DEB8(unsigned char* output_point[2] , unsigned char* multiplier, unsigned char* curve[6])
 {
-   return multiply_generator_point_on_ecc_curve_F00D_80DD96(output_point, multiplier, curve, 7, 0x1C);
+   return multiply_generator_ecc_curve_point_80DD96(output_point, multiplier, curve, 7, 0x1C);
 }
 
 //---
 
-int multiply_ecc_curve_point_80EB50(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6], int size_blocks, int size)
+int multiply_ecc_custom_curve_point_80EB50(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6], int size_blocks, int size)
 {
    unsigned char curve_p_bn[0x28];
    unsigned char curve_a_bn[0x28];
@@ -414,7 +416,7 @@ int multiply_ecc_curve_point_80EB50(unsigned char* curve_point_output[2], unsign
    // how equal is this to EC_POINT_mul ?
    // this call probably should include EC_POINT_get_affine_coordinates inside it
 
-   maybe_multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
+   multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
 
    maybe_BN_bn2bin_81001A(curve_point_output[0], output_curve_point_bn[0], size_blocks);
 
@@ -423,14 +425,14 @@ int multiply_ecc_curve_point_80EB50(unsigned char* curve_point_output[2], unsign
    return 0;
 }
 
-int multiply_ECC_160_curve_point_80EDEA(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6])
+int multiply_ecc_160_custom_curve_point_80EDEA(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char* curve_point_input[2], unsigned char* curve[6])
 {
-   return multiply_ecc_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 5, 0x14);
+   return multiply_ecc_custom_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 5, 0x14);
 }
 
-int multiply_ECC_224_curve_point_80EE00(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char** curve_point_input, unsigned char* curve[6])
+int multiply_ecc_224_custom_curve_point_80EE00(unsigned char* curve_point_output[2], unsigned char* multiplier, unsigned char** curve_point_input, unsigned char* curve[6])
 {
-   return multiply_ecc_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 7, 0x1C);
+   return multiply_ecc_custom_curve_point_80EB50(curve_point_output, multiplier, curve_point_input, curve, 7, 0x1C);
 }
 
 //---
@@ -494,13 +496,13 @@ int service_handler_0x1000B_command_C_80C9F4(SceSblSmCommGcAuthMgrData_1000B* ct
    bigmac_generate_random_number_80C462(nonce, 0x40);
 
    unsigned char nonce_modulus[0x14];
-   BN_mod_F00D_ecc_160_80FF34(nonce_modulus, nonce, N_ptr_160_81259C);
+   modulus_ecc_160_80FF34(nonce_modulus, nonce, N_ptr_160_81259C);
 
    unsigned char output_curve_point_x[0x14];
    unsigned char output_curve_point_y[0x14];
    unsigned char* output_curve_point[2] = {output_curve_point_x, output_curve_point_y};
 
-   multiply_generator_point_on_ecc_curve_ecc_160_80DEA4(output_curve_point, nonce_modulus, ECC_160_curve_812590);
+   multiply_ECC_160_generator_curve_point_80DEA4(output_curve_point, nonce_modulus, ECC_160_curve_812590);
 
    // construct response
 
@@ -545,7 +547,7 @@ int service_handler_0x1000B_command_D_80B2C8(SceSblSmCommGcAuthMgrData_1000B* ct
    unsigned char output_y[0x14];
    unsigned char* output_curve_point[2] = {output_x, output_y};
 
-   multiply_ECC_160_curve_point_80EDEA(output_curve_point, multiplier, curve_point, ECC_160_curve_812590);
+   multiply_ecc_160_custom_curve_point_80EDEA(output_curve_point, multiplier, curve_point, ECC_160_curve_812590);
 
    // construct response
 
@@ -603,13 +605,13 @@ int service_handler_0x1000B_command_14_80C828(SceSblSmCommGcAuthMgrData_1000B* c
    bigmac_generate_random_number_80C462(nonce, 0x40);
 
    unsigned char nonce_modulus[0x1C];
-   BN_mod_F00D_ecc_224_80FF50(nonce_modulus, nonce, N_ptr_224_81251C);
+   modulus_ecc_224_80FF50(nonce_modulus, nonce, N_ptr_224_81251C);
 
    unsigned char output_curve_point_x[0x1C];
    unsigned char output_curve_point_y[0x1C];
    unsigned char* output_curve_point[2] = {output_curve_point_x, output_curve_point_y};
 
-   multiply_generator_point_on_ecc_curve_ecc_224_80DEB8(output_curve_point, nonce_modulus, ECC_224_curve_812510);
+   multiply_ECC_224_generator_curve_point_80DEB8(output_curve_point, nonce_modulus, ECC_224_curve_812510);
 
    // construct response
 
@@ -654,7 +656,7 @@ int service_handler_0x1000B_command_15_80B72A(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char output_y[0x1C];
    unsigned char* output_curve_point[2] = {output_x, output_y};
 
-   multiply_ECC_224_curve_point_80EE00(output_curve_point, multiplier, curve_point, ECC_224_curve_812510);
+   multiply_ecc_224_custom_curve_point_80EE00(output_curve_point, multiplier, curve_point, ECC_224_curve_812510);
 
    // construct response
 
@@ -1149,7 +1151,7 @@ int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* c
       if(r0_2 != 0)
          return 5;
 
-      int r0_3 = BN_mod_F00D_ecc_224_80FF50(nonce, digest_F4, N_ptr_224_81251C);
+      int r0_3 = modulus_ecc_224_80FF50(nonce, digest_F4, N_ptr_224_81251C);
       if(r0_3 == 0)
          break;
    }
