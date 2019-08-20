@@ -6,6 +6,29 @@
 
 using namespace f00d;
 
+//0x04
+//0x07
+//0x0C - DONE
+//0x0D - DONE
+//0x0E
+//0x10
+//0x11
+//0x14 - DONE
+//0x15 - DONE
+//0x16
+//0x17
+//0x18
+//0x19
+//0x1B
+//0x1C
+//0x1D
+//0x1E
+//0x1F
+//0x20
+//0x21
+//0x22 - DONE
+//0x23
+
 //==========================================
 
 //curve 160
@@ -308,28 +331,6 @@ int encrypt_with_static_key_ids_80CEFE(SceSblSmCommGcAuthMgrData_1000B* ctx)
 
 //==========================================
 
-int maybe_BN_bin2bn_80FFD6(unsigned char* dst, const unsigned char* src, int size)
-{
-   return 0;
-}
-
-int maybe_BN_bn2bin_81001A(unsigned char* dst, const unsigned char* src, int size_blocks)
-{
-   return 0;
-}
-
-int unindentified_function_80DECC(const unsigned char* multiplier, const unsigned char* order, int size_blocks)
-{
-   return 0;
-}
-
-int multiply_ecc_curve_F00D_80DF18(unsigned char* curve_point_output[2], const unsigned char* curve_point_input[2], const unsigned char* curve_p, const unsigned char* curve_a, const unsigned char* multiplier)
-{
-   return 0;
-}
-
-//==========================================
-
 int ecc_modulus_80FD6E(unsigned char* dst, const unsigned char* nonce, int nonce_size_blocks, int nonce_size, const unsigned char* N, int N_blocks_size, int N_size)
 {
    return ecc_modulus(nonce, nonce_size, N, N_size, dst);
@@ -347,123 +348,60 @@ int modulus_ecc_224_80FF50(unsigned char* dst, const unsigned char* nonce, const
 
 //==========================================
 
-int multiply_generator_ecc_curve_point_80DD96(unsigned char* output_point[2], const unsigned char* multiplier, const unsigned char* curve[6], int size_blocks, int size)
+int multiply_generator_ecc_curve_point_80DD96(unsigned char* curve_point_output[2], const unsigned char* multiplier, const unsigned char* curve[6], int size_blocks, int size)
 {
-   unsigned char curve_p_bn[0x28];
-   unsigned char curve_a_bn[0x28];
-   unsigned char curve_n_bn[0x28];
-   unsigned char curve_gx_bn[0x28];
-   unsigned char curve_gy_bn[0x28];
+   ecdsa_params params;
 
-   maybe_BN_bin2bn_80FFD6(curve_p_bn, curve[0], size);
-   maybe_BN_bin2bn_80FFD6(curve_a_bn, curve[1], size);
-   maybe_BN_bin2bn_80FFD6(curve_n_bn, curve[3], size);
-   maybe_BN_bin2bn_80FFD6(curve_gx_bn, curve[4], size);
-   maybe_BN_bin2bn_80FFD6(curve_gy_bn, curve[5], size);
+   memcpy(params.P, curve[0], size);
+   memcpy(params.A, curve[1], size);
+   memcpy(params.B, curve[2], size);
+   memcpy(params.N, curve[3], size);
+   memcpy(params.G.X, curve[4], size);
+   memcpy(params.G.Y, curve[5], size);
 
-   unsigned char multiplier_bn[0x28];
+   ecdsa_point output_point;
 
-   maybe_BN_bin2bn_80FFD6(multiplier_bn, multiplier, size);
+   ecc_multiply(size, &params, multiplier, &output_point);
 
-   int r0 = unindentified_function_80DECC(multiplier_bn, curve_n_bn, size_blocks);
-   if(r0 != 0)
-      return -1;
-
-   unsigned char output_x[0x28];
-   unsigned char output_y[0x28];
-   unsigned char* output_curve_point_bn[2] = {output_x, output_y};
-
-   const unsigned char* input_curve_point[2] = {curve_gx_bn, curve_gy_bn};
-
-   multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
-
-   maybe_BN_bn2bin_81001A(output_point[0], output_curve_point_bn[0], size_blocks);
-
-   maybe_BN_bn2bin_81001A(output_point[1], output_curve_point_bn[1], size_blocks);
+   memcpy(curve_point_output[0], output_point.X, size);
+   memcpy(curve_point_output[1], output_point.Y, size);
 
    return 0;
 }
 
-int multiply_ECC_160_generator_curve_point_80DEA4(unsigned char* output_point[2] , const unsigned char* multiplier, const unsigned char* curve[6])
+int multiply_ECC_160_generator_curve_point_80DEA4(unsigned char* curve_point_output[2] , const unsigned char* multiplier, const unsigned char* curve[6])
 {
-   return multiply_generator_ecc_curve_point_80DD96(output_point, multiplier, curve, 5, 0x14);
+   return multiply_generator_ecc_curve_point_80DD96(curve_point_output, multiplier, curve, 5, 0x14);
 }
 
-int multiply_ECC_224_generator_curve_point_80DEB8(unsigned char* output_point[2] , const unsigned char* multiplier, const unsigned char* curve[6])
+int multiply_ECC_224_generator_curve_point_80DEB8(unsigned char* curve_point_output[2] , const unsigned char* multiplier, const unsigned char* curve[6])
 {
-   return multiply_generator_ecc_curve_point_80DD96(output_point, multiplier, curve, 7, 0x1C);
+   return multiply_generator_ecc_curve_point_80DD96(curve_point_output, multiplier, curve, 7, 0x1C);
 }
 
 //==========================================
 
 int multiply_ecc_custom_curve_point_80EB50(unsigned char* curve_point_output[2], const unsigned char* multiplier, const unsigned char* curve_point_input[2], const unsigned char* curve[6], int size_blocks, int size)
 {
-   unsigned char curve_p_bn[0x28];
-   unsigned char curve_a_bn[0x28];
-   unsigned char curve_n_bn[0x28];
+   ecdsa_params params;
 
-   maybe_BN_bin2bn_80FFD6(curve_p_bn, curve[0], size);
-   maybe_BN_bin2bn_80FFD6(curve_a_bn, curve[1], size);
-   maybe_BN_bin2bn_80FFD6(curve_n_bn, curve[3], size);
+   memcpy(params.P, curve[0], size);
+   memcpy(params.A, curve[1], size);
+   memcpy(params.B, curve[2], size);
+   memcpy(params.N, curve[3], size);
+   memcpy(params.G.X, curve[4], size);
+   memcpy(params.G.Y, curve[5], size);
 
-   unsigned char curve_point_input_x_bn[0x28];
-   unsigned char curve_point_input_y_bn[0x28];
+   ecdsa_point input_point;
+   memcpy(input_point.X, curve_point_input[0], size);
+   memcpy(input_point.Y, curve_point_input[1], size);
 
-   maybe_BN_bin2bn_80FFD6(curve_point_input_x_bn, curve_point_input[0], size);
-   maybe_BN_bin2bn_80FFD6(curve_point_input_y_bn, curve_point_input[1], size);
+   ecdsa_point output_point;
 
-   //=============== those transformations probably do EC_POINT_set_affine_coordinates
+   ecc_multiply(size, &params, &input_point, multiplier, &output_point);
 
-   // do some additional checks of curve parameters (p, maybe a and n)
-
-   unsigned char curve_point_trans_x[0x28];
-   unsigned char curve_point_trans_y[0x28];
-
-   if(size_blocks > 0)
-   {
-      //copy curve_point_input_x_bn to 0xE0040000 - size size_blocks
-   }
-
-   if(size_blocks > 0)
-   {
-      //copy curve_p to 0xE0040000 - size size_blocks
-   }
-
-   //set 0xE0040800 to (((size_blocks << 0x12) & 0x3FC0000) | 0x58000000) | ((r3 << 9) & 0x3FE00)
-   //copy 0xE0040000 to curve_point_trans_x
-
-   if(size_blocks > 0)
-   {
-      //copy curve_point_input_y_bn to 0xE0040000 - size size_blocks
-   }
-
-   //set 0xE0040800 to (((size_blocks << 0x12) & 0x3FC0000) | 0x58000000) | ((r3 << 9) & 0x3FE00)
-   //copy 0xE0040000 to curve_point_trans_y
-
-   //===============
-
-   unsigned char multiplier_bn[0x28];
-
-   maybe_BN_bin2bn_80FFD6(multiplier_bn, multiplier, size);
-
-   int r0 = unindentified_function_80DECC(multiplier_bn, curve_n_bn, size_blocks); // not sure what does this call do
-   if(r0 != 0)
-      return -1;
-
-   unsigned char output_x[0x28];
-   unsigned char output_y[0x28];
-   unsigned char* output_curve_point_bn[2] = {output_x, output_y};
-
-   const unsigned char* input_curve_point[2] = {curve_point_trans_x, curve_point_trans_y};
-
-   // how equal is this to EC_POINT_mul ?
-   // this call probably should include EC_POINT_get_affine_coordinates inside it
-
-   multiply_ecc_curve_F00D_80DF18(output_curve_point_bn, input_curve_point, curve_p_bn, curve_a_bn, multiplier_bn);
-
-   maybe_BN_bn2bin_81001A(curve_point_output[0], output_curve_point_bn[0], size_blocks);
-
-   maybe_BN_bn2bin_81001A(curve_point_output[1], output_curve_point_bn[1], size_blocks);
+   memcpy(curve_point_output[0], output_point.X, size);
+   memcpy(curve_point_output[1], output_point.Y, size);
 
    return 0;
 }
@@ -577,8 +515,6 @@ int get_command_4_key(int key_id, const unsigned char** key)
    default:
       return 0xE;
    }
-
-   return 0;
 }
 
 int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ctx)
@@ -744,7 +680,7 @@ int service_handler_0x1000B_command_14_80C828(SceSblSmCommGcAuthMgrData_1000B* c
 
    // construct response
 
-   int response_size = 0x3C;
+   int response_size = 0x54;
 
    ctx->size = response_size;
 
