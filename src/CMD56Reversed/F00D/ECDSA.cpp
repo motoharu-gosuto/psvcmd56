@@ -459,6 +459,75 @@ int ecc_multiply(int ecc_size, const ecdsa_params* params, const ecdsa_point* in
    return result;
 }
 
+int ecc_multiply(int ecc_size, const ecdsa_params* params, const unsigned char* multiplier, ecdsa_point* output)
+{
+   int result = -1;
+
+   EC_GROUP* curve = create_curve(ecc_size, params->A, params->B, params->P, params->N, params->G.X, params->G.Y);
+
+   if(curve != NULL)
+   {    
+      BN_CTX* ctx = BN_CTX_new();
+
+      if(NULL != ctx)
+      {
+                  
+         BIGNUM* multiplier_bn;
+
+         if(NULL != (multiplier_bn = BN_bin2bn(multiplier, ecc_size, NULL)))
+         {
+            EC_POINT* tmp_point;
+
+            if(NULL != (tmp_point = EC_POINT_new(curve)))
+            {
+               if (EC_POINT_mul(curve, tmp_point, multiplier_bn, NULL, NULL, ctx) == 1)
+               {
+                  BIGNUM* output_curve_point_x = BN_new();
+
+                  if(output_curve_point_x != NULL)
+                  {
+                     BIGNUM* output_curve_point_y = BN_new();
+
+                     if(output_curve_point_y != NULL)
+                     {
+                        if (EC_POINT_get_affine_coordinates(curve, tmp_point, output_curve_point_x, output_curve_point_y, ctx) == 1)
+                        {
+                           if(BN_bn2bin(output_curve_point_x, output->X) == ecc_size)
+                           {
+                              if(BN_bn2bin(output_curve_point_y, output->Y) == ecc_size)
+                              {
+                                 //std::cout << "rp:" << std::endl;
+                                 //print_bignum(output_curve_point_x);
+                                 //std::cout << "kinvp:" << std::endl;
+                                 //print_bignum(output_curve_point_y);
+                                          
+                                 result = 0;
+                              }
+                           }
+                        }
+
+                        BN_clear_free(output_curve_point_y);
+                     }
+
+                     BN_clear_free(output_curve_point_x);
+                  }
+               }
+
+               EC_POINT_free(tmp_point);
+            }
+
+            BN_free(multiplier_bn);
+         }
+
+         BN_CTX_free(ctx);
+      }
+
+      EC_GROUP_free(curve);
+   }
+
+   return result;
+}
+
 int ecc_modulus(const unsigned char* nonce, int nonce_size, const unsigned char* N, int N_size, unsigned char* output)
 {
    int result = -1;
