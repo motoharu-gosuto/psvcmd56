@@ -324,6 +324,11 @@ int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, u
    return 0;
 }
 
+int bigmac_aes_128_cbc_submit_with_keyslot_80B538(unsigned char * dst, const unsigned char* src, int size, int keyslot, int function)
+{
+   return 0;
+}
+
 int encrypt_with_static_key_ids_80CEFE(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
    return 0;
@@ -529,8 +534,22 @@ int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ct
    if(r0 != 0)
       return r0;
 
-   
+   int r1 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x21, 0x345);
+   if(r1 != 0)
+      return r1;
 
+   unsigned char work_buffer_812E80[0x800];
+
+   memcpy(work_buffer_812E80, ctx->data, ctx->size);
+
+   unsigned char work_buffer_813680[0x800];
+   
+   int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x21, 2); // AES-128-CBC decrypt
+   if(r2 != 0)
+      return r2;
+    
+   memcpy(ctx->data, work_buffer_813680, ctx->size);
+   
    return 0;
 }
 
