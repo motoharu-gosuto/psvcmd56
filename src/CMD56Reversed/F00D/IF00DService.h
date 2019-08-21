@@ -365,35 +365,6 @@ struct SceSblSmCommGcAuthMgrData_1000B
 //Commands that I am particulary interested in are: 1B - 20
 //I know some basic layout of requests and size of responses (assumption about size check in sub_CAC924_command)
 
-struct SceSblSmCommGcAuthMgrData_1000B_04_input
-{
-   unsigned int unk0;
-   unsigned int unk4;
-   unsigned int unk8;
-   unsigned int key_slot;
-   unsigned int data_length;
-   unsigned char enc_data[0x7EC];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_04_output
-{
-
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_07_input
-{
-   unsigned int unk0;
-   unsigned int unk4;
-   unsigned int unk8;
-   unsigned int key_slot;
-   unsigned int data_length;
-   unsigned char dec_data[0x7EC];
-};
-
-struct SceSblSmCommGcAuthMgrData_1000B_07_output
-{
-
-};
 
 struct SceSblSmCommGcAuthMgrData_1000B_0C_output
 {

@@ -334,6 +334,11 @@ int encrypt_with_static_key_ids_80CEFE(SceSblSmCommGcAuthMgrData_1000B* ctx)
    return 0;
 }
 
+int decrypt_with_static_key_ids_80CC02(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   return 0;
+}
+
 //==========================================
 
 int ecc_modulus_80FD6E(unsigned char* dst, const unsigned char* nonce, int nonce_size_blocks, int nonce_size, const unsigned char* N, int N_blocks_size, int N_size)
@@ -523,9 +528,7 @@ int get_command_4_key(int key_id, const unsigned char** key)
 }
 
 int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ctx)
-{
-   SceSblSmCommGcAuthMgrData_1000B_04_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_04_input*)ctx->data;
-
+{   
    if(ctx->key_id == 0x100)
       return encrypt_with_static_key_ids_80CEFE(ctx);
    
@@ -560,9 +563,420 @@ int GcAuthMgrService::service_0x1000B_04(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int get_command_7_key(int key_id, const unsigned char** key)
+{
+   if(key_id == 0x3A)
+   {
+      *key = cmd_4_7_key14_812940;
+      return 0;
+   }
+   else
+   {
+      #pragma region
+
+      if(key_id > 0x3A)
+      {
+         #pragma region
+
+         if(key_id == 0x81)
+         {
+            *key = cmd_4_7_key22_812B40;
+            return 0;
+         }
+         else
+         {
+            #pragma region
+
+            if(key_id > 0x81)
+            {
+               #pragma region
+
+               if(key_id == 0xC1)
+               {
+                  *key = cmd_7_key25_812C40;
+                  return 0;
+               }
+               else
+               {
+                  #pragma region
+
+                  if(key_id > 0xC1)
+                  {
+                     if(key_id == 0xC3)
+                     {
+                        *key = cmd_7_key27_812CC0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id < 0xC3)
+                        {
+                           *key = cmd_7_key26_812C80;
+                           return 0;
+                        }
+                        else
+                        {
+                           if(key_id == 0x100)
+                           {
+                              // static dec
+                              return 0;
+                           }
+                           else
+                           {
+                              return 0xF;
+                           }
+                        }
+
+                        #pragma endregion
+                     }
+                  }
+                  else
+                  {
+                     #pragma region
+
+                     if(key_id == 0x83)
+                     {
+                        *key = cmd_4_7_key24_812BC0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id < 0x83)
+                        {
+                           *key = cmd_4_7_key23_812B80;
+                           return 0;
+                        }
+                        else
+                        {
+                           if(key_id == 0xC0)
+                           {
+                              *key = cmd_7_key24_812C00;
+                              return 0;
+                           }
+                           else
+                           {
+                               return 0xF;
+                           }
+                        }
+
+                        #pragma endregion
+                     }
+
+                     #pragma endregion
+                  }
+
+                  #pragma endregion
+               }
+
+               #pragma endregion
+            }
+            else
+            {
+               #pragma region
+
+               if(key_id == 0x63)
+               {
+                  *key = cmd_7_key18_812A40;
+                  return 0;
+               }
+               else
+               {
+                  #pragma region
+
+                  if(key_id > 0x63)
+                  {
+                     #pragma region
+
+                     if(key_id == 0x68)
+                     {
+                        *key = cmd_7_key20_812AC0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id == 0x80)
+                        {
+                           *key = cmd_4_7_key21_812B00;
+                           return 0;
+                        }
+                        else
+                        {
+                           #pragma region
+
+                           if(key_id == 0x64)
+                           {
+                              *key = cmd_7_key19_812A80;
+                              return 0;
+                           }
+                           else
+                           {
+                              return 0xF;
+                           }
+
+                           #pragma endregion
+                        }
+
+                        #pragma endregion
+                     }
+
+                     #pragma endregion
+                  }
+                  else
+                  {
+                     #pragma region
+
+                     if(key_id == 0x53)
+                     {
+                        *key = cmd_7_key16_8129C0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id == 0x57)
+                        {
+                           *key = cmd_7_key17_812A00;
+                           return 0;
+                        }
+                        else
+                        {
+                           #pragma region
+
+                           if(key_id == 0x44)
+                           {
+                              *key = cmd_7_key15_812980;
+                              return 0;
+                           }
+                           else
+                           {
+                              return 0xF;
+                           }
+
+                           #pragma endregion
+                        }
+
+                        #pragma endregion
+                     }
+
+                     #pragma endregion
+                  }
+
+                  #pragma endregion
+               }
+
+               #pragma endregion
+            }
+
+            #pragma endregion
+         }
+
+         #pragma endregion
+      }
+      else
+      {
+         #pragma region
+
+         if(key_id == 0xE)
+         {
+            *key = cmd_4_7_key6_812740;
+            return 0;
+         }
+         else
+         {
+            #pragma region
+
+            if(key_id > 0xE)
+            {
+               if(key_id == 0x12)
+               {
+                  *key = cmd_4_7_key10_812840;
+                  return 0;
+               }
+               else
+               {
+                  #pragma region
+
+                  if(key_id > 0x12)
+                  {
+                     if(key_id == 0x38)
+                     {
+                        *key = cmd_4_7_key12_8128C0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id > 0x38)
+                        {
+                           *key = cmd_4_7_key13_812900;
+                           return 0;
+                        }
+                        else
+                        {
+                           #pragma region
+
+                           if(key_id == 0x13)
+                           {
+                              *key = cmd_4_7_key11_812880;
+                              return 0;
+                           }
+                           else
+                           {
+                              return 0xF;
+                           }
+
+                           #pragma endregion
+                        }
+
+                        #pragma endregion
+                     }
+                  }
+                  else
+                  {
+                     #pragma region
+
+                     if(key_id == 0x10)
+                     {
+                        *key = cmd_4_7_key8_8127C0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id > 0x10)
+                        {
+                           *key = cmd_4_7_key9_812800;
+                           return 0;
+                        }
+                        else
+                        {
+                           *key = cmd_4_7_key7_812780;
+                           return 0;
+                        }
+
+                        #pragma endregion
+                     }
+
+                     #pragma endregion
+                  }
+
+                  #pragma endregion
+               }
+            }
+            else
+            {
+               #pragma region
+
+               if(key_id == 4)
+               {
+                  *key = cmd_4_7_key2_812640;
+                  return 0;
+               }
+               else
+               {
+                  #pragma region
+
+                  if(key_id > 4)
+                  {
+                     if(key_id == 0xC)
+                     {
+                        *key = cmd_4_7_key4_8126C0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id > 0xC)
+                        {
+                           *key = cmd_4_7_key5_812700;
+                           return 0;
+                        }
+                        else
+                        {
+                           #pragma region
+
+                           if(key_id == 5)
+                           {
+                              *key = cmd_4_7_key3_812680;
+                              return 0;
+                           }
+                           else
+                           {
+                              return 0xF;
+                           }
+
+                           #pragma endregion
+                        }
+
+                        #pragma endregion
+                     }
+                  }
+                  else
+                  {
+                     #pragma region
+
+                     if(key_id == 2)
+                     {
+                        *key = cmd_4_7_key0_8125C0;
+                        return 0;
+                     }
+                     else
+                     {
+                        #pragma region
+
+                        if(key_id == 3)
+                        {
+                           *key = cmd_4_7_key1_812600;
+                           return 0;
+                        }
+                        else
+                        {
+                           return 0xF;
+                        }
+
+                        #pragma endregion
+                     }
+
+                     #pragma endregion
+                  }
+
+                  #pragma endregion
+               }
+
+               #pragma endregion
+            }
+
+            #pragma endregion
+         }
+
+         #pragma endregion
+      }
+
+      #pragma endregion
+   }
+}
+
 int service_handler_0x1000B_command_7_80CC9C(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
-   SceSblSmCommGcAuthMgrData_1000B_07_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_07_input*)ctx->data;
+   if(ctx->key_id == 0x100)
+      return decrypt_with_static_key_ids_80CC02(ctx);
+   
+   const unsigned char* key = 0;
+   int r0 = get_command_7_key(ctx->key_id, &key);
+   if(r0 != 0)
+      return r0;
+
+   
 
    return 0;
 }
