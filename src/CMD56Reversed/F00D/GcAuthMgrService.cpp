@@ -461,105 +461,177 @@ int sign_ecc_224_80F4CE(unsigned char* sig[2], const unsigned char* M, const uns
 
 //==========================================
 
-int get_command_4_key(int key_id, const unsigned char** key)
+int get_command_4_key(int key_id, const unsigned char** key, int* src_key_slot, int* dst_key_slot)
 {
    switch(key_id)
    {
    case 0x02:
       *key = cmd_4_7_key0_8125C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x03:
       *key = cmd_4_7_key1_812600;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x04:
       *key = cmd_4_7_key2_812640;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x05:
       *key = cmd_4_7_key3_812680;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0C:
       *key = cmd_4_7_key4_8126C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0D:
       *key = cmd_4_7_key5_812700;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0E:
       *key = cmd_4_7_key6_812740;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0F:
       *key = cmd_4_7_key7_812780;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x10:
       *key = cmd_4_7_key8_8127C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x11:
       *key = cmd_4_7_key9_812800;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x12:
       *key = cmd_4_7_key10_812840;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x13:
       *key = cmd_4_7_key11_812880;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x38:
       *key = cmd_4_7_key12_8128C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x39:
       *key = cmd_4_7_key13_812900;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x3A:
       *key = cmd_4_7_key14_812940;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
+
    //case 0x44:
    //   *key = cmd_7_key15_812980; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0x53:
    //   *key = cmd_7_key16_8129C0; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0x57:
    //   *key = cmd_7_key17_812A00; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0x63:
    //   *key = cmd_7_key18_812A40; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0x64:
    //   *key = cmd_7_key19_812A80; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0x68:
    //   *key = cmd_7_key20_812AC0; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
+
    case 0x80:
       *key = cmd_4_7_key21_812B00;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x81:
       *key = cmd_4_7_key22_812B40;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x82:
       *key = cmd_4_7_key23_812B80;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x83:
       *key = cmd_4_7_key24_812BC0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
+
    //case 0xC0:
    //   *key = cmd_7_key25_812C00; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0xC1:
    //   *key = cmd_7_key26_812C40; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0xC2:
    //   *key = cmd_7_key27_812C80; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
    //case 0xC3:
    //   *key = cmd_7_key28_812CC0; // available only for decryption
+   //   *src_key_slot = 0x340;
+   //   *dst_key_slot = 0x10;
    //   return 0;
+
    default:
       return 0xE;
    }
 }
 
-int command4_encrypt_0x345_0x21(const unsigned char* key, SceSblSmCommGcAuthMgrData_1000B* ctx)
-{
-   int r1 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x21, 0x345);
+int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{   
+   if(ctx->key_id == 0x100)
+      return encrypt_with_static_key_ids_80CEFE(ctx);
+   
+   const unsigned char* key = 0;
+   int src_key_slot = 0;
+   int dst_key_slot = 0;
+   int r0 = get_command_4_key(ctx->key_id, &key, &src_key_slot, &dst_key_slot);
+   if(r0 != 0)
+      return r0;
+
+   int r1 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, dst_key_slot, src_key_slot);
    if(r1 != 0)
       return r1;
 
@@ -569,26 +641,13 @@ int command4_encrypt_0x345_0x21(const unsigned char* key, SceSblSmCommGcAuthMgrD
 
    unsigned char work_buffer_813680[0x800];
    
-   int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x21, 1); // AES-128-CBC encrypt
+   int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, dst_key_slot, 1); // AES-128-CBC encrypt
    if(r2 != 0)
       return r2;
     
    memcpy(ctx->data, work_buffer_813680, ctx->size);
    
    return 0;
-}
-
-int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ctx)
-{   
-   if(ctx->key_id == 0x100)
-      return encrypt_with_static_key_ids_80CEFE(ctx);
-   
-   const unsigned char* key = 0;
-   int r0 = get_command_4_key(ctx->key_id, &key);
-   if(r0 != 0)
-      return r0;
-
-   return command4_encrypt_0x345_0x21(key, ctx);
 }
 
 int GcAuthMgrService::service_0x1000B_04(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
@@ -598,142 +657,162 @@ int GcAuthMgrService::service_0x1000B_04(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
-int get_command_7_key(int key_id, const unsigned char** key)
+int get_command_7_key(int key_id, const unsigned char** key, int* src_key_slot, int* dst_key_slot)
 {
    switch(key_id)
    {
    case 0x02:
       *key = cmd_4_7_key0_8125C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x03:
       *key = cmd_4_7_key1_812600;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x04:
       *key = cmd_4_7_key2_812640;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x05:
       *key = cmd_4_7_key3_812680;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0C:
       *key = cmd_4_7_key4_8126C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0D:
       *key = cmd_4_7_key5_812700;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0E:
       *key = cmd_4_7_key6_812740;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x0F:
       *key = cmd_4_7_key7_812780;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x10:
       *key = cmd_4_7_key8_8127C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x11:
       *key = cmd_4_7_key9_812800;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x12:
       *key = cmd_4_7_key10_812840;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x13:
       *key = cmd_4_7_key11_812880;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x38:
       *key = cmd_4_7_key12_8128C0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x39:
       *key = cmd_4_7_key13_812900;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x3A:
       *key = cmd_4_7_key14_812940;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
+
    case 0x44:
       *key = cmd_7_key15_812980;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0x53:
       *key = cmd_7_key16_8129C0;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0x57:
       *key = cmd_7_key17_812A00;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0x63:
       *key = cmd_7_key18_812A40;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0x64:
       *key = cmd_7_key19_812A80;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0x68:
       *key = cmd_7_key20_812AC0;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
+
    case 0x80:
       *key = cmd_4_7_key21_812B00;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x81:
       *key = cmd_4_7_key22_812B40;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x82:
       *key = cmd_4_7_key23_812B80;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
    case 0x83:
       *key = cmd_4_7_key24_812BC0;
+      *src_key_slot = 0x345;
+      *dst_key_slot = 0x21;
       return 0;
+
    case 0xC0:
       *key = cmd_7_key25_812C00;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0xC1:
       *key = cmd_7_key26_812C40;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0xC2:
       *key = cmd_7_key27_812C80;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
    case 0xC3:
       *key = cmd_7_key28_812CC0;
+      *src_key_slot = 0x340;
+      *dst_key_slot = 0x10;
       return 0;
+
    default:
       return 0xF;
    }
-}
-
-int command7_decrypt_0x345_0x21(const unsigned char* key, SceSblSmCommGcAuthMgrData_1000B* ctx)
-{
-   int r0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x21, 0x345);
-   if(r0 != 0)
-      return r0;
-
-   unsigned char work_buffer_812E80[0x800];
-
-   memcpy(work_buffer_812E80, ctx->data, ctx->size);
-
-   unsigned char work_buffer_813680[0x800];
-   
-   int r1 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x21, 2); // AES-128-CBC decrypt
-   if(r1 != 0)
-      return r1;
-
-   memcpy(ctx->data, work_buffer_813680, ctx->size);
-
-   return 0;
-}
-
-int command7_decrypt_0x340_0x10(const unsigned char* key, SceSblSmCommGcAuthMgrData_1000B* ctx)
-{
-   int r0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x10, 0x340);
-   if(r0 != 0)
-      return r0;
-
-   unsigned char work_buffer_812E80[0x800];
-
-   memcpy(work_buffer_812E80, ctx->data, ctx->size);
-
-   unsigned char work_buffer_813680[0x800];
-   
-   int r1 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x10, 2); // AES-128-CBC decrypt
-   if(r1 != 0)
-      return r1;
-
-   memcpy(ctx->data, work_buffer_813680, ctx->size);
-
-   return 0;
 }
 
 int service_handler_0x1000B_command_7_80CC9C(SceSblSmCommGcAuthMgrData_1000B* ctx)
@@ -742,11 +821,27 @@ int service_handler_0x1000B_command_7_80CC9C(SceSblSmCommGcAuthMgrData_1000B* ct
       return decrypt_with_static_key_ids_80CC02(ctx);
    
    const unsigned char* key = 0;
-   int r0 = get_command_7_key(ctx->key_id, &key);
+   int src_key_slot = 0;
+   int dst_key_slot = 0;
+   int r0 = get_command_7_key(ctx->key_id, &key, &src_key_slot, &dst_key_slot);
    if(r0 != 0)
       return r0;
 
+   int r0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, dst_key_slot, src_key_slot);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0x800];
+
+   memcpy(work_buffer_812E80, ctx->data, ctx->size);
+
+   unsigned char work_buffer_813680[0x800];
    
+   int r1 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, dst_key_slot, 2); // AES-128-CBC decrypt
+   if(r1 != 0)
+      return r1;
+
+   memcpy(ctx->data, work_buffer_813680, ctx->size);
 
    return 0;
 }
