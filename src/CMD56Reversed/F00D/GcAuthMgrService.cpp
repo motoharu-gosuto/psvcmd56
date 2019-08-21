@@ -527,16 +527,8 @@ int get_command_4_key(int key_id, const unsigned char** key)
    }
 }
 
-int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ctx)
-{   
-   if(ctx->key_id == 0x100)
-      return encrypt_with_static_key_ids_80CEFE(ctx);
-   
-   const unsigned char* key = 0;
-   int r0 = get_command_4_key(ctx->key_id, &key);
-   if(r0 != 0)
-      return r0;
-
+int command4_encrypt_0x345_0x21(const unsigned char* key, SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
    int r1 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x21, 0x345);
    if(r1 != 0)
       return r1;
@@ -547,13 +539,26 @@ int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ct
 
    unsigned char work_buffer_813680[0x800];
    
-   int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x21, 2); // AES-128-CBC decrypt
+   int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x21, 1); // AES-128-CBC encrypt
    if(r2 != 0)
       return r2;
     
    memcpy(ctx->data, work_buffer_813680, ctx->size);
    
    return 0;
+}
+
+int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{   
+   if(ctx->key_id == 0x100)
+      return encrypt_with_static_key_ids_80CEFE(ctx);
+   
+   const unsigned char* key = 0;
+   int r0 = get_command_4_key(ctx->key_id, &key);
+   if(r0 != 0)
+      return r0;
+
+   return command4_encrypt_0x345_0x21(key, ctx);
 }
 
 int GcAuthMgrService::service_0x1000B_04(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
@@ -964,6 +969,48 @@ int get_command_7_key(int key_id, const unsigned char** key)
 
       #pragma endregion
    }
+}
+
+int command7_decrypt_0x345_0x21(const unsigned char* key, SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   int r0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x21, 0x345);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0x800];
+
+   memcpy(work_buffer_812E80, ctx->data, ctx->size);
+
+   unsigned char work_buffer_813680[0x800];
+   
+   int r1 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x21, 2); // AES-128-CBC decrypt
+   if(r1 != 0)
+      return r1;
+
+   memcpy(ctx->data, work_buffer_813680, ctx->size);
+
+   return 0;
+}
+
+int command7_decrypt_0x340_0x10(const unsigned char* key, SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   int r0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, 0x10, 0x340);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0x800];
+
+   memcpy(work_buffer_812E80, ctx->data, ctx->size);
+
+   unsigned char work_buffer_813680[0x800];
+   
+   int r1 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, 0x10, 2); // AES-128-CBC decrypt
+   if(r1 != 0)
+      return r1;
+
+   memcpy(ctx->data, work_buffer_813680, ctx->size);
+
+   return 0;
 }
 
 int service_handler_0x1000B_command_7_80CC9C(SceSblSmCommGcAuthMgrData_1000B* ctx)
