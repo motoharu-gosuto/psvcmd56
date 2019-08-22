@@ -329,10 +329,7 @@ int bigmac_aes_128_cbc_submit_with_keyslot_80B538(unsigned char* dst, const unsi
    return 0;
 }
 
-int get_encrypted_shuffled_key_from_key_0x601_0x602_80CA94(unsigned char* dst)
-{
-   return 0;
-}
+//==========================================
 
 int bigmac_aes_128_cbc_encrypt_with_potential_key_and_iv_80D906(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, unsigned char* iv)
 {
@@ -353,6 +350,78 @@ int bigmac_aes_128_cbc_decrypt_with_potential_key_and_iv_80D928(unsigned char* d
 {
    return 0;
 }
+
+//==========================================
+
+int bigmac_read_key_from_keyring_80B11A(int index, unsigned char* dst)
+{
+   return 0;
+}
+
+int get_encrypted_shuffled_key_from_key_0x601_0x602_80CA94(unsigned char* dst)
+{
+   unsigned char key_buffer1[0x20];
+   unsigned char shuffled_key[0x10];
+
+   bigmac_read_key_from_keyring_80B11A(0x602, key_buffer1);
+   
+   shuffled_key[0x03] = (char)((*((int*)(key_buffer1 + 0x1C))));
+   shuffled_key[0x00] = (char)((*((int*)(key_buffer1 + 0x1C))) >> 0x18);
+   shuffled_key[0x01] = (char)((*((int*)(key_buffer1 + 0x1C))) >> 0x10);
+   shuffled_key[0x02] = (char)((*((int*)(key_buffer1 + 0x1C))) >> 8);
+
+   shuffled_key[0x07] = (char)((*((int*)(key_buffer1 + 0x18))));
+   shuffled_key[0x04] = (char)((*((int*)(key_buffer1 + 0x18))) >> 0x18);
+   shuffled_key[0x05] = (char)((*((int*)(key_buffer1 + 0x18))) >> 0x10);
+   shuffled_key[0x06] = (char)((*((int*)(key_buffer1 + 0x18))) >> 8);
+
+   shuffled_key[0x0B] = (char)((*((int*)(key_buffer1 + 0x14))));
+   shuffled_key[0x08] = (char)((*((int*)(key_buffer1 + 0x14))) >> 0x18);
+   shuffled_key[0x09] = (char)((*((int*)(key_buffer1 + 0x14))) >> 0x10);
+   shuffled_key[0x0A] = (char)((*((int*)(key_buffer1 + 0x14))) >> 8);
+
+   shuffled_key[0x0F] = (char)((*((int*)(key_buffer1 + 0x10))));
+   shuffled_key[0x0C] = (char)((*((int*)(key_buffer1 + 0x10))) >> 0x18);
+   shuffled_key[0x0D] = (char)((*((int*)(key_buffer1 + 0x10))) >> 0x10);
+   shuffled_key[0x0E] = (char)((*((int*)(key_buffer1 + 0x10))) >> 8);
+
+   unsigned char key_buffer2[0x20];
+   unsigned char shuffled_seed[0x10];
+   
+   bigmac_read_key_from_keyring_80B11A(0x601, key_buffer2);
+   
+   shuffled_seed[0x03] = (char)((*((int*)(key_buffer2 + 0x0C))));
+   shuffled_seed[0x00] = (char)((*((int*)(key_buffer2 + 0x0C))) >> 0x18);
+   shuffled_seed[0x01] = (char)((*((int*)(key_buffer2 + 0x0C))) >> 0x10);
+   shuffled_seed[0x02] = (char)((*((int*)(key_buffer2 + 0x0C))) >> 8);
+
+   shuffled_seed[0x07] = (char)((*((int*)(key_buffer2 + 0x08))));
+   shuffled_seed[0x04] = (char)((*((int*)(key_buffer2 + 0x08))) >> 0x18);
+   shuffled_seed[0x05] = (char)((*((int*)(key_buffer2 + 0x08))) >> 0x10);
+   shuffled_seed[0x06] = (char)((*((int*)(key_buffer2 + 0x08))) >> 8);
+
+   shuffled_seed[0x0B] = (char)((*((int*)(key_buffer2 + 0x04))));
+   shuffled_seed[0x08] = (char)((*((int*)(key_buffer2 + 0x04))) >> 0x18);
+   shuffled_seed[0x09] = (char)((*((int*)(key_buffer2 + 0x04))) >> 0x10);
+   shuffled_seed[0x0A] = (char)((*((int*)(key_buffer2 + 0x04))) >> 8);
+
+   shuffled_seed[0x0F] = (char)((*((int*)(key_buffer2 + 0x00))));
+   shuffled_seed[0x0C] = (char)((*((int*)(key_buffer2 + 0x00))) >> 0x18);
+   shuffled_seed[0x0D] = (char)((*((int*)(key_buffer2 + 0x00))) >> 0x10);
+   shuffled_seed[0x0E] = (char)((*((int*)(key_buffer2 + 0x00))) >> 0x8);
+
+   unsigned char iv[0x10];
+
+   memset(iv, 0, 0x10);
+
+   int r0 = bigmac_aes_128_cbc_encrypt_with_potential_key_and_iv_80D906(dst, shuffled_seed, 0x10, shuffled_key, iv);
+   if(r0 != 0)
+      return 5;
+   
+   return 0;
+}
+
+
 
 int encrypt_with_static_key_ids_80CEFE(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
