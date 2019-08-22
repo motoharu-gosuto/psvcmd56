@@ -324,18 +324,85 @@ int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, u
    return 0;
 }
 
-int bigmac_aes_128_cbc_submit_with_keyslot_80B538(unsigned char * dst, const unsigned char* src, int size, int keyslot, int function)
+int bigmac_aes_128_cbc_submit_with_keyslot_80B538(unsigned char* dst, const unsigned char* src, int size, int keyslot, int function)
+{
+   return 0;
+}
+
+int get_encrypted_shuffled_key_from_key_0x601_0x602_80CA94(unsigned char* dst)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_encrypt_with_potential_key_and_iv_80D906(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, unsigned char* iv)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_encrypt_with_potential_key_and_iv_80D906(unsigned char* dst, const unsigned char* src, int size, int keyslot, unsigned char* iv)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_decrypt_with_potential_key_and_iv_80D928(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, unsigned char* iv)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_decrypt_with_potential_key_and_iv_80D928(unsigned char* dst, const unsigned char* src, int size, int keyslot, unsigned char* iv)
 {
    return 0;
 }
 
 int encrypt_with_static_key_ids_80CEFE(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
+   unsigned char encrypted_key[0x10] = {0};
+
+   int r0 = get_encrypted_shuffled_key_from_key_0x601_0x602_80CA94(encrypted_key);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0x800] = {0};
+
+   memcpy(work_buffer_812E80, ctx->data, ctx->size);
+
+   unsigned char iv[0x10];
+   memset(iv, 0, 0x10);
+
+   unsigned char work_buffer_813680[0x800] = {0};
+
+   int r1 = bigmac_aes_128_cbc_encrypt_with_potential_key_and_iv_80D906(work_buffer_813680, work_buffer_812E80, ctx->size, encrypted_key, iv);
+   if(r1 != 0)
+      return r1;
+
+   memcpy(ctx->data, work_buffer_813680, ctx->size);
+
    return 0;
 }
 
 int decrypt_with_static_key_ids_80CC02(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
+   unsigned char encrypted_key[0x10] = {0};
+
+   int r0 = get_encrypted_shuffled_key_from_key_0x601_0x602_80CA94(encrypted_key);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0x800] = {0};
+
+   memcpy(work_buffer_812E80, ctx->data, ctx->size);
+
+   unsigned char iv[0x10];
+   memset(iv, 0, 0x10);
+
+   unsigned char work_buffer_813680[0x800] = {0};
+
+   int r1 = bigmac_aes_128_cbc_decrypt_with_potential_key_and_iv_80D928(work_buffer_813680, work_buffer_812E80, ctx->size, encrypted_key, iv);
+   if(r1 != 0)
+      return r1;
+
+   memcpy(ctx->data, work_buffer_813680, ctx->size);
+
    return 0;
 }
 
@@ -635,11 +702,11 @@ int service_handler_0x1000B_command_4_80CF98(SceSblSmCommGcAuthMgrData_1000B* ct
    if(r1 != 0)
       return r1;
 
-   unsigned char work_buffer_812E80[0x800];
+   unsigned char work_buffer_812E80[0x800] = {0};
 
    memcpy(work_buffer_812E80, ctx->data, ctx->size);
 
-   unsigned char work_buffer_813680[0x800];
+   unsigned char work_buffer_813680[0x800] = {0};
    
    int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, dst_key_slot, 1); // AES-128-CBC encrypt
    if(r2 != 0)
@@ -827,19 +894,19 @@ int service_handler_0x1000B_command_7_80CC9C(SceSblSmCommGcAuthMgrData_1000B* ct
    if(r0 != 0)
       return r0;
 
-   int r0 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, dst_key_slot, src_key_slot);
-   if(r0 != 0)
-      return r0;
+   int r1 = bigmac_aes_256_ecb_decrypt_set_keyslot_from_keyslot_80B40C(key, dst_key_slot, src_key_slot);
+   if(r1 != 0)
+      return r1;
 
-   unsigned char work_buffer_812E80[0x800];
+   unsigned char work_buffer_812E80[0x800] = {0};
 
    memcpy(work_buffer_812E80, ctx->data, ctx->size);
 
-   unsigned char work_buffer_813680[0x800];
+   unsigned char work_buffer_813680[0x800] = {0};
    
-   int r1 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, dst_key_slot, 2); // AES-128-CBC decrypt
-   if(r1 != 0)
-      return r1;
+   int r2 = bigmac_aes_128_cbc_submit_with_keyslot_80B538(work_buffer_813680, work_buffer_812E80, ctx->size, dst_key_slot, 2); // AES-128-CBC decrypt
+   if(r2 != 0)
+      return r2;
 
    memcpy(ctx->data, work_buffer_813680, ctx->size);
 
