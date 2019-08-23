@@ -391,6 +391,18 @@ struct SceSblSmCommGcAuthMgrData_1000B_0E_output
    unsigned char random[0x14];
 };
 
+struct SceSblSmCommGcAuthMgrData_1000B_10_input
+{
+   unsigned char enc_private_key[0x20];
+   unsigned char message_hash[0x14];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_10_output
+{
+   unsigned char r[0x14];
+   unsigned char s[0x14];
+};
+
 struct SceSblSmCommGcAuthMgrData_1000B_14_output
 {
    unsigned char private_key[0x1C];
@@ -414,6 +426,18 @@ struct SceSblSmCommGcAuthMgrData_1000B_15_output
 struct SceSblSmCommGcAuthMgrData_1000B_16_output
 {
    unsigned char random[0x1C];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_17_input
+{
+   unsigned char enc_private_key[0x20];
+   unsigned char message_hash[0x1C];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_17_output
+{
+   unsigned char r[0x1C];
+   unsigned char s[0x1C];
 };
 
 struct SceSblSmCommGcAuthMgrData_1000B_1B_input

@@ -11,12 +11,12 @@ using namespace f00d;
 //0x0C - DONE
 //0x0D - DONE
 //0x0E - DONE - top level
-//0x10
+//0x10 - DONE - top level
 //0x11
 //0x14 - DONE
 //0x15 - DONE
 //0x16 - DONE - top level
-//0x17
+//0x17 - DONE - top level
 //0x18
 //0x19
 //0x1B
@@ -110,6 +110,12 @@ unsigned char cmd_7_key25_812C00[0x10]   = {0x06, 0x9F, 0x49, 0xE1, 0xFB, 0xFE, 
 unsigned char cmd_7_key26_812C40[0x10]   = {0x53, 0xC3, 0x70, 0x31, 0x81, 0x61, 0x75, 0x43, 0x3B, 0xB3, 0x43, 0x92, 0xEA, 0x9E, 0x20, 0x43};
 unsigned char cmd_7_key27_812C80[0x10]   = {0xEF, 0xF7, 0xD3, 0xB9, 0x55, 0x97, 0xC3, 0x7A, 0xB4, 0xE5, 0xDC, 0x16, 0x06, 0x65, 0xC4, 0x4C};
 unsigned char cmd_7_key28_812CC0[0x10]   = {0xEF, 0xA8, 0xA0, 0x55, 0x93, 0xE0, 0x0D, 0x45, 0xC3, 0xC1, 0xE1, 0x1D, 0x74, 0xE2, 0x2A, 0x24};
+
+//==========================================
+
+unsigned char key_seed_812580[0x10] = {0xB0, 0x74, 0x4F, 0x09, 0x1C, 0xD3, 0x33, 0xF9, 0xF6, 0xA5, 0x24, 0xF4, 0x26, 0xCC, 0x0D, 0x6E};
+
+unsigned char key_seed_812500[0x10] = {0x82, 0x1C, 0x57, 0x14, 0x41, 0x5E, 0x98, 0x04, 0xD6, 0xAA, 0xE3, 0x24, 0xEB, 0x3D, 0xDD, 0xFE}; 
 
 //==========================================
 
@@ -347,6 +353,18 @@ int bigmac_aes_128_cbc_decrypt_with_potential_key_and_iv_80D928(unsigned char* d
 }
 
 int bigmac_aes_128_cbc_decrypt_with_potential_key_and_iv_80D928(unsigned char* dst, const unsigned char* src, int size, int keyslot, unsigned char* iv)
+{
+   return 0;
+}
+
+//==========================================
+
+int bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(const unsigned char* src)
+{
+   return 0;
+}
+
+int bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unsigned char* dst, const unsigned char* src, int size)
 {
    return 0;
 }
@@ -1096,11 +1114,65 @@ int GcAuthMgrService::service_0x1000B_0E(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_10_80C8CA(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_10_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_10_input*)ctx->data;
+
+   unsigned char nonce_modulus[0x14];
+
+   while(true)
+   {
+      unsigned char nonce[0x40];
+      int r0 = bigmac_generate_random_number_80C462(nonce, 0x40);
+      if(r0 != 0)
+         return 5;
+
+      int r1 = modulus_ecc_160_80FF34(nonce_modulus, nonce, N_ptr_160_81259C);
+      if(r1 == 0)
+         break;
+   }
+
+   int r2 = bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(key_seed_812580);
+   if(r2 != 0)
+      return r2;
+
+   unsigned char work_buffer_812E80[0x20];
+   memcpy(work_buffer_812E80, input_data->enc_private_key, 0x20);
+
+   unsigned char work_buffer_813680[0x20];
+   bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(work_buffer_813680, work_buffer_812E80, 0x20);
+   
+   unsigned char message_hash[0x14];
+   memcpy(message_hash, input_data->message_hash, 0x14);
+
+   unsigned char sig_r[0x14] = {0};
+   unsigned char sig_s[0x14] = {0};
+   unsigned char* sig_ptrs[2] = {sig_r, sig_s};
+
+   int r3 = sign_ecc_160_80F4B4(sig_ptrs, message_hash, nonce_modulus, work_buffer_813680, ECC_160_curve_812590);
+   if(r3 != 0)
+      return 5;
+
+   // construct response
+
+   int response_size = 0x28;
+
+   ctx->size = response_size;
+
+   SceSblSmCommGcAuthMgrData_1000B_10_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_10_output*)ctx->data;
+
+   memcpy(output_data->r, sig_ptrs[0], 0x14);
+
+   memcpy(output_data->s, sig_ptrs[1], 0x14);
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_10(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_10_80C8CA();
+   *f00d_resp = service_handler_0x1000B_command_10_80C8CA(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_11(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
@@ -1226,11 +1298,65 @@ int GcAuthMgrService::service_0x1000B_16(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_17_80C6FC(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_17_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_17_input*)ctx->data;
+
+   unsigned char nonce_modulus[0x1C];
+
+   while(true)
+   {
+      unsigned char nonce[0x40];
+      int r0 = bigmac_generate_random_number_80C462(nonce, 0x40);
+      if(r0 != 0)
+         return 5;
+
+      int r1 = modulus_ecc_224_80FF50(nonce_modulus, nonce, N_ptr_224_81251C);
+      if(r1 == 0)
+         break;
+   }
+
+   int r2 = bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(key_seed_812580);
+   if(r2 != 0)
+      return r2;
+
+   unsigned char work_buffer_812E80[0x20];
+   memcpy(work_buffer_812E80, input_data->enc_private_key, 0x20);
+
+   unsigned char work_buffer_813680[0x20];
+   bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(work_buffer_813680, work_buffer_812E80, 0x20);
+   
+   unsigned char message_hash[0x1C];
+   memcpy(message_hash, input_data->message_hash, 0x1C);
+
+   unsigned char sig_r[0x1C] = {0};
+   unsigned char sig_s[0x1C] = {0};
+   unsigned char* sig_ptrs[2] = {sig_r, sig_s};
+
+   int r3 = sign_ecc_224_80F4CE(sig_ptrs, message_hash, nonce_modulus, work_buffer_813680, ECC_224_curve_812510);
+   if(r3 != 0)
+      return 5;
+
+   // construct response
+
+   int response_size = 0x38;
+
+   ctx->size = response_size;
+
+   SceSblSmCommGcAuthMgrData_1000B_17_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_17_output*)ctx->data;
+
+   memcpy(output_data->r, sig_ptrs[0], 0x1C);
+
+   memcpy(output_data->s, sig_ptrs[1], 0x1C);
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_17(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_17_80C6FC();
+   *f00d_resp = service_handler_0x1000B_command_17_80C6FC(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_18(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
