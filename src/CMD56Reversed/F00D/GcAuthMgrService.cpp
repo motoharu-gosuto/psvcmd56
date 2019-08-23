@@ -613,6 +613,40 @@ int sign_ecc_224_80F4CE(unsigned char* sig[2], const unsigned char* M, const uns
 
 //==========================================
 
+int verify_ecc_signature_80F548(const unsigned char* sig[2], const unsigned char* M, const unsigned char* Qa[2], const unsigned char* curve[6], int size_blocks, int size)
+{
+   ecdsa_params params;
+
+   memcpy(params.P, curve[0], size);
+   memcpy(params.A, curve[1], size);
+   memcpy(params.B, curve[2], size);
+   memcpy(params.N, curve[3], size);
+   memcpy(params.G.X, curve[4], size);
+   memcpy(params.G.Y, curve[5], size);
+
+   ecdsa_signature signature;
+   memcpy(signature.r, sig[0], size);
+   memcpy(signature.s, sig[1], size);
+
+   ecdsa_point pub_key;
+   memcpy(pub_key.X, Qa[0], size);
+   memcpy(pub_key.Y, Qa[1], size);
+   
+   return ecdsa_verify(size, &signature, M, &pub_key, &params);
+}
+
+int verify_signature_ECC_160_80FD3E(const unsigned char* sig[2], const unsigned char* M, const unsigned char* Qa[2], const unsigned char* curve[6])
+{
+   return verify_ecc_signature_80F548(sig, M, Qa, curve, 5, 0x14);
+}
+
+int verify_signature_ECC_224_80FD56(const unsigned char* sig[2], const unsigned char* M, const unsigned char* Qa[2], const unsigned char* curve[6])
+{
+   return verify_ecc_signature_80F548(sig, M, Qa, curve, 7, 0x1C);
+}
+
+//==========================================
+
 int get_command_4_key(int key_id, const unsigned char** key, int* src_key_slot, int* dst_key_slot)
 {
    switch(key_id)
@@ -1175,11 +1209,41 @@ int GcAuthMgrService::service_0x1000B_10(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_11_80B372(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_11_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_11_input*)ctx->data;
+
+   unsigned char public_key_x[0x14];
+   memcpy(public_key_x, input_data->public_key_x, 0x14);
+
+   unsigned char public_key_y[0x14];
+   memcpy(public_key_y, input_data->public_key_y, 0x14);
+
+   const unsigned char* Qa[2] = {public_key_x, public_key_y};
+
+   unsigned char message_hash[0x14];
+   memcpy(message_hash, input_data->message_hash, 0x14);
+
+   unsigned char signature_r[0x14];
+   memcpy(signature_r, input_data->signature_r, 0x14);
+
+   unsigned char signature_s[0x14];
+   memcpy(signature_s, input_data->signature_s, 0x14);
+
+   const unsigned char* signature[2] = {signature_r, signature_s};
+
+   int r0 = verify_signature_ECC_160_80FD3E(signature, message_hash, Qa, ECC_160_curve_812590);
+   if(r0 != 0)
+      return 5;
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_11(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_11_80B372();
+   *f00d_resp = service_handler_0x1000B_command_11_80B372(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_12(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
@@ -1359,11 +1423,41 @@ int GcAuthMgrService::service_0x1000B_17(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_18_80B7DA(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_18_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_18_input*)ctx->data;
+
+   unsigned char public_key_x[0x1C];
+   memcpy(public_key_x, input_data->public_key_x, 0x1C);
+
+   unsigned char public_key_y[0x1C];
+   memcpy(public_key_y, input_data->public_key_y, 0x1C);
+
+   const unsigned char* Qa[2] = {public_key_x, public_key_y};
+
+   unsigned char message_hash[0x1C];
+   memcpy(message_hash, input_data->message_hash, 0x1C);
+
+   unsigned char signature_r[0x1C];
+   memcpy(signature_r, input_data->signature_r, 0x1C);
+
+   unsigned char signature_s[0x1C];
+   memcpy(signature_s, input_data->signature_s, 0x1C);
+
+   const unsigned char* signature[2] = {signature_r, signature_s};
+
+   int r0 = verify_signature_ECC_224_80FD56(signature, message_hash, Qa, ECC_224_curve_812510);
+   if(r0 != 0)
+      return 5;
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_18(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_18_80B7DA();
+   *f00d_resp = service_handler_0x1000B_command_18_80B7DA(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_19(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
