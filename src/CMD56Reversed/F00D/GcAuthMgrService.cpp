@@ -8,17 +8,18 @@ using namespace f00d;
 
 //0x04 - DONE - top level
 //0x07 - DONE - top level
-//0x0C - DONE
-//0x0D - DONE
+//0x0C - DONE - tested
+//0x0D - DONE - tested
 //0x0E - DONE - top level
 //0x10 - DONE - top level
-//0x11
+//0x11 - DONE - not tested
+//0x12 - ?
 //0x14 - DONE
 //0x15 - DONE
 //0x16 - DONE - top level
 //0x17 - DONE - top level
-//0x18
-//0x19
+//0x18 - DONE - not tested
+//0x19 - ?
 //0x1B
 //0x1C
 //0x1D
@@ -647,6 +648,13 @@ int verify_signature_ECC_224_80FD56(const unsigned char* sig[2], const unsigned 
 
 //==========================================
 
+int enc_stuff_80D182(unsigned char* dst, const unsigned char* src, int size)
+{
+   return 0;
+}
+
+//==========================================
+
 int get_command_4_key(int key_id, const unsigned char** key, int* src_key_slot, int* dst_key_slot)
 {
    switch(key_id)
@@ -1246,11 +1254,44 @@ int GcAuthMgrService::service_0x1000B_11(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_12_80D374(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_12_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_12_input*)ctx->data;
+
+   unsigned char unk_813E80[0x40]; // result of unknown enc of first block of input data
+   memset(unk_813E80, 0, 0x40);
+
+   unsigned char unk_813EC0[0x40]; // result of aes cbc dec of second block of input data
+   memset(unk_813EC0, 0, 0x40);
+
+   int r0 = bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(key_seed_812500);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0xA8]; // first block of input data, or second block of input data
+   memcpy(work_buffer_812E80, input_data->unk0, 0xA8);
+
+   int r1 = enc_stuff_80D182(unk_813E80, work_buffer_812E80, 0xA8); // unknown enc of first block of input data
+   if(r1 != 0)
+      return r1;
+
+   memcpy(work_buffer_812E80, input_data->unk1, 0x10);
+
+   int r2 = bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unk_813EC0, work_buffer_812E80, 0x10); // aes cbc dec of second block of input data
+   if(r2 != 0)
+      return r2;
+
+   if(memcmp(unk_813E80, unk_813EC0, 0x10) != 0) // final comparison
+      return 5;
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_12(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_12_80D374();
+   *f00d_resp = service_handler_0x1000B_command_12_80D374(ctx);
 
-   return -1;
+   return 0;
 }
 
 int service_handler_0x1000B_command_14_80C828(SceSblSmCommGcAuthMgrData_1000B* ctx)
@@ -1460,11 +1501,44 @@ int GcAuthMgrService::service_0x1000B_18(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_19_80D2E4(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_19_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_19_input*)ctx->data;
+
+   unsigned char unk_813E80[0x40]; // result of unknown enc of first block of input data
+   memset(unk_813E80, 0, 0x40);
+
+   unsigned char unk_813EC0[0x40]; // result of aes cbc dec of second block of input data
+   memset(unk_813EC0, 0, 0x40);
+
+   int r0 = bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(key_seed_812500);
+   if(r0 != 0)
+      return r0;
+
+   unsigned char work_buffer_812E80[0xD8]; // first block of input data, or second block of input data
+   memcpy(work_buffer_812E80, input_data->unk0, 0xD8);
+
+   int r1 = enc_stuff_80D182(unk_813E80, work_buffer_812E80, 0xD8); // unknown enc of first block of input data
+   if(r1 != 0)
+      return r1;
+
+   memcpy(work_buffer_812E80, input_data->unk1, 0x10);
+
+   int r2 = bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unk_813EC0, work_buffer_812E80, 0x10); // aes cbc dec of second block of input data
+   if(r2 != 0)
+      return r2;
+
+   if(memcmp(unk_813E80, unk_813EC0, 0x10) != 0) // final comparison
+      return 5;
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_19(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_19_80D2E4();
+   *f00d_resp = service_handler_0x1000B_command_19_80D2E4(ctx);
 
-   return -1;
+   return 0;
 }
 
 int service_handler_0x1000B_command_1B_80BC44(SceSblSmCommGcAuthMgrData_1000B* ctx)
