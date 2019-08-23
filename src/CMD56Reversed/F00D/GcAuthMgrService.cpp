@@ -6,16 +6,16 @@
 
 using namespace f00d;
 
-//0x04
-//0x07
+//0x04 - DONE - top level
+//0x07 - DONE - top level
 //0x0C - DONE
 //0x0D - DONE
-//0x0E
+//0x0E - DONE - top level
 //0x10
 //0x11
 //0x14 - DONE
 //0x15 - DONE
-//0x16
+//0x16 - DONE - top level
 //0x17
 //0x18
 //0x19
@@ -420,8 +420,6 @@ int get_encrypted_shuffled_key_from_key_0x601_0x602_80CA94(unsigned char* dst)
    
    return 0;
 }
-
-
 
 int encrypt_with_static_key_ids_80CEFE(SceSblSmCommGcAuthMgrData_1000B* ctx)
 {
@@ -1070,11 +1068,32 @@ int GcAuthMgrService::service_0x1000B_0D(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_E_80C9A6(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   unsigned char rng[0x20] = {0};
+
+   int r0 = bigmac_generate_random_number_80C462(rng, 0x20);
+   if(r0 != 0)
+      return 5;
+
+   // construct response
+
+   int response_size = 0x14;
+
+   ctx->size = response_size;
+
+   SceSblSmCommGcAuthMgrData_1000B_0E_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_0E_output*)ctx->data;
+
+   memcpy(output_data->random, rng, 0x14);
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_0E(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_E_80C9A6();
+   *f00d_resp = service_handler_0x1000B_command_E_80C9A6(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_10(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
@@ -1179,11 +1198,32 @@ int GcAuthMgrService::service_0x1000B_15(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_16_80C7DA(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   unsigned char rng[0x20] = {0};
+
+   int r0 = bigmac_generate_random_number_80C462(rng, 0x20);
+   if(r0 != 0)
+      return 5;
+
+   // construct response
+
+   int response_size = 0x1C;
+
+   ctx->size = response_size;
+
+   SceSblSmCommGcAuthMgrData_1000B_16_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_16_output*)ctx->data;
+
+   memcpy(output_data->random, rng, 0x1C);
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_16(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_16_80C7DA();
+   *f00d_resp = service_handler_0x1000B_command_16_80C7DA(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_17(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
