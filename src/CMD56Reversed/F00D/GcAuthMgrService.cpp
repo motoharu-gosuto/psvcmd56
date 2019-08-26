@@ -367,15 +367,24 @@ int bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(const unsigned 
 
 int bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unsigned char* dst, const unsigned char* src, int size)
 {
-   return 0;
+   unsigned char key_0[0x10] = {0};
+   unsigned char iv[0x10] = {0};
+
+   auto cryptops = CryptoService::get();
+   return cryptops->aes_cbc_decrypt(src, dst, size, key_0, 0x80, iv);
 }
 
 //==========================================
 
 int bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(unsigned char* dst, unsigned char* src)
 {
-   return 0;
+   unsigned char key_212[0x20] = {0};
+
+   auto cryptops = CryptoService::get();
+   return cryptops->aes_ecb_encrypt(src, dst, 0x10, key_212, 0x100);
 }
+
+//==========================================
 
 int bigmac_read_key_from_keyring_80B11A(int index, unsigned char* dst)
 {
@@ -653,21 +662,6 @@ int verify_signature_ECC_224_80FD56(const unsigned char* sig[2], const unsigned 
 
 //==========================================
 
-unsigned char sra(unsigned char value, int N)
-{
-   return 0;
-}
-
-unsigned char sll(unsigned char value, int N)
-{
-   return 0;
-}
-
-unsigned int extub(unsigned char value)
-{
-   return 0;
-}
-
 int pad_src_tail(const unsigned char* src, int size, unsigned char* padded_src_tail, int* src_n_blocks, int* n_bit_cycles)
 {
    int tail_size = size & 0xF;
@@ -708,6 +702,30 @@ int pad_src_tail(const unsigned char* src, int size, unsigned char* padded_src_t
    return 0;
 }
 
+int left_circular_shift_with_salt(unsigned char* salt, int n_bit_cycles)
+{
+   for(int k = 0; k < n_bit_cycles; k++)
+   {
+      // store first byte
+      unsigned char prev_byte = salt[0];
+      
+      // i + 1 logic
+      for(int i = 0; i < 0xF; i++)
+         salt[i] = (salt[i + 0] << 1) | (salt[i + 1] >> 7);
+      
+      // update last byte
+      salt[0xF] = salt[0xF] << 1;
+      
+      // update last byte depending on first byte (some 0x87 salt)
+      if((prev_byte & 0x80) > 0)
+      {
+         salt[0xF] = salt[0xF] ^ 0x87;
+      }
+   }
+
+   return 0;
+}
+
 int construct_salt(unsigned char* salt, int n_bit_cycles)
 {
    memset(salt, 0, 0x10);
@@ -718,24 +736,7 @@ int construct_salt(unsigned char* salt, int n_bit_cycles)
 
    // this part seems to be byte array cycling function
 
-   int scenario_ctr = 0;
-
-   for(int i = 0; i < n_bit_cycles; i++)
-   {
-      // store first byte
-      char prev_byte = salt[0];
-      
-      // i + 1 logic
-      for(int i = 0; i < 0xE; i++)
-         salt[i] = sll(salt[i + 0], 1) | sra(salt[i + 1], 7);
-      
-      // update last byte
-      salt[0xF] = extub(sll(salt[0xF], 1));
-      
-      // update last byte depending on first byte
-      if(prev_byte < 0)
-         salt[0xF] = salt[0xF] ^ 0x87;
-   }
+   left_circular_shift_with_salt(salt, n_bit_cycles);
 
    return 0;
 }
@@ -776,7 +777,7 @@ int construct_dest(unsigned char* dst, const unsigned char* src, int src_n_block
    return res2;
 }
 
-int enc_stuff_80D182(unsigned char* dst, const unsigned char* src, int size)
+int sw_cmac_80D182(unsigned char* dst, const unsigned char* src, int size)
 {
    // this part constructs salted tail
 
@@ -793,7 +794,9 @@ int enc_stuff_80D182(unsigned char* dst, const unsigned char* src, int size)
    if(res0 != 0)
       return res0;
 
-   // this part calculates dst = src ^ padded_src_tail ^ salt
+   // this part calculates:
+   // dst = aes(dst ^ src) - repeat for N blocks of source data
+   // dst = aes(dst ^ padded_src_tail ^ salt)
    
    return construct_dest(dst, src, src_n_blocks, padded_src_tail, salt);
 }
@@ -1416,7 +1419,7 @@ int service_handler_0x1000B_command_12_80D374(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char work_buffer_812E80[0xA8]; // first block of input data, or second block of input data
    memcpy(work_buffer_812E80, input_data->unk0, 0xA8);
 
-   int r1 = enc_stuff_80D182(unk_813E80, work_buffer_812E80, 0xA8); // unknown enc of first block of input data
+   int r1 = sw_cmac_80D182(unk_813E80, work_buffer_812E80, 0xA8); // unknown enc of first block of input data
    if(r1 != 0)
       return r1;
 
@@ -1663,7 +1666,7 @@ int service_handler_0x1000B_command_19_80D2E4(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char work_buffer_812E80[0xD8]; // first block of input data, or second block of input data
    memcpy(work_buffer_812E80, input_data->unk0, 0xD8);
 
-   int r1 = enc_stuff_80D182(unk_813E80, work_buffer_812E80, 0xD8); // unknown enc of first block of input data
+   int r1 = sw_cmac_80D182(unk_813E80, work_buffer_812E80, 0xD8); // unknown enc of first block of input data
    if(r1 != 0)
       return r1;
 
