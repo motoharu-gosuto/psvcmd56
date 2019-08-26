@@ -1273,30 +1273,25 @@ int service_handler_0x1000B_command_12_80D374(SceSblSmCommGcAuthMgrData_1000B* c
 {
    SceSblSmCommGcAuthMgrData_1000B_12_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_12_input*)ctx->data;
 
-   unsigned char unk_813E80[0x40]; // result of unknown enc of first block of input data
-   memset(unk_813E80, 0, 0x40);
-
-   unsigned char unk_813EC0[0x40]; // result of aes cbc dec of second block of input data
-   memset(unk_813EC0, 0, 0x40);
+   unsigned char message_cmac[0x40];
+   memset(message_cmac, 0, 0x40);
 
    int r0 = bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(key_seed_812500);
    if(r0 != 0)
       return r0;
 
-   unsigned char work_buffer_812E80[0xA8]; // first block of input data, or second block of input data
-   memcpy(work_buffer_812E80, input_data->unk0, 0xA8);
-
-   int r1 = sw_cmac_with_keyslot_0x212_80D182(unk_813E80, work_buffer_812E80, 0xA8); // software implementation of cmac
+   int r1 = sw_cmac_with_keyslot_0x212_80D182(message_cmac, input_data->message, 0xA8);
    if(r1 != 0)
       return r1;
 
-   memcpy(work_buffer_812E80, input_data->unk1, 0x10);
+   unsigned char expected_cmac[0x40];
+   memset(expected_cmac, 0, 0x40);
 
-   int r2 = bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unk_813EC0, work_buffer_812E80, 0x10); // aes cbc dec of second block of input data
+   int r2 = bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(expected_cmac, input_data->enc_cmac, 0x10);
    if(r2 != 0)
       return r2;
 
-   if(memcmp(unk_813E80, unk_813EC0, 0x10) != 0) // final comparison
+   if(memcmp(message_cmac, expected_cmac, 0x10) != 0)
       return 5;
 
    return 0;
@@ -1520,30 +1515,25 @@ int service_handler_0x1000B_command_19_80D2E4(SceSblSmCommGcAuthMgrData_1000B* c
 {
    SceSblSmCommGcAuthMgrData_1000B_19_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_19_input*)ctx->data;
 
-   unsigned char unk_813E80[0x40]; // result of unknown enc of first block of input data
-   memset(unk_813E80, 0, 0x40);
-
-   unsigned char unk_813EC0[0x40]; // result of aes cbc dec of second block of input data
-   memset(unk_813EC0, 0, 0x40);
+   unsigned char message_cmac[0x40];
+   memset(message_cmac, 0, 0x40);
 
    int r0 = bigmac_aes_128_ecb_encrypt_set_keyslot_0x0_from_0x204_80B5EE(key_seed_812500);
    if(r0 != 0)
       return r0;
 
-   unsigned char work_buffer_812E80[0xD8]; // first block of input data, or second block of input data
-   memcpy(work_buffer_812E80, input_data->unk0, 0xD8);
-
-   int r1 = sw_cmac_with_keyslot_0x212_80D182(unk_813E80, work_buffer_812E80, 0xD8); // software implementation of cmac
+   int r1 = sw_cmac_with_keyslot_0x212_80D182(message_cmac, input_data->message, 0xD8);
    if(r1 != 0)
       return r1;
 
-   memcpy(work_buffer_812E80, input_data->unk1, 0x10);
+   unsigned char expected_cmac[0x40];
+   memset(expected_cmac, 0, 0x40);
 
-   int r2 = bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unk_813EC0, work_buffer_812E80, 0x10); // aes cbc dec of second block of input data
+   int r2 = bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(expected_cmac, input_data->enc_cmac, 0x10);
    if(r2 != 0)
       return r2;
 
-   if(memcmp(unk_813E80, unk_813EC0, 0x10) != 0) // final comparison
+   if(memcmp(message_cmac, expected_cmac, 0x10) != 0)
       return 5;
 
    return 0;
