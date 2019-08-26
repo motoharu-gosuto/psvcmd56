@@ -384,6 +384,14 @@ int bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(unsigned char* dst, uns
    return cryptops->aes_ecb_encrypt(src, dst, 0x10, key_212, 0x100);
 }
 
+int sw_cmac_with_keyslot_0x212_80D182(unsigned char* dst, const unsigned char* src, int size)
+{
+   unsigned char key_212[0x20] = {0};
+
+   auto cryptops = CryptoService::get();
+   return cryptops->aes_cmac(src, dst, 0xA8, key_212, 0x100);
+}
+
 //==========================================
 
 int bigmac_read_key_from_keyring_80B11A(int index, unsigned char* dst)
@@ -658,147 +666,6 @@ int verify_signature_ECC_160_80FD3E(const unsigned char* sig[2], const unsigned 
 int verify_signature_ECC_224_80FD56(const unsigned char* sig[2], const unsigned char* M, const unsigned char* Qa[2], const unsigned char* curve[6])
 {
    return verify_ecc_signature_80F548(sig, M, Qa, curve, 7, 0x1C);
-}
-
-//==========================================
-
-int pad_src_tail(const unsigned char* src, int size, unsigned char* padded_src_tail, int* src_n_blocks, int* n_bit_cycles)
-{
-   int tail_size = size & 0xF;
-
-   if(tail_size != 0)
-   {
-      int n_blocks = size / 0x10;
-      *src_n_blocks = n_blocks;
-      
-      memcpy(padded_src_tail, src + (size - tail_size), tail_size); // copy tail
-      padded_src_tail[tail_size] = 0x80; // assign salt
-
-      for(int i = tail_size + 1; i < 0x10; i++)
-         padded_src_tail[i] = 0;
-
-      *n_bit_cycles = 2;
-   }
-   else
-   {
-      int n_blocks = size / 0x10;
-      *src_n_blocks = n_blocks - 1;
-
-      if(size == 0)
-      {
-         padded_src_tail[0] = 0x80; // assign salt
-         memset(padded_src_tail + 1, 0, 0xF); // set tail
-         
-         *n_bit_cycles = 2;
-      }
-      else
-      {
-         memcpy(padded_src_tail, src + (size - 0x10), 0x10); // copy tail
-
-         *n_bit_cycles = 1;
-      }
-   }
-
-   return 0;
-}
-
-int left_circular_shift_with_salt(unsigned char* salt, int n_bit_cycles)
-{
-   for(int k = 0; k < n_bit_cycles; k++)
-   {
-      // store first byte
-      unsigned char prev_byte = salt[0];
-      
-      // i + 1 logic
-      for(int i = 0; i < 0xF; i++)
-         salt[i] = (salt[i + 0] << 1) | (salt[i + 1] >> 7);
-      
-      // update last byte
-      salt[0xF] = salt[0xF] << 1;
-      
-      // update last byte depending on first byte (some 0x87 salt)
-      if((prev_byte & 0x80) > 0)
-      {
-         salt[0xF] = salt[0xF] ^ 0x87;
-      }
-   }
-
-   return 0;
-}
-
-int construct_salt(unsigned char* salt, int n_bit_cycles)
-{
-   memset(salt, 0, 0x10);
-   
-   int res0 = bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(salt, salt);
-   if(res0 != 0)
-      return res0;
-
-   // this part seems to be byte array cycling function
-
-   left_circular_shift_with_salt(salt, n_bit_cycles);
-
-   return 0;
-}
-
-int construct_dest(unsigned char* dst, const unsigned char* src, int src_n_blocks, const unsigned char* padded_src_tail, const unsigned char* salt)
-{
-   // initialize destination
-
-   memset(dst, 0, 0x10);
-   
-   // xor dst with blocks of src
-
-   int src_offset = 0;
-
-   for(int i = 0; i < src_n_blocks; i++)
-   {
-      for(int i = 0; i < 0x10; i++)
-         dst[i] = dst[i] ^ src[src_offset + i];
-
-      int res1 = bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(dst, dst);
-      if(res1 != 0)
-         return res1;
-
-      src_offset = src_offset + 0x10;
-   }
-
-   // xor dst with padded tail of src
-
-   for(int i = 0; i < 0x10; i++)
-      dst[i] = dst[i] ^ padded_src_tail[i];
-
-   // xor dst with salt
-   
-   for(int i = 0; i < 0x10; i++)
-      dst[i] = dst[i] ^ salt[i];
-
-   int res2 = bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(dst, dst);
-   return res2;
-}
-
-int sw_cmac_80D182(unsigned char* dst, const unsigned char* src, int size)
-{
-   // this part constructs salted tail
-
-   unsigned char padded_src_tail[0x10];
-   int src_n_blocks = 0;
-   int n_bit_cycles = 0;
-
-   pad_src_tail(src, size, padded_src_tail, &src_n_blocks, &n_bit_cycles);
-
-   // this part initializes shift array
-
-   unsigned char salt[0x10];
-   int res0 = construct_salt(salt, n_bit_cycles);
-   if(res0 != 0)
-      return res0;
-
-   // this part calculates:
-   // dst = aes(dst ^ src) - repeat for N blocks of source data
-   // dst = aes(dst ^ padded_src_tail ^ salt)
-   
-   return construct_dest(dst, src, src_n_blocks, padded_src_tail, salt);
 }
 
 //==========================================
@@ -1419,7 +1286,7 @@ int service_handler_0x1000B_command_12_80D374(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char work_buffer_812E80[0xA8]; // first block of input data, or second block of input data
    memcpy(work_buffer_812E80, input_data->unk0, 0xA8);
 
-   int r1 = sw_cmac_80D182(unk_813E80, work_buffer_812E80, 0xA8); // unknown enc of first block of input data
+   int r1 = sw_cmac_with_keyslot_0x212_80D182(unk_813E80, work_buffer_812E80, 0xA8); // software implementation of cmac
    if(r1 != 0)
       return r1;
 
@@ -1666,7 +1533,7 @@ int service_handler_0x1000B_command_19_80D2E4(SceSblSmCommGcAuthMgrData_1000B* c
    unsigned char work_buffer_812E80[0xD8]; // first block of input data, or second block of input data
    memcpy(work_buffer_812E80, input_data->unk0, 0xD8);
 
-   int r1 = sw_cmac_80D182(unk_813E80, work_buffer_812E80, 0xD8); // unknown enc of first block of input data
+   int r1 = sw_cmac_with_keyslot_0x212_80D182(unk_813E80, work_buffer_812E80, 0xD8); // software implementation of cmac
    if(r1 != 0)
       return r1;
 
