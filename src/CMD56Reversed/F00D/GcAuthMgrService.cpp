@@ -372,6 +372,11 @@ int bigmac_aes_128_cbc_decrypt_with_keyslot_0x0_80B67A(unsigned char* dst, const
 
 //==========================================
 
+int bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(unsigned char* dst, unsigned char* src)
+{
+   return 0;
+}
+
 int bigmac_read_key_from_keyring_80B11A(int index, unsigned char* dst)
 {
    return 0;
@@ -648,9 +653,149 @@ int verify_signature_ECC_224_80FD56(const unsigned char* sig[2], const unsigned 
 
 //==========================================
 
-int enc_stuff_80D182(unsigned char* dst, const unsigned char* src, int size)
+unsigned char sra(unsigned char value, int N)
 {
    return 0;
+}
+
+unsigned char sll(unsigned char value, int N)
+{
+   return 0;
+}
+
+unsigned int extub(unsigned char value)
+{
+   return 0;
+}
+
+int pad_src_tail(const unsigned char* src, int size, unsigned char* padded_src_tail, int* src_n_blocks, int* n_bit_cycles)
+{
+   int tail_size = size & 0xF;
+
+   if(tail_size != 0)
+   {
+      int n_blocks = size / 0x10;
+      *src_n_blocks = n_blocks;
+      
+      memcpy(padded_src_tail, src + (size - tail_size), tail_size); // copy tail
+      padded_src_tail[tail_size] = 0x80; // assign salt
+
+      for(int i = tail_size + 1; i < 0x10; i++)
+         padded_src_tail[i] = 0;
+
+      *n_bit_cycles = 2;
+   }
+   else
+   {
+      int n_blocks = size / 0x10;
+      *src_n_blocks = n_blocks - 1;
+
+      if(size == 0)
+      {
+         padded_src_tail[0] = 0x80; // assign salt
+         memset(padded_src_tail + 1, 0, 0xF); // set tail
+         
+         *n_bit_cycles = 2;
+      }
+      else
+      {
+         memcpy(padded_src_tail, src + (size - 0x10), 0x10); // copy tail
+
+         *n_bit_cycles = 1;
+      }
+   }
+
+   return 0;
+}
+
+int construct_salt(unsigned char* salt, int n_bit_cycles)
+{
+   memset(salt, 0, 0x10);
+   
+   int res0 = bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(salt, salt);
+   if(res0 != 0)
+      return res0;
+
+   // this part seems to be byte array cycling function
+
+   int scenario_ctr = 0;
+
+   for(int i = 0; i < n_bit_cycles; i++)
+   {
+      // store first byte
+      char prev_byte = salt[0];
+      
+      // i + 1 logic
+      for(int i = 0; i < 0xE; i++)
+         salt[i] = sll(salt[i + 0], 1) | sra(salt[i + 1], 7);
+      
+      // update last byte
+      salt[0xF] = extub(sll(salt[0xF], 1));
+      
+      // update last byte depending on first byte
+      if(prev_byte < 0)
+         salt[0xF] = salt[0xF] ^ 0x87;
+   }
+
+   return 0;
+}
+
+int construct_dest(unsigned char* dst, const unsigned char* src, int src_n_blocks, const unsigned char* padded_src_tail, const unsigned char* salt)
+{
+   // initialize destination
+
+   memset(dst, 0, 0x10);
+   
+   // xor dst with blocks of src
+
+   int src_offset = 0;
+
+   for(int i = 0; i < src_n_blocks; i++)
+   {
+      for(int i = 0; i < 0x10; i++)
+         dst[i] = dst[i] ^ src[src_offset + i];
+
+      int res1 = bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(dst, dst);
+      if(res1 != 0)
+         return res1;
+
+      src_offset = src_offset + 0x10;
+   }
+
+   // xor dst with padded tail of src
+
+   for(int i = 0; i < 0x10; i++)
+      dst[i] = dst[i] ^ padded_src_tail[i];
+
+   // xor dst with salt
+   
+   for(int i = 0; i < 0x10; i++)
+      dst[i] = dst[i] ^ salt[i];
+
+   int res2 = bigmac_aes_256_ecb_encrypt_with_keyslot_0x212_80D118(dst, dst);
+   return res2;
+}
+
+int enc_stuff_80D182(unsigned char* dst, const unsigned char* src, int size)
+{
+   // this part constructs salted tail
+
+   unsigned char padded_src_tail[0x10];
+   int src_n_blocks = 0;
+   int n_bit_cycles = 0;
+
+   pad_src_tail(src, size, padded_src_tail, &src_n_blocks, &n_bit_cycles);
+
+   // this part initializes shift array
+
+   unsigned char salt[0x10];
+   int res0 = construct_salt(salt, n_bit_cycles);
+   if(res0 != 0)
+      return res0;
+
+   // this part calculates dst = src ^ padded_src_tail ^ salt
+   
+   return construct_dest(dst, src, src_n_blocks, padded_src_tail, salt);
 }
 
 //==========================================
