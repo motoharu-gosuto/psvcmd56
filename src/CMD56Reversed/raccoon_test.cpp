@@ -37,7 +37,7 @@ int test_raccoon()
    //this part has to be executed on pc side
 
    unsigned char full_key[0x10] = {0};
-   int bruteforce_res = raccoon_bruteforce_key_partials(dec_partial0, dec_partial1, dec_partial2, dec_partial3, full_key);
+   int bruteforce_res = raccoon_bruteforce_key_partials(dec_partial0, dec_partial1, dec_partial2, dec_partial3, full_key, true);
 
    print_byte_array(full_key, 0x10);
 

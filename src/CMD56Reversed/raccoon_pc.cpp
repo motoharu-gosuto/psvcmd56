@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* key, unsigned char* key_partials_out, int* num_partials)
+int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* key, unsigned char* key_partials_out, int* num_partials, bool exit_on_match)
 {
    unsigned char current_key[0x10] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
    unsigned char current_output[0x10] = {0};
@@ -40,6 +40,9 @@ int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* ke
                {
                   memcpy(key_partials_out, current_key + 0xC, 0x4);
                   (*num_partials)++;
+
+                  if(exit_on_match)
+                     return 0;
                }
             }
          }
@@ -49,7 +52,7 @@ int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* ke
    return 0;
 }
 
-int bruteforce_0x8(const unsigned char* expected_output, const unsigned char* key, const unsigned char* key_partial0, unsigned char* key_partials_out, int* num_partials)
+int bruteforce_0x8(const unsigned char* expected_output, const unsigned char* key, const unsigned char* key_partial0, unsigned char* key_partials_out, int* num_partials, bool exit_on_match)
 {
    unsigned char current_key[0x10] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
    unsigned char current_output[0x10] = {0};
@@ -85,6 +88,9 @@ int bruteforce_0x8(const unsigned char* expected_output, const unsigned char* ke
                {
                   memcpy(key_partials_out, current_key + 0x8, 0x4);
                   (*num_partials)++;
+
+                  if(exit_on_match)
+                     return 0;
                }
             }
          }
@@ -94,7 +100,7 @@ int bruteforce_0x8(const unsigned char* expected_output, const unsigned char* ke
    return 0;
 }
 
-int bruteforce_0x4(const unsigned char* expected_output, const unsigned char* key, const unsigned char* key_partial0, const unsigned char* key_partial1, unsigned char* key_partials_out, int* num_partials)
+int bruteforce_0x4(const unsigned char* expected_output, const unsigned char* key, const unsigned char* key_partial0, const unsigned char* key_partial1, unsigned char* key_partials_out, int* num_partials, bool exit_on_match)
 {
    unsigned char current_key[0x10] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
    unsigned char current_output[0x10] = {0};
@@ -131,6 +137,9 @@ int bruteforce_0x4(const unsigned char* expected_output, const unsigned char* ke
                {
                   memcpy(key_partials_out, current_key + 0x4, 0x4);
                   (*num_partials)++;
+
+                  if(exit_on_match)
+                     return 0;
                }
             }
          }
@@ -140,7 +149,7 @@ int bruteforce_0x4(const unsigned char* expected_output, const unsigned char* ke
    return 0;
 }
 
-int bruteforce_0x0(const unsigned char* expected_output, const unsigned char* input, const unsigned char* key_partial0, const unsigned char* key_partial1, const unsigned char* key_partial2, unsigned char* key_partials_out, int* num_partials)
+int bruteforce_0x0(const unsigned char* expected_output, const unsigned char* input, const unsigned char* key_partial0, const unsigned char* key_partial1, const unsigned char* key_partial2, unsigned char* key_partials_out, int* num_partials, bool exit_on_match)
 {
    unsigned char current_key[0x10] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
    unsigned char current_output[0x10] = {0};
@@ -178,6 +187,9 @@ int bruteforce_0x0(const unsigned char* expected_output, const unsigned char* in
                {
                   memcpy(key_partials_out, current_key, 0x4);
                   (*num_partials)++;
+
+                  if(exit_on_match)
+                     return 0;
                }
             }
          }
@@ -208,7 +220,7 @@ int test_full_key(const unsigned char* input, const unsigned char* full_key, con
 // we only know some of the bytes of corresponding decryption partials
 // this may lead to collisions
 
-int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const unsigned char* dec_partial1, const unsigned char* dec_partial2, const unsigned char* dec_partial3, unsigned char* full_key_out)
+int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const unsigned char* dec_partial1, const unsigned char* dec_partial2, const unsigned char* dec_partial3, unsigned char* full_key_out, bool exit_on_match)
 {
    // choose keys
 
@@ -218,7 +230,7 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
 
    unsigned char key_partials0[0x4 * N_PARTIALS_TO_STORE] = {0}; // place for 0x10 partials
    int num_partials0 = 0;
-   bruteforce_0xC(dec_partial0, key_0x519, key_partials0, &num_partials0);
+   bruteforce_0xC(dec_partial0, key_0x519, key_partials0, &num_partials0, exit_on_match);
 
    //-------------bruteforce 0x8 - 0xB ----------------------
 
@@ -227,7 +239,7 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
       unsigned char key_partials1[0x4 * N_PARTIALS_TO_STORE] = {0}; // place for 0x10 partials
       int num_partials1 = 0;
 
-      bruteforce_0x8(dec_partial1, key_0x519, key_partials0 + i * 0x4, key_partials1, &num_partials1);
+      bruteforce_0x8(dec_partial1, key_0x519, key_partials0 + i * 0x4, key_partials1, &num_partials1, exit_on_match);
 
       //-------------bruteforce 0x4 - 0x7 ----------------------
 
@@ -236,7 +248,7 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
          unsigned char key_partials2[0x4 * N_PARTIALS_TO_STORE] = {0}; // place for 0x10 partials
          int num_partials2 = 0;
 
-         bruteforce_0x4(dec_partial2, key_0x519, key_partials0 + i * 0x4, key_partials1 + j * 0x4, key_partials2, &num_partials2);
+         bruteforce_0x4(dec_partial2, key_0x519, key_partials0 + i * 0x4, key_partials1 + j * 0x4, key_partials2, &num_partials2, exit_on_match);
 
          //-------------bruteforce 0x0 - 0x3 ----------------------
 
@@ -247,7 +259,7 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
 
             unsigned char input3[0x10] = {0};  // chosen plain text
 
-            bruteforce_0x0(dec_partial3, input3, key_partials0 + i * 0x4, key_partials1 + j * 0x4, key_partials2 + k * 0x4, key_partials3, &num_partials3);
+            bruteforce_0x0(dec_partial3, input3, key_partials0 + i * 0x4, key_partials1 + j * 0x4, key_partials2 + k * 0x4, key_partials3, &num_partials3, exit_on_match);
 
             //------------- print results ----------------------
 
