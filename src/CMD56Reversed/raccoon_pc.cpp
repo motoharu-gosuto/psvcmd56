@@ -1,23 +1,10 @@
 #include "raccoon_pc.h"
 
-#include <iostream>
-#include <iomanip>
-
 #include "Crypto/CryptoService.h"
 
 #include "raccoon_bigmac.h"
 
-int print_byte_array(const unsigned char* data, int size)
-{
-   for(int i = 0; i < size; i++)
-   {
-      std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)data[i];
-   }
-
-   std::cout << std::endl;
-
-   return 0;
-}
+#include <iostream>
 
 int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* key, unsigned char* key_partials_out, int* num_partials)
 {
@@ -282,8 +269,6 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
 
                if(test_full_key(input3, full_key, dec_partial3) == 0)
                {
-                  //print_byte_array(full_key, 0x10);
-
                   memcpy(full_key_out, full_key, 0x10);
 
                   return 0;
