@@ -15,7 +15,7 @@ int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* ke
 
    auto cryptops = CryptoService::get();
 
-   for(int i0 = 0xC; i0 <= 0xFF; i0++) // for faster bruteforcing
+   for(int i0 = 0; i0 <= 0xFF; i0++)
    {
       std::cout << i0 << std::endl;
 
@@ -40,8 +40,6 @@ int bruteforce_0xC(const unsigned char* expected_output, const unsigned char* ke
                {
                   memcpy(key_partials_out, current_key + 0xC, 0x4);
                   (*num_partials)++;
-
-                  return 0; // for faster bruteforcing
                }
             }
          }
@@ -62,7 +60,7 @@ int bruteforce_0x8(const unsigned char* expected_output, const unsigned char* ke
 
    auto cryptops = CryptoService::get();
 
-   for(int i0 = 8; i0 <= 0xFF; i0++) // for faster bruteforcing
+   for(int i0 = 0; i0 <= 0xFF; i0++)
    {
       std::cout << i0 << std::endl;
 
@@ -87,8 +85,6 @@ int bruteforce_0x8(const unsigned char* expected_output, const unsigned char* ke
                {
                   memcpy(key_partials_out, current_key + 0x8, 0x4);
                   (*num_partials)++;
-
-                  return 0; // for faster bruteforcing
                }
             }
          }
@@ -110,7 +106,7 @@ int bruteforce_0x4(const unsigned char* expected_output, const unsigned char* ke
 
    auto cryptops = CryptoService::get();
 
-   for(int i0 = 4; i0 <= 0xFF; i0++) // for faster bruteforcing
+   for(int i0 = 0; i0 <= 0xFF; i0++)
    {
       std::cout << i0 << std::endl;
 
@@ -135,8 +131,6 @@ int bruteforce_0x4(const unsigned char* expected_output, const unsigned char* ke
                {
                   memcpy(key_partials_out, current_key + 0x4, 0x4);
                   (*num_partials)++;
-
-                  return 0; // for faster bruteforcing
                }
             }
          }
@@ -184,8 +178,6 @@ int bruteforce_0x0(const unsigned char* expected_output, const unsigned char* in
                {
                   memcpy(key_partials_out, current_key, 0x4);
                   (*num_partials)++;
-
-                  return 0; // for faster bruteforcing
                }
             }
          }
