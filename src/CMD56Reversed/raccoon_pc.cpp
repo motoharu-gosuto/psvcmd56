@@ -2,7 +2,7 @@
 
 #include "Crypto/CryptoService.h"
 
-#include "raccoon_bigmac.h"
+#include "raccoon_util.h"
 
 #include <iostream>
 
@@ -225,11 +225,13 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
    // choose keys
 
    unsigned char key_0x519[0x20] = {0};
+   unsigned char input3[0x10] = {0};  // chosen plain text
 
    //-------------bruteforce 0xC - 0xF ----------------------
 
    unsigned char key_partials0[0x4 * N_PARTIALS_TO_STORE] = {0}; // place for 0x10 partials
    int num_partials0 = 0;
+
    bruteforce_0xC(dec_partial0, key_0x519, key_partials0, &num_partials0, exit_on_match);
 
    //-------------bruteforce 0x8 - 0xB ----------------------
@@ -256,8 +258,6 @@ int raccoon_bruteforce_key_partials(const unsigned char* dec_partial0, const uns
          {
             unsigned char key_partials3[0x4 * N_PARTIALS_TO_STORE] = {0}; // place for 0x10 partials
             int num_partials3 = 0;
-
-            unsigned char input3[0x10] = {0};  // chosen plain text
 
             bruteforce_0x0(dec_partial3, input3, key_partials0 + i * 0x4, key_partials1 + j * 0x4, key_partials2 + k * 0x4, key_partials3, &num_partials3, exit_on_match);
 

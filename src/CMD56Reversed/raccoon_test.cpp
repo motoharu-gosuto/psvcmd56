@@ -3,23 +3,12 @@
 #include "raccoon_bigmac.h"
 #include "raccoon_vita.h"
 #include "raccoon_pc.h"
+#include "raccoon_pc_parallel.h"
+#include "raccoon_util.h"
 
 #include <iostream>
-#include <iomanip>
 
 // https://www.lolhax.org/2019/01/02/extracting-keys-f00d-crumbs-raccoon-exploit/
-
-int print_byte_array(const unsigned char* data, int size)
-{
-   for(int i = 0; i < size; i++)
-   {
-      std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)data[i];
-   }
-
-   std::cout << std::endl;
-
-   return 0;
-}
 
 int test_raccoon()
 {
@@ -37,9 +26,14 @@ int test_raccoon()
    //this part has to be executed on pc side
 
    unsigned char full_key[0x10] = {0};
-   int bruteforce_res = raccoon_bruteforce_key_partials(dec_partial0, dec_partial1, dec_partial2, dec_partial3, full_key, true);
+   //int bruteforce_res = raccoon_bruteforce_key_partials(dec_partial0, dec_partial1, dec_partial2, dec_partial3, full_key, true);
+   int bruteforce_res = raccoon_bruteforce_key_partials_parallel(dec_partial0, dec_partial1, dec_partial2, dec_partial3, full_key);
 
-   print_byte_array(full_key, 0x10);
+   if(bruteforce_res == 0)
+   {
+      std::cout << "result decrypted key:" << std::endl;
+      print_byte_array(full_key, 0x10);
+   }
 
    return 0;
 }
