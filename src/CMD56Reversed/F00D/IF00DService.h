@@ -543,6 +543,18 @@ struct SceSblSmCommGcAuthMgrData_1000B_20_output
    unsigned char rif_digest[0x14];
 };
 
+struct SceSblSmCommGcAuthMgrData_1000B_21_input
+{
+   unsigned char field0[0x20];
+   unsigned char message_hash[0x14];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_21_output
+{
+   unsigned char r[0x14];
+   unsigned char s[0x14];
+};
+
 struct SceSblSmCommGcAuthMgrData_1000B_22_input
 {
    unsigned char field0[0x20];

@@ -80,6 +80,8 @@ unsigned char Pk_00812528[0x1C] = {0x76, 0x74, 0x36, 0xA6, 0x99, 0x9D, 0x88, 0x4
 
 unsigned char Pk_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA0, 0x32, 0xF4, 0x52, 0x53, 0xCF, 0xED, 0x20, 0xDB, 0x2E, 0x6E, 0x44, 0x6C, 0x37, 0x82, 0xE8, 0x2A, 0x1A, 0xB9, 0xC9, 0x23};
 
+unsigned char Pk_008125A8[0x14] = {0x53, 0xCC, 0xC3, 0x6E, 0xDF, 0xAD, 0xBE, 0x24, 0x55, 0x83, 0x27, 0x05, 0x52, 0xD2, 0x3B, 0x22, 0x51, 0x8E, 0xE3, 0xA8};
+
 //==========================================
 
 unsigned char cmd_4_7_key0_8125C0[0x10]  = {0xF8, 0x1E, 0x0E, 0x97, 0xAD, 0xED, 0x52, 0xB3, 0xA9, 0xFB, 0x83, 0x22, 0xCF, 0x58, 0x92, 0x63};
@@ -1932,11 +1934,78 @@ int GcAuthMgrService::service_0x1000B_20(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_21_80C36A(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_21_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_21_input*)ctx->data;
+
+   unsigned char sig_r[0x14] = {0};
+   unsigned char sig_s[0x14] = {0};
+   unsigned char* sig_ptrs[2] = {sig_r, sig_s};
+
+   // calculate contract
+
+   unsigned char iv_94[0x20] = {0};
+
+   int r0_0 = bigmac_hmac_sha256_contract_80C0F6(Pk_008125A8, input_data->message_hash, 0x14, iv_94);
+   if(r0_0 != 0)
+      return 5;
+
+   unsigned char digest_D4[0x40] = {0};
+   unsigned char nonce[0x14] = {0};
+
+   // calculate nonce
+
+   // this part is supposed to cycle forever on fail, untill modulus completes successfully
+
+   while(true)
+   {
+      int r0_1 = bigmac_sha256_block_update_80C17A(input_data->message_hash, 0x14, iv_94, digest_D4);
+      if(r0_1 != 0)
+         return 5;
+
+      int r0_2 = bigmac_sha256_block_update_80C17A(input_data->message_hash, 0x14, iv_94, digest_D4 + 0x20);
+      if(r0_2 != 0)
+         return 5;
+
+      int r0_3 = modulus_ecc_160_80FF34(nonce, digest_D4, N_ptr_160_81259C);
+      if(r0_3 == 0)
+         break;
+   }
+
+   //check input
+
+   for(int i = 0; i < 0x20; i++)
+   {
+      if(input_data->field0[i] != 0)
+         return 5;
+   }
+
+   // calculate signature
+   
+   int r0_4 = sign_ecc_160_80F4B4(sig_ptrs, input_data->message_hash, nonce, Pk_008125A8, ECC_160_curve_812590);
+   if(r0_4 != 0)
+      return 5;
+
+   // construct response
+
+   int response_size = 0x28;
+
+   ctx->size = response_size;
+
+   SceSblSmCommGcAuthMgrData_1000B_21_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_21_output*)ctx->data;
+
+   memcpy(output_data->r, sig_ptrs[0], 0x14);
+
+   memcpy(output_data->s, sig_ptrs[1], 0x14);
+   
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_21(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_21_80C36A();
+   *f00d_resp = service_handler_0x1000B_command_21_80C36A(ctx);
 
-   return -1;
+   return 0;
 }
 
 int service_handler_0x1000B_command_22_80C256(SceSblSmCommGcAuthMgrData_1000B* ctx)
@@ -2027,7 +2096,7 @@ int GcAuthMgrService::service_0x1000B_22(int* f00d_resp, SceSblSmCommGcAuthMgrDa
 {
    *f00d_resp = service_handler_0x1000B_command_22_80C256(ctx);
 
-   return -0;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B_23(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
