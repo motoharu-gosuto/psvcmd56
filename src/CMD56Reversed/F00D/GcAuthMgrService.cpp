@@ -13,22 +13,22 @@ using namespace f00d;
 //0x0E - DONE - top level
 //0x10 - DONE - top level
 //0x11 - DONE - not tested
-//0x12 - ?
+//0x12 - DONE - top level
 //0x14 - DONE
 //0x15 - DONE
 //0x16 - DONE - top level
 //0x17 - DONE - top level
 //0x18 - DONE - not tested
-//0x19 - ?
+//0x19 - DONE - top level
 //0x1B
 //0x1C
 //0x1D
 //0x1E
 //0x1F
 //0x20
-//0x21
+//0x21 - DONE - not tested
 //0x22 - DONE
-//0x23
+//0x23 - DONE - top level
 
 //==========================================
 
@@ -81,6 +81,12 @@ unsigned char Pk_00812528[0x1C] = {0x76, 0x74, 0x36, 0xA6, 0x99, 0x9D, 0x88, 0x4
 unsigned char Pk_00812544[0x1C] = {0x60, 0x7A, 0x2E, 0x55, 0x68, 0xB4, 0xB9, 0xA0, 0x32, 0xF4, 0x52, 0x53, 0xCF, 0xED, 0x20, 0xDB, 0x2E, 0x6E, 0x44, 0x6C, 0x37, 0x82, 0xE8, 0x2A, 0x1A, 0xB9, 0xC9, 0x23};
 
 unsigned char Pk_008125A8[0x14] = {0x53, 0xCC, 0xC3, 0x6E, 0xDF, 0xAD, 0xBE, 0x24, 0x55, 0x83, 0x27, 0x05, 0x52, 0xD2, 0x3B, 0x22, 0x51, 0x8E, 0xE3, 0xA8};
+
+//==========================================
+
+unsigned char aes_key_0x23_812380[0x10] = {0x61, 0x35, 0x87, 0xCC, 0xF0, 0x41, 0xDE, 0x6E, 0xB9, 0x73, 0x97, 0xC2, 0x05, 0xDF, 0x49, 0xE9};
+
+unsigned char cmac_key_0x23_8123C0[0x10] = {0x66, 0x01, 0x54, 0x5F, 0x5E, 0x9D, 0x4D, 0xD8, 0xF8, 0xED, 0x3B, 0x33, 0x39, 0x26, 0xA8, 0x99};
 
 //==========================================
 
@@ -334,6 +340,21 @@ int bigmac_sha256_block_update_80C17A(const unsigned char* src, int data_size, u
 }
 
 int bigmac_aes_128_cbc_submit_with_keyslot_80B538(unsigned char* dst, const unsigned char* src, int size, int keyslot, int function)
+{
+   return 0;
+}
+
+//==========================================
+
+// 0x00 CMAC-AES-192
+// 0x10 CMAC-AES-128
+// 0x20 CMAC-AES-256
+int bigmac_cmac_aes_submit_80D990(unsigned char* dst, const unsigned char* src, int size, const unsigned char* key, int func_mode)
+{
+   return 0;
+}
+
+int bigmac_cmac_aes_submit_80D990(unsigned char* dst, const unsigned char* src, int size, int keyslot, int func_mode)
 {
    return 0;
 }
@@ -2099,11 +2120,49 @@ int GcAuthMgrService::service_0x1000B_22(int* f00d_resp, SceSblSmCommGcAuthMgrDa
    return 0;
 }
 
+int service_handler_0x1000B_command_23_80C04A(SceSblSmCommGcAuthMgrData_1000B* ctx)
+{
+   SceSblSmCommGcAuthMgrData_1000B_23_input* input_data = (SceSblSmCommGcAuthMgrData_1000B_23_input*)ctx->data;
+
+   unsigned char work_buffer_812E80[0x10] = {0};
+
+   memcpy(work_buffer_812E80, input_data->message, 0x10);
+
+   unsigned char iv_C[0x10];
+   memset(iv_C, 0, 0x10);
+
+   unsigned char work_buffer_813680[0x10] = {0};
+
+   int res0 = bigmac_aes_128_cbc_encrypt_with_potential_key_and_iv_80D906(work_buffer_813680, work_buffer_812E80, 0x10, aes_key_0x23_812380, iv_C);
+   if(res0 != 0)
+      return 0x11;
+
+   unsigned char cmac_value[0x10] = {0};
+
+   int res1 = bigmac_cmac_aes_submit_80D990(cmac_value, work_buffer_813680, 0x10, cmac_key_0x23_8123C0, 0x10);
+   if(res1 != 0)
+      return 0x11;
+
+   // construct response
+
+   int response_size = 0x20;
+
+   ctx->size = response_size;
+
+   SceSblSmCommGcAuthMgrData_1000B_23_output* output_data = (SceSblSmCommGcAuthMgrData_1000B_23_output*)ctx->data;
+
+   memcpy(output_data->enc_message, work_buffer_813680, 0x10);
+   
+   memcpy(output_data->cmac, cmac_value, 0x10);
+
+   return 0;
+}
+
 int GcAuthMgrService::service_0x1000B_23(int* f00d_resp, SceSblSmCommGcAuthMgrData_1000B* ctx, int size) const
 {
-   //service_handler_0x1000B_command_23_80C04A();
+   *f00d_resp = service_handler_0x1000B_command_23_80C04A(ctx);
 
-   return -1;
+   return 0;
 }
 
 int GcAuthMgrService::service_0x1000B(int* f00d_resp, void* ctx, int size) const

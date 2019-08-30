@@ -567,6 +567,17 @@ struct SceSblSmCommGcAuthMgrData_1000B_22_output
    unsigned char s[0x1C];
 };
 
+struct SceSblSmCommGcAuthMgrData_1000B_23_input
+{
+   unsigned char message[0x10];
+};
+
+struct SceSblSmCommGcAuthMgrData_1000B_23_output
+{
+   unsigned char enc_message[0x10];
+   unsigned char cmac[0x10];
+};
+
 //=============== PM TYPES =============
 
 //NONE
